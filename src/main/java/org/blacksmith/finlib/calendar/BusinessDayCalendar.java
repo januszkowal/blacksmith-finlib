@@ -2,6 +2,7 @@ package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.commons.date.LocalDateUtils;
@@ -252,6 +253,24 @@ public interface BusinessDayCalendar {
   }
 
   /**
+   * Gets the stream of business days between the two dates.
+   * <p>
+   * This method will treat weekends as holidays.
+   * If the dates are equal, an empty stream is returned.
+   * If the end is before the start, an exception is thrown.
+   *
+   * @param startInclusive  the start date
+   * @param endInclusive  the end date
+   * @return the stream of business days
+   * @throws IllegalArgumentException if either date is outside the supported range
+   */
+  default Stream<LocalDate> businessDaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
+    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
+    return LocalDateUtils.stream(startInclusive, endInclusive.plusDays(1))
+        .filter(this::isBusinessDay);
+  }
+
+  /**
    * Gets the stream of holidays between the two dates.
    * <p>
    * This method will treat weekends as holidays.
@@ -269,4 +288,21 @@ public interface BusinessDayCalendar {
         .filter(this::isHoliday);
   }
 
+  /**
+   * Gets the stream of holidays between the two dates.
+   * <p>
+   * This method will treat weekends as holidays.
+   * If the dates are equal, an empty stream is returned.
+   * If the end is before the start, an exception is thrown.
+   *
+   * @param startInclusive  the start date
+   * @param endInclusive  the end date
+   * @return the stream of holidays
+   * @throws IllegalArgumentException if either date is outside the supported range
+   */
+  default Stream<LocalDate> holidaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
+    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
+    return LocalDateUtils.stream(startInclusive, endInclusive.plusDays(1))
+        .filter(this::isHoliday);
+  }
 }
