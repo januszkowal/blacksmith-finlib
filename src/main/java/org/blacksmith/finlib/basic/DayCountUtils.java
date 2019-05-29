@@ -1,10 +1,119 @@
 package org.blacksmith.finlib.basic;
 
+import java.time.LocalDate;
+import org.blacksmith.commons.date.LocalDateUtils;
+
+
+import static org.blacksmith.commons.date.LocalDateUtils.daysBetween;
+import static org.blacksmith.commons.date.LocalDateUtils.nextLeapDay;
+
 public class DayCountUtils {
-  public static int thirty360Days(int y1, int m1, int d1, int y2, int m2, int d2) {
+  public static int days360(int y1, int m1, int d1, int y2, int m2, int d2) {
     return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
   }
-  public static int thirty360Days(YMD date1, YMD date2) {
-    return thirty360Days(date1.getYear(),date1.getMonth(),date1.getDay(),date2.getYear(),date2.getMonth(),date2.getDay());
+
+  public static int days360(YMD date1, YMD date2) {
+    return days360(date1.getYear(), date1.getMonth(), date1.getDay(), date2.getYear(), date2.getMonth(), date2.getDay());
+  }
+
+  public static int daysBetween30ISDA(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay() == 31)
+      date1.setDay(30);
+    if (date2.getDay() == 31 && date1.getDay() == 30) {
+      date2.setDay(30);
+    }
+    return days360(date1, date2);
+  }
+
+  public static int daysBetween30E(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay()==31)
+      date1.setDay(30);
+    if (date2.getDay()==31) {
+      date2.setDay(30);
+    }
+    return days360(date1, date2);
+  }
+  public static int daysBetween30EPlus(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay()==31)
+      date1.setDay(30);
+    if (date2.getDay()==31) {
+      date2.setDay(1);
+      date2.setMonth(date2.getMonth()+1);
+    }
+    return days360(date1, date2);
+  }
+  public static int daysBetween30A(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay()==31)
+      date1.setDay(30);
+    if (date2.getDay()==31) {
+      if (date1.getDay() < 30)
+      {
+        date2.setDay(1);
+        date2.setMonth(date2.getMonth()+1);
+      }
+      else {
+        date2.setDay(30);
+      }
+    }
+    return days360(date1, date2);
+  }
+
+  public static int daysBetween30PSA(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay()==31 || LocalDateUtils.isLastDayOfFebruary(startDate))
+      date1.setDay(30);
+    if (date2.getDay()==31 && date1.getDay()==30) {
+      date2.setDay(30);
+    }
+    return days360(date1, date2);
+  }
+
+  public static int daysNL(LocalDate startDate, LocalDate endDate) {
+    long actualDays = daysBetween(startDate, endDate);
+    long numberOfLeapDays = 0;
+    LocalDate temp = nextLeapDay(startDate);
+    while (!temp.isAfter(endDate)) {
+      numberOfLeapDays++;
+      temp = nextLeapDay(temp);
+    }
+    return Math.toIntExact(actualDays - numberOfLeapDays);
+  }
+
+  public static int daysBetween30EISDA(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (date1.getDay() == 31 || LocalDateUtils.isLastDayOfFebruary(startDate))
+      date1.setDay(30);
+    if (date2.getDay() == 31 && LocalDateUtils.isLastDayOfFebruary(endDate)) {
+      date2.setDay(30);
+    }
+    return days360(date1, date2);
+  }
+
+  public static int daysBetween30USEOM(LocalDate startDate, LocalDate endDate) {
+    YMD date1 = YMD.of(startDate);
+    YMD date2 = YMD.of(endDate);
+    if (LocalDateUtils.isLastDayOfFebruary(startDate)) {
+      if (LocalDateUtils.isLastDayOfFebruary(endDate)) {
+        date2.setDay(30);
+      }
+      date1.setDay(30);
+    }
+    if (date1.getDay() == 31) {
+      date1.setDay(30);
+    }
+    if (date2.getDay() == 31 && date1.getDay() == 30) {
+      date2.setDay(30);
+    }
+    return days360(date1, date2);
   }
 }

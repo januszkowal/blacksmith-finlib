@@ -14,6 +14,7 @@ public class YMD {
   int year;
   int month;
   int day;
+
   public static YMD of(LocalDate date) {
     return new YMD(date.getYear(),date.getMonthValue(),date.getDayOfMonth());
   }
