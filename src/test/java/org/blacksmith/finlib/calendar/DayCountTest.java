@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 
-import static org.blacksmith.commons.date.LocalDateUtils.daysBetween;
-import static org.blacksmith.commons.date.LocalDateUtils.nextOrSameLeapDay;
+import static org.blacksmith.commons.date.DateUtils.daysBetween;
+import static org.blacksmith.commons.date.DateUtils.nextOrSameLeapDay;
 
 public class DayCountTest {
 

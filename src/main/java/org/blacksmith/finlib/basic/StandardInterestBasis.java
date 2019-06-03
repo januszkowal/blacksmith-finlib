@@ -3,12 +3,12 @@ package org.blacksmith.finlib.basic;
 import java.time.LocalDate;
 import java.time.Period;
 
-import org.blacksmith.commons.date.LocalDateUtils;
-
 
 import static java.lang.Math.toIntExact;
-import static org.blacksmith.commons.date.LocalDateUtils.daysBetween;
-import static org.blacksmith.commons.date.LocalDateUtils.nextLeapDay;
+import static org.blacksmith.commons.date.DateUtils.daysBetween;
+import static org.blacksmith.commons.date.DateUtils.isLastDayOfFebruary;
+import static org.blacksmith.commons.date.DateUtils.isLeapDayInPeriod;
+import static org.blacksmith.commons.date.DateUtils.nextLeapDay;
 
 //TR:A,B,C,D,E,F,G,J,K,L,N
 public enum StandardInterestBasis implements  InterestBasis {
@@ -277,7 +277,7 @@ public enum StandardInterestBasis implements  InterestBasis {
       final int years = Period.between(startDate, endDate).getYears();
       final LocalDate remainedPeriodEndDate = (years==0) ? endDate: endDate.minusYears(years);
       final long remainedPeriodDays = daysBetween(startDate, remainedPeriodEndDate);
-      final double remainedPeriodYearLength = LocalDateUtils.isLeapDayInPeriod(startDate,remainedPeriodEndDate) ? 366d : 365d;
+      final double remainedPeriodYearLength = isLeapDayInPeriod(startDate,remainedPeriodEndDate) ? 366d : 365d;
       return years + (remainedPeriodDays / remainedPeriodYearLength);
     }
 
@@ -429,10 +429,10 @@ public enum StandardInterestBasis implements  InterestBasis {
     public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       YMD date1 = YMD.of(startDate);
       YMD date2 = YMD.of(endDate);
-      if (date1.getDay()==31 || LocalDateUtils.isLastDayOfFebruary(startDate)) {
+      if (date1.getDay()==31 || isLastDayOfFebruary(startDate)) {
         date1.setDay(30);
       }
-      if (date2.getDay()==31 || (LocalDateUtils.isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getEndDate()))) {
+      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getEndDate()))) {
         date2.setDay(30);
       }
       return DayCountUtils.days360(date1,date2) /360d;

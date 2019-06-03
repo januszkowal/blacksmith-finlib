@@ -28,7 +28,7 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
-    implementation 'org.blacksmith:commons:0.1.0'
+    implementation 'org.blacksmith:blacksmith-commons:0.1.0'
     testImplementation('org.junit.jupiter:junit-jupiter:5.4.2')
     testImplementation('org.hamcrest:hamcrest-library:2.1')
 }

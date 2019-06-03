@@ -1,11 +1,9 @@
 package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 import org.blacksmith.commons.arg.Validate;
-import org.blacksmith.commons.date.LocalDateUtils;
+import org.blacksmith.commons.date.DateUtils;
 
 public interface BusinessDayCalendar {
   /**
@@ -229,7 +227,7 @@ public interface BusinessDayCalendar {
    */
   default int daysBetween(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return Math.toIntExact(LocalDateUtils.stream(startInclusive, endExclusive)
+    return Math.toIntExact(DateUtils.stream(startInclusive, endExclusive)
         .filter(this::isBusinessDay)
         .count());
   }
@@ -248,7 +246,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> businessDays(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return LocalDateUtils.stream(startInclusive, endExclusive)
+    return DateUtils.stream(startInclusive, endExclusive)
         .filter(this::isBusinessDay);
   }
 
@@ -266,7 +264,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> businessDaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
     Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return LocalDateUtils.stream(startInclusive, endInclusive.plusDays(1))
+    return DateUtils.stream(startInclusive, endInclusive.plusDays(1))
         .filter(this::isBusinessDay);
   }
 
@@ -284,7 +282,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> holidays(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return LocalDateUtils.stream(startInclusive, endExclusive)
+    return DateUtils.stream(startInclusive, endExclusive)
         .filter(this::isHoliday);
   }
 
@@ -302,7 +300,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> holidaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
     Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return LocalDateUtils.stream(startInclusive, endInclusive.plusDays(1))
+    return DateUtils.stream(startInclusive, endInclusive.plusDays(1))
         .filter(this::isHoliday);
   }
 }

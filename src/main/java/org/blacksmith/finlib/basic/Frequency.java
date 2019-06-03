@@ -26,7 +26,7 @@ public class Frequency implements TemporalAmount {
   @ToString.Include
   private final int amount;
   //@EqualsAndHashCode.Include
-  @ToString.Include
+  @ToString.Include //TODO: to be removed - for testing purposes only
   private final Period period;
 
   public Frequency(TimeUnit unit, int amount) {

@@ -1,11 +1,10 @@
 package org.blacksmith.finlib.basic;
 
 import java.time.LocalDate;
-import org.blacksmith.commons.date.LocalDateUtils;
 
-
-import static org.blacksmith.commons.date.LocalDateUtils.daysBetween;
-import static org.blacksmith.commons.date.LocalDateUtils.nextLeapDay;
+import static org.blacksmith.commons.date.DateUtils.daysBetween;
+import static org.blacksmith.commons.date.DateUtils.isLastDayOfFebruary;
+import static org.blacksmith.commons.date.DateUtils.nextLeapDay;
 
 public class DayCountUtils {
   public static int days360(int y1, int m1, int d1, int y2, int m2, int d2) {
@@ -69,7 +68,7 @@ public class DayCountUtils {
   public static int daysBetween30PSA(LocalDate startDate, LocalDate endDate) {
     YMD date1 = YMD.of(startDate);
     YMD date2 = YMD.of(endDate);
-    if (date1.getDay()==31 || LocalDateUtils.isLastDayOfFebruary(startDate))
+    if (date1.getDay()==31 || isLastDayOfFebruary(startDate))
       date1.setDay(30);
     if (date2.getDay()==31 && date1.getDay()==30) {
       date2.setDay(30);
@@ -91,9 +90,9 @@ public class DayCountUtils {
   public static int daysBetween30EISDA(LocalDate startDate, LocalDate endDate) {
     YMD date1 = YMD.of(startDate);
     YMD date2 = YMD.of(endDate);
-    if (date1.getDay() == 31 || LocalDateUtils.isLastDayOfFebruary(startDate))
+    if (date1.getDay() == 31 || isLastDayOfFebruary(startDate))
       date1.setDay(30);
-    if (date2.getDay() == 31 && LocalDateUtils.isLastDayOfFebruary(endDate)) {
+    if (date2.getDay() == 31 && isLastDayOfFebruary(endDate)) {
       date2.setDay(30);
     }
     return days360(date1, date2);
@@ -102,8 +101,8 @@ public class DayCountUtils {
   public static int daysBetween30USEOM(LocalDate startDate, LocalDate endDate) {
     YMD date1 = YMD.of(startDate);
     YMD date2 = YMD.of(endDate);
-    if (LocalDateUtils.isLastDayOfFebruary(startDate)) {
-      if (LocalDateUtils.isLastDayOfFebruary(endDate)) {
+    if (isLastDayOfFebruary(startDate)) {
+      if (isLastDayOfFebruary(endDate)) {
         date2.setDay(30);
       }
       date1.setDay(30);

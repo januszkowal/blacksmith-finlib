@@ -2,9 +2,6 @@ package org.blacksmith.finlib.basic;
 
 import java.time.LocalDate;
 
-
-import lombok.AllArgsConstructor;
-
 public class AdjustableDate {
   private final LocalDate unadjusted;
   private final BusinessDayConvention convention;
