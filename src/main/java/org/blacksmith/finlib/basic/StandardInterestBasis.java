@@ -444,7 +444,7 @@ public enum StandardInterestBasis implements  InterestBasis {
     }
   },
   // US thirty day months / 360 with dynamic EOM rule
-  XXX_THIRTY_U_360("30U/360") {
+  D30_U_360("30U/360") {
     @Override
     public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
       if (scheduleInfo.isEndOfMonthConvention()) {
@@ -588,16 +588,6 @@ public enum StandardInterestBasis implements  InterestBasis {
     }
   };
 
-  // calculate using the standard 30/360 function - 360(y2 - y1) + 30(m2 - m1) + (d2 - d1)) / 360
-  private static double thirty360x(int y1, int m1, int d1, int y2, int m2, int d2) {
-    return (360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1)) / 360d;
-  }
-
-  //calculate using the 30/360 function as above but does not divide by 360, as the number of days is needed, not the fraction.
-  private static int thirty360Days(int y1, int m1, int d1, int y2, int m2, int d2) {
-    return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
-  }
-
   @Override
   public double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     if (endDate.isBefore(startDate)) {
@@ -609,7 +599,7 @@ public enum StandardInterestBasis implements  InterestBasis {
     return calculateYearFraction(startDate, endDate, scheduleInfo);
   }
 
-  //@Override
+  @Override
   public int days(LocalDate startDate, LocalDate endDate) {
     if (endDate.isBefore(startDate)) {
       throw new IllegalArgumentException("Dates must be in time-line order");
