@@ -2,7 +2,7 @@ package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
 import org.blacksmith.finlib.calendar.policy.DefaultHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.YearMonthDaySetHolidayProvider;
+import org.blacksmith.finlib.calendar.policy.YearMonthDayPolicySet;
 import org.junit.jupiter.api.Test;
 
 
@@ -14,12 +14,11 @@ public class BusinessDayCalendarTest {
     /*
     holidays: 2019-05-15, 2019-05-16, 2019-05-17
     * */
-    YearMonthDaySetHolidayProvider hset = new YearMonthDaySetHolidayProvider();
-    hset.add(LocalDate.of(2019,5,15));
-    hset.add(LocalDate.of(2019,5,16));
-    hset.add(LocalDate.of(2019,6,15));
-    HolidayPolicy policy = new DefaultHolidayPolicy(hset);
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(policy);
+    YearMonthDayPolicySet ymdPolicy = new YearMonthDayPolicySet();
+    ymdPolicy.add(LocalDate.of(2019,5,15));
+    ymdPolicy.add(LocalDate.of(2019,5,16));
+    ymdPolicy.add(LocalDate.of(2019,6,15));
+    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(ymdPolicy);
     assertEquals(LocalDate.of(2019,05,14),cal.nextOrSame(LocalDate.of(2019,5,14)));
     assertEquals(LocalDate.of(2019,05,17),cal.nextOrSame(LocalDate.of(2019,5,15)));
     assertEquals(LocalDate.of(2019,05,17),cal.nextOrSame(LocalDate.of(2019,5,16)));

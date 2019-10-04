@@ -1,42 +1,42 @@
 package org.blacksmith.finlib.calendar.policy;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
+import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.finlib.calendar.HolidayPolicy;
 import org.blacksmith.finlib.calendar.HolidayProvider;
 
-public class YearMonthDaySetHolidayProvider
-    implements HolidayProvider<LocalDate> {
+public abstract class AbstractHolidayPolicySet<U extends TemporalAccessor> implements HolidayPolicy {
 
-  private final Set<LocalDate> holidays = new HashSet<>();
+  private final Set<U> holidays = new HashSet<>();
 
-  public YearMonthDaySetHolidayProvider() {  }
+  public AbstractHolidayPolicySet() {}
 
-  public YearMonthDaySetHolidayProvider(Set<LocalDate> holidays) {
+  public AbstractHolidayPolicySet(Set<U> holidays) {
     Validate.checkNotNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(holidays);
   }
 
-  public void add(LocalDate d) {
+  public void add(U d) {
     this.holidays.add(d);
   }
 
-  public void add(Collection<LocalDate> holidays) {
+  public void addAll(Collection<U> holidays) {
     Validate.checkNotNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(holidays); }
 
   public void clear() {
-    this.holidays.clear();
+    holidays.clear();
   }
+
+  public abstract U convertDate(LocalDate date);
 
   @Override
-  public boolean contains(LocalDate date) {
+  public boolean isHoliday(LocalDate date) {
     return holidays.contains(convertDate(date));
-  }
-
-  private LocalDate convertDate(LocalDate date) {
-    return date;
   }
 }
