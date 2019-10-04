@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.basic;
+package org.blacksmith.finlib.dayconvention.utils;
 
 import java.time.LocalDate;
 

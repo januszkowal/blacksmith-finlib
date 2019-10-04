@@ -1,15 +1,12 @@
 package org.blacksmith.finlib.calendar;
 
-import org.blacksmith.commons.enums.EnumUtils;
-import org.blacksmith.finlib.basic.InterestBasis;
-import org.blacksmith.finlib.basic.ScheduleInfo;
-import org.blacksmith.finlib.basic.StandardInterestBasis;
+import org.blacksmith.finlib.dayconvention.InterestBasis;
+import org.blacksmith.finlib.schedule.ScheduleInfo;
+import org.blacksmith.finlib.dayconvention.StandardInterestBasis;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 

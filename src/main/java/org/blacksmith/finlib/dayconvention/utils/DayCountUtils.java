@@ -1,10 +1,11 @@
-package org.blacksmith.finlib.basic;
+package org.blacksmith.finlib.dayconvention.utils;
 
 import java.time.LocalDate;
 
-import static org.blacksmith.commons.date.DateUtils.daysBetween;
-import static org.blacksmith.commons.date.DateUtils.isLastDayOfFebruary;
-import static org.blacksmith.commons.date.DateUtils.nextLeapDay;
+
+import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
+import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
+import static org.blacksmith.commons.datetime.DateUtils.nextLeapDay;
 
 public class DayCountUtils {
   public static int days360(int y1, int m1, int d1, int y2, int m2, int d2) {

@@ -1,17 +1,22 @@
-package org.blacksmith.finlib.basic;
+package org.blacksmith.finlib.dayconvention;
 
 import java.time.LocalDate;
 import java.time.Period;
 
+import org.blacksmith.commons.datetime.Frequency;
+import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
+import org.blacksmith.finlib.dayconvention.utils.YMD;
+import org.blacksmith.finlib.schedule.ScheduleInfo;
+
 
 import static java.lang.Math.toIntExact;
-import static org.blacksmith.commons.date.DateUtils.daysBetween;
-import static org.blacksmith.commons.date.DateUtils.isLastDayOfFebruary;
-import static org.blacksmith.commons.date.DateUtils.isLeapDayInPeriod;
-import static org.blacksmith.commons.date.DateUtils.nextLeapDay;
+import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
+import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
+import static org.blacksmith.commons.datetime.DateUtils.isLeapDayInPeriod;
+import static org.blacksmith.commons.datetime.DateUtils.nextLeapDay;
 
 //TR:A,B,C,D,E,F,G,J,K,L,N
-public enum StandardInterestBasis implements  InterestBasis {
+public enum StandardInterestBasis implements InterestBasis {
 
   /**
    * Always one

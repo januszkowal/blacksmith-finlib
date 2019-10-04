@@ -1,6 +1,7 @@
-package org.blacksmith.finlib.basic;
+package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
+import org.blacksmith.commons.datetime.Frequency;
 
 public class ScheduleInfo {
   private final boolean isEndOfMonthConvention;
