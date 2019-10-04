@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.schedule;
+package org.blacksmith.finlib.interestbasis.schedule;
 
 import java.time.LocalDate;
 import org.blacksmith.commons.datetime.Frequency;

@@ -1,7 +1,7 @@
-package org.blacksmith.finlib.dayconvention;
+package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.schedule.ScheduleInfo;
+import org.blacksmith.finlib.interestbasis.schedule.ScheduleInfo;
 
 public interface InterestBasis {
   /**

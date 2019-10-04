@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.dayconvention;
+package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -6,7 +6,7 @@ import java.time.Period;
 import org.blacksmith.commons.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
 import org.blacksmith.finlib.dayconvention.utils.YMD;
-import org.blacksmith.finlib.schedule.ScheduleInfo;
+import org.blacksmith.finlib.interestbasis.schedule.ScheduleInfo;
 
 
 import static java.lang.Math.toIntExact;
