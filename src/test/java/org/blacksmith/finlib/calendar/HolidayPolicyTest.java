@@ -6,10 +6,9 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.DefaultHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.MonthDayPolicySet;
-import org.blacksmith.finlib.calendar.policy.WeekDayPolicySet;
-import org.blacksmith.finlib.calendar.policy.YearMonthDayPolicySet;
+import org.blacksmith.finlib.calendar.policy.MonthDaySetPolicy;
+import org.blacksmith.finlib.calendar.policy.WeekDaySetPolicy;
+import org.blacksmith.finlib.calendar.policy.YearMonthDaySetPolicy;
 import org.junit.jupiter.api.Test;
 
 
@@ -18,14 +17,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class HolidayPolicyTest {
   @Test
   public void holidayByWeekDay1() {
-    HolidayPolicy policy = WeekDayPolicySet.SAT_SUN;
+    HolidayPolicy policy = WeekDaySetPolicy.SAT_SUN;
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,25)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,26)));
   }
   @Test
   public void holidayByWeekDay2() {
-    HolidayPolicy policy = new WeekDayPolicySet(new int[]{3,4});
+    HolidayPolicy policy = new WeekDaySetPolicy(new int[]{3,4});
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,16)));
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,25)));
@@ -39,7 +38,7 @@ public class HolidayPolicyTest {
         MonthDay.of(12,25),
         MonthDay.of(12,26)
     ).stream().collect(Collectors.toSet());
-    HolidayPolicy policy = new MonthDayPolicySet(mdays);
+    HolidayPolicy policy = new MonthDaySetPolicy(mdays);
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,1,15)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,20)));
@@ -56,7 +55,7 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,6,10)
     ).stream().collect(Collectors.toSet());
-    HolidayPolicy policy = new YearMonthDayPolicySet(days);
+    HolidayPolicy policy = new YearMonthDaySetPolicy(days);
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,1,15)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,20)));
@@ -80,8 +79,8 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,7,15),
         LocalDate.of(2019,9,10)
     ).stream().collect(Collectors.toSet());
-    HolidayPolicy policy1 = new MonthDayPolicySet(hset1);
-    HolidayPolicy policy2 = new YearMonthDayPolicySet(hset2);
+    HolidayPolicy policy1 = new MonthDaySetPolicy(hset1);
+    HolidayPolicy policy2 = new YearMonthDaySetPolicy(hset2);
 
     CombinedHolidayPolicy policy = null;
 

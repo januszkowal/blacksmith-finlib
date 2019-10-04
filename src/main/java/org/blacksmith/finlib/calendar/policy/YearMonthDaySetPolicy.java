@@ -3,11 +3,11 @@ package org.blacksmith.finlib.calendar.policy;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class YearMonthDayPolicySet extends AbstractHolidayPolicySet<LocalDate> {
+public class YearMonthDaySetPolicy extends AbstractHolidaySetPolicy<LocalDate> {
 
-  public YearMonthDayPolicySet() {  }
+  public YearMonthDaySetPolicy() {  }
 
-  public YearMonthDayPolicySet(Set<LocalDate> holidays) {
+  public YearMonthDaySetPolicy(Set<LocalDate> holidays) {
     this.addAll(holidays);
   }
 

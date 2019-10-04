@@ -4,13 +4,13 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.util.Set;
 
-public class MonthDayPolicySet extends AbstractHolidayPolicySet<MonthDay>
+public class MonthDaySetPolicy extends AbstractHolidaySetPolicy<MonthDay>
 {
-  public MonthDayPolicySet() {
+  public MonthDaySetPolicy() {
     super();
   }
 
-  public MonthDayPolicySet(Set<MonthDay> holidays) {
+  public MonthDaySetPolicy(Set<MonthDay> holidays) {
     super(holidays);
   }
 

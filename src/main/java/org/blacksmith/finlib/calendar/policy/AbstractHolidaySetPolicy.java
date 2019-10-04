@@ -10,13 +10,13 @@ import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 import org.blacksmith.finlib.calendar.HolidayProvider;
 
-public abstract class AbstractHolidayPolicySet<U extends TemporalAccessor> implements HolidayPolicy {
+public abstract class AbstractHolidaySetPolicy<U extends TemporalAccessor> implements HolidayPolicy {
 
   private final Set<U> holidays = new HashSet<>();
 
-  public AbstractHolidayPolicySet() {}
+  public AbstractHolidaySetPolicy() {}
 
-  public AbstractHolidayPolicySet(Set<U> holidays) {
+  public AbstractHolidaySetPolicy(Set<U> holidays) {
     Validate.checkNotNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(holidays);
   }
