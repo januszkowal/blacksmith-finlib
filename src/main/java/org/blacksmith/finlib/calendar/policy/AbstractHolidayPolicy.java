@@ -15,9 +15,7 @@ public abstract class AbstractHolidayPolicy {
   }
 
   public boolean isHoliday(LocalDate date) {
-    return (next==null) ?
-        currentIsHoliday(date) :
-        currentIsHoliday(date) && next.isHoliday(date);
+    return currentIsHoliday(date) && (next==null) ? true : next.isHoliday(date);
   }
 
   public abstract boolean currentIsHoliday(LocalDate date);

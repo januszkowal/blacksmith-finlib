@@ -1,14 +1,12 @@
 package org.blacksmith.finlib.calendar.policy;
 
 import java.time.LocalDate;
-import java.time.MonthDay;
 import java.time.temporal.TemporalAccessor;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
-import org.blacksmith.finlib.calendar.HolidayProvider;
 
 public abstract class AbstractHolidaySetPolicy<U extends TemporalAccessor> implements HolidayPolicy {
 
