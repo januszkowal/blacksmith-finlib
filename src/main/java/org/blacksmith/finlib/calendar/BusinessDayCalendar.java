@@ -3,7 +3,7 @@ package org.blacksmith.finlib.calendar;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.blacksmith.commons.arg.Validate;
-import org.blacksmith.commons.date.DateUtils;
+import org.blacksmith.commons.datetime.DateUtils;
 
 public interface BusinessDayCalendar {
   /**

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import static org.blacksmith.commons.date.DateUtils.daysBetween;
-import static org.blacksmith.commons.date.DateUtils.nextOrSameLeapDay;
+import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
+import static org.blacksmith.commons.datetime.DateUtils.nextOrSameLeapDay;
 
 public class DayCountTest {
 

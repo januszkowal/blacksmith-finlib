@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data(staticConstructor = "of")
+@Data
 @AllArgsConstructor
 public class YMD {
   int year;

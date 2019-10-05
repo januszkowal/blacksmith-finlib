@@ -6,3 +6,6 @@ build
 /out
 /.idea
 *.iml
+.classpath
+.project
+.settings/org.eclipse.buildship.core.prefs
