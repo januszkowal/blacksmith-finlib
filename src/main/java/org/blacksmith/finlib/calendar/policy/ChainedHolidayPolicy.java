@@ -18,12 +18,12 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   private Set<HolidayProvider> holidayProviders = new LinkedHashSet<>();
   
   public ChainedHolidayPolicy(Collection<HolidayProvider> providers) {
-    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
+    Validate.checkNotEmpty(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(providers);
   }
   
   public ChainedHolidayPolicy(HolidayProvider...providers) {
-    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
+    Validate.checkNotEmpty(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(Arrays.stream(providers).collect(Collectors.toList()));
   }
   

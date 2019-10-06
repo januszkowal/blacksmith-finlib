@@ -16,15 +16,23 @@ public class StandardHolidayPolicy implements HolidayPolicy {
   private Set<HolidayProvider> holidayProviders = new LinkedHashSet<>();
   
   public StandardHolidayPolicy(Collection<HolidayProvider> providers) {
-    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
+    Validate.checkNotEmpty(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(providers);
   }
   
   public StandardHolidayPolicy(HolidayProvider...providers) {
-    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
+    Validate.checkNotEmpty(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(Arrays.stream(providers).collect(Collectors.toList()));
   }
   
+  public static StandardHolidayPolicy of(Collection<HolidayProvider> providers) {
+    return new StandardHolidayPolicy(providers);
+  }
+  
+  public static StandardHolidayPolicy of(HolidayProvider...providers) {
+    return new StandardHolidayPolicy(providers);
+  }
+
   /*
    * Providers are used respectively in order they were inserted
    * */

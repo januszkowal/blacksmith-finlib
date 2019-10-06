@@ -17,21 +17,28 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   public CombinedHolidayPolicy(){}
   
   public CombinedHolidayPolicy(Collection<HolidayPolicy> holidayPolicies){
-    Validate.checkNotNull(holidayPolicies, NULL_POLICIES_MESSAGE);
-    this.holidayPolicies.addAll(holidayPolicies);
+    addPolicies(holidayPolicies);
   }
   
   public CombinedHolidayPolicy(HolidayPolicy... holidayPolicies){
     addPolicies(holidayPolicies);
   }
   
+  public static CombinedHolidayPolicy of (Collection<HolidayPolicy> holidayPolicies){
+    return new CombinedHolidayPolicy(holidayPolicies);
+  }
+  
+  public static CombinedHolidayPolicy of(HolidayPolicy... holidayPolicies){
+    return new CombinedHolidayPolicy(holidayPolicies);
+  }
+
   public void addPolicies(HolidayPolicy...holidayPolicies) {
-    Validate.checkNotNull(holidayPolicies, NULL_POLICIES_MESSAGE);
+    Validate.checkNotEmpty(holidayPolicies, NULL_POLICIES_MESSAGE);
     this.holidayPolicies.addAll(Arrays.stream(holidayPolicies).collect(Collectors.toList()));
   }
   
   public void addPolicies(Collection<HolidayPolicy> holidayPolicies) {
-    Validate.checkNotNull(holidayPolicies, "Null holiday policy not allowed");
+    Validate.checkNotEmpty(holidayPolicies, "Null holiday policy not allowed");
     this.holidayPolicies.addAll(holidayPolicies);
   }
   

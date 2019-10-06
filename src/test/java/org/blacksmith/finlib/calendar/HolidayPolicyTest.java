@@ -121,9 +121,9 @@ public class HolidayPolicyTest {
     HolidayProvider provider2 = new HolidaySetProvider<LocalDate>(StandardDateToPartConverters.YEAR_DAY,hset2);
     
     HolidayProvider[] hpa = {provider1,provider2};
-    checkPolicyGroup1("chk1.1",new StandardHolidayPolicy(provider1));
-    checkPolicyGroup2("chk1.2",new StandardHolidayPolicy(provider1,provider2));
-    checkPolicyGroup2("chk1.3",new StandardHolidayPolicy(hpa));
+    checkPolicyGroup1("chk1.1",StandardHolidayPolicy.of(provider1));
+    checkPolicyGroup2("chk1.2",StandardHolidayPolicy.of(provider1,provider2));
+    checkPolicyGroup2("chk1.3",StandardHolidayPolicy.of(hpa));
     
     checkPolicyGroup1("chk2.1",ChainedHolidayPolicy.builder()
         .providers(provider1)
@@ -137,8 +137,8 @@ public class HolidayPolicyTest {
             .build())
         .build());
 
-    checkPolicyGroup1("chk3.1",new CombinedHolidayPolicy(new StandardHolidayPolicy(provider1)));
-    checkPolicyGroup2("chk3.2",new CombinedHolidayPolicy(new StandardHolidayPolicy(provider1),new StandardHolidayPolicy(provider2)));
-    checkPolicyGroup2("chk3.3",new CombinedHolidayPolicy(new StandardHolidayPolicy(provider2),new StandardHolidayPolicy(provider1)));
+    checkPolicyGroup1("chk3.1",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider1)));
+    checkPolicyGroup2("chk3.2",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider1),new StandardHolidayPolicy(provider2)));
+    checkPolicyGroup2("chk3.3",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider2),new StandardHolidayPolicy(provider1)));
 }
 }
