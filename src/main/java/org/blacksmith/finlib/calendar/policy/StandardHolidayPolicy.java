@@ -11,14 +11,17 @@ import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public class StandardHolidayPolicy implements HolidayPolicy {
   
+  private static final String NULL_PROVIDERS_MESSAGE = "Null providers list not allowed";
+  
   private Set<HolidayProvider> holidayProviders = new LinkedHashSet<>();
   
   public StandardHolidayPolicy(Collection<HolidayProvider> providers) {
+    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(providers);
   }
   
   public StandardHolidayPolicy(HolidayProvider...providers) {
-    Validate.checkNotNull(providers, "Null providers list not allowed");
+    Validate.checkNotNull(providers, NULL_PROVIDERS_MESSAGE);
     this.holidayProviders.addAll(Arrays.stream(providers).collect(Collectors.toList()));
   }
   

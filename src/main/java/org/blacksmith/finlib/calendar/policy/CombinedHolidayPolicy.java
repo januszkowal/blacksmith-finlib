@@ -10,23 +10,24 @@ import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public class CombinedHolidayPolicy implements HolidayPolicy {
+  private static final String NULL_POLICIES_MESSAGE = "Null policies list not allowed";
+  
   private List<HolidayPolicy> holidayPolicies = new ArrayList<>();
   
   public CombinedHolidayPolicy(){}
   
-  public CombinedHolidayPolicy(Collection<HolidayPolicy> policies){
-    Validate.checkNotNull(holidayPolicies, "Null holiday policy list not allowed");
-    this.holidayPolicies.addAll(policies);
+  public CombinedHolidayPolicy(Collection<HolidayPolicy> holidayPolicies){
+    Validate.checkNotNull(holidayPolicies, NULL_POLICIES_MESSAGE);
+    this.holidayPolicies.addAll(holidayPolicies);
   }
   
-  public CombinedHolidayPolicy(HolidayPolicy... holidayPolicy){
-    Validate.checkNotNull(holidayPolicies, "Null holiday policy list not allowed");
-    this.holidayPolicies.addAll(Arrays.stream(holidayPolicy).collect(Collectors.toList()));
+  public CombinedHolidayPolicy(HolidayPolicy... holidayPolicies){
+    addPolicies(holidayPolicies);
   }
   
-  public void addPolicies(HolidayPolicy... holidayPolicy) {
-    Validate.checkNotNull(holidayPolicies, "Null holiday policy not allowed");
-    holidayPolicies.addAll(Arrays.stream(holidayPolicy).collect(Collectors.toList()));
+  public void addPolicies(HolidayPolicy...holidayPolicies) {
+    Validate.checkNotNull(holidayPolicies, NULL_POLICIES_MESSAGE);
+    this.holidayPolicies.addAll(Arrays.stream(holidayPolicies).collect(Collectors.toList()));
   }
   
   public void addPolicies(Collection<HolidayPolicy> holidayPolicies) {

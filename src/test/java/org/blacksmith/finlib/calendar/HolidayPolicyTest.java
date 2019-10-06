@@ -31,7 +31,7 @@ public class HolidayPolicyTest {
   }
   @Test
   public void holidayByWeekDay2() {
-    HolidayProvider provider = new WeekDaySetPolicy(new int[]{3,4});
+    HolidayProvider provider = WeekDaySetPolicy.of(3,4);
     assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,16)));
     assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,25)));
@@ -45,7 +45,7 @@ public class HolidayPolicyTest {
         MonthDay.of(12,25),
         MonthDay.of(12,26)
     ).stream().collect(Collectors.toSet());
-    HolidayProvider provider = new HolidaySetProvider<MonthDay>(StandardDateToPartConverters.MONTH_DAY,mdays);
+    HolidayProvider provider = HolidaySetProvider.of(StandardDateToPartConverters.MONTH_DAY,mdays);
     assertEquals(false,provider.isHoliday(LocalDate.of(2019,1,15)));
     assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,20)));
@@ -62,7 +62,7 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,6,10)
     ).stream().collect(Collectors.toSet());
-    HolidayProvider provider = new HolidaySetProvider<LocalDate>(StandardDateToPartConverters.YEAR_DAY,days);
+    HolidayProvider provider = HolidaySetProvider.of(StandardDateToPartConverters.YEAR_DAY,days);
     assertEquals(false,provider.isHoliday(LocalDate.of(2019,1,15)));
     assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
     assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,20)));

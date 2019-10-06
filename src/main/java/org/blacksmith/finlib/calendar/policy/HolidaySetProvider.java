@@ -33,6 +33,15 @@ public class HolidaySetProvider<U extends TemporalAccessor> implements HolidayPr
     this.converter = converter;
   }
 
+  public static <U extends TemporalAccessor> HolidaySetProvider<U> of (DateToPartConverter<U> converter,Collection<U> holidays) {
+    return new HolidaySetProvider<>(converter,holidays);
+  }
+
+  @SafeVarargs
+  public static <U extends TemporalAccessor> HolidaySetProvider<U> of (DateToPartConverter<U> converter,U...holidays) {
+    return new HolidaySetProvider<>(converter,holidays);
+  }
+
   public void add(U d) {
     this.holidays.add(d);
   }
