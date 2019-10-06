@@ -23,7 +23,7 @@ public class DayCountTest {
       @Override public double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
         LocalDate end = endDate;
         LocalDate start = endDate.minusYears(1);
-        int yearsx = 0;
+        long yearsx = 0;
         while (!start.isBefore(startDate)) {
           yearsx++;
           end = start;

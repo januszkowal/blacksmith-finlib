@@ -1,23 +1,27 @@
 package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.calendar.policy.YearMonthDaySetPolicy;
+import org.blacksmith.finlib.calendar.policy.HolidaySetProvider;
+import org.blacksmith.finlib.calendar.policy.StandardHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-
+import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("BusinessDayCalendarTest")
+@ExtendWith(org.blacksmith.finlib.test.TimingExtension.class)
 public class BusinessDayCalendarTest {
   @Test
   public void holidayByWeekDay1() {
     /*
     holidays: 2019-05-15, 2019-05-16, 2019-05-17
     * */
-    YearMonthDaySetPolicy ymdPolicy = new YearMonthDaySetPolicy();
-    ymdPolicy.add(LocalDate.of(2019,5,15));
-    ymdPolicy.add(LocalDate.of(2019,5,16));
-    ymdPolicy.add(LocalDate.of(2019,6,15));
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(ymdPolicy);
+    HolidaySetProvider<LocalDate> ymdProvider = new HolidaySetProvider<>(StandardDateToPartConverters.YEAR_DAY);
+    ymdProvider.add(LocalDate.of(2019,5,15));
+    ymdProvider.add(LocalDate.of(2019,5,16));
+    ymdProvider.add(LocalDate.of(2019,6,15));
+    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(new StandardHolidayPolicy(ymdProvider));
     assertEquals(LocalDate.of(2019,05,14),cal.nextOrSame(LocalDate.of(2019,5,14)));
     assertEquals(LocalDate.of(2019,05,17),cal.nextOrSame(LocalDate.of(2019,5,15)));
     assertEquals(LocalDate.of(2019,05,17),cal.nextOrSame(LocalDate.of(2019,5,16)));

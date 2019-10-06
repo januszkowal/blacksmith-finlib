@@ -165,12 +165,12 @@ public enum StandardInterestBasis implements InterestBasis {
       int y2 = endDate.getYear();
       double firstYearLength = startDate.lengthOfYear();
       if (y1 == y2) {
-        double actualDays = endDate.getDayOfYear() - startDate.getDayOfYear();
+        double actualDays = (double)endDate.getDayOfYear() - startDate.getDayOfYear();
         return actualDays / firstYearLength;
       }
       else {
         double firstYearDays = firstYearLength - startDate.getDayOfYear() + 1;
-        double lastYearDays = endDate.getDayOfYear() - 1;
+        double lastYearDays = (double)endDate.getDayOfYear() - 1;
         double lastYearLength = endDate.lengthOfYear();
         return firstYearDays / firstYearLength +
             lastYearDays / lastYearLength +
@@ -249,8 +249,8 @@ public enum StandardInterestBasis implements InterestBasis {
         long prevNominalEpochDay = prevNominal.toEpochDay();
         long startEpochDay = start.toEpochDay();
         long endEpochDay = end.toEpochDay();
-        double periodDays = curNominalEpochDay - prevNominalEpochDay;
-        double actualDays = Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
+        double periodDays = (double)curNominalEpochDay - prevNominalEpochDay;
+        double actualDays = (double)Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
         return actualDays / (freq.eventsPerYear() * periodDays);
       }
       return 0;

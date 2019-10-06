@@ -1,12 +1,11 @@
 package org.blacksmith.finlib.calendar.policy;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
 
-public class WeekDaySetPolicy extends AbstractHolidaySetPolicy<DayOfWeek> {
+public class WeekDaySetPolicy extends HolidaySetProvider<DayOfWeek> {
 
   public static final WeekDaySetPolicy SAT_SUN = new WeekDaySetPolicy(new DayOfWeek[]{
     DayOfWeek.SATURDAY,DayOfWeek.SUNDAY});
@@ -18,16 +17,11 @@ public class WeekDaySetPolicy extends AbstractHolidaySetPolicy<DayOfWeek> {
       DayOfWeek.THURSDAY,DayOfWeek.FRIDAY});
 
   public WeekDaySetPolicy(DayOfWeek[] weekendDays) {
-    Validate.checkNotNull(weekendDays, "Null week days not allowed");
-    this.addAll(Arrays.stream(weekendDays).collect(Collectors.toSet()));
+    super(StandardDateToPartConverters.WEEK_DAY,weekendDays);
   }
 
   public WeekDaySetPolicy(int[] weekendDays) {
-    Validate.checkNotNull(weekendDays, "Null week days not allowed");
-    this.addAll(Arrays.stream(weekendDays).boxed().map(d->DayOfWeek.of(d)).collect(Collectors.toSet()));
+    super(StandardDateToPartConverters.WEEK_DAY,Arrays.stream(weekendDays).boxed().map(DayOfWeek::of).collect(Collectors.toSet()));
   }
 
-  public DayOfWeek convertDate(LocalDate date) {
-    return date.getDayOfWeek();
-  }
 }
