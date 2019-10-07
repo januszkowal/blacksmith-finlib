@@ -213,6 +213,7 @@ public interface BusinessDayCalendar {
   default LocalDate lastBusinessDayOfMonth(LocalDate date) {
     return previousOrSame(date.withDayOfMonth(date.lengthOfMonth()));
   }
+
   /**
    * Calculates the number of business days between two dates.
    * <p>
@@ -227,7 +228,26 @@ public interface BusinessDayCalendar {
    */
   default int daysBetween(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return Math.toIntExact(DateUtils.stream(startInclusive, endExclusive)
+    return Math.toIntExact(DateUtils.streamRange(startInclusive, endExclusive)
+        .filter(this::isBusinessDay)
+        .count());
+  }
+
+  /**
+   * Calculates the number of business days between two dates.
+   * <p>
+   * This calculates the number of business days within the range.
+   * If the dates are equal, zero is returned.
+   * If the end is before the start, an exception is thrown.
+   *
+   * @param startInclusive  the start date
+   * @param endInclusive  the end date (including)
+   * @return the total number of business days between the start and end date
+   * @throws IllegalArgumentException if either date is outside the supported range
+   */
+  default int daysBetweenRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
+    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
+    return Math.toIntExact(DateUtils.streamRangeClosed(startInclusive, endInclusive)
         .filter(this::isBusinessDay)
         .count());
   }
@@ -246,7 +266,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> businessDays(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return DateUtils.stream(startInclusive, endExclusive)
+    return DateUtils.streamRange(startInclusive, endExclusive)
         .filter(this::isBusinessDay);
   }
 
@@ -262,9 +282,9 @@ public interface BusinessDayCalendar {
    * @return the stream of business days
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> businessDaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
+  default Stream<LocalDate> businessDaysRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
     Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return DateUtils.stream(startInclusive, endInclusive.plusDays(1))
+    return DateUtils.streamRangeClosed(startInclusive, endInclusive)
         .filter(this::isBusinessDay);
   }
 
@@ -282,7 +302,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> holidays(LocalDate startInclusive, LocalDate endExclusive) {
     Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return DateUtils.stream(startInclusive, endExclusive)
+    return DateUtils.streamRange(startInclusive, endExclusive)
         .filter(this::isHoliday);
   }
 
@@ -298,9 +318,9 @@ public interface BusinessDayCalendar {
    * @return the stream of holidays
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> holidaysEndInclusive(LocalDate startInclusive, LocalDate endInclusive) {
+  default Stream<LocalDate> holidaysRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
     Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return DateUtils.stream(startInclusive, endInclusive.plusDays(1))
+    return DateUtils.streamRangeClosed(startInclusive, endInclusive)
         .filter(this::isHoliday);
   }
 }
