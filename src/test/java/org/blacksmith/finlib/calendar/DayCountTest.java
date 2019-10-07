@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.calendar;
 
 import org.blacksmith.finlib.interestbasis.InterestBasis;
-import org.blacksmith.finlib.interestbasis.schedule.ScheduleInfo;
+import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
