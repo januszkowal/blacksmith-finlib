@@ -11,7 +11,12 @@ public class BusinessDayCalendarWithPolicy implements BusinessDayCalendar {
     this.holidayPolicy = holidayPolicy;
   }
 
+  public static BusinessDayCalendarWithPolicy of(HolidayPolicy holidayPolicy) {
+    return new BusinessDayCalendarWithPolicy(holidayPolicy);
+  }
+
   public boolean isHoliday(LocalDate date) {
+    Validate.checkNotNull(date);
     return holidayPolicy.isHoliday(date);
   }
 }

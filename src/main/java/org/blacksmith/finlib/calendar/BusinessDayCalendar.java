@@ -3,6 +3,7 @@ package org.blacksmith.finlib.calendar;
 import java.time.LocalDate;
 import java.util.stream.Stream;
 import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.datetime.DateRange;
 import org.blacksmith.commons.datetime.DateUtils;
 
 public interface BusinessDayCalendar {
@@ -27,6 +28,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default boolean isBusinessDay(LocalDate date) {
+    Validate.checkNotNull(date);
     return !isHoliday(date);
   }
 
@@ -43,6 +45,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate shift(LocalDate date, int amount) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = date;
     if (amount > 0) {
       for (int i = 0; i < amount; i++) {
@@ -66,6 +69,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate next(LocalDate date) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = date.plusDays(1);
     return isHoliday(adjusted) ? next(adjusted) : adjusted;
   }
@@ -78,6 +82,7 @@ public interface BusinessDayCalendar {
    * @return Next n-th business day
    */
   default LocalDate next(LocalDate date, int amount) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = date;
     for (int i = 0; i < amount; i++) {
       adjusted = next(adjusted);
@@ -97,6 +102,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate nextOrSame(LocalDate date) {
+    Validate.checkNotNull(date);
     return isHoliday(date) ? next(date) : date;
   }
 
@@ -110,6 +116,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previous(LocalDate date) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = date.minusDays(1);
     return isHoliday(adjusted) ? previous(adjusted) : adjusted;
   }
@@ -122,6 +129,7 @@ public interface BusinessDayCalendar {
    * @return Prior n-th business day
    */
   default LocalDate previous(LocalDate date, int amount) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = date;
     for (int i = 0; i < amount; i++) {
       adjusted = previous(adjusted);
@@ -141,6 +149,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previousOrSame(LocalDate date) {
+    Validate.checkNotNull(date);
     return isHoliday(date) ? previous(date) : date;
   }
 
@@ -162,6 +171,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate nextSameOrLastInMonth(LocalDate date) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = nextOrSame(date);
     return (adjusted.getMonthValue() != date.getMonthValue() ? previous(adjusted) : adjusted);
   }
@@ -184,6 +194,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previousSameOrLastInMonth(LocalDate date) {
+    Validate.checkNotNull(date);
     LocalDate adjusted = previousOrSame(date);
     return (adjusted.getMonthValue() != date.getMonthValue() ? next(date) : adjusted);
   }
@@ -198,6 +209,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default boolean isLastBusinessDayOfMonth(LocalDate date) {
+    Validate.checkNotNull(date);
     return isBusinessDay(date) && next(date).getMonthValue() != date.getMonthValue();
   }
 
@@ -211,116 +223,65 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default LocalDate lastBusinessDayOfMonth(LocalDate date) {
+    Validate.checkNotNull(date);
     return previousOrSame(date.withDayOfMonth(date.lengthOfMonth()));
   }
 
   /**
-   * Calculates the number of business days between two dates.
+   * Gets the stream of business days within range
    * <p>
-   * This calculates the number of business days within the range.
-   * If the dates are equal, zero is returned.
-   * If the end is before the start, an exception is thrown.
-   *
-   * @param startInclusive  the start date
-   * @param endExclusive  the end date
-   * @return the total number of business days between the start and end date
-   * @throws IllegalArgumentException if either date is outside the supported range
-   */
-  default int daysBetween(LocalDate startInclusive, LocalDate endExclusive) {
-    Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return Math.toIntExact(DateUtils.streamRange(startInclusive, endExclusive)
-        .filter(this::isBusinessDay)
-        .count());
-  }
-
-  /**
-   * Calculates the number of business days between two dates.
-   * <p>
-   * This calculates the number of business days within the range.
-   * If the dates are equal, zero is returned.
-   * If the end is before the start, an exception is thrown.
-   *
-   * @param startInclusive  the start date
-   * @param endInclusive  the end date (including)
-   * @return the total number of business days between the start and end date
-   * @throws IllegalArgumentException if either date is outside the supported range
-   */
-  default int daysBetweenRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
-    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return Math.toIntExact(DateUtils.streamRangeClosed(startInclusive, endInclusive)
-        .filter(this::isBusinessDay)
-        .count());
-  }
-
-  /**
-   * Gets the stream of business days between the two dates.
-   * <p>
-   * This method will treat weekends as holidays.
    * If the dates are equal, an empty stream is returned.
    * If the end is before the start, an exception is thrown.
    *
-   * @param startInclusive  the start date
-   * @param endExclusive  the end date
+   * @param range the date range
    * @return the stream of business days
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> businessDays(LocalDate startInclusive, LocalDate endExclusive) {
-    Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return DateUtils.streamRange(startInclusive, endExclusive)
+  default Stream<LocalDate> businessDays(DateRange range) {
+    Validate.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
+    return DateUtils.stream(range)
         .filter(this::isBusinessDay);
   }
 
   /**
-   * Gets the stream of business days between the two dates.
+   * Calculates the number of business days within range.
    * <p>
-   * This method will treat weekends as holidays.
-   * If the dates are equal, an empty stream is returned.
-   * If the end is before the start, an exception is thrown.
    *
-   * @param startInclusive  the start date
-   * @param endInclusive  the end date
+   * @param range the date range
    * @return the stream of business days
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> businessDaysRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
-    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return DateUtils.streamRangeClosed(startInclusive, endInclusive)
-        .filter(this::isBusinessDay);
+  default int businessDaysCount(DateRange range) {
+    Validate.checkNotNull(range);
+    return Math.toIntExact(businessDays(range).count());
   }
 
   /**
-   * Gets the stream of holidays between the two dates.
+   * Gets the stream of holidays within range.
    * <p>
-   * This method will treat weekends as holidays.
    * If the dates are equal, an empty stream is returned.
    * If the end is before the start, an exception is thrown.
    *
-   * @param startInclusive  the start date
-   * @param endExclusive  the end date
+   * @param range  the date range
    * @return the stream of holidays
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> holidays(LocalDate startInclusive, LocalDate endExclusive) {
-    Validate.inOrderOrEqual(startInclusive, endExclusive, "Start date must be later or equal than end date");
-    return DateUtils.streamRange(startInclusive, endExclusive)
+  default Stream<LocalDate> holidays(DateRange range) {
+    Validate.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
+    return DateUtils.stream(range)
         .filter(this::isHoliday);
   }
-
   /**
-   * Gets the stream of holidays between the two dates.
+   * Calculates the number of holidays within range.
    * <p>
-   * This method will treat weekends as holidays.
    * If the dates are equal, an empty stream is returned.
    * If the end is before the start, an exception is thrown.
    *
-   * @param startInclusive  the start date
-   * @param endInclusive  the end date
+   * @param range  the date range
    * @return the stream of holidays
    * @throws IllegalArgumentException if either date is outside the supported range
    */
-  default Stream<LocalDate> holidaysRangeClosed(LocalDate startInclusive, LocalDate endInclusive) {
-    Validate.inOrderOrEqual(startInclusive, endInclusive, "Start date must be later or equal than end date");
-    return DateUtils.streamRangeClosed(startInclusive, endInclusive)
-        .filter(this::isHoliday);
+  default int holidaysCount(DateRange range) {
+    return Math.toIntExact(holidays(range).count());
   }
 }
