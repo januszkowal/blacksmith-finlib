@@ -44,8 +44,7 @@ public class DayCountUtils {
     if (date1.getDay()==31)
       date1.setDay(30);
     if (date2.getDay()==31) {
-      date2.setDay(1);
-      date2.setMonth(date2.getMonth()+1);
+      date2.setFirstDayOfNextMonth();
     }
     return days360(date1, date2);
   }
@@ -57,8 +56,7 @@ public class DayCountUtils {
     if (date2.getDay()==31) {
       if (date1.getDay() < 30)
       {
-        date2.setDay(1);
-        date2.setMonth(date2.getMonth()+1);
+        date2.setFirstDayOfNextMonth();
       }
       else {
         date2.setDay(30);

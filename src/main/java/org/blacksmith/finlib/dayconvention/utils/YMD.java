@@ -19,4 +19,9 @@ public class YMD {
   public static YMD of(int year, int month, int day) {
     return new YMD(year,month,day);
   }
+
+  public void setFirstDayOfNextMonth() {
+    this.month++;
+    this.day=1;
+  }
 }
