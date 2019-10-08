@@ -1,12 +1,9 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.blacksmith.finlib.dayconvention.utils.Pair;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,32 +15,34 @@ public class ScheduleGenerator {
   public ScheduleGenerator(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
   }
+  public LocalDate getEndDate(LocalDate pmtUnadjusted, LocalDate pmtAdjusted) {
+    return scheduleParameters.isLinkCouponLengthWitPayment() ? pmtAdjusted : pmtUnadjusted;
+  }
   public void generate() {
     LocalDate refDate = scheduleParameters.getReferenceDate();
     LocalDate refDateX = refDate.minusDays(1);
-    LocalDate schPmtDateCalc = null;
+    LocalDate schPmtDateUnadjusted = null;
+    LocalDate schPmtDateAdjusted = null;
     LocalDate schStartDate = scheduleParameters.getStartDate();
     LocalDate schEndDate = null;
-    Pair<LocalDate> endDates = null;
+    
     Set<LocalDate> nonMovablePmtDates = Stream.of(refDate,scheduleParameters.getEndDate()).collect(Collectors.toSet());
     int i=0;
-    LOGGER.info("fff {}",scheduleParameters);
     do {
       i++;
-      schPmtDateCalc = scheduleParameters.getCouponFrequency().plus(refDate,i);
+      schPmtDateUnadjusted = scheduleParameters.getCouponFrequency().plus(refDate,i);
       //scheduleParameters.getBasis().yearFraction()
-      if (schPmtDateCalc.isAfter(refDateX)) {
-        if (nonMovablePmtDates.contains(schPmtDateCalc)) {
-          endDates = Pair.of(schPmtDateCalc,schPmtDateCalc);
+      if (schPmtDateUnadjusted.isAfter(refDateX)) {
+        if (nonMovablePmtDates.contains(schPmtDateUnadjusted)) {
+          schPmtDateAdjusted = schPmtDateUnadjusted;
+          schEndDate = schPmtDateUnadjusted;
         }
         else {
-          endDates = scheduleParameters.getBusinessDayConvention().adjustPair(schPmtDateCalc,scheduleParameters.getBusinessDayCalendar());
+          schPmtDateAdjusted = scheduleParameters.getBusinessDayConvention().adjust(schPmtDateUnadjusted,scheduleParameters.getBusinessDayCalendar());
+          schEndDate = getEndDate(schPmtDateUnadjusted,schPmtDateAdjusted);
         }
-        schEndDate = schPmtDateCalc;
-        LOGGER.info("Item pmtDate={} pmtDateAdj={}",schPmtDateCalc, endDates);
-        //
-        schStartDate = endDates.getValue1();
+        LOGGER.info("Item pmtDateUnadjusted={} pmtDateAdjusted={}",schPmtDateUnadjusted, schPmtDateAdjusted);
       }
-    } while (schPmtDateCalc.isBefore(scheduleParameters.getEndDate()));
+    } while (schPmtDateUnadjusted.isBefore(scheduleParameters.getEndDate()));
   }
 }

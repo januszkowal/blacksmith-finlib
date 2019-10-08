@@ -1,8 +1,7 @@
 package org.blacksmith.finlib.calendar;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.blacksmith.commons.datetime.DateRange;
 import org.blacksmith.finlib.calendar.policy.HolidaySetProvider;
 import org.blacksmith.finlib.calendar.policy.StandardHolidayPolicy;
@@ -13,9 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("BusinessDayCalendarTest")
 @ExtendWith(org.blacksmith.finlib.test.TimingExtension.class)

@@ -17,12 +17,9 @@ public class ScheduleParameters {
   private InterestBasis basis;
   private BusinessDayConvention businessDayConvention;
   private BusinessDayCalendar businessDayCalendar;
+  @Builder.Default
+  private boolean linkCouponLengthWitPayment=true;
   private LocalDate startDate;
   private LocalDate endDate;
   private LocalDate referenceDate;
-
-
-  public static ScheduleParameters SIMPLE_SCHEDULE_PARAMETERS = builder()
-      .isEndOfMonthConvention(true)
-      .build();
 }

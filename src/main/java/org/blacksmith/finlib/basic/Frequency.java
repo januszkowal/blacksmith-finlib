@@ -5,15 +5,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
-import java.util.List;
 import java.util.Locale;
 import org.blacksmith.commons.datetime.DateOperation;
 import org.blacksmith.commons.datetime.TimeUnit;
-
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -281,11 +275,12 @@ public class Frequency implements Serializable, DateOperation {
         return P3Y;
       case 5:
         return P5Y;
+      default:
+        if (years > MAX_YEARS) {
+          throw new IllegalArgumentException(maxYearMsg());
+        }
+        return new Frequency(years, TimeUnit.YEAR);
     }
-    if (years > MAX_YEARS) {
-      throw new IllegalArgumentException(maxYearMsg());
-    }
-    return new Frequency(years, TimeUnit.YEAR);
   }
 
   // extracted to aid inlining
@@ -302,10 +297,11 @@ public class Frequency implements Serializable, DateOperation {
 
 
   public boolean isAnnual() {
-    return (amount!=0)&&((unit== TimeUnit.YEAR) ||
-        (unit== TimeUnit.MONTH && amount%12==0) ||
-        (unit== TimeUnit.QUARTER && amount%4==0) ||
-        (unit== TimeUnit.HALF_YEAR && amount%2==0));
+    return (amount!=0)&&(
+        (unit==TimeUnit.YEAR) ||
+        (unit==TimeUnit.MONTH && amount%12==0) ||
+        (unit==TimeUnit.QUARTER && amount%4==0) ||
+        (unit==TimeUnit.HALF_YEAR && amount%2==0));
   }
 
   public Period toPeriod() {

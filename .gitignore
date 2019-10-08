@@ -9,3 +9,4 @@ build
 .classpath
 .project
 .settings/org.eclipse.buildship.core.prefs
+.settings/org.eclipse.core.resources.prefs
