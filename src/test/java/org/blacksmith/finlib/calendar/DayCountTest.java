@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.calendar;
 
 import org.blacksmith.finlib.interestbasis.InterestBasis;
-import org.blacksmith.finlib.interestbasis.ScheduleInfo;
+import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
@@ -15,12 +15,12 @@ import static org.blacksmith.commons.datetime.DateUtils.nextOrSameLeapDay;
 
 public class DayCountTest {
 
-  private void printFactor(InterestBasis basis, LocalDate startDate, LocalDate endDate) {
-    System.out.println(basis.toString() + ":"+basis.yearFraction(startDate,endDate));
+  private void printFactor(InterestBasis basis, LocalDate startDate, LocalDate endDate, LocalDate calcDate) {
+    System.out.println(basis.toString() + ":"+basis.yearFraction(startDate,endDate,calcDate));
   }
   private InterestBasis testr1() {
     return  new InterestBasis() {
-      @Override public double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+      @Override public double yearFraction(LocalDate startDate, LocalDate endDate, LocalDate calcDate, ScheduleParameters scheduleInfo) {
         LocalDate end = endDate;
         LocalDate start = endDate.minusYears(1);
         long yearsx = 0;
@@ -54,8 +54,8 @@ public class DayCountTest {
         StandardInterestBasis.D30_E_360, StandardInterestBasis.D30_E_365,
         StandardInterestBasis.D30_EPLUS_360, StandardInterestBasis.D30_U_360_EOM,
         StandardInterestBasis.ACT_ACT_YEAR,StandardInterestBasis.ACT_ACT_AFB).stream().collect(Collectors.toList());
-    basiss.forEach(b->printFactor(b,startDate,endDate));
-    printFactor(testr1(),startDate,endDate);
+    basiss.forEach(b->printFactor(b,startDate,endDate,endDate));
+    printFactor(testr1(),startDate,endDate, endDate);
     System.out.println(Arrays.stream(StandardInterestBasis.values()).filter(b->!basiss.contains(b)).collect(Collectors.toList()));
 
   }
