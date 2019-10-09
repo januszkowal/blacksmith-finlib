@@ -40,7 +40,7 @@ public class ScheduleGeneratorTest {
 
   @Test
   public void testSchedule1() {
-    ScheduleGenerator gen = new ScheduleGenerator(createScheduleParamters1());
+    TempScheduleGenerator gen = new TempScheduleGenerator(createScheduleParamters1());
     gen.generate();
   }
 }
