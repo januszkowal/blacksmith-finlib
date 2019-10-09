@@ -641,7 +641,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
   }
 
   // calculate the year fraction, using validated inputs
-  protected double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return calculateYearFractionSimple(startDate, endDate);
   }
 

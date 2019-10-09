@@ -4,9 +4,8 @@ import java.time.LocalDate;
 
 
 import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
-import static org.blacksmith.commons.datetime.DateUtils.numberOfLeapDays;
 import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
-import static org.blacksmith.commons.datetime.DateUtils.nextLeapDay;
+import static org.blacksmith.commons.datetime.DateUtils.numberOfLeapDays;
 
 public class DayCountUtils {
   private DayCountUtils() {}
@@ -78,10 +77,7 @@ public class DayCountUtils {
   }
 
   public static int days365(LocalDate startDate, LocalDate endDate) {
-    int actualDays = daysBetween(startDate, endDate);
-    //without end date
-    int numberOfLeapDays = numberOfLeapDays(startDate, endDate.minusDays(1));
-    return actualDays - numberOfLeapDays;
+    return daysBetween(startDate, endDate) - numberOfLeapDays(startDate, endDate.minusDays(1));
   }
 
   public static int daysBetween30EISDA(LocalDate startDate, LocalDate endDate) {
