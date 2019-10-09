@@ -28,8 +28,8 @@ public class DayCountTest {
         ScheduleInfo.builder()
             .couponEndDate(endDate)
             .couponStartDate(startDate)
-            .scheduleEndDate(endDate)
-            .scheduleStartDate(startDate)
+            .maturityDate(endDate)
+            .startDate(startDate)
             .build()));
   }
   private DayCountConvention testr1() {
@@ -101,8 +101,8 @@ public class DayCountTest {
         LocalDate.of(2003,11,1),
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(2003,11,1))
-            .scheduleEndDate(LocalDate.of(2008,5,1))
+            .startDate(LocalDate.of(2003,11,1))
+            .maturityDate(LocalDate.of(2008,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -112,8 +112,8 @@ public class DayCountTest {
         LocalDate.of(2003,11,1),
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,11,1))
-            .scheduleEndDate(LocalDate.of(2004,5,1))
+            .startDate(LocalDate.of(1999,11,1))
+            .maturityDate(LocalDate.of(2004,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -123,8 +123,8 @@ public class DayCountTest {
         LocalDate.of(2003,11,1),
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1998,11,1))
-            .scheduleEndDate(LocalDate.of(2008,5,1))
+            .startDate(LocalDate.of(1998,11,1))
+            .maturityDate(LocalDate.of(2008,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -143,8 +143,8 @@ public class DayCountTest {
         LocalDate.of(1999,2,1),
         LocalDate.of(1999,7,1),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,2,1))
-            .scheduleEndDate(LocalDate.of(2000,7,1))
+            .startDate(LocalDate.of(1999,2,1))
+            .maturityDate(LocalDate.of(2000,7,1))
             .couponStartDate(LocalDate.of(1999,2,1))
             .couponEndDate(LocalDate.of(1999,7,1))
             .couponFrequency(Frequency.P1Y)
@@ -162,8 +162,8 @@ public class DayCountTest {
         LocalDate.of(1999,7,1),
         LocalDate.of(2000,7,1),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,2,1))
-            .scheduleEndDate(LocalDate.of(2000,7,1))
+            .startDate(LocalDate.of(1999,2,1))
+            .maturityDate(LocalDate.of(2000,7,1))
             .couponStartDate(LocalDate.of(1999,7,1))
             .couponEndDate(LocalDate.of(2000,7,1))
             .couponFrequency(Frequency.P1Y)
@@ -184,8 +184,8 @@ public class DayCountTest {
         LocalDate.of(2002,8,15),
         LocalDate.of(2003,7,15),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(2002,8,15))
-            .scheduleEndDate(LocalDate.of(2004,1,15))
+            .startDate(LocalDate.of(2002,8,15))
+            .maturityDate(LocalDate.of(2004,1,15))
             .couponStartDate(LocalDate.of(2002,8,15))
             .couponEndDate(LocalDate.of(2003,7,15))
             .couponFrequency(Frequency.P6M)
@@ -203,8 +203,8 @@ public class DayCountTest {
         LocalDate.of(2003,7,15),
         LocalDate.of(2004,1,15),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(2002,8,15))
-            .scheduleEndDate(LocalDate.of(2004,1,15))
+            .startDate(LocalDate.of(2002,8,15))
+            .maturityDate(LocalDate.of(2004,1,15))
             .couponStartDate(LocalDate.of(2003,7,15))
             .couponEndDate(LocalDate.of(2004,1,15))
             .couponFrequency(Frequency.P6M)
@@ -220,8 +220,8 @@ public class DayCountTest {
         LocalDate.of(1999,7,30),
         LocalDate.of(2000,1,30),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,7,30))
-            .scheduleEndDate(LocalDate.of(2000,6,30))
+            .startDate(LocalDate.of(1999,7,30))
+            .maturityDate(LocalDate.of(2000,6,30))
             .couponStartDate(LocalDate.of(1999,7,30))
             .couponEndDate(LocalDate.of(2000,1,30))
             .couponFrequency(Frequency.P6M)
@@ -239,8 +239,8 @@ public class DayCountTest {
         LocalDate.of(2000,1,30),
         LocalDate.of(2000,6,30),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,7,30))
-            .scheduleEndDate(LocalDate.of(2000,6,30))
+            .startDate(LocalDate.of(1999,7,30))
+            .maturityDate(LocalDate.of(2000,6,30))
             .couponStartDate(LocalDate.of(2000,1,30))
             .couponEndDate(LocalDate.of(2000,6,30))
             .couponFrequency(Frequency.P6M)
@@ -258,8 +258,8 @@ public class DayCountTest {
         LocalDate.of(1999,11,30),
         LocalDate.of(2000,4,30),
         ScheduleInfo.builder()
-            .scheduleStartDate(LocalDate.of(1999,11,30))
-            .scheduleEndDate(LocalDate.of(2000,4,30))
+            .startDate(LocalDate.of(1999,11,30))
+            .maturityDate(LocalDate.of(2000,4,30))
             .couponStartDate(LocalDate.of(1999,11,30))
             .couponEndDate(LocalDate.of(2000,4,30))
             .couponFrequency(Frequency.P3M)

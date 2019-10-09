@@ -192,8 +192,8 @@ public enum StandardDayCountConvention implements DayCountConvention {
     @Override
     public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       // calculation is based on the schedule period, firstDate assumed to be the start of the period
-      LocalDate scheduleStartDate = scheduleInfo.getScheduleStartDate();
-      LocalDate scheduleEndDate = scheduleInfo.getScheduleEndDate();
+      LocalDate scheduleStartDate = scheduleInfo.getStartDate();
+      LocalDate scheduleEndDate = scheduleInfo.getMaturityDate();
       LocalDate nextCouponDate = scheduleInfo.getCouponEndDate();
       Frequency freq = scheduleInfo.getCouponFrequency();
       boolean eom = scheduleInfo.isEndOfMonthConvention();
@@ -454,7 +454,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
       if (date1.getDay()==31 || isLastDayOfFebruary(startDate)) {
         date1.setDay(30);
       }
-      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getScheduleEndDate()))) {
+      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getMaturityDate()))) {
         date2.setDay(30);
       }
       return DayCountUtils.days360(date1,date2) / 360d;
@@ -616,10 +616,10 @@ public enum StandardDayCountConvention implements DayCountConvention {
       throw new IllegalArgumentException("Dates must be in time-line order");
     }
     if (scheduleInfo!=null) {
-      if (startDate.isBefore(scheduleInfo.getScheduleStartDate())) {
+      if (startDate.isBefore(scheduleInfo.getStartDate())) {
         throw new IllegalArgumentException("Dates must be in time-line order");
       }
-      if (endDate.isAfter(scheduleInfo.getScheduleEndDate())) {
+      if (endDate.isAfter(scheduleInfo.getMaturityDate())) {
         throw new IllegalArgumentException("Dates must be in time-line order");
       }
     }

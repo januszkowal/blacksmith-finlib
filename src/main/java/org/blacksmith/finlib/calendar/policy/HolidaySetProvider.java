@@ -46,13 +46,13 @@ public class HolidaySetProvider<U> implements HolidayProvider {
   }
 
   public void addAll(Collection<U> holidays) {
-    Validate.checkNotNull(holidays, "Null holidays list not allowed");
+    Validate.notNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(holidays); 
   }
   
   @SafeVarargs
   public final void addAll(U...holidays) {
-    Validate.checkNotNull(holidays, "Null holidays list not allowed");
+    Validate.notNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(Arrays.stream(holidays).collect(Collectors.toSet()));
   }
 

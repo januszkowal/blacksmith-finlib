@@ -2,6 +2,7 @@ package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
+import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.basic.Frequency;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
@@ -27,20 +28,21 @@ public class ScheduleGeneratorTest {
     ymdProvider.add(MonthDay.of(12,26));
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(new StandardHolidayPolicy(WeekDaySetPolicy.SAT_SUN,ymdProvider));
     return ScheduleParameters.builder()
+        .firstCouponDate(LocalDate.of(2019,1,1))
         .startDate(LocalDate.of(2019,1,3))
-        .endDate(LocalDate.of(2021,1,1))
-        .referenceDate(LocalDate.of(2019,1,1))
+        .maturityDate(LocalDate.of(2021,1,1))        
         .couponFrequency(Frequency.P3M)
         .basis(StandardDayCountConvention.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
         .businessDayCalendar(cal)
         .isEndOfMonthConvention(true)
+        .notional(Amount.of(1000000L))
         .build();
   }
 
   @Test
   public void testSchedule1() {
-    TempScheduleGenerator gen = new TempScheduleGenerator(createScheduleParamters1());
-    gen.generate();
+    ScheduleGenerator generator = ScheduleGeneratorFactory.of().getGenerator(createScheduleParamters1());
+    LOGGER.info("schedule={}",generator.generate());
   }
 }

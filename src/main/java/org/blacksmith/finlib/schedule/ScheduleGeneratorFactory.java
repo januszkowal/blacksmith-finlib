@@ -4,11 +4,14 @@ import org.blacksmith.finlib.basic.Frequency;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 
 public class ScheduleGeneratorFactory {
-  public ScheduleGenerator getGenerator(ScheduleParameters parameters) {
-    if (parameters.getCouponFrequency()==null || parameters.getCouponFrequency()== Frequency.TERM) {
-      return new TermScheduleGenerator();
+  public static ScheduleGeneratorFactory of() {
+    return new ScheduleGeneratorFactory();
+  }
+  public ScheduleGenerator getGenerator(ScheduleParameters scheduleParameters) {
+    if (scheduleParameters.getCouponFrequency()==null || scheduleParameters.getCouponFrequency()== Frequency.TERM) {
+      return new TermScheduleGenerator(scheduleParameters);
     }
     else
-      return new StandardScheduleGenerator();
+      return new StandardScheduleGenerator(scheduleParameters);
   }
 }

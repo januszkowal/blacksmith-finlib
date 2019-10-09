@@ -33,12 +33,12 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   }
 
   public void addPolicies(HolidayPolicy...holidayPolicies) {
-    Validate.checkNotEmpty(holidayPolicies, NULL_POLICIES_MESSAGE);
+    Validate.notEmpty(holidayPolicies, NULL_POLICIES_MESSAGE);
     this.holidayPolicies.addAll(Arrays.stream(holidayPolicies).collect(Collectors.toList()));
   }
   
   public void addPolicies(Collection<HolidayPolicy> holidayPolicies) {
-    Validate.checkNotEmpty(holidayPolicies, "Null holiday policy not allowed");
+    Validate.notEmpty(holidayPolicies, "Null holiday policy not allowed");
     this.holidayPolicies.addAll(holidayPolicies);
   }
   
