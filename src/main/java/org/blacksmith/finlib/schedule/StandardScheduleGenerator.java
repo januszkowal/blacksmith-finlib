@@ -18,12 +18,8 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
   
   private Schedule schedule;
 
-  private final Set<LocalDate> nonMovablePmtDates;
-  
-
   public StandardScheduleGenerator(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
-    this.nonMovablePmtDates = Stream.of(scheduleParameters.getFirstCouponDate(),scheduleParameters.getMaturityDate()).collect(Collectors.toSet());
   }
   
   public LocalDate getEndDate(LocalDate pmtUnadjusted, LocalDate pmtAdjusted) {

@@ -264,8 +264,8 @@ public enum StandardDayCountConvention implements DayCountConvention {
         long prevNominalEpochDay = prevNominal.toEpochDay();
         long startEpochDay = start.toEpochDay();
         long endEpochDay = end.toEpochDay();
-        double periodDays = curNominalEpochDay - prevNominalEpochDay;
-        double actualDays = Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
+        double periodDays = (double)curNominalEpochDay - prevNominalEpochDay;
+        double actualDays = (double)Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
 //        LOGGER.debug("calc curNominalEpochDay={} prevNominalEpochDay={} actualDays={} periodDays={} freqPerYear={}",curNominalEpochDay,prevNominalEpochDay,actualDays,
 //            periodDays, freq.eventsPerYear());
         return actualDays / (freq.eventsPerYear() * periodDays);
