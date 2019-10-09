@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.basic.Frequency;
 import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
 import org.blacksmith.finlib.dayconvention.utils.YMD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import static java.lang.Math.toIntExact;
@@ -14,14 +16,14 @@ import static org.blacksmith.commons.datetime.DateUtils.isLeapDayInPeriod;
 import static org.blacksmith.commons.datetime.DateUtils.nextLeapDay;
 
 //TR:A,B,C,D,E,F,G,J,K,L,N
-public enum StandardInterestBasis implements InterestBasis {
+public enum StandardDayCountConvention implements DayCountConvention {
 
   /**
    * Always one
    */
   ONE_ONE("1/1") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return 1d;
     }
     @Override
@@ -44,7 +46,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * */
   ACT_360("ACT/360") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return daysBetween(startDate, endDate) / 360d;
     }
 
@@ -64,7 +66,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * */
   ACT_364("ACT/364") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return daysBetween(startDate, endDate) / 364d;
     }
 
@@ -87,7 +89,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * */
   ACT_365("ACT/365") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return daysBetween(startDate, endDate) / 365d;
     }
 
@@ -109,7 +111,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * */
   ACT_365_25("ACT/365.25") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return daysBetween(startDate, endDate) / 365.25d;
     }
 
@@ -132,9 +134,10 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   ACT_365_ACT("ACT/365 ACT") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       int days = daysBetween(startDate, endDate);
-      double denominator = nextLeapDay(startDate).isAfter(endDate) ? 365d : 366d;
+      //end date included
+      double denominator = isLeapDayInPeriod(startDate,endDate) ? 366d : 365d;
       return days / denominator;
     }
 
@@ -157,18 +160,21 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   ACT_ACT_ISDA("ACT/ACT ISDA") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       int y1 = startDate.getYear();
       int y2 = endDate.getYear();
       int firstYearLength = startDate.lengthOfYear();
       if (y1 == y2) {
         int actualDays = endDate.getDayOfYear() - startDate.getDayOfYear();
+//        LOGGER.debug("ACT_ACT_ISDA actualDays={} firstYearLength={}",actualDays,firstYearLength);
         return (double)actualDays / firstYearLength;
       }
       else {
         int firstRemainderOfYear = firstYearLength - startDate.getDayOfYear() + 1;
         int secondRemainderOfYear = endDate.getDayOfYear() - 1;
         int secondYearLength = endDate.lengthOfYear();
+//        LOGGER.debug("ACT_ACT_ISDA firstRemainderOfYear={} firstYearLength={} secondRemainderOfYear={} secondYearLength={}",
+//            firstRemainderOfYear,firstYearLength,secondRemainderOfYear,secondYearLength);
         return (double)firstRemainderOfYear / firstYearLength +
             (double)secondRemainderOfYear / secondYearLength +
             (y2 - y1 - 1);
@@ -182,21 +188,27 @@ public enum StandardInterestBasis implements InterestBasis {
   },
 
   // complex ICMA calculation
-  ACT_ACT_ICMA("ACT/ACT ICMA") {
+  ACT_ACT_ISMA("ACT/ACT ISMA") {
     @Override
     public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       // calculation is based on the schedule period, firstDate assumed to be the start of the period
-      LocalDate scheduleStartDate = scheduleInfo.getStartDate();
-      LocalDate scheduleEndDate = scheduleInfo.getEndDate();
-      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate(startDate);
+      LocalDate scheduleStartDate = scheduleInfo.getScheduleStartDate();
+      LocalDate scheduleEndDate = scheduleInfo.getScheduleEndDate();
+      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate();
       Frequency freq = scheduleInfo.getCouponFrequency();
       boolean eom = scheduleInfo.isEndOfMonthConvention();
+
+
       // final period, also handling single period schedules
       if (nextCouponDate.equals(scheduleEndDate)) {
-        return finalPeriod(startDate, endDate, freq, eom);
+        LocalDate endCalculated = eom(startDate, startDate.plus(freq.getPeriod()), eom);
+        if (endCalculated.isBefore(scheduleEndDate))
+          return initPeriod(startDate, endDate, nextCouponDate, freq, eom);
+        else
+          return finalPeriod(startDate, endDate, freq, eom);
       }
       // initial period
-      else if (startDate.equals(scheduleStartDate)) {
+      else if (scheduleStartDate.equals(startDate)) {
         return initPeriod(startDate, endDate, nextCouponDate, freq, eom);
       }
       else
@@ -205,28 +217,31 @@ public enum StandardInterestBasis implements InterestBasis {
     
     // calculate nominal periods backwards from couponDate
     private double initPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponDate, Frequency freq, boolean eom) {
-      LocalDate currentNominal = couponDate;
-      LocalDate prevNominal = eom(couponDate, currentNominal.minus(freq.getPeriod()), eom);
+      LocalDate subPeriodEnd = couponDate;
+      LocalDate subPeriodStart = eom(couponDate, subPeriodEnd.minus(freq.getPeriod()), eom);
+//      LOGGER.debug("initPeriod subStart={} subEnd={} startDate={} endDate{}",subPeriodStart,subPeriodEnd,startDate,endDate);
       double result = 0;
-      while (prevNominal.isAfter(startDate)) {
-        result += calc(prevNominal, currentNominal, startDate, endDate, freq);
-        currentNominal = prevNominal;
-        prevNominal = eom(couponDate, currentNominal.minus(freq.getPeriod()), eom);
+      while (subPeriodStart.isAfter(startDate)) {
+        result += calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
+        subPeriodEnd = subPeriodStart;
+        subPeriodStart = eom(couponDate, subPeriodEnd.minus(freq.getPeriod()), eom);
+//        LOGGER.debug("from final periodStart={} periodEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       }
-      return result + calc(prevNominal, currentNominal, startDate, endDate, freq);
+      return result + calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
     }
 
     // calculate nominal periods forwards from couponDate
     private double finalPeriod(LocalDate couponDate, LocalDate endDate, Frequency freq, boolean eom) {
-      LocalDate curNominal = couponDate;
-      LocalDate nextNominal = eom(couponDate, curNominal.plus(freq.getPeriod()), eom);
+      LocalDate subPeriodStart = couponDate;
+      LocalDate subPeriodEnd = eom(couponDate, subPeriodStart.plus(freq.getPeriod()), eom);
+//      LOGGER.debug("finalPeriod subStart={} subEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       double result = 0;
-      while (nextNominal.isBefore(endDate)) {
-        result += calc(curNominal, nextNominal, curNominal, endDate, freq);
-        curNominal = nextNominal;
-        nextNominal = eom(couponDate, curNominal.plus(freq.getPeriod()), eom);
+      while (subPeriodEnd.isBefore(endDate)) {
+        result += calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
+        subPeriodStart = subPeriodEnd;
+        subPeriodEnd = eom(couponDate, subPeriodEnd.plus(freq.getPeriod()), eom);
       }
-      return result + calc(curNominal, nextNominal, curNominal, endDate, freq);
+      return result + calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
     }
     
     private double otherPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponEndDate, Frequency freq) {
@@ -243,13 +258,16 @@ public enum StandardInterestBasis implements InterestBasis {
 
     // calculate the result
     private double calc(LocalDate prevNominal, LocalDate curNominal, LocalDate start, LocalDate end, Frequency freq) {
+//      LOGGER.debug("calc prev={} end={}",prevNominal,end);
       if (end.isAfter(prevNominal)) {
         long curNominalEpochDay = curNominal.toEpochDay();
         long prevNominalEpochDay = prevNominal.toEpochDay();
         long startEpochDay = start.toEpochDay();
         long endEpochDay = end.toEpochDay();
-        double periodDays = (double)curNominalEpochDay - prevNominalEpochDay;
-        double actualDays = (double)Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
+        double periodDays = curNominalEpochDay - prevNominalEpochDay;
+        double actualDays = Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
+//        LOGGER.debug("calc curNominalEpochDay={} prevNominalEpochDay={} actualDays={} periodDays={} freqPerYear={}",curNominalEpochDay,prevNominalEpochDay,actualDays,
+//            periodDays, freq.eventsPerYear());
         return actualDays / (freq.eventsPerYear() * periodDays);
       }
       return 0;
@@ -276,11 +294,12 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   ACT_ACT_AFB("ACT/ACT AFB") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       final int years = yearsBetween(startDate, endDate);
       final LocalDate remainedPeriodEndDate = (years==0) ? endDate: endDate.minusYears(years);
-      final double remainedPeriodDays = daysBetween(startDate, remainedPeriodEndDate);
+      final int remainedPeriodDays = daysBetween(startDate, remainedPeriodEndDate);
       final double remainedPeriodYearLength = isLeapDayInPeriod(startDate,remainedPeriodEndDate) ? 366d : 365d;
+//      LOGGER.debug("ACT_ACT_AFB years={} remainedPeriodDays={} remainedPeriodYearLength={}",years,remainedPeriodDays,remainedPeriodYearLength);
       return years + (remainedPeriodDays / remainedPeriodYearLength);
     }
 
@@ -304,10 +323,10 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   ACT_ACT_YEAR("ACT/ACT YEAR") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       final int years = yearsBetween(startDate, endDate);
       final LocalDate remainedPeriodStartDate = years==0 ? startDate : startDate.plusYears(years);
-      final double remainedPeriodDays = daysBetween(remainedPeriodStartDate, endDate);
+      final int remainedPeriodDays = daysBetween(remainedPeriodStartDate, endDate);
       final double remainedPeriodYearLength = daysBetween(remainedPeriodStartDate, remainedPeriodStartDate.plusYears(1));
       return years + remainedPeriodDays/remainedPeriodYearLength;
     }
@@ -320,12 +339,13 @@ public enum StandardInterestBasis implements InterestBasis {
 
 
   // actual days / 365 or 366
+  //TODO CHECK
   ACT_365L("Act/365L") {
     @Override
     public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       int actualDays = daysBetween(startDate, endDate);
       // calculation is based on the end of the schedule period (next coupon date) and annual/non-annual frequency
-      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate(startDate);
+      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate();
       if (scheduleInfo.getCouponFrequency().isAnnual()) {
         LocalDate nextLeap = nextLeapDay(startDate);
         return actualDays / (nextLeap.isAfter(nextCouponDate) ? 365d : 366d);
@@ -353,13 +373,13 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   NL_360("NL/360") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysNL(startDate, endDate) / 360d;
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+      return DayCountUtils.days365(startDate, endDate) / 360d;
     }
 
     @Override
     public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysNL(startDate, endDate);
+      return DayCountUtils.days365(startDate, endDate);
     }
   },
 
@@ -376,13 +396,13 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   NL_365("NL/365") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysNL(startDate, endDate) / 365d;
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+      return DayCountUtils.days365(startDate, endDate) / 365d;
     }
 
     @Override
     public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysNL(startDate, endDate);
+      return DayCountUtils.days365(startDate, endDate);
     }
   },
 
@@ -401,7 +421,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_360_ISDA("30/360 ISDA") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30ISDA(startDate, endDate) / 360d;
     }
 
@@ -434,7 +454,7 @@ public enum StandardInterestBasis implements InterestBasis {
       if (date1.getDay()==31 || isLastDayOfFebruary(startDate)) {
         date1.setDay(30);
       }
-      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getEndDate()))) {
+      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getScheduleEndDate()))) {
         date2.setDay(30);
       }
       return DayCountUtils.days360(date1,date2) / 360d;
@@ -463,7 +483,7 @@ public enum StandardInterestBasis implements InterestBasis {
   },
 
   /**
-   * Name: "30U/360 EOM
+   * Name: 30U/360 EOM
    * Summary: A 30/360 style algorithm with special rules for the 31st day-of-month and the end of February
    * Description:
    *  The result is calculated as (360 * deltaYear + 30 * deltaMonth + deltaDay) / 360.
@@ -483,7 +503,7 @@ public enum StandardInterestBasis implements InterestBasis {
   // US thirty day months / 360 with fixed EOM rule
   D30_U_360_EOM("30U/360 EOM") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30USEOM(startDate, endDate) / 360d;
     }
 
@@ -508,7 +528,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_360_PSA("30/360 PSA") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30PSA(startDate, endDate) / 360d;
     }
 
@@ -533,7 +553,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_E_360("30E/360") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30E(startDate, endDate) / 360d;
     }
 
@@ -557,7 +577,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_E_365("30E/365") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30E(startDate, endDate) / 365d;
     }
 
@@ -580,7 +600,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_EPLUS_360("30E+/360") {
     @Override
-    public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return DayCountUtils.daysBetween30EPlus(startDate, endDate) / 360d;
     }
 
@@ -595,11 +615,13 @@ public enum StandardInterestBasis implements InterestBasis {
     if (endDate.isBefore(startDate)) {
       throw new IllegalArgumentException("Dates must be in time-line order");
     }
-    if (startDate.isBefore(scheduleInfo.getStartDate())) {
-      throw new IllegalArgumentException("Dates must be in time-line order");
-    }
-    if (endDate.isAfter(scheduleInfo.getEndDate())) {
-      throw new IllegalArgumentException("Dates must be in time-line order");
+    if (scheduleInfo!=null) {
+      if (startDate.isBefore(scheduleInfo.getScheduleStartDate())) {
+        throw new IllegalArgumentException("Dates must be in time-line order");
+      }
+      if (endDate.isAfter(scheduleInfo.getScheduleEndDate())) {
+        throw new IllegalArgumentException("Dates must be in time-line order");
+      }
     }
     if (endDate.isEqual(startDate)) {
       return 0;
@@ -618,21 +640,12 @@ public enum StandardInterestBasis implements InterestBasis {
     return calculateDays(startDate, endDate);
   }
 
-//  @Override
-//  public double relativeYearFraction(LocalDate startDate, LocalDate endDate, LocalDate calcDate, ScheduleParameters scheduleInfo) {
-//    // override to avoid duplicate null checks
-//    if (endDate.isBefore(startDate)) {
-//      return -yearFraction(endDate, startDate, calcDate, scheduleInfo);
-//    }
-//    return yearFraction(startDate, endDate, calcDate, scheduleInfo);
-//  }
-
   // calculate the year fraction, using validated inputs
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return calculateYearFraction1(startDate, endDate);
+  protected double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+    return calculateYearFractionSimple(startDate, endDate);
   }
 
-  public double calculateYearFraction1(LocalDate startDate, LocalDate endDate) {
+  protected double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
       return 0d;
   }
     
@@ -641,10 +654,11 @@ public enum StandardInterestBasis implements InterestBasis {
 
   String shortName;
 
-  StandardInterestBasis(String shortName) {
+  StandardDayCountConvention(String shortName) {
     this.shortName = shortName;
   }
   public String getShortName() {
     return this.shortName;
   }
+  private static final Logger LOGGER = LoggerFactory.getLogger(StandardDayCountConvention.class);
 }

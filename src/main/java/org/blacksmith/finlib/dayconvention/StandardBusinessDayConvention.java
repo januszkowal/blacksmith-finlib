@@ -12,7 +12,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   /**
    * No adjustment
    */
-  NO_ADJUST("NO_ADJUST") {
+  NO_ADJUST("NoAdjust") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return date;
@@ -21,43 +21,43 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   /**
    * Next business day adjustment
    */
-  FOLLOWING("FOLLOWING") {
+  FOLLOWING("Following") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.nextOrSame(date);
     }
   },
-  MODIFIED_FOLLOWING("MODIFIED_FOLLOWING") {
+  MODIFIED_FOLLOWING("ModifiedFollowing") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.nextSameOrLastInMonth(date);
     }
   },
-  PRECEDING("PRECEDING") {
+  PRECEDING("Preceding") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.previousOrSame(date);
     }
   },
-  MODIFIED_PRECEDING("MODIFIED_PRECEDING") {
+  MODIFIED_PRECEDING("ModifiedPreceding") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.previousSameOrLastInMonth(date);
     }
   },
-  END_OF_MONTH("END_OF_MONTH") {
+  END_OF_MONTH("EndOfMonth") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return date.withDayOfMonth(date.lengthOfMonth());
     }
   },
-  END_OF_MONTH_PRECEDING("END_OF_MONTH_PRECEDING") {
+  END_OF_MONTH_PRECEDING("EndOfMonthPreceding") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.previousOrSame(date.withDayOfMonth(date.lengthOfMonth()));
     }
   },
-  END_OF_MONTH_FOLLOWING("END_OF_MONTH_FOLLOWING") {
+  END_OF_MONTH_FOLLOWING("EndOfMonthFollowing") {
     @Override
     public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
       return calendar.nextOrSame(date.withDayOfMonth(date.lengthOfMonth()));
@@ -78,7 +78,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
        return calendar.previous(date);
      }
    }
- };;
+ };
   String shortName;
   private static Map<String, StandardBusinessDayConvention> shortNameMap =
       Arrays.stream(StandardBusinessDayConvention.values()).collect(Collectors.toMap(StandardBusinessDayConvention::getShortName, e -> e));

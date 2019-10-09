@@ -8,18 +8,13 @@ import lombok.Data;
 @Data
 @Builder
 public class ScheduleInfo {
-  private LocalDate startDate;
-  private LocalDate endDate;
+  private LocalDate scheduleStartDate;
+  private LocalDate scheduleEndDate;
+  private LocalDate couponStartDate;
+  private LocalDate couponEndDate;
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
-  
-  public LocalDate getCouponStartDate(LocalDate date) {
-    return this.startDate;
-  }
-  
-  public LocalDate getCouponEndDate(LocalDate date) {
-    return this.startDate;
-  }
+
 
   public static ScheduleInfo SIMPLE_SCHEDULE_INFO = builder()
       .isEndOfMonthConvention(true)      

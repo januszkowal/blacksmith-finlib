@@ -63,7 +63,7 @@ public class HolidaySetProvider<U> implements HolidayProvider {
   @Override
   public boolean isHoliday(LocalDate date) {
     boolean result = holidays.contains(converter.convert(date));
-//    LOGGER.info("Check date={}, result={}, class={}",date,result,this);
+    LOGGER.debug("Check isHoliday date={}, result={}, class={}",date,result,this);
     return result;
   }
 }

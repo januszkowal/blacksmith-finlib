@@ -14,7 +14,7 @@ import lombok.Data;
 public class ScheduleParameters {
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
-  private InterestBasis basis;
+  private DayCountConvention basis;
   private BusinessDayConvention businessDayConvention;
   private BusinessDayCalendar businessDayCalendar;
   @Builder.Default

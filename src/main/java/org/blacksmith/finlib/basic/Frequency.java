@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.temporal.Temporal;
 import java.util.Locale;
 import org.blacksmith.commons.datetime.DateOperation;
 import org.blacksmith.commons.datetime.TimeUnit;
@@ -327,16 +328,16 @@ public class Frequency implements Serializable, DateOperation {
     }
   }
 
-  public int eventsPerYear() {
+  public double eventsPerYear() {
     switch (unit) {
       case MONTH:
-        return amount / 12;
+        return 12d / amount;
       case QUARTER:
-        return amount / 4;
+        return 4d / amount;
       case HALF_YEAR:
-        return amount / 2;
+        return 2d / amount;
       case YEAR:
-        return amount;
+        return 1d / amount;
       default:
         return 0;
     }
@@ -347,11 +348,11 @@ public class Frequency implements Serializable, DateOperation {
       case MONTH:
         return amount;
       case QUARTER:
-        return amount*3;
+        return amount/3;
       case HALF_YEAR:
-        return amount*6;
+        return amount/6;
       case YEAR:
-        return amount*12;
+        return amount/12;
       default:
         return 0;
     }
@@ -361,11 +362,14 @@ public class Frequency implements Serializable, DateOperation {
     return amount + unit.symbol();
   }
 
-  @Override public LocalDate plus(LocalDate date, int amount) {
-    return this.unit.plus(date,this.amount*amount);
+  @Override
+  public <R extends Temporal> R plus(R t, int amount) {
+    return this.unit.plus(t,this.amount*amount);
   }
 
-  @Override public LocalDate minus(LocalDate date, int amount) {
-    return this.unit.minus(date,this.amount*amount);
+
+  @Override
+  public <R extends Temporal> R minus(R t, int amount) {
+    return this.unit.plus(t,this.amount*amount);
   }
 }

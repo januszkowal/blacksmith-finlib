@@ -11,7 +11,7 @@ import org.blacksmith.finlib.calendar.policy.WeekDaySetPolicy;
 import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
+import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class ScheduleGeneratorTest {
         .endDate(LocalDate.of(2021,1,1))
         .referenceDate(LocalDate.of(2019,1,1))
         .couponFrequency(Frequency.P3M)
-        .basis(StandardInterestBasis.ACT_365)
+        .basis(StandardDayCountConvention.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
         .businessDayCalendar(cal)
         .isEndOfMonthConvention(true)
