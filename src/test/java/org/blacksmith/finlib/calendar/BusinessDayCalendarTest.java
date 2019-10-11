@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @DisplayName("BusinessDayCalendarTest")
-@ExtendWith(org.blacksmith.finlib.test.TimingExtension.class)
+@ExtendWith(org.blacksmith.test.TimingExtension.class)
 public class BusinessDayCalendarTest {
   private static final Logger LOGGER = LoggerFactory.getLogger(BusinessDayCalendarTest.class);
 

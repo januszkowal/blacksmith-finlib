@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ExtendWith(org.blacksmith.finlib.test.TimingExtension.class)
+@ExtendWith(org.blacksmith.test.TimingExtension.class)
 public class HolidayPolicyTest {
   private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyTest.class);
   
