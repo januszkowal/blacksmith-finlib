@@ -68,7 +68,7 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
       LOGGER.info("Item schedulePmtDateUnadjusted={} cashflowPmtDateAdjusted={}",cashflowPmtDateUnadjusted, cashflowPmtDateAdjusted);
       addInterestCashflow(cashflowStartDate,cashflowEndDate,cashflowPmtDateAdjusted);
       cashflowStartDate = cashflowEndDate;
-    }
+    } 
 
     return schedule;
   }
