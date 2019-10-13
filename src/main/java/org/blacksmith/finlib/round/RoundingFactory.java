@@ -1,8 +1,5 @@
 package org.blacksmith.finlib.round;
 
-import java.math.MathContext;
-import java.util.Currency;
-
 public class RoundingFactory {
   public static Rounding of(RoundingMode mode, int decimalPlaces) {
     if (mode==RoundingMode.UP) {
@@ -10,7 +7,7 @@ public class RoundingFactory {
     }
     else
     {
-      return new HalfDownRounding();
+      return HalfDownRounding.ofDecimalPlaces(decimalPlaces);
     }
   }
   public static Rounding of(RoundingMode mode, int decimalPlaces, int fraction) {
@@ -19,7 +16,10 @@ public class RoundingFactory {
     }
     else
     {
-      return new HalfDownRounding();
+      if (fraction > 1) {
+        throw new IllegalArgumentException("Fraction is not suported for truncating");
+      }
+      return HalfDownRounding.ofDecimalPlaces(decimalPlaces);
     }
   }
 }
