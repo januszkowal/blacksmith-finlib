@@ -10,6 +10,7 @@ public class RoundingFactory {
       return HalfDownRounding.ofDecimalPlaces(decimalPlaces);
     }
   }
+  
   public static Rounding of(RoundingMode mode, int decimalPlaces, int fraction) {
     if (mode==RoundingMode.UP) {
       return HalfUpRounding.ofFractionalDecimalPlaces(decimalPlaces,fraction);

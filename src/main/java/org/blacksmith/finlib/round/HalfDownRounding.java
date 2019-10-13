@@ -10,7 +10,9 @@ public class HalfDownRounding implements Rounding {
   private final int decimalPlaces;
 
   private static final int MIN_DECIMAL_PLACES = -3;
-  private static final int CACHE_SIZE = 19;
+  private static final int MAX_DECIMAL_PLACES = 15;
+  private static final int CACHE_SIZE = MAX_DECIMAL_PLACES - MIN_DECIMAL_PLACES + 1; //15
+  //Cache contains objects with decimalPlaces={-3..15}
   private static final HalfDownRounding[] CACHE = new HalfDownRounding[CACHE_SIZE];
   
   static {

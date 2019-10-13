@@ -15,7 +15,9 @@ public class HalfUpRounding implements Rounding, Serializable {
   private final transient BigDecimal fractionDecimal;
 
   private static final int MIN_DECIMAL_PLACES = -3;
-  private static final int CACHE_SIZE = 19;
+  private static final int MAX_DECIMAL_PLACES = 15;
+  private static final int CACHE_SIZE = MAX_DECIMAL_PLACES - MIN_DECIMAL_PLACES + 1;
+  //Cache contains objects with decimalPlaces={-3..15}
   private static final HalfUpRounding[] CACHE = new HalfUpRounding[CACHE_SIZE];
   
   static {
