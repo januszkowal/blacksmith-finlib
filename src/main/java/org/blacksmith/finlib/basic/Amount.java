@@ -21,7 +21,7 @@ public class Amount implements Comparable<Amount>, Serializable {
 
   public Amount(Amount value) {   
     Validate.notNull(value);
-    this.value = alignBigDecimalValue(value.toBigDecimal());
+    this.value = value.getValue();
   }
 
   public Amount(BigDecimal value) {
@@ -88,7 +88,7 @@ public class Amount implements Comparable<Amount>, Serializable {
   }
 
   public Amount copy() {
-    return new Amount(this);
+    return new Amount(this.getValue());
   }
 
   @XmlValue

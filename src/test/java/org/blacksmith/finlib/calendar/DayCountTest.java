@@ -86,7 +86,6 @@ public class DayCountTest {
 
   @Test
   void testFraction_ACT() {
-    LOGGER.info("x={} x2={}",Frequency.P6M.getAmount(),Frequency.P6M.eventsPerMonth());
     //3a - semi-annual
     assertEquals(182/366d,StandardDayCountConvention.ACT_ACT_AFB.yearFraction(
         LocalDate.of(2003,11,1),
