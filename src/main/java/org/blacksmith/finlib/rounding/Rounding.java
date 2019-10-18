@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.round;
+package org.blacksmith.finlib.rounding;
 
 import java.math.BigDecimal;
 

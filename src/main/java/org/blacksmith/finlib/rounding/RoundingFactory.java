@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.round;
+package org.blacksmith.finlib.rounding;
 
 public class RoundingFactory {
   public static Rounding of(RoundingMode mode, int decimalPlaces) {

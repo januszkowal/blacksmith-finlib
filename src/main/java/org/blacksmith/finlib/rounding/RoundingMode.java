@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.round;
+package org.blacksmith.finlib.rounding;
 
 public enum RoundingMode {
   UP,

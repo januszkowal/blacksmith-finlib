@@ -1,9 +1,7 @@
-package org.blacksmith.finlib.round;
+package org.blacksmith.finlib.rounding;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import org.blacksmith.commons.arg.Validate;
 
 public class HalfUpRounding implements Rounding, Serializable {
   /**
