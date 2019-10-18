@@ -8,45 +8,36 @@ public class RegisterFactory {
   public static final String REG_NOSTRO = "NOSTRO";
   public static final String REF_DEAL = "DEAL";
   public static final String REF_PORTFOLIO = "PORTFOLIO";
+  public static final String ATTR_PRODUCT = "PRODUCT";
+  public static final String ATTR_REFCCY = "REFCCY";
   
-  public static Register ofNostro(Long nostroId, Currency currency) {
-    return Register.ofNew(REG_NOSTRO, currency, REF_NOSTRO, nostroId);
+  private RegisterProvider registerProvider;
+  
+  public RegisterFactory(RegisterProvider registerProvider) {
+    this.registerProvider = registerProvider;
   }
   
-  public static Register ofNostroWidthId(Long registerId, Long nostroId, Currency currency) {
-    return Register.of(registerId, REG_NOSTRO, currency, REF_NOSTRO, nostroId);
+  public Register ofNostro(Long nostroId, Currency currency) {
+    Long id = registerProvider.getRegister();
+    return Register.of(id, REG_NOSTRO, currency, REF_NOSTRO, nostroId);
   }
   
-  public static Register ofDeal(String name, Long dealId, Currency currency) {
-    return Register.ofNew(name, currency, REF_DEAL, dealId);
+  public Register ofDeal(String name, Long dealId, Currency currency) {
+    Long id = registerProvider.getRegister();
+    return Register.of(id, name, currency, REF_DEAL, dealId);
   }
   
-  public static Register ofDealWidthId(Long registerId, String name, Long dealId, Currency currency) {
-    return Register.of(registerId, name, currency, REF_DEAL, dealId);
-  }
-
-  public static Register ofProdDeal(String name, Long dealId, Currency currency, Long productId) {
-    Register reg = Register.ofNew(name, currency, REF_DEAL, dealId);
-    reg.addAttribute("PRODUCT", productId);
+  public Register ofProdDeal(String name, Long dealId, Currency currency, Long productId) {
+    Long id = registerProvider.getRegister();
+    Register reg = Register.of(id, name, currency, REF_DEAL, dealId);
+    reg.addAttribute(ATTR_PRODUCT, productId);
     return reg;
   }
   
-  public static Register ofProdDealWidthId(Long registerId, String name, Long dealId, Currency currency, Long productId) {
-    Register reg = Register.of(registerId, name, currency, REF_DEAL, dealId);
-    reg.addAttribute("PRODUCT", productId);
+  public Register ofPosCcy(Long portfolioId, String name, Currency currency, Currency repCcy) {
+    Long id = registerProvider.getRegister();
+    Register reg = Register.of(id, name, currency, REF_PORTFOLIO, portfolioId);
+    reg.addKeyAttribute(ATTR_REFCCY, repCcy.getIsoCode());
     return reg;
   }
-
-  public static Register ofPosCcy(Long portfolioId, String name, Currency currency, Currency repCcy) {
-    Register reg = Register.ofNew(name, currency, REF_PORTFOLIO, portfolioId);
-    reg.addKeyAttribute("RCCY", repCcy.getIsoCode());
-    return reg;
-  }
-
-  public static Register ofPosCcyWithId(Long registerId, Long portfolioId, String name, Currency currency, Currency repCcy) {
-    Register reg = Register.of(registerId, name, currency, REF_PORTFOLIO, portfolioId);
-    reg.addKeyAttribute("RCCY", repCcy.getIsoCode());
-    return reg;
-  }
-
 }
