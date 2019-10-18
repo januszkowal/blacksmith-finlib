@@ -2,7 +2,7 @@ package org.blacksmith.finlib.accounting.in;
 
 import java.math.BigDecimal;
 
-import org.blacksmith.finlib.accounting.AccountingRegister;
+import org.blacksmith.finlib.accounting.Register;
 import org.blacksmith.finlib.accounting.Operation;
 
 
@@ -13,5 +13,5 @@ public class EntryIn {
   private final BigDecimal cr;
   private final BigDecimal dt;
   private final Operation operation;
-  private final AccountingRegister register;
+  private final Register register;
 }

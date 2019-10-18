@@ -1,7 +1,5 @@
 package org.blacksmith.finlib.schedule;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
