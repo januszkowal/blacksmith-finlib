@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.basic;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Data;
 
 @Data(staticConstructor = "of")
@@ -12,5 +13,6 @@ public class Currency {
   public static final Currency PLN = Currency.of("PLN");
   public static final Currency JPY = Currency.of("JPY");
 
+  @JsonValue
   private final String isoCode;
 }

@@ -39,13 +39,13 @@ public class RegisterFactory {
 
   public static Register ofPosCcy(Long portfolioId, String name, Currency currency, Currency repCcy) {
     Register reg = Register.ofNew(name, currency, REF_PORTFOLIO, portfolioId);
-    reg.addAttribute("RCCY", repCcy.getIsoCode());
+    reg.addKeyAttribute("RCCY", repCcy.getIsoCode());
     return reg;
   }
 
   public static Register ofPosCcyWithId(Long registerId, Long portfolioId, String name, Currency currency, Currency repCcy) {
     Register reg = Register.of(registerId, name, currency, REF_PORTFOLIO, portfolioId);
-    reg.addAttribute("RCCY", repCcy.getIsoCode());
+    reg.addKeyAttribute("RCCY", repCcy.getIsoCode());
     return reg;
   }
 
