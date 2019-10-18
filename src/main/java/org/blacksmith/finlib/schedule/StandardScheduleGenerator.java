@@ -32,7 +32,7 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
     double interest =
         scheduleParameters.getBasis().yearFraction(startDate, scheduleInfo.getCouponEndDate(), scheduleInfo)*
         rate*
-        scheduleInfo.getNotional().getValue().doubleValue();
+        scheduleInfo.getNotional(startDate).doubleValue();
     Cashflow cashflow = Cashflow.builder()
         .startDate(startDate)
         .endDate(endDate)

@@ -24,7 +24,7 @@ public class TermScheduleGenerator implements ScheduleGenerator {
     double interest =
         scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
         rate*
-        scheduleInfo.getNotional().getValue().doubleValue();
+        scheduleInfo.getNotional(scheduleInfo.getCouponStartDate()).doubleValue();
     
     Cashflow cashflow = Cashflow.builder()
         .startDate(scheduleParameters.getStartDate())
