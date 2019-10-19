@@ -49,6 +49,7 @@ task sourceJar(type: Jar) {
     from sourceSets.main.allJava
 }
 
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
