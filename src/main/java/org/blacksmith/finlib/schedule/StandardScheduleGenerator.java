@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import blacksmith.finlib.commons.Amount;
 
 public class StandardScheduleGenerator implements ScheduleGenerator {
   

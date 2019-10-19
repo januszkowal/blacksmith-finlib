@@ -2,8 +2,6 @@ package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
-import org.blacksmith.finlib.basic.Amount;
-import org.blacksmith.finlib.basic.Frequency;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
 import org.blacksmith.finlib.calendar.policy.HolidaySetProvider;
@@ -16,6 +14,8 @@ import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import blacksmith.finlib.commons.Amount;
+import blacksmith.finlib.commons.Frequency;
 
 public class ScheduleGeneratorTest {
   private final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratorTest.class);

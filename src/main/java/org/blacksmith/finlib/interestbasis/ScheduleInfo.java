@@ -2,8 +2,8 @@ package org.blacksmith.finlib.interestbasis;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import org.blacksmith.finlib.basic.Amount;
-import org.blacksmith.finlib.basic.Frequency;
+import blacksmith.finlib.commons.Amount;
+import blacksmith.finlib.commons.Frequency;
 import lombok.Builder;
 import lombok.Data;
 

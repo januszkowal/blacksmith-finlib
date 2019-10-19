@@ -2,10 +2,8 @@ package org.blacksmith.finlib.calendar;
 
 import java.time.Period;
 import org.blacksmith.commons.datetime.TimeUnit;
-import org.blacksmith.finlib.basic.Frequency;
 import org.junit.jupiter.api.Test;
-
-
+import blacksmith.finlib.commons.Frequency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FrequencyTest {

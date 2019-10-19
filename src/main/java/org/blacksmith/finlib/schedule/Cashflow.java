@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.basic.Amount;
+import blacksmith.finlib.commons.Amount;
 import lombok.Builder;
 import lombok.Data;
 
