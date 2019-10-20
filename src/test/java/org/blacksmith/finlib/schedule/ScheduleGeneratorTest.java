@@ -8,14 +8,14 @@ import org.blacksmith.finlib.calendar.policy.HolidaySetProvider;
 import org.blacksmith.finlib.calendar.policy.StandardHolidayPolicy;
 import org.blacksmith.finlib.calendar.policy.WeekDaySetPolicy;
 import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
+import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import blacksmith.finlib.commons.Amount;
-import blacksmith.finlib.commons.Frequency;
+import org.blacksmith.finlib.basic.Amount;
 
 public class ScheduleGeneratorTest {
   private final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratorTest.class);

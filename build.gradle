@@ -27,7 +27,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
     implementation 'org.blacksmith:blacksmith-commons:0.1.0'
-    implementation 'org.blacksmith:blacksmith-finlib-commons:0.1.0'
+    implementation 'org.blacksmith:blacksmith-finlib-basic:0.1.0'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'

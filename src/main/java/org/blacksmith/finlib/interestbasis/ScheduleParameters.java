@@ -2,9 +2,9 @@ package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
+import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
-import blacksmith.finlib.commons.Amount;
-import blacksmith.finlib.commons.Frequency;
+import org.blacksmith.finlib.basic.Amount;
 import lombok.Builder;
 import lombok.Data;
 

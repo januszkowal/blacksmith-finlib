@@ -8,7 +8,7 @@ import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import blacksmith.finlib.commons.Amount;
+import org.blacksmith.finlib.basic.Amount;
 
 public class StandardScheduleGenerator implements ScheduleGenerator {
   

@@ -2,7 +2,7 @@ package org.blacksmith.finlib.schedule;
 
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import blacksmith.finlib.commons.Amount;
+import org.blacksmith.finlib.basic.Amount;
 
 public class TermScheduleGenerator implements ScheduleGenerator {
 

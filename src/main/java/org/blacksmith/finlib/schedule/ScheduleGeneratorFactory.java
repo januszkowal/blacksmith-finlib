@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.schedule;
 
+import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import blacksmith.finlib.commons.Frequency;
 
 public class ScheduleGeneratorFactory {
   public static ScheduleGeneratorFactory of() {
