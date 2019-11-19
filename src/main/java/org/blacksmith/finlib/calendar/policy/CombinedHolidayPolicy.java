@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 
+/**
+ * Holiday policy containing list of policies
+ * Checking is done in insertion order, until first "non-business" day is found
+ * */
 public class CombinedHolidayPolicy implements HolidayPolicy {
   private static final String NULL_POLICIES_MESSAGE = "Null policies list not allowed";
   
@@ -28,7 +32,7 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
     return new CombinedHolidayPolicy(holidayPolicies);
   }
   
-  public static CombinedHolidayPolicy of(HolidayPolicy... holidayPolicies){
+  public static CombinedHolidayPolicy of (HolidayPolicy... holidayPolicies){
     return new CombinedHolidayPolicy(holidayPolicies);
   }
 
@@ -42,10 +46,30 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
     this.holidayPolicies.addAll(holidayPolicies);
   }
   
-  @Override public boolean isHoliday(LocalDate date) {
+  @Override
+  public boolean isHoliday(LocalDate date) {
     return holidayPolicies.stream()
         .map(hp->hp.isHoliday(date))
         .filter(ih->ih)
         .findFirst().orElse(false);
+  }
+
+  public static CombinedHolidayPolicyBuilder builder() {
+    return new CombinedHolidayPolicyBuilder();
+  }
+
+  public static class CombinedHolidayPolicyBuilder {
+    private Collection<HolidayPolicy> holidayProviders;
+    public CombinedHolidayPolicyBuilder policies(HolidayPolicy...policies) {
+      this.holidayProviders = Arrays.stream(policies).collect(Collectors.toList());
+      return this;
+    }
+    public CombinedHolidayPolicyBuilder policies(Collection<HolidayPolicy> providers) {
+      this.holidayProviders = providers;
+      return this;
+    }
+    public CombinedHolidayPolicy build() {
+      return new CombinedHolidayPolicy(holidayProviders);
+    }
   }
 }
