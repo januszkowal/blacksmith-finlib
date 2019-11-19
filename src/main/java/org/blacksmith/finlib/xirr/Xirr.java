@@ -95,7 +95,7 @@ public class Xirr implements Function{
     this(csws, null, null);
   }
 
-  public Xirr(Collection<Cashflow> csws, SolverBuilder builder, Double guess) {
+  public Xirr(Collection<Cashflow> csws, SolverBuilder solverBuilder, Double guess) {
     details = csws.stream().collect(XirrDetails.collector());
     details.validate();
     investments = csws.stream()
@@ -105,7 +105,7 @@ public class Xirr implements Function{
       throw new IllegalArgumentException(
           "Must have at least two cashflows");
     }
-    this.solverBuilder = builder != null ? builder : NewtonRaphsonAlgorithm.builder();
+    this.solverBuilder = solverBuilder != null ? solverBuilder : NewtonRaphsonAlgorithm.builder();
     this.guess = guess;
   }
 
@@ -163,7 +163,7 @@ public class Xirr implements Function{
    */
   public static class Builder {
     private Collection<Cashflow> cashflows = null;
-    private SolverBuilder builder = null;
+    private SolverBuilder solverBuilder = null;
     private Double guess = null;
 
     public Builder() {
@@ -178,8 +178,8 @@ public class Xirr implements Function{
       return this;
     }
 
-    public Builder withSolverBuilder(SolverBuilder builder) {
-      this.builder = builder;
+    public Builder withSolverBuilder(SolverBuilder solverBuilder) {
+      this.solverBuilder = solverBuilder;
       return this;
     }
 
@@ -189,7 +189,7 @@ public class Xirr implements Function{
     }
 
     public Xirr build() {
-      return new Xirr(cashflows, builder, guess);
+      return new Xirr(cashflows, solverBuilder, guess);
     }
   }
 
