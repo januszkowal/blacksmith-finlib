@@ -106,7 +106,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         Cashflow.of(-1000, LocalDate.parse("2010-01-01")),
         Cashflow.of( 3000, LocalDate.parse("2011-01-01"))
-    )).xirr();
+    ), BisectionAlgorithm.builder(), null).xirr();
     assertEquals(2.00, xirr, TOLERANCE);
   }
 
@@ -116,7 +116,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         Cashflow.of(-1000, LocalDate.parse("2010-01-01")),
         Cashflow.of(    0, LocalDate.parse("2011-01-01"))
-    )).xirr();
+    ), BisectionAlgorithm.builder(), null).xirr();
     assertEquals(-1.00, xirr, TOLERANCE);
   }
 
@@ -126,7 +126,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         Cashflow.of(-1000, LocalDate.parse("2010-01-01")),
         Cashflow.of(    0, LocalDate.parse("2011-01-01"))
-    )).xirr();
+    ), BisectionAlgorithm.builder(), null).xirr();
     assertEquals(-1.00, xirr, TOLERANCE);
   }
 
@@ -136,18 +136,18 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         Cashflow.of(-1000, LocalDate.parse("2010-01-01")),
         Cashflow.of(    0, LocalDate.parse("2010-07-01"))
-    )).xirr();
+    ), BisectionAlgorithm.builder(), null).xirr();
     assertEquals(-1.00, xirr, TOLERANCE);
   }
 
   @Test
   public void xirr_readme_example() {
-    double rate = new Xirr(
+    double rate = new Xirr(Arrays.asList(
         Cashflow.of(-1000, LocalDate.parse("2016-01-15")),
         Cashflow.of(-2500, LocalDate.parse("2016-02-08")),
         Cashflow.of(-1000, LocalDate.parse("2016-04-17")),
         Cashflow.of( 5050, LocalDate.parse("2016-08-24"))
-    ).xirr();
+    ), BisectionAlgorithm.builder(), null).xirr();
     assertEquals(0.2504234710540838, rate, TOLERANCE);
   }
 
