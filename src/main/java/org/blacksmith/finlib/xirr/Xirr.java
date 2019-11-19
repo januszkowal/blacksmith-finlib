@@ -153,7 +153,8 @@ public class Xirr implements Function{
       return -1; // Total loss
     }
     guess = guess != null ? guess : (details.total / details.outcomes) / years;
-    return solverBuilder.withFunction(this)
+    return solverBuilder
+        .withFunction(this)
         .build()
         .findRoot(guess);
   }
