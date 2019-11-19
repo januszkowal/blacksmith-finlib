@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.xirr.exception;
 
-import org.blacksmith.finlib.xirr.exception.OverflowException;
 import org.blacksmith.finlib.xirr.solver.AbstractSolver;
 
 /**

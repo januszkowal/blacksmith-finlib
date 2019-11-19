@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import org.blacksmith.commons.datetime.DateConversion;
-import org.blacksmith.finlib.xirr.solver.BisectionMethod;
+import org.blacksmith.finlib.xirr.solver.BisectionAlgorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-import static org.blacksmith.finlib.xirr.solver.BisectionMethod.TOLERANCE;
+import static org.blacksmith.finlib.xirr.solver.BisectionAlgorithm.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -23,7 +23,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         new Cashflow(-1000, LocalDate.parse("2010-01-01")),
         new Cashflow( 1000, LocalDate.parse("2011-01-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0, xirr, TOLERANCE);
   }
 
@@ -33,7 +33,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         new Cashflow(-1000, LocalDate.parse("2010-01-01")),
         new Cashflow( 1100, LocalDate.parse("2011-01-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.10, xirr, TOLERANCE);
   }
 
@@ -43,7 +43,7 @@ public class XirrBisectionTest {
     final double xirr = new Xirr(Arrays.asList(
         new Cashflow(-1000, LocalDate.parse("2010-01-01")),
         new Cashflow(  900, LocalDate.parse("2011-01-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(-0.10, xirr, TOLERANCE);
   }
 
@@ -57,7 +57,7 @@ public class XirrBisectionTest {
         new Cashflow(-1000, LocalDate.parse("2010-07-01")),
         new Cashflow(-1000, LocalDate.parse("2010-10-01")),
         new Cashflow( 4300, LocalDate.parse("2011-01-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
 
@@ -71,7 +71,7 @@ public class XirrBisectionTest {
         new Cashflow(1000, LocalDate.parse("2010-07-01")),
         new Cashflow(1000, LocalDate.parse("2010-10-01")),
         new Cashflow( -4300, LocalDate.parse("2011-01-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
   @Test
@@ -83,7 +83,7 @@ public class XirrBisectionTest {
         new Cashflow(-1000, LocalDate.parse("2010-07-01")),
         new Cashflow(-1000, LocalDate.parse("2010-01-01")),
         new Cashflow(-1000, LocalDate.parse("2010-04-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
 
@@ -96,7 +96,7 @@ public class XirrBisectionTest {
         new Cashflow(1000, LocalDate.parse("2010-07-01")),
         new Cashflow(1000, LocalDate.parse("2010-01-01")),
         new Cashflow(1000, LocalDate.parse("2010-04-01"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
 
@@ -172,7 +172,7 @@ public class XirrBisectionTest {
         new Cashflow(1765.89, LocalDate.parse("2016-01-22")),
         new Cashflow(1765.89, LocalDate.parse("2017-01-20")),
         new Cashflow(22421.55, LocalDate.parse("2017-06-05"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(0.2126861, rate, TOLERANCE);
   }
 
@@ -189,7 +189,7 @@ public class XirrBisectionTest {
         new Cashflow(-2552, LocalDate.parse("2001-07-13")),
         new Cashflow(-2530, LocalDate.parse("2001-07-16")),
         new Cashflow(29520, LocalDate.parse("2001-07-17"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(-0.7640294, rate, TOLERANCE);
   }
   @Test
@@ -205,7 +205,7 @@ public class XirrBisectionTest {
         new Cashflow(2552, LocalDate.parse("2001-07-13")),
         new Cashflow(2530, LocalDate.parse("2001-07-16")),
         new Cashflow(-29520, LocalDate.parse("2001-07-17"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(-0.7640294, rate, TOLERANCE);
   }
 
@@ -223,7 +223,7 @@ public class XirrBisectionTest {
         new Cashflow(-2530, LocalDate.parse("2001-07-16")),
         new Cashflow(-9840, LocalDate.parse("2001-07-17")),
         new Cashflow(38900, LocalDate.parse("2001-07-18"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(-0.8353404, rate, TOLERANCE);
   }
 
@@ -241,7 +241,7 @@ public class XirrBisectionTest {
         new Cashflow(2530, LocalDate.parse("2001-07-16")),
         new Cashflow(9840, LocalDate.parse("2001-07-17")),
         new Cashflow(-38900, LocalDate.parse("2001-07-18"))
-    ), BisectionMethod.builder(),null).xirr();
+    ), BisectionAlgorithm.builder(),null).xirr();
     assertEquals(-0.8353404, rate, TOLERANCE);
   }
 
@@ -273,7 +273,7 @@ public class XirrBisectionTest {
           new Cashflow(-1000, DateConversion.convertDateToLocalDate(format.parse("2010-01-01 09:00"))),
           new Cashflow(-1000, DateConversion.convertDateToLocalDate(format.parse("2010-01-01 12:00"))),
           new Cashflow( 2100, DateConversion.convertDateToLocalDate(format.parse("2010-01-01 15:00")))
-      ), BisectionMethod.builder(),null).xirr();
+      ), BisectionAlgorithm.builder(),null).xirr();
       fail("Expected exception for all transactions on the same day");
     });
   }
@@ -287,7 +287,7 @@ public class XirrBisectionTest {
           new Cashflow(-1000, LocalDate.parse("2010-01-01")),
           new Cashflow(-1000, LocalDate.parse("2010-05-01")),
           new Cashflow(-2000, LocalDate.parse("2010-09-01"))
-      ), BisectionMethod.builder(),null).xirr();
+      ), BisectionAlgorithm.builder(),null).xirr();
       fail("Expected exception for all transactions are negative");
     });
   }
@@ -301,7 +301,7 @@ public class XirrBisectionTest {
           new Cashflow(1000, LocalDate.of(2010,01,01)),
           new Cashflow(1000, LocalDate.parse("2010-05-01")),
           new Cashflow(   0, LocalDate.parse("2010-09-01"))
-      ), BisectionMethod.builder(),null).xirr();
+      ), BisectionAlgorithm.builder(),null).xirr();
       fail("Expected exception for all transactions are nonnegative");
     });
   }

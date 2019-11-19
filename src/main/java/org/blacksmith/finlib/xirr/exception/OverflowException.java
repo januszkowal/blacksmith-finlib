@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.xirr.exception;
 
-import org.blacksmith.finlib.xirr.solver.AbstractSolver;
+import org.blacksmith.finlib.xirr.solver.Solver;
 
 /**
  * Indicates that the algorithm failed to converge due to one of the values
@@ -10,9 +10,9 @@ import org.blacksmith.finlib.xirr.solver.AbstractSolver;
  */
 public class OverflowException extends ArithmeticException {
 
-  private final AbstractSolver state;
+  private final Solver state;
 
-  public OverflowException(String message, AbstractSolver state) {
+  public OverflowException(String message, Solver state) {
     super(message);
     this.state = state;
   }
@@ -22,7 +22,7 @@ public class OverflowException extends ArithmeticException {
    * @return the initial guess
    */
   public double getInitialGuess() {
-    return state.getGuess();
+    return state.getInitialGuess();
   }
 
   /**
@@ -38,16 +38,16 @@ public class OverflowException extends ArithmeticException {
    * Get the candidate value when the overflow condition occurred.
    * @return the candidate value when the overflow condition occurred
    */
-  public double getCandidate() {
-    return state.getCandidate();
+  public double getArgument() {
+    return state.getArgument();
   }
 
   /**
    * Get the function value when the overflow condition occurred.
    * @return the function value when the overflow condition occurred
    */
-  public double getValue() {
-    return state.getValue();
+  public double getFunctionValue() {
+    return state.getFunctionValue();
   }
 
   /**

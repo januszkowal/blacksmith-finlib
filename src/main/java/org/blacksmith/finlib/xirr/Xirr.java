@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
 import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
-import org.blacksmith.finlib.xirr.solver.NewtonMethod;
+import org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm;
 import org.blacksmith.finlib.xirr.solver.SolverBuilder;
 
 
@@ -98,14 +98,14 @@ public class Xirr implements Function{
   public Xirr(Collection<Cashflow> csws, SolverBuilder builder, Double guess) {
     details = csws.stream().collect(XirrDetails.collector());
     details.validate();
-    investments =csws.stream()
+    investments = csws.stream()
         .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summarizingDouble(Cashflow::getAmount)))
         .entrySet().stream().map((k)->createCashflow(k.getKey(),k.getValue().getSum())).collect(Collectors.toList());
     if (investments.size() < 2) {
       throw new IllegalArgumentException(
           "Must have at least two cashflows");
     }
-    this.solverBuilder = builder != null ? builder : NewtonMethod.builder();
+    this.solverBuilder = builder != null ? builder : NewtonRaphsonAlgorithm.builder();
     this.guess = guess;
   }
 
@@ -178,7 +178,7 @@ public class Xirr implements Function{
       return this;
     }
 
-    public Builder withSolverBuilder(NewtonMethod.Builder builder) {
+    public Builder withSolverBuilder(SolverBuilder builder) {
       this.builder = builder;
       return this;
     }

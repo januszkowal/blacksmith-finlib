@@ -4,14 +4,14 @@ import org.blacksmith.finlib.xirr.Function;
 import org.blacksmith.finlib.xirr.exception.OverflowException;
 import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
 
-public abstract class AbstractSolver {
+public abstract class AbstractSolver implements Solver {
   protected final Function function;
   protected final long maxIterations;
   protected final double tolerance;
   private long iteration;
-  protected double guess;
-  protected double candidate;
-  protected double value;
+  protected double initialGuess;
+  protected double argument;
+  protected double functionValue;
   protected Double derivativeValue;
 
   public AbstractSolver(Function function, long maxIterations, double tolerance) {
@@ -20,11 +20,11 @@ public abstract class AbstractSolver {
     this.tolerance = tolerance;
   }
 
-  public void setGuess(double guess) {
-    this.guess = guess;
+  public void setInitialGuess(double initialGuess) {
+    this.initialGuess = initialGuess;
   }
-  public double getGuess() {
-    return this.guess;
+  public double getInitialGuess() {
+    return this.initialGuess;
   }
   public void nextIteration() {
     iteration++;
@@ -32,12 +32,12 @@ public abstract class AbstractSolver {
   public long getIteration() {
     return this.iteration;
   }
-  public double getCandidate() {
-    return candidate;
+  public double getArgument() {
+    return argument;
   }
-  public void setCandidate(double candidate) {
-    this.candidate = candidate;
-    if (!Double.isFinite(candidate)) {
+  public void setArgument(double argument) {
+    this.argument = argument;
+    if (!Double.isFinite(argument)) {
       throw new OverflowException("Candidate overflow", this);
     }
   }
@@ -61,12 +61,12 @@ public abstract class AbstractSolver {
       throw new ZeroValuedDerivativeException(this);
     }
   }
-  public double getValue() {
-    return value;
+  public double getFunctionValue() {
+    return functionValue;
   }
-  public void setValue(double value) {
-    this.value = value;
-    if (!Double.isFinite(value)) {
+  public void setFunctionValue(double functionValue) {
+    this.functionValue = functionValue;
+    if (!Double.isFinite(functionValue)) {
       throw new OverflowException("Function value overflow", this);
     }
   }
@@ -74,10 +74,10 @@ public abstract class AbstractSolver {
   @Override
   public String toString() {
     return '{'
-        + "guess=" + getGuess()
-        + ", iteration="+ getIteration()
-        + ", candidate=" + getCandidate()
-        + ", value=" + getValue()
+        + "initialGuess=" + initialGuess
+        + ", iteration="+ iteration
+        + ", argument=" + argument
+        + ", functionValue=" + functionValue
         + ", derivative=" + derivativeValue + '}';
   }
 }

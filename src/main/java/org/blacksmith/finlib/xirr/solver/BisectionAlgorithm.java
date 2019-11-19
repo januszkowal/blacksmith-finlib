@@ -4,10 +4,10 @@ import org.blacksmith.finlib.xirr.Function;
 import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
 
 /**
- * Simple implementation of the Newton-Raphson method for finding roots or
+ * Simple implementation of the Bisection method for finding roots or
  * inverses of a function.
  * <p>
- * The function and its derivative must be supplied as instances of
+ * The function must be supplied as instances of
  * DoubleUnaryOperator and the answers are computed as doubles.
  * <p>
  * For examples of usage, see the source of the test class or the Xirr class.
@@ -20,30 +20,29 @@ import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
  * is within the <code>tolerance</code> of the desired target value, the
  * method terminates.
  */
-public class NewtonMethod implements Solver{
+public class BisectionAlgorithm {
   /** Default tolerance. */
   public static final double TOLERANCE = 0.000_000_1;
+  private final Function function;
+  private final double tolerance;
+  private final long iterations;
 
   /**
-   * Convenience method for getting an instance of a {@link Builder}.
+   * Convenience method for getting an instance of a {@link BisectionAlgorithm.Builder}.
    * @return new Builder
    */
   public static Builder builder() {
     return new Builder();
   }
 
-  private final Function function;
-  private final double tolerance;
-  private final long iterations;
-
   /**
-   * Construct an instance of the NewtonRaphson method for masochists who
+   * Construct an instance of the BisectionMethod
    * do not want to use {@link #builder()}.
    * @param function the function
    * @param tolerance the tolerance
    * @param iterations maximum number of iterations
    */
-  public NewtonMethod(
+  public BisectionAlgorithm(
       Function function,
       double tolerance,
       long iterations) {
@@ -52,41 +51,44 @@ public class NewtonMethod implements Solver{
     this.iterations = iterations;
   }
 
-  public double solve(final double target, final double guess) {
-    return new NewtonRaphsonSolver(function, iterations, tolerance).solve(target,guess);
-  }
-
   /**
-   * Builder for {@link NewtonMethod} instances.
+   * Builder for {@link BisectionSolver} instances.
    */
   public static class Builder extends AbstractSolverBuilder {
-
-    public Builder() {
-    }
-
+    public Builder() {}
     public Solver build() {
-      return new NewtonRaphsonSolver(this.function, this.iterations, this.tolerance);
+      return new BisectionSolver(this.function, this.iterations, this.tolerance);
     }
   }
 
-  public static class NewtonRaphsonSolver extends AbstractSolver implements Solver {
+  public static class BisectionSolver extends AbstractSolver {
 
-    public NewtonRaphsonSolver(Function function,
+    public BisectionSolver(Function function,
         long maxIterations, double tolerance) {
       super(function, maxIterations, tolerance);
     }
 
     public double solve(double target, double guess) {
-      setGuess(guess);
-      setCandidate(guess);
+      setInitialGuess(guess);
+      double leftArg = -1;
+      double rightArg = 2;
+      int signRight = (int)Math.signum(function.presentValue(rightArg));
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
-        setValue(function.presentValue(getCandidate()) - target);
-        if (Math.abs(getValue()) < this.tolerance) {
-          return this.candidate;
-        } else {
-          setDerivativeValue(function.derivative(getCandidate()));
-          setCandidate(this.candidate - this.value / this.derivativeValue);
+        setArgument((leftArg+rightArg)/2.0);
+        setFunctionValue(function.presentValue(this.getArgument()) - target);
+        int signMid = (int)Math.signum(this.getFunctionValue());
+        if (Math.abs(this.getFunctionValue())<TOLERANCE) {
+          return this.getArgument();
+        }
+        else {
+          if (signMid==signRight) {
+            rightArg = this.getArgument();
+            signRight = signMid;
+          }
+          else {
+            leftArg = this.getArgument();
+          }
         }
       }
       throw new NonconvergenceException(guess, maxIterations);

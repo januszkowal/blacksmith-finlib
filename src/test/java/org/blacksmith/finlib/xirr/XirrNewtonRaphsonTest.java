@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-import static org.blacksmith.finlib.xirr.solver.NewtonMethod.TOLERANCE;
+import static org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 

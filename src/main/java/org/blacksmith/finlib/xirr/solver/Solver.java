@@ -38,4 +38,10 @@ public interface Solver {
   default double findRoot(final double guess) {
     return solve(0 , guess);
   }
+
+  Double getDerivativeValue();
+  double getInitialGuess();
+  long getIteration();
+  double getArgument();
+  double getFunctionValue();
 }

@@ -2,18 +2,17 @@ package org.blacksmith.finlib.xirr;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import org.blacksmith.finlib.xirr.solver.NewtonMethod;
+import org.blacksmith.finlib.xirr.solver.Solver;
+import org.blacksmith.finlib.xirr.solver.SolverBuilder;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import static org.blacksmith.finlib.xirr.solver.NewtonMethod.TOLERANCE;
+import static org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class XirrBuilderTest {
@@ -55,7 +54,8 @@ public class XirrBuilderTest {
   public void withNewtonRaphsonBuilder() throws Exception {
     final double expected = 1;
 
-    final NewtonMethod.Builder builder = setUpNewtonRaphsonBuilder();
+    final SolverBuilder builder = setUpNewtonRaphsonBuilder();
+    System.out.println("builder build:" + builder.build());
     Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
 
     final double xirr = Xirr.builder()
@@ -75,7 +75,7 @@ public class XirrBuilderTest {
     final double expected = 1;
     final double guess = 3;
 
-    final NewtonMethod.Builder builder = setUpNewtonRaphsonBuilder();
+    final SolverBuilder builder = setUpNewtonRaphsonBuilder();
     Mockito.when(builder.build().findRoot(guess)).thenReturn(expected);
 
     final double xirr = Xirr.builder()
@@ -91,10 +91,12 @@ public class XirrBuilderTest {
     assertEquals(expected, xirr, 0);
   }
 
-  private NewtonMethod.Builder setUpNewtonRaphsonBuilder()
+  private SolverBuilder setUpNewtonRaphsonBuilder()
   {
-    final NewtonMethod.Builder builder = Mockito.mock(NewtonMethod.Builder.class);
+    final SolverBuilder builder = Mockito.mock(SolverBuilder.class);
+    final Solver solver = Mockito.mock(Solver.class);
     Mockito.when(builder.withFunction(ArgumentMatchers.any())).thenReturn(builder);
+    Mockito.when(builder.build()).thenReturn(solver);
     return builder;
   }
 

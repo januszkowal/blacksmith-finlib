@@ -3,13 +3,13 @@ package org.blacksmith.finlib.xirr;
 import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
 import org.blacksmith.finlib.xirr.exception.OverflowException;
 import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
-import org.blacksmith.finlib.xirr.solver.NewtonMethod;
+import org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm;
 import org.blacksmith.finlib.xirr.solver.Solver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-import static org.blacksmith.finlib.xirr.solver.NewtonMethod.TOLERANCE;
+import static org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,7 +19,7 @@ public class NewtonRaphsonTest {
 
   @Test
   public void sqrt() throws Exception {
-    Solver nr = NewtonMethod.builder()
+    Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
           @Override public double presentValue(double x) {
             return x*x;
@@ -36,7 +36,7 @@ public class NewtonRaphsonTest {
 
   @Test
   public void cubeRoot() throws Exception {
-    Solver nr = NewtonMethod.builder()
+    Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
           @Override public double presentValue(double x) {
             return x*x*x;
@@ -53,7 +53,7 @@ public class NewtonRaphsonTest {
 
   @Test
   public void quadratic() throws Exception {
-    Solver nr = NewtonMethod.builder()
+    Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
           @Override public double presentValue(double x) {
             return (x-4)*(x+3);
@@ -73,7 +73,7 @@ public class NewtonRaphsonTest {
   @Test
   public void failToConverge() throws Exception {
     Assertions.assertThrows(ZeroValuedDerivativeException.class,()->{
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return (x-4)*(x+3);
@@ -94,7 +94,7 @@ public class NewtonRaphsonTest {
     try {
       // Use nonsense functions designed to cause a zero derivative
       // after one iteration
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return 2;
@@ -109,15 +109,15 @@ public class NewtonRaphsonTest {
     } catch (ZeroValuedDerivativeException zvde) {
       assertEquals(3, zvde.getInitialGuess(), TOLERANCE);
       assertEquals(2, zvde.getIteration());
-      assertEquals(-5, zvde.getCandidate(), TOLERANCE);
-      assertEquals(2, zvde.getValue(), TOLERANCE);
+      assertEquals(-5, zvde.getArgument(), TOLERANCE);
+      assertEquals(2, zvde.getFunctionValue(), TOLERANCE);
     }
   }
 
   @Test
   public void failToConverge_iterations() throws Exception {
     Assertions.assertThrows(NonconvergenceException.class,()->{
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return 2 * Math.signum(x);
@@ -135,7 +135,7 @@ public class NewtonRaphsonTest {
   @Test
   public void failToConverge_iterations_verifyDetails() throws Exception {
     try {
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return 2 * Math.signum(x);
@@ -156,7 +156,7 @@ public class NewtonRaphsonTest {
   @Test
   public void failToConverge_badCandidate_verifyDetails() throws Exception {
     try {
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return Double.MAX_VALUE;
@@ -172,14 +172,14 @@ public class NewtonRaphsonTest {
       System.out.println(ne);
       assertEquals(3, ne.getInitialGuess(), TOLERANCE);
       assertEquals(1, ne.getIteration());
-      assertEquals(Double.NEGATIVE_INFINITY, ne.getCandidate(), TOLERANCE);
+      assertEquals(Double.NEGATIVE_INFINITY, ne.getArgument(), TOLERANCE);
     }
   }
 
   @Test
   public void failToConverge_nanFunctionValue_verifyDetails() throws Exception {
     try {
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double x) {
               return Double.NaN;
@@ -194,8 +194,8 @@ public class NewtonRaphsonTest {
     } catch (OverflowException ne) {
       assertEquals(3, ne.getInitialGuess(), TOLERANCE);
       assertEquals(1, ne.getIteration());
-      assertEquals(3, ne.getCandidate(), TOLERANCE);
-      assertTrue(Double.isNaN(ne.getValue()));
+      assertEquals(3, ne.getArgument(), TOLERANCE);
+      assertTrue(Double.isNaN(ne.getFunctionValue()));
       assertNull(ne.getDerivativeValue());
     }
   }
@@ -203,7 +203,7 @@ public class NewtonRaphsonTest {
   @Test
   public void failToConverge_nanDerivative_verifyDetails() throws Exception {
     try {
-      Solver nr = NewtonMethod.builder()
+      Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
             @Override public double presentValue(double arg) {
               return 2;
@@ -218,8 +218,8 @@ public class NewtonRaphsonTest {
     } catch (OverflowException ne) {
       assertEquals(3, ne.getInitialGuess(), TOLERANCE);
       assertEquals(1, ne.getIteration());
-      assertEquals(3, ne.getCandidate(), TOLERANCE);
-      assertEquals(2, ne.getValue(), TOLERANCE);
+      assertEquals(3, ne.getArgument(), TOLERANCE);
+      assertEquals(2, ne.getFunctionValue(), TOLERANCE);
       assertTrue(Double.isNaN(ne.getDerivativeValue()));
     }
   }
@@ -228,7 +228,7 @@ public class NewtonRaphsonTest {
   @Test
   public void tolerance() throws Exception {
     final double tolerance = TOLERANCE/1000;
-    Solver nr = NewtonMethod.builder()
+    Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
           @Override public double presentValue(double x) {
             return x*x;
