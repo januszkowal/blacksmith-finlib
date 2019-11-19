@@ -4,7 +4,7 @@ package org.blacksmith.finlib.xirr;
  * Convenience class which represents {@link Cashflow} instances more
  * conveniently for calculating purposes
  */
-public class XirrCashflow {
+public final class XirrCashflow {
   /** The amount of the cashflow. */
   private double amount;
   /** The number of years for which the cashflow applies, including

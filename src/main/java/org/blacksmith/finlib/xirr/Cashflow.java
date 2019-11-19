@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * investment is now worthless.
  * @see Xirr
  */
-public class Cashflow {
+public final class Cashflow {
 
   final double amount;
   final LocalDate date;
@@ -25,6 +25,10 @@ public class Cashflow {
   public Cashflow(double amount, LocalDate date) {
     this.amount = amount;
     this.date = date;
+  }
+
+  public static Cashflow of (double amount, LocalDate date) {
+    return new Cashflow(amount,date);
   }
 
   /**
