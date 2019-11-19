@@ -21,41 +21,21 @@ import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
  * method terminates.
  */
 public class BisectionAlgorithm {
-  /** Default tolerance. */
-  public static final double TOLERANCE = 0.000_000_1;
-  private final Function function;
-  private final double tolerance;
-  private final long iterations;
-
+  private BisectionAlgorithm() {
+  }
   /**
-   * Convenience method for getting an instance of a {@link BisectionAlgorithm.Builder}.
+   * Convenience method for getting an instance of a {@link BisectionAlgorithm.AlgorithmSolverBuilder}.
    * @return new Builder
    */
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  /**
-   * Construct an instance of the BisectionMethod
-   * do not want to use {@link #builder()}.
-   * @param function the function
-   * @param tolerance the tolerance
-   * @param iterations maximum number of iterations
-   */
-  public BisectionAlgorithm(
-      Function function,
-      double tolerance,
-      long iterations) {
-    this.function = function;
-    this.tolerance = tolerance;
-    this.iterations = iterations;
+  public static SolverBuilder builder() {
+    return new AlgorithmSolverBuilder();
   }
 
   /**
    * Builder for {@link BisectionSolver} instances.
    */
-  public static class Builder extends AbstractSolverBuilder {
-    public Builder() {}
+  public static class AlgorithmSolverBuilder extends AbstractSolverBuilder {
+    public AlgorithmSolverBuilder() {}
     public Solver build() {
       return new BisectionSolver(this.function, this.iterations, this.tolerance);
     }
@@ -78,7 +58,7 @@ public class BisectionAlgorithm {
         setArgument((leftArg+rightArg)/2.0);
         setFunctionValue(function.presentValue(this.getArgument()) - target);
         int signMid = (int)Math.signum(this.getFunctionValue());
-        if (Math.abs(this.getFunctionValue())<TOLERANCE) {
+        if (Math.abs(this.getFunctionValue())<this.getTolerance()) {
           return this.getArgument();
         }
         else {

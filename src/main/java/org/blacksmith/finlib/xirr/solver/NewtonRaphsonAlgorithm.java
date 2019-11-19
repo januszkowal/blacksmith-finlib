@@ -21,44 +21,25 @@ import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
  * method terminates.
  */
 public class NewtonRaphsonAlgorithm {
-  /** Default tolerance. */
-  public static final double TOLERANCE = 0.000_000_1;
-  private final Function function;
-  private final double tolerance;
-  private final long iterations;
 
+  private NewtonRaphsonAlgorithm() {
+  }
   /**
-   * Convenience method for getting an instance of a {@link Builder}.
+   * Convenience method for getting an instance of a {@link AlgorithmSolverBuilder}.
    * @return new Builder
    */
-  public static Builder builder() {
-    return new Builder();
+  public static SolverBuilder builder() {
+    return new AlgorithmSolverBuilder();
   }
-  /**
-   * Construct an instance of the NewtonRaphsonMethod
-   * do not want to use {@link #builder()}.
-   * @param function the function
-   * @param tolerance the tolerance
-   * @param iterations maximum number of iterations
-   */
-  public NewtonRaphsonAlgorithm(
-      Function function,
-      double tolerance,
-      long iterations) {
-    this.function = function;
-    this.tolerance = tolerance;
-    this.iterations = iterations;
-  }
-
   /**
    * Builder for {@link NewtonRaphsonSolver} instances.
    */
-  public static class Builder extends AbstractSolverBuilder {
+  public static class AlgorithmSolverBuilder extends AbstractSolverBuilder {
 
-    public Builder() {}
+    public AlgorithmSolverBuilder() {}
 
     public Solver build() {
-      return new NewtonRaphsonSolver(this.function, this.iterations, this.tolerance);
+      return new NewtonRaphsonSolver(function, this.iterations, this.tolerance);
     }
   }
 

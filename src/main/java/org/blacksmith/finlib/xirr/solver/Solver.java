@@ -39,9 +39,10 @@ public interface Solver {
     return solve(0 , guess);
   }
 
-  Double getDerivativeValue();
   double getInitialGuess();
+  long getMaxIterations();
   long getIteration();
   double getArgument();
   double getFunctionValue();
+  Double getDerivativeValue();
 }

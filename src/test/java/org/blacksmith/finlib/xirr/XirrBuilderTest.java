@@ -12,7 +12,7 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 
-import static org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm.TOLERANCE;
+import static org.blacksmith.finlib.xirr.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class XirrBuilderTest {

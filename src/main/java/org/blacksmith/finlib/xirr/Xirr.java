@@ -37,8 +37,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * Example using the builder to gain more control:
  * <code>
  *     double rate = Xirr.builder()
- *         .withNewtonRaphsonBuilder(
- *             NewtonRaphson.builder()
+ *         .withSolverBuilder(
+ *             NewtonRaphsonAlgorithm.builder()
  *                 .withIterations(1000)
  *                 .withTolerance(0.0001))
  *         .withGuess(.20)
