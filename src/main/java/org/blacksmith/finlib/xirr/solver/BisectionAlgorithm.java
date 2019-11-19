@@ -27,7 +27,7 @@ public class BisectionAlgorithm {
    * Convenience method for getting an instance of a {@link BisectionAlgorithm.AlgorithmSolverBuilder}.
    * @return new Builder
    */
-  public static SolverBuilder builder() {
+  public static AlgorithmSolverBuilder builder() {
     return new AlgorithmSolverBuilder();
   }
 
@@ -35,23 +35,41 @@ public class BisectionAlgorithm {
    * Builder for {@link BisectionSolver} instances.
    */
   public static class AlgorithmSolverBuilder extends AbstractSolverBuilder {
+    private double minArg = -1.0;
+    private double maxArg =  2.0;
     public AlgorithmSolverBuilder() {}
+    public AlgorithmSolverBuilder withMinArg(double minArg) {
+      this.minArg = minArg;
+      return this;
+    }
+    public AlgorithmSolverBuilder withMaxArg(double maxArg) {
+      this.maxArg = maxArg;
+      return this;
+    }
     public Solver build() {
-      return new BisectionSolver(this.function, this.iterations, this.tolerance);
+      return new BisectionSolver(this.function, this.iterations, this.tolerance,
+          this.minArg, this.maxArg);
     }
   }
 
   public static class BisectionSolver extends AbstractSolver {
 
+    private double minArg;
+    private double maxArg;
+
     public BisectionSolver(Function function,
-        long maxIterations, double tolerance) {
+        long maxIterations, double tolerance, double minArg, double maxArg) {
       super(function, maxIterations, tolerance);
+      this.minArg = minArg;
+      this.maxArg = maxArg;
     }
 
     public double solve(double target, double guess) {
       setInitialGuess(guess);
-      double leftArg = -1;
-      double rightArg = 2;
+      double leftArg  = this.minArg;
+      double rightArg = this.maxArg;
+      System.out.println("left=" + leftArg + " right=" + rightArg);
+      int signLeft  = (int)Math.signum(function.presentValue(leftArg));
       int signRight = (int)Math.signum(function.presentValue(rightArg));
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
@@ -68,6 +86,7 @@ public class BisectionAlgorithm {
           }
           else {
             leftArg = this.getArgument();
+            signLeft = signMid;
           }
         }
       }

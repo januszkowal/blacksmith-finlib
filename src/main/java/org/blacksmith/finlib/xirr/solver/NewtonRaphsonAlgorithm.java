@@ -28,7 +28,7 @@ public class NewtonRaphsonAlgorithm {
    * Convenience method for getting an instance of a {@link AlgorithmSolverBuilder}.
    * @return new Builder
    */
-  public static SolverBuilder builder() {
+  public static AlgorithmSolverBuilder builder() {
     return new AlgorithmSolverBuilder();
   }
   /**
