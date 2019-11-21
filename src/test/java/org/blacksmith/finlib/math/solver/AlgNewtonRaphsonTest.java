@@ -27,9 +27,9 @@ public class AlgNewtonRaphsonTest {
           }
         })
         .build();
-    assertEquals(2, nr.inverse(4, 4), TOLERANCE);
-    assertEquals(-3, nr.inverse(9, -9), TOLERANCE);
-    assertEquals(25, nr.inverse(625, 625), TOLERANCE);
+    assertEquals(2, nr.inverse(4, 4.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(9, -9.0), TOLERANCE);
+    assertEquals(25, nr.inverse(625, 625.0), TOLERANCE);
   }
 
   @Test
@@ -44,9 +44,9 @@ public class AlgNewtonRaphsonTest {
           }
         })
         .build();
-    assertEquals(2, nr.inverse(8, 8), TOLERANCE);
-    assertEquals(-3, nr.inverse(-27, 27), TOLERANCE);
-    assertEquals(25, nr.inverse(15_625, 15_625), TOLERANCE);
+    assertEquals(2, nr.inverse(8, 8.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(-27, 27.0), TOLERANCE);
+    assertEquals(25, nr.inverse(15_625, 15_625.0), TOLERANCE);
   }
 
   @Test
@@ -61,8 +61,8 @@ public class AlgNewtonRaphsonTest {
           }
         })
         .build();
-    assertEquals(4, nr.findRoot(10), TOLERANCE);
-    assertEquals(-3, nr.findRoot(-10), TOLERANCE);
+    assertEquals(4, nr.findRoot(10.0), TOLERANCE);
+    assertEquals(-3, nr.findRoot(-10.0), TOLERANCE);
     // Inflection point when derivative is zero => x = 1/2
     assertEquals(4, nr.findRoot(.51), TOLERANCE);
     assertEquals(-3, nr.findRoot(.49), TOLERANCE);
@@ -102,7 +102,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(3);
+      nr.findRoot(3.0);
       fail("Expected non-convergence");
     } catch (ZeroValuedDerivativeException zvde) {
       assertEquals(3, zvde.getInitialGuess(), TOLERANCE);
@@ -125,7 +125,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(1);
+      nr.findRoot(1.0);
       fail("Expected non-convergence");
     });
   }
@@ -143,7 +143,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(1);
+      nr.findRoot(1.0);
       fail("Expected non-convergence");
     } catch (NonconvergenceException ne) {
       assertEquals(1, ne.getInitialGuess(), TOLERANCE);
@@ -164,7 +164,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(3);
+      nr.findRoot(3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       System.out.println(ne);
@@ -187,7 +187,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(3);
+      nr.findRoot(3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       assertEquals(3, ne.getInitialGuess(), TOLERANCE);
@@ -211,7 +211,7 @@ public class AlgNewtonRaphsonTest {
             }
           })
           .build();
-      nr.findRoot(3);
+      nr.findRoot(3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       assertEquals(3, ne.getInitialGuess(), TOLERANCE);
@@ -237,9 +237,9 @@ public class AlgNewtonRaphsonTest {
         })
         .withTolerance(tolerance)
         .build();
-    assertEquals(4, nr.inverse(16, 16), tolerance);
-    assertEquals(15, nr.inverse(225, 225), tolerance);
-    assertEquals(1.414_213_562_3, nr.inverse(2, 2), tolerance);
+    assertEquals(4, nr.inverse(16, 16.0), tolerance);
+    assertEquals(15, nr.inverse(225, 225.0), tolerance);
+    assertEquals(1.414_213_562_3, nr.inverse(2, 2.0), tolerance);
   }
 
 }

@@ -39,7 +39,7 @@ public interface Solver {
     return solve(0 , guess);
   }
 
-  double getInitialGuess();
+  Double getInitialGuess();
   long getMaxIterations();
   long getIteration();
   double getArgument();

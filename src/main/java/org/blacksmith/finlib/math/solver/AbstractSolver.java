@@ -7,7 +7,7 @@ public abstract class AbstractSolver implements Solver {
   protected final Function function;
   protected final long maxIterations;
   protected final double tolerance;
-  protected double initialGuess;
+  protected Double initialGuess;
 
   //Values actualized during iteration
   //Current iteration
@@ -28,7 +28,7 @@ public abstract class AbstractSolver implements Solver {
   public void setInitialGuess(double initialGuess) {
     this.initialGuess = initialGuess;
   }
-  public double getInitialGuess() {
+  public Double getInitialGuess() {
     return this.initialGuess;
   }
   public void nextIteration() {

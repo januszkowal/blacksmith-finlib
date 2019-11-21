@@ -69,6 +69,7 @@ public class BiSectionAlgorithm {
       double a  = this.a;
       double b = this.b;
       double aT = function.functionValue(a) - target;
+      setInitialGuess(guess);
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
         setArgument((a+b)/2.0);

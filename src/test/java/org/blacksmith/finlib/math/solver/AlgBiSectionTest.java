@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 public class AlgBiSectionTest {
 
@@ -25,9 +22,9 @@ public class AlgBiSectionTest {
           }
         })
         .build();
-    assertEquals(2, nr.inverse(4, 4), TOLERANCE);
-    assertEquals(3, nr.inverse(9, -9), TOLERANCE);
-    assertEquals(25, nr.inverse(625, 625), TOLERANCE);
+    assertEquals(2, nr.inverse(4, 0.0), TOLERANCE);
+    assertEquals(3, nr.inverse(9, 0.0), TOLERANCE);
+    assertEquals(25, nr.inverse(625, 0.0), TOLERANCE);
   }
 
   @Test
@@ -44,9 +41,9 @@ public class AlgBiSectionTest {
           }
         })
         .build();
-    assertEquals(-2, nr.inverse(4, 4), TOLERANCE);
-    assertEquals(-3, nr.inverse(9, -9), TOLERANCE);
-    assertEquals(-25, nr.inverse(625, 625), TOLERANCE);
+    assertEquals(-2, nr.inverse(4, 0.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(9, 0.0), TOLERANCE);
+    assertEquals(-25, nr.inverse(625, 0.0), TOLERANCE);
   }
 
   @Test
@@ -63,9 +60,9 @@ public class AlgBiSectionTest {
           }
         })
         .build();
-    assertEquals(2, nr.inverse(8, 8), TOLERANCE);
-    assertEquals(-3, nr.inverse(-27, 27), TOLERANCE);
-    assertEquals(25, nr.inverse(15_625, 15_625), TOLERANCE);
+    assertEquals(2, nr.inverse(8, 8.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(-27, 0.0), TOLERANCE);
+    assertEquals(25, nr.inverse(15_625, 0.0), TOLERANCE);
   }
 
   @Test
@@ -82,11 +79,11 @@ public class AlgBiSectionTest {
           }
         })
         .build();
-    assertEquals(-3, nr.findRoot(10), TOLERANCE);
-    assertEquals(-3, nr.findRoot(-10), TOLERANCE);
+    assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
+    assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
     // Inflection point when derivative is zero => x = 1/2
-    assertEquals(-3, nr.findRoot(.51), TOLERANCE);
-    assertEquals(-3, nr.findRoot(.49), TOLERANCE);
+    assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
+    assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
   }
 
   @Test
@@ -103,10 +100,10 @@ public class AlgBiSectionTest {
           }
         })
         .build();
-    assertEquals(4, nr.findRoot(10), TOLERANCE);
-    assertEquals(4, nr.findRoot(-10), TOLERANCE);
+    assertEquals(4, nr.findRoot(0.0), TOLERANCE);
+    assertEquals(4, nr.findRoot(0.0), TOLERANCE);
     // Inflection point when derivative is zero => x = 1/2
-    assertEquals(4, nr.findRoot(.51), TOLERANCE);
-    assertEquals(4, nr.findRoot(.49), TOLERANCE);
+    assertEquals(4, nr.findRoot(0.0), TOLERANCE);
+    assertEquals(4, nr.findRoot(0.0), TOLERANCE);
   }
 }
