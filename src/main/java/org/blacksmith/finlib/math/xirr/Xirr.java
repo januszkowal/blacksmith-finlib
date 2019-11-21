@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.blacksmith.finlib.math.solver.Function;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonAlgorithm;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
@@ -53,7 +54,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * This class is not thread-safe and is designed for each instance to be used
  * once.
  */
-public class Xirr implements Function{
+public class Xirr implements Function {
 
   private static final double DAYS_IN_YEAR = 365;
 

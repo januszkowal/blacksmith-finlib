@@ -3,9 +3,6 @@ package org.blacksmith.finlib.math.solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
-import org.blacksmith.finlib.math.solver.NewtonRaphsonAlgorithm;
-import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.xirr.Function;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

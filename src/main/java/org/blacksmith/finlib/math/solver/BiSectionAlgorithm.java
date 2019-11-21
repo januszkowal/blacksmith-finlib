@@ -1,16 +1,17 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.xirr.Function;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 
 /**
  * Simple implementation of the Bisection method for finding roots or
  * inverses of a function.
  * <p>
- * The function must be supplied as instances of
- * DoubleUnaryOperator and the answers are computed as doubles.
+ * The function and its derivative must be supplied as instance of Function
  * <p>
  * For examples of usage, see the source of the test class or the Xirr class.
+ * The algorithm consists of repeatedly bisecting the interval defined within range: a <= arg <= b
+ * If the value of the function at the candidate input is within the <code>tolerance</code> of the desired target value, the
+ * method terminates.
  * <p>
  * The <code>iterations</code> parameter is used as an upper bound on the number
  * of iterations to run the method for.
@@ -19,6 +20,10 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
  * has been successful.  If the value of the function at the candidate input
  * is within the <code>tolerance</code> of the desired target value, the
  * method terminates.
+ * <p>
+ * The <code>minArg</code> parameter is used to determine left starting point of the algorithm
+ * <p>
+ * The <code>maxArg</code> parameter is used to determine right starting point of the algorithm
  */
 public class BiSectionAlgorithm {
   private BiSectionAlgorithm() {
@@ -54,39 +59,36 @@ public class BiSectionAlgorithm {
 
   public static class BisectionSolver extends AbstractSolver {
 
-    private double minArg;
-    private double maxArg;
+    private double a;
+    private double b;
 
     public BisectionSolver(Function function,
-        long maxIterations, double tolerance, double minArg, double maxArg) {
+        long maxIterations, double tolerance, double a, double b) {
       super(function, maxIterations, tolerance);
-      this.minArg = minArg;
-      this.maxArg = maxArg;
+      this.a = a;
+      this.b = b;
     }
 
     public double solve(double target, double guess) {
       setInitialGuess(guess);
-      double leftArg  = this.minArg;
-      double rightArg = this.maxArg;
-      double leftValueT = function.presentValue(leftArg) - target;
-      if (leftArg*rightArg>=0) {
-
-      }
+      double a  = this.a;
+      double b = this.b;
+      double aT = function.presentValue(a) - target;
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
-        setArgument((leftArg+rightArg)/2.0);
+        setArgument((a+b)/2.0);
         setFunctionValue(function.presentValue(this.getArgument()));
         double functionValueT = this.getFunctionValue()-target;
         if (Math.abs(functionValueT)<this.getTolerance()) {
           return this.getArgument();
         }
         else {
-          if (functionValueT*leftValueT<0) {
-            rightArg = this.getArgument();
+          if (functionValueT*aT<0) {
+            b = this.getArgument();
           }
           else {
-            leftArg = this.getArgument();
-            leftValueT = functionValueT;
+            a = this.getArgument();
+            aT = functionValueT;
           }
         }
       }

@@ -1,18 +1,16 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.xirr.Function;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 
 /**
  * Simple implementation of the Newton-Raphson method for finding roots or
  * inverses of a function.
  * <p>
- * The function and its derivative must be supplied as instances of
- * DoubleUnaryOperator and the answers are computed as doubles.
+ * The function and its derivative must be supplied as instance of Function
  * <p>
  * For examples of usage, see the source of the test class or the Xirr class.
  * <p>
- * The <code>iterations</code> parameter is used as an upper bound on the number
+ * The <code>maxIterations</code> parameter is used as an upper bound on the number
  * of iterations to run the method for.
  * <p>
  * The <code>tolerance</code> parameter is used to determine when the method

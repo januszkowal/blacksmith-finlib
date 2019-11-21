@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.xirr.Function;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 

@@ -1,8 +1,5 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
-import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.xirr.Function;
 import org.junit.jupiter.api.Test;
 
 
