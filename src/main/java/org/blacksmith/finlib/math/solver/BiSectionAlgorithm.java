@@ -68,11 +68,11 @@ public class BiSectionAlgorithm {
       setInitialGuess(guess);
       double a  = this.a;
       double b = this.b;
-      double aT = function.presentValue(a) - target;
+      double aT = function.functionValue(a) - target;
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
         setArgument((a+b)/2.0);
-        setFunctionValue(function.presentValue(this.getArgument()));
+        setFunctionValue(function.functionValue(this.getArgument()));
         double functionValueT = this.getFunctionValue()-target;
         if (Math.abs(functionValueT)<this.getTolerance()) {
           return this.getArgument();

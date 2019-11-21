@@ -50,11 +50,11 @@ public class NewtonRaphsonAlgorithm {
       setArgument(guess);
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
-        setFunctionValue(function.presentValue(getArgument()) - target);
+        setFunctionValue(function.functionValue(getArgument()) - target);
         if (Math.abs(this.getFunctionValue()) < this.getTolerance()) {
           return this.getArgument();
         } else {
-          setDerivativeValue(function.derivative(getArgument()));
+          setDerivativeValue(function.derivativeValue(getArgument()));
           setArgument(this.getArgument() - this.getFunctionValue() / this.getDerivativeValue());
         }
       }

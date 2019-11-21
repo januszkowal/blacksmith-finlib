@@ -17,10 +17,10 @@ public class AlgBiSectionTest {
         .withMinArg(0)
         .withMaxArg(30)
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x;
           }
         })
@@ -36,10 +36,10 @@ public class AlgBiSectionTest {
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x;
           }
         })
@@ -55,10 +55,10 @@ public class AlgBiSectionTest {
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 3*x*x;
           }
         })
@@ -74,10 +74,10 @@ public class AlgBiSectionTest {
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return (x-4)*(x+3);
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x-1;
           }
         })
@@ -95,10 +95,10 @@ public class AlgBiSectionTest {
         .withMinArg(0)
         .withMaxArg(30)
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return (x-4)*(x+3);
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x-1;
           }
         })

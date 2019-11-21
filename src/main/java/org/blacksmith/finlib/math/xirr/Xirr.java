@@ -136,7 +136,7 @@ public class Xirr implements Function {
    * @return the present value of the investment if it had been subject to the
    *         given rate of return
    */
-  public double presentValue(final double rate) {
+  public double functionValue(final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.presentValue(rate))
         .sum();
@@ -147,7 +147,7 @@ public class Xirr implements Function {
    * @param rate the rate of return
    * @return derivative of the present value under the given rate
    */
-  public double derivative(final double rate) {
+  public double derivativeValue(final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.derivative(rate))
         .sum();

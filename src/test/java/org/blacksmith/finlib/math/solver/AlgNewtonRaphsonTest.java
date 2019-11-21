@@ -19,10 +19,10 @@ public class AlgNewtonRaphsonTest {
   public void sqrt() throws Exception {
     Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x;
           }
         })
@@ -36,10 +36,10 @@ public class AlgNewtonRaphsonTest {
   public void cubeRoot() throws Exception {
     Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 3*x*x;
           }
         })
@@ -53,10 +53,10 @@ public class AlgNewtonRaphsonTest {
   public void quadratic() throws Exception {
     Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return (x-4)*(x+3);
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x-1;
           }
         })
@@ -73,10 +73,10 @@ public class AlgNewtonRaphsonTest {
     Assertions.assertThrows(ZeroValuedDerivativeException.class,()->{
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return (x-4)*(x+3);
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return 2*x-1;
             }
           })
@@ -94,10 +94,10 @@ public class AlgNewtonRaphsonTest {
       // after one iteration
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return 2;
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return x > 0 ? .25 : 0;
             }
           })
@@ -117,10 +117,10 @@ public class AlgNewtonRaphsonTest {
     Assertions.assertThrows(NonconvergenceException.class,()->{
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return 2 * Math.signum(x);
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return 1;
             }
           })
@@ -135,10 +135,10 @@ public class AlgNewtonRaphsonTest {
     try {
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return 2 * Math.signum(x);
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return 1;
             }
           })
@@ -156,10 +156,10 @@ public class AlgNewtonRaphsonTest {
     try {
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return Double.MAX_VALUE;
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return Double.MIN_NORMAL;
             }
           })
@@ -179,10 +179,10 @@ public class AlgNewtonRaphsonTest {
     try {
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double x) {
+            @Override public double functionValue(double x) {
               return Double.NaN;
             }
-            @Override public double derivative(double x) {
+            @Override public double derivativeValue(double x) {
               return 1;
             }
           })
@@ -203,10 +203,10 @@ public class AlgNewtonRaphsonTest {
     try {
       Solver nr = NewtonRaphsonAlgorithm.builder()
           .withFunction(new Function() {
-            @Override public double presentValue(double arg) {
+            @Override public double functionValue(double arg) {
               return 2;
             }
-            @Override public double derivative(double arg) {
+            @Override public double derivativeValue(double arg) {
               return Double.NaN;
             }
           })
@@ -228,10 +228,10 @@ public class AlgNewtonRaphsonTest {
     final double tolerance = TOLERANCE/1000;
     Solver nr = NewtonRaphsonAlgorithm.builder()
         .withFunction(new Function() {
-          @Override public double presentValue(double x) {
+          @Override public double functionValue(double x) {
             return x*x;
           }
-          @Override public double derivative(double x) {
+          @Override public double derivativeValue(double x) {
             return 2*x;
           }
         })
