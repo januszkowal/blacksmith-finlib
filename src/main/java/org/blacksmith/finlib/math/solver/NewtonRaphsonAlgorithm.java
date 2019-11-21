@@ -7,16 +7,13 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
  * inverses of a function.
  * <p>
  * The function and its derivative must be supplied as instance of Function
- * <p>
  * For examples of usage, see the source of the test class or the Xirr class.
+ * If the value of the function at the candidate input is within the <code>tolerance</code> of the desired target value,
+ * the method terminates.
  * <p>
- * The <code>maxIterations</code> parameter is used as an upper bound on the number
- * of iterations to run the method for.
+ * The <code>iterations</code> parameter is used as an upper bound on the number of iterations to run the method for.
  * <p>
- * The <code>tolerance</code> parameter is used to determine when the method
- * has been successful.  If the value of the function at the candidate input
- * is within the <code>tolerance</code> of the desired target value, the
- * method terminates.
+ * The <code>tolerance</code> parameter is used to determine when the method has been successful.
  */
 public class NewtonRaphsonAlgorithm {
 

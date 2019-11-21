@@ -7,19 +7,14 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
  * inverses of a function.
  * <p>
  * The function and its derivative must be supplied as instance of Function
- * <p>
  * For examples of usage, see the source of the test class or the Xirr class.
  * The algorithm consists of repeatedly bisecting the interval defined within range: a <= arg <= b
  * If the value of the function at the candidate input is within the <code>tolerance</code> of the desired target value, the
  * method terminates.
  * <p>
- * The <code>iterations</code> parameter is used as an upper bound on the number
- * of iterations to run the method for.
+ * The <code>iterations</code> parameter is used as an upper bound on the number of iterations to run the method for.
  * <p>
- * The <code>tolerance</code> parameter is used to determine when the method
- * has been successful.  If the value of the function at the candidate input
- * is within the <code>tolerance</code> of the desired target value, the
- * method terminates.
+ * The <code>tolerance</code> parameter is used to determine when the method has been successful.
  * <p>
  * The <code>minArg</code> parameter is used to determine left starting point of the algorithm
  * <p>
