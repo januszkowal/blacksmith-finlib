@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
 
@@ -14,21 +14,29 @@ import java.time.LocalDate;
  */
 public final class Cashflow {
 
-  final double amount;
   final LocalDate date;
+  final double amount;
 
   /**
    * Construct a Transaction instance with the given amount at the given day.
    * @param amount the amount transferred
    * @param date the day the transaction took place
    */
-  public Cashflow(double amount, LocalDate date) {
-    this.amount = amount;
+  public Cashflow(LocalDate date, double amount) {
     this.date = date;
+    this.amount = amount;
   }
 
-  public static Cashflow of (double amount, LocalDate date) {
-    return new Cashflow(amount,date);
+  public static Cashflow of (LocalDate date,double amount) {
+    return new Cashflow(date,amount);
+  }
+
+  /**
+   * The day the cashlfow took place.
+   * @return day
+   */
+  public LocalDate getDate() {
+    return this.date;
   }
 
   /**
@@ -39,11 +47,10 @@ public final class Cashflow {
     return amount;
   }
 
-  /**
-   * The day the cashlfow took place.
-   * @return day
-   */
-  public LocalDate getDate() {
-    return this.date;
+  @Override public String toString() {
+    return "Cashflow{" +
+        "date=" + date +
+        ", amount=" + amount +
+        '}';
   }
 }

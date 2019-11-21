@@ -1,8 +1,8 @@
-package org.blacksmith.finlib.xirr.solver;
+package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.xirr.Function;
-import org.blacksmith.finlib.xirr.exception.OverflowException;
-import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.math.xirr.Function;
+import org.blacksmith.finlib.math.solver.exception.OverflowException;
+import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
 public abstract class AbstractSolver implements Solver {
   protected final Function function;

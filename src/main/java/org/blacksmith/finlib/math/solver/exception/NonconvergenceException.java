@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.xirr.exception;
+package org.blacksmith.finlib.math.solver.exception;
 
 /**
  * Indicates the algorithm failed to converge in the allotted number of

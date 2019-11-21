@@ -1,8 +1,8 @@
-package org.blacksmith.finlib.xirr.solver;
+package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
-import org.blacksmith.finlib.xirr.exception.OverflowException;
-import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
+import org.blacksmith.finlib.math.solver.exception.OverflowException;
+import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
 public interface Solver {
   double solve(double target, double guess);

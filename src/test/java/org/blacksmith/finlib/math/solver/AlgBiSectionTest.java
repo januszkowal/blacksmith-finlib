@@ -1,12 +1,12 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.xirr.solver.BiSectionAlgorithm;
-import org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm;
-import org.blacksmith.finlib.xirr.solver.Solver;
+import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
+import org.blacksmith.finlib.math.solver.Solver;
+import org.blacksmith.finlib.math.xirr.Function;
 import org.junit.jupiter.api.Test;
 
 
-import static org.blacksmith.finlib.xirr.solver.AbstractSolverBuilder.TOLERANCE;
+import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

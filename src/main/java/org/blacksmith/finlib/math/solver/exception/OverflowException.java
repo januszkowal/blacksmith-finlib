@@ -1,6 +1,6 @@
-package org.blacksmith.finlib.xirr.exception;
+package org.blacksmith.finlib.math.solver.exception;
 
-import org.blacksmith.finlib.xirr.solver.Solver;
+import org.blacksmith.finlib.math.solver.Solver;
 
 /**
  * Indicates that the algorithm failed to converge due to one of the values

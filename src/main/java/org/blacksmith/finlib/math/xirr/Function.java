@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.xirr;
 
 public interface Function {
   double presentValue(double arg);

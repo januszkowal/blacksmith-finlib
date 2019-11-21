@@ -1,6 +1,6 @@
-package org.blacksmith.finlib.xirr.exception;
+package org.blacksmith.finlib.math.solver.exception;
 
-import org.blacksmith.finlib.xirr.solver.AbstractSolver;
+import org.blacksmith.finlib.math.solver.AbstractSolver;
 
 /**
  * Indicates that the numerical method employed encountered a zero-valued

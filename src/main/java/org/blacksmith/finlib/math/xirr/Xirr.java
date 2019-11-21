@@ -1,15 +1,15 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
-import org.blacksmith.finlib.xirr.exception.ZeroValuedDerivativeException;
-import org.blacksmith.finlib.xirr.solver.NewtonRaphsonAlgorithm;
-import org.blacksmith.finlib.xirr.solver.SolverBuilder;
+import org.blacksmith.finlib.math.solver.NewtonRaphsonAlgorithm;
+import org.blacksmith.finlib.math.solver.SolverBuilder;
+import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
+import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -65,7 +65,7 @@ public class Xirr implements Function{
     return new Builder();
   }
 
-  private final List<XirrCashflow> investments;
+  private final List<XirrCashflow> xirrCashflows;
   private final XirrDetails details;
 
   private SolverBuilder solverBuilder = null;
@@ -74,7 +74,7 @@ public class Xirr implements Function{
   /**
    * Construct an Xirr instance for the given cashflows.
    * @param csws the cashflows
-   * @throws IllegalArgumentException if there are fewer than 2 cashflows
+   * @throws IllegalArgumentException if there are fewer than 2 dates
    * @throws IllegalArgumentException if all the cashflows are on the same date
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
@@ -95,25 +95,37 @@ public class Xirr implements Function{
     this(csws, null, null);
   }
 
+  public List<Cashflow> groupCashflows(Collection<Cashflow> csws) {
+    return csws.stream().collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summingDouble(Cashflow::getAmount)))
+        .entrySet().stream()
+        .map(e->Cashflow.of(e.getKey(),e.getValue()))
+        .sorted(Comparator.comparing(Cashflow::getDate))
+        .collect(Collectors.toList());
+  }
+
+
   public Xirr(Collection<Cashflow> csws, SolverBuilder solverBuilder, Double guess) {
-    details = csws.stream().collect(XirrDetails.collector());
-    details.validate();
-    investments = csws.stream()
-        .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summarizingDouble(Cashflow::getAmount)))
-        .entrySet().stream().map((k)->createCashflow(k.getKey(),k.getValue().getSum())).collect(Collectors.toList());
-    if (investments.size() < 2) {
+    List<Cashflow> gcsws = groupCashflows(csws);
+    details = XirrDetails.calculateFromCashflows1(gcsws);
+    this.xirrCashflows = gcsws.stream()
+        .map(v->createXirrCashflow(v.getDate(),v.getAmount()))
+        .collect(Collectors.toList());
+    if (xirrCashflows.size() < 2) {
       throw new IllegalArgumentException(
-          "Must have at least two cashflows");
+          "Must have at least two dates");
     }
+    details.validate();
+
     this.solverBuilder = solverBuilder != null ? solverBuilder : NewtonRaphsonAlgorithm.builder();
     this.guess = guess;
   }
 
-  private XirrCashflow createCashflow(LocalDate date, double amount) {
+  private XirrCashflow createXirrCashflow(LocalDate date, double amount) {
     // Transform the cashflows into an internal representation
     // It is much easier to calculate the present value of an Cashflow
-    return new XirrCashflow(amount,
+    return new XirrCashflow(date, amount,
         DAYS.between(date, details.end) / DAYS_IN_YEAR);
+        //DAYS.between(details.start, date) / DAYS_IN_YEAR);
   }
 
   /**
@@ -124,7 +136,7 @@ public class Xirr implements Function{
    *         given rate of return
    */
   public double presentValue(final double rate) {
-    return investments.stream()
+    return xirrCashflows.stream()
         .mapToDouble(inv -> inv.presentValue(rate))
         .sum();
   }
@@ -135,7 +147,7 @@ public class Xirr implements Function{
    * @return derivative of the present value under the given rate
    */
   public double derivative(final double rate) {
-    return investments.stream()
+    return xirrCashflows.stream()
         .mapToDouble(inv -> inv.derivative(rate))
         .sum();
   }

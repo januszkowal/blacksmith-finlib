@@ -1,21 +1,29 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.xirr;
+
+import java.time.LocalDate;
 
 /**
  * Convenience class which represents {@link Cashflow} instances more
  * conveniently for calculating purposes
  */
 public final class XirrCashflow {
+  private LocalDate date;
   /** The amount of the cashflow. */
   private double amount;
   /** The number of years for which the cashflow applies, including
    * fractional years. */
   private double years;
 
-  public XirrCashflow(double amount, double years) {
+
+  public XirrCashflow(LocalDate date, double amount, double years) {
     this.amount = amount;
+    this.date = date;
     this.years = years;
   }
 
+  public static XirrCashflow of(LocalDate date, double amount, double years) {
+    return new XirrCashflow(date,amount,years);
+  }
   /**
    * Future value of the cashflow at the given rate.
    * @param rate the rate of return
@@ -66,4 +74,7 @@ public final class XirrCashflow {
       return 0;
     }
   }
+
+  public LocalDate getDate() { return this.date;}
+  public double getAmount() { return  this.amount;}
 }

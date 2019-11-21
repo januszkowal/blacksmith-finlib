@@ -1,9 +1,11 @@
-package org.blacksmith.finlib.xirr;
+package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import org.blacksmith.finlib.xirr.solver.Solver;
-import org.blacksmith.finlib.xirr.solver.SolverBuilder;
+import org.blacksmith.finlib.math.solver.Solver;
+import org.blacksmith.finlib.math.solver.SolverBuilder;
+import org.blacksmith.finlib.math.xirr.Cashflow;
+import org.blacksmith.finlib.math.xirr.Xirr;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -12,7 +14,7 @@ import org.mockito.Mockito;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 
-import static org.blacksmith.finlib.xirr.solver.AbstractSolverBuilder.TOLERANCE;
+import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class XirrBuilderTest {
@@ -22,8 +24,8 @@ public class XirrBuilderTest {
     // computes the xirr on 1 year growth of 0%
     final double xirr = Xirr.builder()
         .withCashflows(Arrays.asList(
-            Cashflow.of(-1000,LocalDate.parse("2010-01-01")),
-            Cashflow.of( 1000,LocalDate.parse("2011-01-01"))
+            Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
+            Cashflow.of(LocalDate.parse("2011-01-01"),1000)
         )).build().xirr();
     assertEquals(0, xirr, TOLERANCE);
   }
@@ -33,8 +35,8 @@ public class XirrBuilderTest {
     // computes the xirr on 1 year growth of 10%
     final double xirr = Xirr.builder()
         .withCashflows(
-            Cashflow.of(-1000,LocalDate.parse("2010-01-01")),
-            Cashflow.of( 1100,LocalDate.parse("2011-01-01"))
+            Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
+            Cashflow.of(LocalDate.parse("2011-01-01"),1100)
         ).build().xirr();
     assertEquals(0.10, xirr, TOLERANCE);
   }
@@ -44,8 +46,8 @@ public class XirrBuilderTest {
     // computes the negative xirr on 1 year decline of 10%
     final double xirr = Xirr.builder()
         .withCashflows(
-            Cashflow.of(-1000,LocalDate.parse("2010-01-01")),
-            Cashflow.of(  900,LocalDate.parse("2011-01-01"))
+            Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
+            Cashflow.of(LocalDate.parse("2011-01-01"),900)
         ).build().xirr();
     assertEquals(-0.10, xirr, TOLERANCE);
   }
@@ -61,8 +63,8 @@ public class XirrBuilderTest {
     final double xirr = Xirr.builder()
         .withSolverBuilder(builder)
         .withCashflows(
-            Cashflow.of(-1000,LocalDate.parse("2010-01-01")),
-            Cashflow.of( 1000,LocalDate.parse("2011-01-01"))
+            Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
+            Cashflow.of(LocalDate.parse("2011-01-01"),1000)
         ).build().xirr();
 
     // Correct answer is 0, but we are ensuring that Xirr is using the
@@ -82,8 +84,8 @@ public class XirrBuilderTest {
         .withGuess(guess)
         .withSolverBuilder(builder)
         .withCashflows(
-            Cashflow.of(-1000, LocalDate.parse("2010-01-01")),
-            Cashflow.of( 1000, LocalDate.parse("2011-01-01"))
+            Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
+            Cashflow.of(LocalDate.parse("2011-01-01"), 1000)
         ).build().xirr();
 
     // Correct answer is 0, but we are ensuring that Xirr is using the

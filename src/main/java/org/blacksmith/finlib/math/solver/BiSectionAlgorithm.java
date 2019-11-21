@@ -1,7 +1,7 @@
-package org.blacksmith.finlib.xirr.solver;
+package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.xirr.Function;
-import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
+import org.blacksmith.finlib.math.xirr.Function;
+import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 
 /**
  * Simple implementation of the Bisection method for finding roots or

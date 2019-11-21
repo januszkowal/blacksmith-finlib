@@ -1,6 +1,6 @@
-package org.blacksmith.finlib.xirr.solver;
+package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.xirr.Function;
+import org.blacksmith.finlib.math.xirr.Function;
 
 public abstract class AbstractSolverBuilder implements SolverBuilder{
   public static final double TOLERANCE = 0.000_000_1;
