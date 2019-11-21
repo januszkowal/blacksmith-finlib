@@ -20,11 +20,11 @@ import org.blacksmith.finlib.xirr.exception.NonconvergenceException;
  * is within the <code>tolerance</code> of the desired target value, the
  * method terminates.
  */
-public class BisectionAlgorithm {
-  private BisectionAlgorithm() {
+public class BiSectionAlgorithm {
+  private BiSectionAlgorithm() {
   }
   /**
-   * Convenience method for getting an instance of a {@link BisectionAlgorithm.AlgorithmSolverBuilder}.
+   * Convenience method for getting an instance of a {@link BiSectionAlgorithm.AlgorithmSolverBuilder}.
    * @return new Builder
    */
   public static AlgorithmSolverBuilder builder() {
@@ -68,25 +68,25 @@ public class BisectionAlgorithm {
       setInitialGuess(guess);
       double leftArg  = this.minArg;
       double rightArg = this.maxArg;
-      System.out.println("left=" + leftArg + " right=" + rightArg);
-      int signLeft  = (int)Math.signum(function.presentValue(leftArg));
-      int signRight = (int)Math.signum(function.presentValue(rightArg));
+      double leftValueT = function.presentValue(leftArg) - target;
+      if (leftArg*rightArg>=0) {
+
+      }
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
         setArgument((leftArg+rightArg)/2.0);
-        setFunctionValue(function.presentValue(this.getArgument()) - target);
-        int signMid = (int)Math.signum(this.getFunctionValue());
-        if (Math.abs(this.getFunctionValue())<this.getTolerance()) {
+        setFunctionValue(function.presentValue(this.getArgument()));
+        double functionValueT = this.getFunctionValue()-target;
+        if (Math.abs(functionValueT)<this.getTolerance()) {
           return this.getArgument();
         }
         else {
-          if (signMid==signRight) {
+          if (functionValueT*leftValueT<0) {
             rightArg = this.getArgument();
-            signRight = signMid;
           }
           else {
             leftArg = this.getArgument();
-            signLeft = signMid;
+            leftValueT = functionValueT;
           }
         }
       }
