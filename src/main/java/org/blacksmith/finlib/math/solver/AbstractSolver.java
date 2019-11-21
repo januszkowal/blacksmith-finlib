@@ -7,10 +7,16 @@ public abstract class AbstractSolver implements Solver {
   protected final Function function;
   protected final long maxIterations;
   protected final double tolerance;
-  private long iteration;
   protected double initialGuess;
+
+  //Values actualized during iteration
+  //Current iteration
+  private long iteration;
+  //Current function argument
   protected double argument;
+  //Current function value
   protected double functionValue;
+  //Current derivative value
   protected Double derivativeValue;
 
   public AbstractSolver(Function function, long maxIterations, double tolerance) {
