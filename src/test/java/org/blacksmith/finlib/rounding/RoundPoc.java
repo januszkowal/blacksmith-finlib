@@ -2,10 +2,6 @@ package org.blacksmith.finlib.rounding;
 
 import java.math.BigDecimal;
 import org.apache.commons.math3.util.Precision;
-import org.blacksmith.finlib.round.Rounding;
-import org.blacksmith.finlib.round.RoundingFactory;
-import org.blacksmith.finlib.round.RoundingMode;
-import org.decimal4j.util.DoubleRounder;
 import org.junit.jupiter.api.Test;
 
 public class RoundPoc {
@@ -18,7 +14,7 @@ public class RoundPoc {
   private void roundValue(double value, double expected, int precision, int fraction) {
     Rounding bsr = RoundingFactory.of(RoundingMode.UP, precision, fraction);
     Rounding bst = RoundingFactory.of(RoundingMode.DOWN, precision);
-    //System.out.println("Double     rounder:" + DoubleRounder.round(value, precision, java.math.RoundingMode.HALF_UP));
+    //System.out.println("Double     rounder:" + DoubleRounder.rounding(value, precision, java.math.RoundingMode.HALF_UP));
     System.out.println("### Round         :" + value + " precision " + precision);
     System.out.println("Commons    rounder:" + Precision.round(value,precision));
     System.out.println("Blacksmith BSR    :" + bsr.round(value));
@@ -61,9 +57,9 @@ public class RoundPoc {
             low = mid;
     }
 
-    System.out.println("Math.round(" + low + ") is " + 
+    System.out.println("Math.rounding(" + low + ") is " +
             Math.round(Double.parseDouble(low.toString())));
-    System.out.println("Math.round(" + high + ") is " + 
+    System.out.println("Math.rounding(" + high + ") is " +
             Math.round(Double.parseDouble(high.toString())));
   }
   

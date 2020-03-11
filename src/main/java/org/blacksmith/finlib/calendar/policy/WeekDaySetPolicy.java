@@ -3,9 +3,9 @@ package org.blacksmith.finlib.calendar.policy;
 import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.stream.Collectors;
-import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
+import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
 
-public class WeekDaySetPolicy extends HolidaySetProvider<DayOfWeek> {
+public class WeekDaySetPolicy extends HolidaySetPolicy<DayOfWeek> {
 
   public static final WeekDaySetPolicy SAT_SUN = WeekDaySetPolicy.of(DayOfWeek.SATURDAY,DayOfWeek.SUNDAY);
 

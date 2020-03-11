@@ -7,11 +7,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.blacksmith.finlib.calendar.policy.ChainedHolidayPolicy;
 import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.HolidayProvider;
-import org.blacksmith.finlib.calendar.policy.HolidaySetProvider;
-import org.blacksmith.finlib.calendar.policy.StandardHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.HolidaySetPolicy;
 import org.blacksmith.finlib.calendar.policy.WeekDaySetPolicy;
-import org.blacksmith.finlib.calendar.policy.helper.StandardDateToPartConverters;
+import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -24,18 +22,18 @@ public class HolidayPolicyTest {
   
   @Test
   public void holidayByWeekDay1() {
-    HolidayProvider provider = WeekDaySetPolicy.SAT_SUN;
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,15)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,25)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,26)));
+    HolidayPolicy policy = WeekDaySetPolicy.SAT_SUN;
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,15)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,25)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,26)));
   }
   @Test
   public void holidayByWeekDay2() {
-    HolidayProvider provider = WeekDaySetPolicy.of(3,4);
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,16)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,25)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,26)));
+    HolidayPolicy policy = WeekDaySetPolicy.of(3,4);
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,16)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,25)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,26)));
   }
   @Test
   public void holidayByMonthDay() {
@@ -45,16 +43,16 @@ public class HolidayPolicyTest {
         MonthDay.of(12,25),
         MonthDay.of(12,26)
     ).stream().collect(Collectors.toSet());
-    HolidayProvider provider = HolidaySetProvider.of(StandardDateToPartConverters.MONTH_DAY,mdays);
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,1,15)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,20)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,6,10)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,6,11)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,12,24)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,12,25)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2020,12,26)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,12,27)));
+    HolidayPolicy policy = HolidaySetPolicy.of(StandardDateToPartConverters.MONTH_DAY,mdays);
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,1,15)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,20)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,6,10)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,6,11)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,12,24)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,12,25)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2020,12,26)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,12,27)));
   }
   @Test
   public void holidayByYearMonthDay() {
@@ -62,17 +60,17 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,6,10)
     ).stream().collect(Collectors.toSet());
-    HolidayProvider provider = HolidaySetProvider.of(StandardDateToPartConverters.YEAR_DAY,days);
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,1,15)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,5,15)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,5,20)));
-    assertEquals(true,provider.isHoliday(LocalDate.of(2019,6,10)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2019,6,11)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,1,15)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,5,15)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,5,20)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,6,10)));
-    assertEquals(false,provider.isHoliday(LocalDate.of(2020,6,11)));
+    HolidayPolicy policy = HolidaySetPolicy.of(StandardDateToPartConverters.YEAR_DAY,days);
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,1,15)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,5,20)));
+    assertEquals(true,policy.isHoliday(LocalDate.of(2019,6,10)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2019,6,11)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,1,15)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,5,15)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,5,20)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,6,10)));
+    assertEquals(false,policy.isHoliday(LocalDate.of(2020,6,11)));
   }
   
   private void checkPolicyGroup1(String chkName, HolidayPolicy policy) {
@@ -117,28 +115,30 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,7,15),
         LocalDate.of(2019,9,10)
     ).stream().collect(Collectors.toSet());
-    HolidayProvider provider1 = new HolidaySetProvider<MonthDay>(StandardDateToPartConverters.MONTH_DAY,hset1);
-    HolidayProvider provider2 = new HolidaySetProvider<LocalDate>(StandardDateToPartConverters.YEAR_DAY,hset2);
-    
-    HolidayProvider[] hpa = {provider1,provider2};
-    checkPolicyGroup1("chk1.1",StandardHolidayPolicy.of(provider1));
-    checkPolicyGroup2("chk1.2",StandardHolidayPolicy.of(provider1,provider2));
-    checkPolicyGroup2("chk1.3",StandardHolidayPolicy.of(hpa));
-    
+    HolidayPolicy policy1 = new HolidaySetPolicy<MonthDay>(StandardDateToPartConverters.MONTH_DAY,hset1);
+    HolidayPolicy policy2 = new HolidaySetPolicy<LocalDate>(StandardDateToPartConverters.YEAR_DAY,hset2);
+
+    HolidayPolicy[] hpa = {policy1,policy2};
+    checkPolicyGroup1("chk1.1",CombinedHolidayPolicy.of(policy1));
+    checkPolicyGroup2("chk1.2",CombinedHolidayPolicy.of(policy1,policy2));
+    checkPolicyGroup2("chk1.3",CombinedHolidayPolicy.of(hpa));
+
     checkPolicyGroup1("chk2.1",ChainedHolidayPolicy.builder()
-        .providers(provider1)
+        .policies(policy1)
         .build());
     checkPolicyGroup2("chk2.2",ChainedHolidayPolicy.builder()
-        .providers(provider1,provider2)
+        .policies(policy1,policy2)
         .build());
     checkPolicyGroup2("chk2.3",ChainedHolidayPolicy.builder()
-        .providers(provider1)
-        .next(ChainedHolidayPolicy.builder().providers(provider2)
+        .policies(policy1)
+        .next(ChainedHolidayPolicy.builder().policies(policy2)
             .build())
         .build());
 
-    checkPolicyGroup1("chk3.1",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider1)));
-    checkPolicyGroup2("chk3.2",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider1),new StandardHolidayPolicy(provider2)));
-    checkPolicyGroup2("chk3.3",CombinedHolidayPolicy.of(new StandardHolidayPolicy(provider2),new StandardHolidayPolicy(provider1)));
+
+    checkPolicyGroup1("chk3.1",CombinedHolidayPolicy.of(policy1));
+    checkPolicyGroup1("chk3.3",CombinedHolidayPolicy.of(CombinedHolidayPolicy.of(policy1)));
+    checkPolicyGroup2("chk3.4",CombinedHolidayPolicy.of(CombinedHolidayPolicy.of(policy1),CombinedHolidayPolicy.of(policy2)));
+    checkPolicyGroup2("chk3.5",CombinedHolidayPolicy.of(CombinedHolidayPolicy.of(policy2),CombinedHolidayPolicy.of(policy1)));
 }
 }

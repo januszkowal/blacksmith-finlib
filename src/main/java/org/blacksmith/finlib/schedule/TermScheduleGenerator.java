@@ -1,10 +1,8 @@
 package org.blacksmith.finlib.schedule;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
+import org.blacksmith.finlib.basic.Amount;
 
 public class TermScheduleGenerator implements ScheduleGenerator {
 
@@ -24,7 +22,7 @@ public class TermScheduleGenerator implements ScheduleGenerator {
     double interest =
         scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
         rate*
-        scheduleInfo.getNotional().getValue().doubleValue();
+        scheduleInfo.getNotional(scheduleInfo.getCouponStartDate()).doubleValue();
     
     Cashflow cashflow = Cashflow.builder()
         .startDate(scheduleParameters.getStartDate())

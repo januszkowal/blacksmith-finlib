@@ -15,7 +15,6 @@ public interface ScheduleGenerator {
         .maturityDate(scheduleParameters.getMaturityDate())
         .couponStartDate(couponStartDate)
         .couponEndDate(couponEndDate)
-        .notional(scheduleParameters.getNotional())
         .build();
   }
 }

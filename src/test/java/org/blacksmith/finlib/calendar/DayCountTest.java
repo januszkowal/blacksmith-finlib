@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.calendar;
 
-import org.blacksmith.finlib.basic.Frequency;
+import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.DayCountConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;

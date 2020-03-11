@@ -1,13 +1,11 @@
 package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.basic.Frequency;
+import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
 import org.blacksmith.finlib.dayconvention.utils.YMD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 import static java.lang.Math.toIntExact;
 import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
 import static org.blacksmith.commons.datetime.DateUtils.yearsBetween;

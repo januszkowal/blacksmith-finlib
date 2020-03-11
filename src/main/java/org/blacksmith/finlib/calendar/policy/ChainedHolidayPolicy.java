@@ -13,27 +13,25 @@ import org.blacksmith.finlib.calendar.HolidayPolicy;
 public class ChainedHolidayPolicy implements HolidayPolicy {
   
   private static final String NULL_PROVIDERS_MESSAGE = "Null providers list not allowed";
-  private HolidayPolicy next;
+  private final HolidayPolicy next;
   
-  private Set<HolidayProvider> holidayProviders = new LinkedHashSet<>();
+  private Set<HolidayPolicy> policies = new LinkedHashSet<>();
   
-  public ChainedHolidayPolicy(Collection<HolidayProvider> providers) {
+  public ChainedHolidayPolicy(Collection<HolidayPolicy> providers, HolidayPolicy next) {
     Validate.notEmpty(providers, NULL_PROVIDERS_MESSAGE);
-    this.holidayProviders.addAll(providers);
-  }
-  
-  public ChainedHolidayPolicy(HolidayProvider...providers) {
-    Validate.notEmpty(providers, NULL_PROVIDERS_MESSAGE);
-    this.holidayProviders.addAll(Arrays.stream(providers).collect(Collectors.toList()));
-  }
-  
-  public void setNext(HolidayPolicy next) {
     this.next = next;
+    this.policies.addAll(providers);
   }
-
+  
+  public ChainedHolidayPolicy(HolidayPolicy...providers) {
+    Validate.notEmpty(providers, NULL_PROVIDERS_MESSAGE);
+    this.next = null;
+    this.policies.addAll(Arrays.stream(providers).collect(Collectors.toList()));
+  }
+  
   @Override
   public boolean isHoliday(LocalDate date) {
-    boolean thisPolicyResult = holidayProviders.stream()
+    boolean thisPolicyResult = policies.stream()
         .map(hp->hp.isHoliday(date))
         .filter(ih->ih)
         .findFirst().orElse(false);
@@ -46,22 +44,21 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   
   public static class ChainedHolidayPolicyBuilder {
     private HolidayPolicy next;
-    private Collection<HolidayProvider> holidayProviders;
+    private Collection<HolidayPolicy> holidayProviders;
     public ChainedHolidayPolicyBuilder next(HolidayPolicy next) {
       this.next = next;
       return this;
     }
-    public ChainedHolidayPolicyBuilder providers(HolidayProvider...providers) {
-      this.holidayProviders = Arrays.stream(providers).collect(Collectors.toList());
+    public ChainedHolidayPolicyBuilder policies(HolidayPolicy...policies) {
+      this.holidayProviders = Arrays.stream(policies).collect(Collectors.toList());
       return this;
     }
-    public ChainedHolidayPolicyBuilder providers(Collection<HolidayProvider> providers) {
+    public ChainedHolidayPolicyBuilder policies(Collection<HolidayPolicy> providers) {
       this.holidayProviders = providers;
       return this;
     }
     public ChainedHolidayPolicy build() {
-      ChainedHolidayPolicy result = new ChainedHolidayPolicy(holidayProviders);
-      result.setNext(next);
+      ChainedHolidayPolicy result = new ChainedHolidayPolicy(holidayProviders,next);
       return result;
     }
   }
