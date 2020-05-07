@@ -12,9 +12,9 @@ plugins {
 }
 
 group = 'org.blacksmith'
-version = '0.1.0'
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+version = '0.1.2'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
@@ -26,14 +26,15 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    implementation 'org.blacksmith:blacksmith-commons:0.1.0'
-    implementation 'org.blacksmith:blacksmith-finlib-basic:0.1.0'
+    implementation 'org.blacksmith:blacksmith-commons:0.1.2'
+    implementation 'org.blacksmith:blacksmith-finlib-basic:0.1.2'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testCompile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testImplementation 'org.hamcrest:hamcrest-library:2.1'
     testImplementation 'org.blacksmith:blacksmith-test:0.1.0'
     testImplementation 'org.decimal4j:decimal4j:1.0.3'
@@ -68,3 +69,6 @@ publishing {
 }
 
 
+test {
+    useJUnitPlatform()
+}
