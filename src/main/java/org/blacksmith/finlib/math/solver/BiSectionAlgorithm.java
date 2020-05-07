@@ -35,8 +35,8 @@ public class BiSectionAlgorithm {
    * Builder for {@link BisectionSolver} instances.
    */
   public static class AlgorithmSolverBuilder extends AbstractSolverBuilder {
-    private double minArg = -1.0;
-    private double maxArg =  2.0;
+    private double minArg = Double.MIN_VALUE;
+    private double maxArg = Double.MAX_VALUE;
     public AlgorithmSolverBuilder() {}
     public AlgorithmSolverBuilder withMinArg(double minArg) {
       this.minArg = minArg;
@@ -54,37 +54,36 @@ public class BiSectionAlgorithm {
 
   public static class BisectionSolver extends AbstractSolver {
 
-    private double a;
-    private double b;
+    private final double minArg;
+    private final double maxArg;
 
     public BisectionSolver(Function function,
-        long maxIterations, double tolerance, double a, double b) {
+        long maxIterations, double tolerance, double minArg, double maxArg) {
       super(function, maxIterations, tolerance);
-      this.a = a;
-      this.b = b;
+      this.minArg = minArg;
+      this.maxArg = maxArg;
     }
 
     public double solve(double target, double guess) {
       setInitialGuess(guess);
-      double a  = this.a;
-      double b = this.b;
-      double aT = function.functionValue(a) - target;
+      double a = this.minArg;
+      double b = this.maxArg;
       setInitialGuess(guess);
+      double fvd = function.functionValue(a) - target;
       for (int i = 0; i < this.maxIterations; i++) {
         nextIteration();
         setArgument((a+b)/2.0);
-        setFunctionValue(function.functionValue(this.getArgument()));
-        double functionValueT = this.getFunctionValue()-target;
-        if (Math.abs(functionValueT)<this.getTolerance()) {
+        setFunctionValue(function.functionValue(getArgument()) - target);
+        if (isTargetAchieved()) {
           return this.getArgument();
         }
         else {
-          if (functionValueT*aT<0) {
+          if (getFunctionValue()*fvd<0) {
             b = this.getArgument();
           }
           else {
             a = this.getArgument();
-            aT = functionValueT;
+            fvd = getFunctionValue();
           }
         }
       }

@@ -17,11 +17,6 @@ public final class Cashflow {
   final LocalDate date;
   final double amount;
 
-  /**
-   * Construct a Transaction instance with the given amount at the given day.
-   * @param amount the amount transferred
-   * @param date the day the transaction took place
-   */
   public Cashflow(LocalDate date, double amount) {
     this.date = date;
     this.amount = amount;
@@ -31,18 +26,10 @@ public final class Cashflow {
     return new Cashflow(date,amount);
   }
 
-  /**
-   * The day the cashlfow took place.
-   * @return day
-   */
   public LocalDate getDate() {
     return this.date;
   }
 
-  /**
-   * The amount of cashlfow
-   * @return amount
-   */
   public double getAmount() {
     return amount;
   }

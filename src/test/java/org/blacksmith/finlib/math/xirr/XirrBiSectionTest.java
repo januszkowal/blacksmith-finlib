@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.blacksmith.commons.datetime.DateConversion;
 import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
 import org.blacksmith.finlib.math.xirr.Cashflow;
@@ -260,7 +261,7 @@ public class XirrBiSectionTest {
   public void xirr_one_transaction() {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws exception when only one transaction is passed
-      new Xirr(Cashflow.of(LocalDate.of(2010,01,01), -1000)).xirr();
+      new Xirr(List.of(Cashflow.of(LocalDate.of(2010,01,01), -1000))).xirr();
       fail("Expected exception for only one transaction");
 
     });

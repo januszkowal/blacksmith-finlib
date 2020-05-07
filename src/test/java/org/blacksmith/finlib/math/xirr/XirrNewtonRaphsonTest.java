@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import org.blacksmith.commons.datetime.DateConversion;
 import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
 import org.blacksmith.finlib.math.xirr.Cashflow;
@@ -42,9 +43,9 @@ public class XirrNewtonRaphsonTest {
   @Test
   public void xirr_1_year_decline() {
     // computes the negative xirr on 1 year decline of 10%
-    final double xirr = new Xirr(
+    final double xirr = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2010-01-01"), -1000),
-        new Cashflow(LocalDate.parse("2011-01-01"), 900)
+        new Cashflow(LocalDate.parse("2011-01-01"), 900))
     ).xirr();
     assertEquals(-0.10, xirr, TOLERANCE);
   }
@@ -53,12 +54,12 @@ public class XirrNewtonRaphsonTest {
   public void xirr_vs_spreadsheet() {
     // computes the xirr on a particular data set the same as a popular
     // spreadsheet
-    final double xirr = new Xirr(
+    final double xirr = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2010-01-01"), -1000),
         new Cashflow(LocalDate.parse("2010-04-01"), -1000),
         new Cashflow(LocalDate.parse("2010-07-01"), -1000),
         new Cashflow(LocalDate.parse("2010-10-01"), -1000),
-        new Cashflow(LocalDate.parse("2011-01-01"), 4300)
+        new Cashflow(LocalDate.parse("2011-01-01"), 4300))
     ).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
@@ -66,12 +67,12 @@ public class XirrNewtonRaphsonTest {
   @Test
   public void xirr_vs_spreadsheet_reordered() {
     // gets the same answer even if the transations are out of order
-    final double xirr = new Xirr(
+    final double xirr = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2010-10-01"), -1000),
         new Cashflow(LocalDate.parse("2011-01-01"), 4300),
         new Cashflow(LocalDate.parse("2010-07-01"), -1000),
         new Cashflow(LocalDate.parse("2010-01-01"), -1000),
-        new Cashflow(LocalDate.parse("2010-04-01"), -1000)
+        new Cashflow(LocalDate.parse("2010-04-01"), -1000))
     ).xirr();
     assertEquals(0.1212676, xirr, TOLERANCE);
   }
@@ -118,18 +119,18 @@ public class XirrNewtonRaphsonTest {
 
   @Test
   public void xirr_readme_example() {
-    double rate = new Xirr(
+    double rate = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2016-01-15"), -1000),
         new Cashflow(LocalDate.parse("2016-02-08"), -2500),
         new Cashflow(LocalDate.parse("2016-04-17"), -1000),
-        new Cashflow(LocalDate.parse("2016-08-24"), 5050)
+        new Cashflow(LocalDate.parse("2016-08-24"), 5050))
     ).xirr();
     assertEquals(0.2504234710540838, rate, TOLERANCE);
   }
 
   @Test
   public void xirr_issue_from_node_js_version() {
-    double rate = new Xirr(
+    double rate = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2000-05-24"),  -10000),
         new Cashflow(LocalDate.parse("2000-06-05"), 3027.25),
         new Cashflow(LocalDate.parse("2001-04-09"),  630.68),
@@ -147,34 +148,32 @@ public class XirrNewtonRaphsonTest {
         new Cashflow(LocalDate.parse("2015-01-30"), 1513.62),
         new Cashflow(LocalDate.parse("2016-01-22"), 1765.89),
         new Cashflow(LocalDate.parse("2017-01-20"), 1765.89),
-        new Cashflow(LocalDate.parse("2017-06-05"), 22421.55)
+        new Cashflow(LocalDate.parse("2017-06-05"), 22421.55))
     ).xirr();
     assertEquals(0.2126861, rate, TOLERANCE);
   }
 
   @Test
   public void xirr_issue5a() {
-    double rate = new Xirr(
+    double rate = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2001-06-22"),-2610),
         new Cashflow(LocalDate.parse("2001-07-03"),-2589),
         new Cashflow(LocalDate.parse("2001-07-05"),-5110),
         new Cashflow(LocalDate.parse("2001-07-06"),-2550),
         new Cashflow(LocalDate.parse("2001-07-09"),-5086),
-        //new Cashflow(-2561, LocalDate.parse("2001-07-10")),
-        new Cashflow(LocalDate.parse("2001-07-10"),-2561),
-        //new Cashflow(LocalDate.parse("2001-07-10"),-4561),
-        //new Cashflow(LocalDate.parse("2001-07-10"),2000),
+        new Cashflow(LocalDate.parse("2001-07-10"),-4561),
+        new Cashflow(LocalDate.parse("2001-07-10"),2000),
         new Cashflow(LocalDate.parse("2001-07-12"),-5040),
         new Cashflow(LocalDate.parse("2001-07-13"),-2552),
         new Cashflow(LocalDate.parse("2001-07-16"),-2530),
-        new Cashflow(LocalDate.parse("2001-07-17"),29520)
+        new Cashflow(LocalDate.parse("2001-07-17"),29520))
     ).xirr();
     assertEquals(-0.7640294, rate, TOLERANCE);
   }
 
   @Test
   public void xirr_issue5b() {
-    double rate = new Xirr(
+    double rate = new Xirr(List.of(
         new Cashflow(LocalDate.parse("2001-06-22"),-2610),
         new Cashflow(LocalDate.parse("2001-07-03"), -2589),
         new Cashflow(LocalDate.parse("2001-07-05"), -5110),
@@ -187,7 +186,7 @@ public class XirrNewtonRaphsonTest {
         new Cashflow(LocalDate.parse("2001-07-13"), -2552),
         new Cashflow(LocalDate.parse("2001-07-16"), -2530),
         new Cashflow(LocalDate.parse("2001-07-17"), -9840),
-        new Cashflow(LocalDate.parse("2001-07-18"), 38900)
+        new Cashflow(LocalDate.parse("2001-07-18"), 38900))
     ).xirr();
     assertEquals(-0.8353404, rate, TOLERANCE);
   }
@@ -205,7 +204,7 @@ public class XirrNewtonRaphsonTest {
   public void xirr_one_transaction() {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws exception when only one transaction is passed
-      new Xirr(new Cashflow(LocalDate.of(2010,01,01), -1000)).xirr();
+      new Xirr(List.of(new Cashflow(LocalDate.of(2010,01,01), -1000))).xirr();
       fail("Expected exception for only one transaction");
 
     });
@@ -216,10 +215,10 @@ public class XirrNewtonRaphsonTest {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are on the same day
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new Xirr(
+      new Xirr(List.of(
           new Cashflow(DateConversion.convertDateToLocalDate(format.parse("2010-01-01 09:00")), -1000),
           new Cashflow(DateConversion.convertDateToLocalDate(format.parse("2010-01-01 12:00")), -1000),
-          new Cashflow(DateConversion.convertDateToLocalDate(format.parse("2010-01-01 15:00")), 2100)
+          new Cashflow(DateConversion.convertDateToLocalDate(format.parse("2010-01-01 15:00")), 2100))
       ).xirr();
       fail("Expected exception for all transactions on the same day");
     });
@@ -230,10 +229,10 @@ public class XirrNewtonRaphsonTest {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new Xirr(
+      new Xirr(List.of(
           new Cashflow(LocalDate.parse("2010-01-01"), -1000),
           new Cashflow(LocalDate.parse("2010-05-01"), -1000),
-          new Cashflow(LocalDate.parse("2010-09-01"), -2000)
+          new Cashflow(LocalDate.parse("2010-09-01"), -2000))
       ).xirr();
       fail("Expected exception for all transactions are negative");
     });
@@ -244,10 +243,10 @@ public class XirrNewtonRaphsonTest {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are nonnegative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new Xirr(
+      new Xirr(List.of(
           new Cashflow(LocalDate.parse("2010-01-01"), 1000),
           new Cashflow(LocalDate.parse("2010-05-01"), 1000),
-          new Cashflow(LocalDate.parse("2010-09-01"), 0)
+          new Cashflow(LocalDate.parse("2010-09-01"), 0))
       ).xirr();
       fail("Expected exception for all transactions are nonnegative");
     });

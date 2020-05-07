@@ -58,6 +58,10 @@ public abstract class AbstractSolver implements Solver {
     return this.tolerance;
   }
 
+  public boolean isTargetAchieved() {
+    return Math.abs(functionValue)<tolerance;
+  }
+
   public void setDerivativeValue(Double derivativeValue) {
     this.derivativeValue = derivativeValue;
     if (!Double.isFinite(derivativeValue)) {

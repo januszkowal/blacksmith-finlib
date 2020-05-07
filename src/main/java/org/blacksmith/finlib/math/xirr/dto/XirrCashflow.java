@@ -1,9 +1,10 @@
-package org.blacksmith.finlib.math.xirr;
+package org.blacksmith.finlib.math.xirr.dto;
 
 import java.time.LocalDate;
+import org.blacksmith.finlib.math.xirr.Cashflow;
 
 /**
- * Convenience class which represents {@link Cashflow} instances more
+ * Convenient class which represents {@link Cashflow} instances more
  * conveniently for calculating purposes
  */
 public final class XirrCashflow {
@@ -29,7 +30,7 @@ public final class XirrCashflow {
    * @param rate the rate of return
    * @return present value of the investment at the given rate
    */
-  public double presentValue(final double rate) {
+  public double futureValue(final double rate) {
     if (rate > -1.0) {
       return amount * Math.pow(1 + rate, years);
     } else if (rate < -1.0) {
@@ -66,9 +67,9 @@ public final class XirrCashflow {
   public double derivative(final double rate) {
     if (years == 0) {
       return 0;
-    } else if (-1 < rate) {
+    } else if (rate > -1.0) {
       return amount * years * Math.pow(1 + rate, years - 1);
-    } else if (rate < -1) {
+    } else if (rate < -1.0) {
       return Math.abs(amount) * years * Math.pow(-1 - rate, years - 1);
     } else {
       return 0;
