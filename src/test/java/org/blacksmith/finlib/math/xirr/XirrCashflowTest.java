@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
+import org.blacksmith.finlib.math.xirr.dto.XirrCashflow;
 import org.junit.jupiter.api.Test;
 
 
@@ -10,6 +11,7 @@ public class XirrCashflowTest {
   @Test
   public void cashflowTest() {
     final XirrCashflow cs = XirrCashflow.of(LocalDate.now(), 10000, 1.0);
-    assertEquals(11000.00, cs.presentValue(0.1));
+    assertEquals(11000.00, cs.futureValue(0.1));
+    assertEquals(10000.00, cs.derivative(0.1));
   }
 }

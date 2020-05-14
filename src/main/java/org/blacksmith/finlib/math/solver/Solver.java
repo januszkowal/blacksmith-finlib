@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.math.solver;
 
+import java.util.Map;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
@@ -41,8 +42,8 @@ public interface Solver {
 
   Double getInitialGuess();
   long getMaxIterations();
-  long getIteration();
-  double getArgument();
+  long getIterations();
+  double getCandidate();
   double getFunctionValue();
-  Double getDerivativeValue();
+  Map<String,?> getStats();
 }
