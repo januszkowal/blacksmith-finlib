@@ -157,16 +157,17 @@ public class XirrCalculator implements Function1stDeriv {
         .build();
     double xirr = 0;
     try {
-      log.info("Start with Guess={}", guess);
+      log.debug("Start with Guess={}", guess);
       xirr = solver.findRoot(guess);
       this.iterations = solver.getIterations();
+      log.info("Completed after iterations={}", iterations);
     } catch (OverflowException oe) {
       log.warn("Guess sign changed due to overflow,{}", solver.getStats());
       this.iterations = solver.getIterations();
-      log.info("Start with Guess={}", guess);
-      //reverseCashflows();
+      log.debug("Start with Guess={}", guess);
       xirr = solver.findRoot(-guess);
       this.iterations += solver.getIterations();
+      log.debug("Completed after iterations={}", iterations);
     }
     return xirr;
   }
