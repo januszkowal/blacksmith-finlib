@@ -13,14 +13,7 @@ public class AlgBiSectionTest {
     Solver nr = BiSectionAlgorithm.builder()
         .withMinArg(0)
         .withMaxArg(30)
-        .withFunction(new Function() {
-          @Override public double functionValue(double x) {
-            return x*x;
-          }
-          @Override public double derivativeValue(double x) {
-            return 2*x;
-          }
-        })
+        .withFunction(x->x*x)
         .build();
     assertEquals(2, nr.inverse(4, 0.0), TOLERANCE);
     assertEquals(3, nr.inverse(9, 0.0), TOLERANCE);
@@ -32,14 +25,7 @@ public class AlgBiSectionTest {
     Solver nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
-        .withFunction(new Function() {
-          @Override public double functionValue(double x) {
-            return x*x;
-          }
-          @Override public double derivativeValue(double x) {
-            return 2*x;
-          }
-        })
+        .withFunction(x->x*x)
         .build();
     assertEquals(-2, nr.inverse(4, 0.0), TOLERANCE);
     assertEquals(-3, nr.inverse(9, 0.0), TOLERANCE);
@@ -51,14 +37,7 @@ public class AlgBiSectionTest {
     Solver nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
-        .withFunction(new Function() {
-          @Override public double functionValue(double x) {
-            return x*x*x;
-          }
-          @Override public double derivativeValue(double x) {
-            return 3*x*x;
-          }
-        })
+        .withFunction(x->x*x*x)
         .build();
     assertEquals(2, nr.inverse(8, 8.0), TOLERANCE);
     assertEquals(-3, nr.inverse(-27, 0.0), TOLERANCE);
@@ -70,14 +49,7 @@ public class AlgBiSectionTest {
     Solver nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
-        .withFunction(new Function() {
-          @Override public double functionValue(double x) {
-            return (x-4)*(x+3);
-          }
-          @Override public double derivativeValue(double x) {
-            return 2*x-1;
-          }
-        })
+        .withFunction(x->(x-4)*(x+3))
         .build();
     assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
     assertEquals(-3, nr.findRoot(0.0), TOLERANCE);
@@ -91,14 +63,7 @@ public class AlgBiSectionTest {
     Solver nr = BiSectionAlgorithm.builder()
         .withMinArg(0)
         .withMaxArg(30)
-        .withFunction(new Function() {
-          @Override public double functionValue(double x) {
-            return (x-4)*(x+3);
-          }
-          @Override public double derivativeValue(double x) {
-            return 2*x-1;
-          }
-        })
+        .withFunction(x->(x-4)*(x+3))
         .build();
     assertEquals(4, nr.findRoot(0.0), TOLERANCE);
     assertEquals(4, nr.findRoot(0.0), TOLERANCE);

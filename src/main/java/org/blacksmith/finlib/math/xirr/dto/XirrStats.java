@@ -1,19 +1,55 @@
 package org.blacksmith.finlib.math.xirr.dto;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.DoubleSummaryStatistics;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.blacksmith.finlib.math.xirr.Cashflow;
-import org.blacksmith.finlib.math.xirr.Xirr;
+import org.blacksmith.finlib.math.xirr.XirrCalculator;
 
 /**
  * Converts a stream of {@link Cashflow} instances into the data needed for
- * the {@link Xirr} algorithm.
+ * the {@link XirrCalculator} algorithm.
  * */
 public class XirrStats {
-  public static XirrStats fromCashflows(Collection<Cashflow> csws) {
-    final XirrStats result = new XirrStats();
+  public static Collector<Cashflow, XirrStats, XirrStats> collector() {
+    return Collector.of(
+        XirrStats::new,
+        XirrStats::accumulate,
+        XirrStats::combine,
+        Collector.Characteristics.IDENTITY_FINISH,
+        Collector.Characteristics.UNORDERED);
+  }
+
+  private static void accumulate(XirrStats a, Cashflow cs) {
+    a.startDate = a.startDate != null && a.startDate.isBefore(cs.getDate()) ? a.startDate : cs.getDate();
+    a.endDate   = a.endDate != null && a.endDate.isAfter(cs.getDate()) ? a.endDate : cs.getDate();
+    a.minAmount = Math.min(a.minAmount, cs.getAmount());
+    a.maxAmount = Math.max(a.maxAmount, cs.getAmount());
+    a.total += cs.getAmount();
+    if (cs.getAmount() < 0) {
+      a.outcomes -= cs.getAmount();
+    }
+    else {
+      a.incomes += cs.getAmount();
+    }
+  }
+
+  private static XirrStats combine(XirrStats a, XirrStats b) {
+    a.startDate = a.startDate.isBefore(b.startDate) ? a.startDate : b.startDate;
+    a.endDate = a.endDate.isAfter(b.endDate) ? a.endDate : b.endDate;
+    a.minAmount = Math.min(a.minAmount, b.minAmount);
+    a.maxAmount = Math.max(a.maxAmount, b.maxAmount);
+    a.total += b.total;
+    a.outcomes += b.outcomes;
+    a.incomes += b.incomes;
+    return a;
+  }
+
+  public static XirrStats fromCashflows(Collection<Cashflow> cashflows) {
+    /*final XirrStats result = new XirrStats();
     result.startDate = csws.stream().map(Cashflow::getDate).min(LocalDate::compareTo).orElse(null);
     result.endDate = csws.stream().map(Cashflow::getDate).max(LocalDate::compareTo).orElse(null);
     final DoubleSummaryStatistics amountStatistics = csws.stream()
@@ -24,7 +60,8 @@ public class XirrStats {
     result.incomes = csws.stream().filter(csw->csw.getAmount()>0.0)
         .collect(Collectors.summingDouble(Cashflow::getAmount));
     result.outcomes = -csws.stream().filter(csw->csw.getAmount()<0.0)
-        .collect(Collectors.summingDouble(Cashflow::getAmount));
+        .collect(Collectors.summingDouble(Cashflow::getAmount));*/
+    XirrStats result = cashflows.stream().collect(XirrStats.collector());
     result.validate();
     return result;
   }
@@ -33,8 +70,9 @@ public class XirrStats {
   LocalDate endDate;
   double minAmount = Double.POSITIVE_INFINITY;
   double maxAmount = Double.NEGATIVE_INFINITY;
-  double total;
-  double outcomes;
+  double total = 0.0;
+  double incomes = 0.0;
+  double outcomes = 0.0;
 
   public LocalDate getStartDate() {
     return startDate;
@@ -63,8 +101,6 @@ public class XirrStats {
   public double getIncomes() {
     return incomes;
   }
-
-  double incomes;
 
   public void validate() {
     if (startDate == null) {

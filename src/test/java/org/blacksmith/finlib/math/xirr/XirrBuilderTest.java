@@ -1,13 +1,10 @@
 package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import org.blacksmith.finlib.math.solver.NewtonRaphsonAlgorithm;
+import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
-import org.blacksmith.finlib.math.xirr.Cashflow;
-import org.blacksmith.finlib.math.xirr.Xirr;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -22,22 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class XirrBuilderTest {
 
   @Test
-  public void withTransactions_1_year_no_growth() {
-    // computes the xirr on 1 year growth of 0%
-    final double xirr = Xirr.builder()
-        .withSolverBuilder(NewtonRaphsonAlgorithm.builder())
-        .withCashflows(Arrays.asList(
-            Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
-            Cashflow.of(LocalDate.parse("2011-01-01"),1000)
-        )).build().xirr();
-    assertEquals(0, xirr, TOLERANCE);
-  }
-
-  @Test
   public void withTransactions_1_year_growth() {
     // computes the xirr on 1 year growth of 10%
-    final double xirr = Xirr.builder()
-        .withSolverBuilder(NewtonRaphsonAlgorithm.builder())
+    final double xirr = XirrCalculator.builder()
+        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
             Cashflow.of(LocalDate.parse("2011-01-01"),1100))
@@ -48,8 +33,8 @@ public class XirrBuilderTest {
   @Test
   public void withTransactions_1_year_decline() {
     // computes the negative xirr on 1 year decline of 10%
-    final double xirr = Xirr.builder()
-        .withSolverBuilder(NewtonRaphsonAlgorithm.builder())
+    final double xirr = XirrCalculator.builder()
+        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
             Cashflow.of(LocalDate.parse("2011-01-01"),900))
@@ -65,7 +50,7 @@ public class XirrBuilderTest {
     System.out.println("builder build:" + builder.build());
     Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
 
-    final double xirr = Xirr.builder()
+    final double xirr = XirrCalculator.builder()
         .withSolverBuilder(builder)
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
@@ -85,7 +70,7 @@ public class XirrBuilderTest {
     final SolverBuilder builder = setUpNewtonRaphsonBuilder();
     Mockito.when(builder.build().findRoot(guess)).thenReturn(expected);
 
-    final double xirr = Xirr.builder()
+    final double xirr = XirrCalculator.builder()
         .withGuess(guess)
         .withSolverBuilder(builder)
         .withCashflows(List.of(

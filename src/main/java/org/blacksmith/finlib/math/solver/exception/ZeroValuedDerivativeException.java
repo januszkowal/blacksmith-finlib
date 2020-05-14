@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.solver.exception;
 
-import org.blacksmith.finlib.math.solver.AbstractSolver;
+import java.util.Map;
 
 /**
  * Indicates that the numerical method employed encountered a zero-valued
@@ -12,7 +12,7 @@ import org.blacksmith.finlib.math.solver.AbstractSolver;
  */
 public class ZeroValuedDerivativeException extends OverflowException {
 
-  public ZeroValuedDerivativeException(AbstractSolver state) {
-    super("Solver failed due to zero-valued derivative.", state);
+  public ZeroValuedDerivativeException(Map<String,?> stats) {
+    super("Solver failed due to zero-valued derivative.", stats);
   }
 }
