@@ -150,7 +150,7 @@ public class XirrCalculator implements Function1stDeriv {
       guess = (stats.getTotal() / stats.getOutcomes()) / years;
     }
 
-    log.info("Total={} Incomes={} Outcomes={}", stats.getTotal(), stats.getIncomes(), stats.getOutcomes());
+    log.debug("Total={} Incomes={} Outcomes={}", stats.getTotal(), stats.getIncomes(), stats.getOutcomes());
 
     var solver = solverBuilder
         .withFunction(this)
@@ -160,7 +160,7 @@ public class XirrCalculator implements Function1stDeriv {
       log.debug("Start with Guess={}", guess);
       xirr = solver.findRoot(guess);
       this.iterations = solver.getIterations();
-      log.info("Completed after iterations={}", iterations);
+      log.debug("Completed after iterations={}", iterations);
     } catch (OverflowException oe) {
       log.warn("Guess sign changed due to overflow,{}", solver.getStats());
       this.iterations = solver.getIterations();
