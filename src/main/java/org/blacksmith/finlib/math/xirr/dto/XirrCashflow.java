@@ -8,6 +8,7 @@ import org.blacksmith.finlib.math.xirr.Cashflow;
  * conveniently for calculating purposes (present and derivative)
  */
 public final class XirrCashflow {
+  /** The date of cashlow */
   private LocalDate date;
   /** The amount of the cashflow. */
   private double amount;
