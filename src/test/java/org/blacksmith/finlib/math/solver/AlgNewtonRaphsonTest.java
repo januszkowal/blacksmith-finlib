@@ -16,12 +16,12 @@ public class AlgNewtonRaphsonTest {
   Function1stDeriv funSqrt = new Function1stDeriv() {
     @Override
     public double value(double x) {
-      return x * x * x;
+      return x * x;
     }
 
     @Override
     public double derivative(double x) {
-      return 3 * x * x;
+      return 2 * x;
     }
   };
 
