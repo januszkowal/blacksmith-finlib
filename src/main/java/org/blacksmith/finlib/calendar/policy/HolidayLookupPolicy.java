@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 public class HolidayLookupPolicy<U> implements HolidayPolicy {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(HolidayLookupPolicy.class);
-  private final Set<U> holidays = new HashSet<>();
   private final DateToPartConverter<U> converter;
   private final HolidayLookupProvider<U> provider;
 
