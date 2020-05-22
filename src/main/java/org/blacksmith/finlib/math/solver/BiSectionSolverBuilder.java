@@ -3,7 +3,7 @@ package org.blacksmith.finlib.math.solver;
 /**
  * Builder for {@link BisectionSolver} instances.
  */
-public class BiSectionSolverBuilder extends AbstractSolverBuilder<BisectionSolver, Function> {
+public class BiSectionSolverBuilder extends AbstractSolverBuilder<Function,BisectionSolver> {
 
   private double minArg = Double.MIN_VALUE;
   private double maxArg = Double.MAX_VALUE;

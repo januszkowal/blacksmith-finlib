@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.finlib.math.solver.Function;
 import org.blacksmith.finlib.math.solver.Function1stDeriv;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
@@ -71,12 +72,12 @@ public class XirrCalculator implements Function1stDeriv {
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder solverBuilder) {
+  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder<?,?> solverBuilder) {
     this(cashflows, solverBuilder, null);
   }
 
-  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder solverBuilder, Double guess) {
-    Validate.notNull(solverBuilder, "Solver builder must be not null");
+  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder<?,?> solverBuilder, Double guess) {
+    Validate.notNull(solverBuilder, "Solver must be not null");
     Validate.notEmpty(cashflows, "Cashflows must be not empty");
     List<Cashflow> gcsws = groupCashflows(cashflows);
     stats = XirrStats.fromCashflows(gcsws);
@@ -134,6 +135,9 @@ public class XirrCalculator implements Function1stDeriv {
         .sum();
   }
 
+  private Function fff() {return this;}
+  private Function1stDeriv fffx() {return this;}
+
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
    *
@@ -155,7 +159,7 @@ public class XirrCalculator implements Function1stDeriv {
     var solver = solverBuilder
         .withFunction(this)
         .build();
-    double xirr = 0;
+    double xirr = 0.0;
     try {
       log.debug("Start with Guess={}", guess);
       xirr = solver.findRoot(guess);
@@ -178,7 +182,7 @@ public class XirrCalculator implements Function1stDeriv {
   public static class Builder {
 
     private Collection<Cashflow> cashflows = null;
-    private SolverBuilder solverBuilder = null;
+    private SolverBuilder<?,?> solverBuilder = null;
     private Double guess = null;
 
     public Builder() {
@@ -189,7 +193,7 @@ public class XirrCalculator implements Function1stDeriv {
       return this;
     }
 
-    public Builder withSolverBuilder(SolverBuilder solverBuilder) {
+    public Builder withSolverBuilder(SolverBuilder<?,?> solverBuilder) {
       this.solverBuilder = solverBuilder;
       return this;
     }

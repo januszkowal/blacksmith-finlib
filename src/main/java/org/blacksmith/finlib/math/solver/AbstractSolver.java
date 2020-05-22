@@ -4,7 +4,7 @@ import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
 public abstract class AbstractSolver<F extends Function> implements Solver<F> {
-  //protected final F function;
+  protected final F function;
   protected final long maxIterations;
   protected final double tolerance;
   protected Double initialGuess;
@@ -19,9 +19,9 @@ public abstract class AbstractSolver<F extends Function> implements Solver<F> {
   //Current derivative value
   protected double derivativeValue;
 
-  public AbstractSolver(//F function,
+  public AbstractSolver(F function,
       long maxIterations, double tolerance) {
-    //this.function = function;
+    this.function = function;
     this.maxIterations = maxIterations;
     this.tolerance = tolerance;
   }

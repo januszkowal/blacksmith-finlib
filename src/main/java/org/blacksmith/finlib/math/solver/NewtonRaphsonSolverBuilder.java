@@ -3,7 +3,7 @@ package org.blacksmith.finlib.math.solver;
 /**
  * Builder for {@link NewtonRaphsonSolver} instances.
  */
-public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<NewtonRaphsonSolver, Function1stDeriv> {
+public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<Function1stDeriv, NewtonRaphsonSolver> {
 
   public NewtonRaphsonSolverBuilder() {
   }

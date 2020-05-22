@@ -5,7 +5,7 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
-public interface Solver {
+public interface Solver<F extends Function> {
   double solve(double target, double guess);
   /**
    * Find the input value to the function which yields the given
@@ -34,7 +34,7 @@ public interface Solver {
    * @param guess the value to start at
    * @return an input to the function which yields zero within the given
    *         tolerance
-   * @see #inverse(double, double)
+   * @see #inverse(F, double, double)
    */
   default double findRoot(final double guess) {
     return solve(0 , guess);

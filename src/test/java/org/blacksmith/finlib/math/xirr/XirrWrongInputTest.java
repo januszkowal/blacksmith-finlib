@@ -8,7 +8,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
+import org.blacksmith.finlib.math.solver.Function;
+import org.blacksmith.finlib.math.solver.Function1stDeriv;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
+import org.blacksmith.finlib.math.solver.Solver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +37,7 @@ public class XirrWrongInputTest {
 
   @Test
   public void xirr_same_day() throws Exception {
+    Solver<? extends Function> x = NewtonRaphsonSolverBuilder.builder().build();
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are on the same day
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -41,7 +45,7 @@ public class XirrWrongInputTest {
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), 2100)
-      ), NewtonRaphsonSolverBuilder.builder(),null).xirr();
+      ), null,null).xirr();
       fail("Expected exception for all transactions on the same day");
     });
   }
