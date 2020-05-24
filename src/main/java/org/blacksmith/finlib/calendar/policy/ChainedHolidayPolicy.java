@@ -15,7 +15,7 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   private static final String NULL_PROVIDERS_MESSAGE = "Null providers list not allowed";
   private final HolidayPolicy next;
   
-  private Set<HolidayPolicy> policies = new LinkedHashSet<>();
+  private final Set<HolidayPolicy> policies = new LinkedHashSet<>();
 
   public ChainedHolidayPolicy(Collection<HolidayPolicy> policies, HolidayPolicy next) {
     Validate.notEmpty(policies, NULL_PROVIDERS_MESSAGE);
@@ -54,8 +54,7 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
       return this;
     }
     public ChainedHolidayPolicy build() {
-      ChainedHolidayPolicy result = new ChainedHolidayPolicy(holidayProviders,next);
-      return result;
+      return new ChainedHolidayPolicy(holidayProviders,next);
     }
   }
 }

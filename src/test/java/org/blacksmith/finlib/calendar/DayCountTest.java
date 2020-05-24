@@ -1,12 +1,11 @@
 package org.blacksmith.finlib.calendar;
 
+import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.DayCountConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -19,9 +18,8 @@ import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
 import static org.blacksmith.commons.datetime.DateUtils.nextOrSameLeapDay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Slf4j
 public class DayCountTest {
-
-  private static  final Logger LOGGER = LoggerFactory.getLogger(DayCountTest.class);
 
   private void printFactor(DayCountConvention basis, LocalDate startDate, LocalDate endDate) {
     System.out.println(basis.toString() + ":"+basis.yearFraction(startDate,endDate,
@@ -32,7 +30,7 @@ public class DayCountTest {
             .startDate(startDate)
             .build()));
   }
-  private DayCountConvention testr1() {
+  private DayCountConvention testRemaining1() {
     return  new DayCountConvention() {
       @Override public double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
         LocalDate end = endDate;
@@ -59,7 +57,7 @@ public class DayCountTest {
     LocalDate startDate = LocalDate.now();
     //LocalDate startDate = LocalDate.of(2020,2,1);
     LocalDate endDate = startDate.plusDays(400);
-    List<StandardDayCountConvention> basiss = Arrays.asList(StandardDayCountConvention.ONE_ONE,
+    List<StandardDayCountConvention> basiss = List.of(StandardDayCountConvention.ONE_ONE,
         StandardDayCountConvention.ACT_360, StandardDayCountConvention.ACT_364, StandardDayCountConvention.ACT_365, StandardDayCountConvention.ACT_365_25,
         StandardDayCountConvention.ACT_ACT_ISDA, StandardDayCountConvention.ACT_365_ACT,
         StandardDayCountConvention.NL_360, StandardDayCountConvention.NL_365,
@@ -67,9 +65,9 @@ public class DayCountTest {
         StandardDayCountConvention.D30_360_PSA,
         StandardDayCountConvention.D30_E_360, StandardDayCountConvention.D30_E_365,
         StandardDayCountConvention.D30_EPLUS_360, StandardDayCountConvention.D30_U_360_EOM,
-        StandardDayCountConvention.ACT_ACT_YEAR, StandardDayCountConvention.ACT_ACT_AFB).stream().collect(Collectors.toList());
+        StandardDayCountConvention.ACT_ACT_YEAR, StandardDayCountConvention.ACT_ACT_AFB);
     basiss.forEach(b->printFactor(b,startDate,endDate));
-    printFactor(testr1(),startDate, endDate);
+    printFactor(testRemaining1(),startDate, endDate);
     System.out.println(Arrays.stream(StandardDayCountConvention.values()).filter(b->!basiss.contains(b)).collect(Collectors.toList()));
 
   }
@@ -267,9 +265,9 @@ public class DayCountTest {
 
   @Test
   void test3() {
-    LocalDate date1 = LocalDate.of(2019,03,8);
-    LocalDate date2 = LocalDate.of(2020,04,21);
-    LocalDate date3 = LocalDate.of(2020,05,21);
+    LocalDate date1 = LocalDate.of(2019, 3,8);
+    LocalDate date2 = LocalDate.of(2020, 4,21);
+    LocalDate date3 = LocalDate.of(2020, 5,21);
     System.out.println("XY11="+ChronoUnit.YEARS.between(date1,date2));
     System.out.println("XY12="+ChronoUnit.YEARS.between(date1,date3));
     System.out.println("XD11="+ChronoUnit.DAYS.between(date1,date2));

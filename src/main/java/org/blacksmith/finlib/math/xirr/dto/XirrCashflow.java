@@ -9,12 +9,12 @@ import org.blacksmith.finlib.math.xirr.Cashflow;
  */
 public final class XirrCashflow {
   /** The date of cashlow */
-  private LocalDate date;
+  private final LocalDate date;
   /** The amount of the cashflow. */
-  private double amount;
+  private final double amount;
   /** The number of years for which the cashflow applies, including
    * fractional years. */
-  private double years;
+  private final double years;
 
 
   public XirrCashflow(LocalDate date, double amount, double years) {
@@ -81,5 +81,5 @@ public final class XirrCashflow {
 
   public LocalDate getDate() { return this.date;}
   public double getAmount() { return  this.amount;}
-  public XirrCashflow negate() {return new XirrCashflow(this.date,-this.amount,this.years);};
+  public XirrCashflow negate() {return new XirrCashflow(this.date,-this.amount,this.years);}
 }

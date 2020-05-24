@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AlgBiSectionTest {
 
   @Test
-  public void sqrt2a() throws Exception {
-    Solver nr = BiSectionAlgorithm.builder()
+  public void sqrt2a() {
+    Solver<?> nr = BiSectionAlgorithm.builder()
         .withMinArg(0)
         .withMaxArg(30)
         .withFunction(x->x*x)
@@ -21,8 +21,8 @@ public class AlgBiSectionTest {
   }
 
   @Test
-  public void sqrt2ab() throws Exception {
-    Solver nr = BiSectionAlgorithm.builder()
+  public void sqrt2ab() {
+    Solver<?> nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(x->x*x)
@@ -33,8 +33,8 @@ public class AlgBiSectionTest {
   }
 
   @Test
-  public void cubeRoot() throws Exception {
-    Solver nr = BiSectionAlgorithm.builder()
+  public void cubeRoot() {
+    Solver<?> nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(x->x*x*x)
@@ -45,8 +45,8 @@ public class AlgBiSectionTest {
   }
 
   @Test
-  public void quadratic_a() throws Exception {
-    Solver nr = BiSectionAlgorithm.builder()
+  public void quadratic_a() {
+    Solver<?> nr = BiSectionAlgorithm.builder()
         .withMinArg(-30)
         .withMaxArg(30)
         .withFunction(x->(x-4)*(x+3))
@@ -59,8 +59,8 @@ public class AlgBiSectionTest {
   }
 
   @Test
-  public void quadratic_b() throws Exception {
-    Solver nr = BiSectionAlgorithm.builder()
+  public void quadratic_b() {
+    Solver<?> nr = BiSectionAlgorithm.builder()
         .withMinArg(0)
         .withMaxArg(30)
         .withFunction(x->(x-4)*(x+3))

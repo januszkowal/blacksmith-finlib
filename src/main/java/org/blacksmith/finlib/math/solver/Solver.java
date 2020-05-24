@@ -34,7 +34,7 @@ public interface Solver<F extends Function> {
    * @param guess the value to start at
    * @return an input to the function which yields zero within the given
    *         tolerance
-   * @see #inverse(F, double, double)
+   * @see #inverse(double, double)
    */
   default double findRoot(final double guess) {
     return solve(0 , guess);

@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
 import org.blacksmith.finlib.math.solver.Function;
-import org.blacksmith.finlib.math.solver.Function1stDeriv;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.junit.jupiter.api.Assertions;
@@ -30,13 +29,13 @@ public class XirrWrongInputTest {
   public void xirr_one_transaction() {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws exception when only one transaction is passed
-      new XirrCalculator(List.of(Cashflow.of(LocalDate.of(2010,01,01), -1000)),null).xirr();
+      new XirrCalculator(List.of(Cashflow.of(LocalDate.of(2010, 1, 1), -1000)),null).xirr();
       fail("Expected exception for only one transaction");
     });
   }
 
   @Test
-  public void xirr_same_day() throws Exception {
+  public void xirr_same_day() {
     Solver<? extends Function> x = NewtonRaphsonSolverBuilder.builder().build();
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are on the same day
@@ -51,7 +50,7 @@ public class XirrWrongInputTest {
   }
 
   @Test
-  public void xirr_all_negative() throws Exception {
+  public void xirr_all_negative() {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -64,16 +63,16 @@ public class XirrWrongInputTest {
     });
   }
   @Test
-  public void xirr_all_nonnegative() throws Exception {
+  public void xirr_all_nonNegative() {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
-      // throws an exception when all transactions are nonnegative
+      // throws an exception when all transactions are non-negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
       new XirrCalculator(Arrays.asList(
           Cashflow.of(LocalDate.parse("2010-01-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), 0)
       ), BiSectionAlgorithm.builder(),null).xirr();
-      fail("Expected exception for all transactions are nonnegative");
+      fail("Expected exception for all transactions are non-negative");
     });
   }
 }

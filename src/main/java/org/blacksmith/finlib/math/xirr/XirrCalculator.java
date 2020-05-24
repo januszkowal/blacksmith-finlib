@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.math.solver.Function;
-import org.blacksmith.finlib.math.solver.Function1stDeriv;
+import org.blacksmith.finlib.math.solver.Function1stDerivative;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-public class XirrCalculator implements Function1stDeriv {
+public class XirrCalculator implements Function1stDerivative {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
@@ -59,9 +59,9 @@ public class XirrCalculator implements Function1stDeriv {
   private List<XirrCashflow> xirrCashflows;
   private final XirrStats stats;
 
-  private SolverBuilder solverBuilder = null;
-  private Double guess = null;
-  private long iterations = 0;
+  private final SolverBuilder solverBuilder;
+  private Double guess;
+  private long iterations = 0L;
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -136,7 +136,7 @@ public class XirrCalculator implements Function1stDeriv {
   }
 
   private Function fff() {return this;}
-  private Function1stDeriv fffx() {return this;}
+  private Function1stDerivative fffx() {return this;}
 
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
@@ -159,7 +159,7 @@ public class XirrCalculator implements Function1stDeriv {
     var solver = solverBuilder
         .withFunction(this)
         .build();
-    double xirr = 0.0;
+    double xirr;
     try {
       log.debug("Start with Guess={}", guess);
       xirr = solver.findRoot(guess);

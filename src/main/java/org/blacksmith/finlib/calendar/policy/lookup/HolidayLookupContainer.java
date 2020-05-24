@@ -5,18 +5,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class HolidayLookupContainer<U> implements HolidayLookupProvider<U> {
-  protected Set<U> holidays;
+
+  protected final Set<U> holidays;
 
   public HolidayLookupContainer(Collection<U> holidays) {
     this.holidays = new HashSet<>(holidays);
   }
 
-  public static <U> HolidayLookupContainer of (Collection<U> holidays) {
-    return new HolidayLookupContainer(holidays);
+  public static <U> HolidayLookupContainer<U> of(Collection<U> holidays) {
+    return new HolidayLookupContainer<>(holidays);
   }
 
-  public static <U> HolidayLookupContainer of (U ... holidays) {
-    return new HolidayLookupContainer(Set.of(holidays));
+  @SafeVarargs
+  public static <U> HolidayLookupContainer<U> of(U... holidays) {
+    return new HolidayLookupContainer<>(Set.of(holidays));
   }
 
   @Override

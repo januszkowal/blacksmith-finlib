@@ -1,9 +1,6 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.slf4j.Logger;
@@ -49,9 +46,9 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
     //
     LocalDate refDate = scheduleParameters.getFirstCouponDate();
     LocalDate cashflowStartDate = scheduleParameters.getStartDate();
-    LocalDate cashflowPmtDateUnadjusted = null;
-    LocalDate cashflowPmtDateAdjusted = null;
-    LocalDate cashflowEndDate = null;
+    LocalDate cashflowPmtDateUnadjusted;
+    LocalDate cashflowPmtDateAdjusted;
+    LocalDate cashflowEndDate;
     
     int i = refDate.compareTo(scheduleParameters.getStartDate()) > 0 ? -1 : 0;
     while(cashflowStartDate.isBefore(scheduleParameters.getMaturityDate())) {

@@ -10,7 +10,7 @@ import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupProvider;
 
 public class HolidayLookupMutableContainer<U> implements HolidayLookupProvider<U> {
 
-  protected Set<U> holidays;
+  protected final Set<U> holidays;
 
   public HolidayLookupMutableContainer() {
     this.holidays = new HashSet<>();

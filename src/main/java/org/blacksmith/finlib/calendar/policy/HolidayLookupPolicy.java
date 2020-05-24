@@ -25,19 +25,19 @@ public class HolidayLookupPolicy<U> implements HolidayPolicy {
   }
 
   public static <U> HolidayLookupPolicy<U> of (DateToPartConverter<U> converter, HolidayLookupProvider<U> provider) {
-    return new HolidayLookupPolicy<U>(converter,provider);
+    return new HolidayLookupPolicy<>(converter,provider);
   }
 
   public static HolidayLookupPolicy<LocalDate> ofDay(HolidayLookupProvider<LocalDate> provider) {
-    return new HolidayLookupPolicy<LocalDate>(StandardDateToPartConverters.DAY, provider);
+    return new HolidayLookupPolicy<>(StandardDateToPartConverters.DAY, provider);
   }
 
   public static HolidayLookupPolicy<MonthDay> ofMonthDay(HolidayLookupProvider<MonthDay> provider) {
-    return new HolidayLookupPolicy<MonthDay>(StandardDateToPartConverters.MONTH_DAY, provider);
+    return new HolidayLookupPolicy<>(StandardDateToPartConverters.MONTH_DAY, provider);
   }
 
   public static HolidayLookupPolicy<DayOfWeek> ofWeekDay(HolidayLookupProvider<DayOfWeek> provider) {
-    return new HolidayLookupPolicy<DayOfWeek>(StandardDateToPartConverters.WEEK_DAY, provider);
+    return new HolidayLookupPolicy<>(StandardDateToPartConverters.WEEK_DAY, provider);
   }
 
   @Override

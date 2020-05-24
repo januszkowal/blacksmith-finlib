@@ -5,11 +5,11 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NewtonRaphsonSolver extends AbstractSolver<Function1stDeriv> {
+public class NewtonRaphsonSolver extends AbstractSolver<Function1stDerivative> {
 
   private static final Logger log = LoggerFactory.getLogger(NewtonRaphsonSolver.class);
 
-  public NewtonRaphsonSolver(Function1stDeriv function, long maxIterations, double tolerance) {
+  public NewtonRaphsonSolver(Function1stDerivative function, long maxIterations, double tolerance) {
     super(function, maxIterations, tolerance);
   }
 

@@ -2,6 +2,7 @@ package org.blacksmith.finlib.math.xirr;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.blacksmith.finlib.math.solver.Function1stDerivative;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
@@ -9,9 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 
 import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,10 +41,10 @@ public class XirrBuilderTest {
   }
 
   @Test
-  public void withNewtonRaphsonBuilder() throws Exception {
+  public void withNewtonRaphsonBuilder() {
     final double expected = 1;
 
-    final SolverBuilder builder = setUpNewtonRaphsonBuilder();
+    final SolverBuilder<?,?> builder = setUpNewtonRaphsonBuilder();
     System.out.println("builder build:" + builder.build());
     Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
 
@@ -83,7 +81,7 @@ public class XirrBuilderTest {
     assertEquals(expected, xirr, 0);
   }
 
-  private SolverBuilder setUpNewtonRaphsonBuilder()
+  private SolverBuilder<Function1stDerivative,?> setUpNewtonRaphsonBuilder()
   {
     final SolverBuilder builder = Mockito.mock(SolverBuilder.class);
     final Solver solver = Mockito.mock(Solver.class);

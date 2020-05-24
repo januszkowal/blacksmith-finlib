@@ -6,7 +6,7 @@ import java.time.MonthDay;
 
 public class StandardDateToPartConverters {
   private StandardDateToPartConverters() {}
-  public static final DateToPartConverter<DayOfWeek>  WEEK_DAY  = d -> d.getDayOfWeek();
-  public static final DateToPartConverter<MonthDay>   MONTH_DAY = d -> MonthDay.of(d.getMonthValue(),d.getDayOfMonth());
+  public static final DateToPartConverter<DayOfWeek>  WEEK_DAY  = LocalDate::getDayOfWeek;
+  public static final DateToPartConverter<MonthDay>   MONTH_DAY = MonthDay::from;
   public static final DateToPartConverter<LocalDate>  DAY  = d -> d;
 }

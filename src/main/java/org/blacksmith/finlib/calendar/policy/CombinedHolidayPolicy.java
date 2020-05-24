@@ -2,12 +2,8 @@ package org.blacksmith.finlib.calendar.policy;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 
@@ -18,7 +14,7 @@ import org.blacksmith.finlib.calendar.HolidayPolicy;
 public class CombinedHolidayPolicy implements HolidayPolicy {
   private static final String NULL_POLICIES_MESSAGE = "Null policies list not allowed";
   
-  private List<HolidayPolicy> policies = new ArrayList<>();
+  private final List<HolidayPolicy> policies = new ArrayList<>();
   
   public CombinedHolidayPolicy(){}
   
@@ -66,7 +62,7 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   }
 
   public static class CombinedHolidayPolicyBuilder {
-    private List<HolidayPolicy> policies = new ArrayList<>();
+    private final List<HolidayPolicy> policies = new ArrayList<>();
     public CombinedHolidayPolicyBuilder policy(HolidayPolicy policy) {
       this.policies.add(policy);
       return this;
