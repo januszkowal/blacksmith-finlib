@@ -40,7 +40,7 @@ public class XirrWrongInputTest {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are on the same day
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new XirrCalculator(Arrays.asList(
+      new XirrCalculator(List.of(
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), 2100)
@@ -54,7 +54,7 @@ public class XirrWrongInputTest {
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new XirrCalculator(Arrays.asList(
+      new XirrCalculator(List.of(
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), -2000)
