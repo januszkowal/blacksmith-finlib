@@ -36,7 +36,6 @@ public class XirrWrongInputTest {
 
   @Test
   public void xirr_same_day() {
-    Solver<? extends Function> x = NewtonRaphsonSolverBuilder.builder().build();
     Assertions.assertThrows(IllegalArgumentException.class,()->{
       // throws an exception when all transactions are on the same day
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");

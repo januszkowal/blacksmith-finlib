@@ -44,7 +44,7 @@ public class XirrBuilderTest {
   public void withNewtonRaphsonBuilder() {
     final double expected = 1;
 
-    final SolverBuilder<?,?> builder = setUpNewtonRaphsonBuilder();
+    final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = setUpNewtonRaphsonBuilder();
     System.out.println("builder build:" + builder.build());
     Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
 
@@ -65,7 +65,7 @@ public class XirrBuilderTest {
     final double expected = 1;
     final double guess = 3;
 
-    final SolverBuilder builder = setUpNewtonRaphsonBuilder();
+    final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = setUpNewtonRaphsonBuilder();
     Mockito.when(builder.build().findRoot(guess)).thenReturn(expected);
 
     final double xirr = XirrCalculator.builder()
@@ -81,10 +81,10 @@ public class XirrBuilderTest {
     assertEquals(expected, xirr, 0);
   }
 
-  private SolverBuilder<Function1stDerivative,?> setUpNewtonRaphsonBuilder()
+  private SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> setUpNewtonRaphsonBuilder()
   {
-    final SolverBuilder builder = Mockito.mock(SolverBuilder.class);
-    final Solver solver = Mockito.mock(Solver.class);
+    final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = Mockito.mock(SolverBuilder.class);
+    final Solver<Function1stDerivative> solver = Mockito.mock(Solver.class);
     Mockito.when(builder.withFunction(ArgumentMatchers.any())).thenReturn(builder);
     Mockito.when(builder.build()).thenReturn(solver);
     return builder;

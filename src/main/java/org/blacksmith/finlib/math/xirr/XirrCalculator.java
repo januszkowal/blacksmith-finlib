@@ -135,9 +135,6 @@ public class XirrCalculator implements Function1stDerivative {
         .sum();
   }
 
-  private Function fff() {return this;}
-  private Function1stDerivative fffx() {return this;}
-
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
    *
