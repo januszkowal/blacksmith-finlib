@@ -5,8 +5,9 @@ import java.time.MonthDay;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
 import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.HolidaySetPolicy;
-import org.blacksmith.finlib.calendar.policy.WeekDaySetPolicy;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupContainer;
+import org.blacksmith.finlib.calendar.policy.HolidayLookupPolicy;
+import org.blacksmith.finlib.calendar.policy.WeekDayPolicy;
 import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
@@ -20,13 +21,14 @@ import org.blacksmith.finlib.basic.Amount;
 public class ScheduleGeneratorTest {
   private final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratorTest.class);
   private ScheduleParameters createScheduleParamters1() {
-    HolidaySetPolicy<MonthDay> ymdProvider = new HolidaySetPolicy<>(StandardDateToPartConverters.MONTH_DAY);
-    ymdProvider.add(MonthDay.of(1,1));
-    ymdProvider.add(MonthDay.of(5,1));
-    ymdProvider.add(MonthDay.of(5,3));
-    ymdProvider.add(MonthDay.of(12,25));
-    ymdProvider.add(MonthDay.of(12,26));
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(CombinedHolidayPolicy.of(WeekDaySetPolicy.SAT_SUN,ymdProvider));
+    HolidayLookupContainer<MonthDay> hyc = HolidayLookupContainer.of(MonthDay.of(1,1),
+      MonthDay.of(5,1),
+      MonthDay.of(5,3),
+      MonthDay.of(12,25),
+      MonthDay.of(12,26));
+    HolidayLookupPolicy<MonthDay> ymdProvider = new HolidayLookupPolicy<>(StandardDateToPartConverters.MONTH_DAY,hyc);
+
+    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(CombinedHolidayPolicy.of(WeekDayPolicy.SAT_SUN,ymdProvider));
     return ScheduleParameters.builder()
         .firstCouponDate(LocalDate.of(2019,1,1))
         .startDate(LocalDate.of(2019,1,3))

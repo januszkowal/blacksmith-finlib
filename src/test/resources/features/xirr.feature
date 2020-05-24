@@ -196,24 +196,24 @@ Feature: Xirr calculations
     When Xirr calculate
     Then Xirr result must be -0.8353404
 
-  Scenario: Spreadsheet reordered - pos
+  Scenario: Schedule in end # in>out
     Given Create schedule
       | on         |   amount |
-      | 2010-10-01 |    -1000 |
-      | 2011-01-01 |     4300 |
-      | 2010-07-01 |    -1000 |
       | 2010-01-01 |    -1000 |
       | 2010-04-01 |    -1000 |
+      | 2010-07-01 |    -1000 |
+      | 2010-10-01 |    -1000 |
+      | 2011-01-01 |     4300 |
     When Xirr calculate
     Then Xirr result must be 0.1212676
 
-  Scenario: Spreadsheet reordered - neg
+  Scenario: Schedule out end # in<out
     Given Create schedule
       | on         |   amount |
-      | 2010-10-01 |     1000 |
-      | 2011-01-01 |    -4300 |
-      | 2010-07-01 |     1000 |
       | 2010-01-01 |     1000 |
       | 2010-04-01 |     1000 |
+      | 2010-07-01 |     1000 |
+      | 2010-10-01 |     1000 |
+      | 2011-01-01 |    -4300 |
     When Xirr calculate
     Then Xirr result must be 0.1212676

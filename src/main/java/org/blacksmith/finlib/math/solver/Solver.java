@@ -5,7 +5,7 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 
-public interface Solver {
+public interface Solver<F extends Function> {
   double solve(double target, double guess);
   /**
    * Find the input value to the function which yields the given

@@ -1,7 +1,6 @@
 package org.blacksmith.finlib.math.solver.exception;
 
 import java.util.Map;
-import org.blacksmith.finlib.math.solver.Solver;
 
 /**
  * Indicates that the algorithm failed to converge due to one of the values

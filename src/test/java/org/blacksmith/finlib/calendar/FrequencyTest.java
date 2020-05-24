@@ -1,24 +1,25 @@
 package org.blacksmith.finlib.calendar;
 
 import java.time.Period;
-import org.blacksmith.commons.datetime.TimeUnit;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FrequencyTest {
   @Test
-  public void testIsFrequenceyAnnual() {
-    assertEquals(false,Frequency.ofDays(0).isAnnual());
-    assertEquals(false,Frequency.ofDays(3).isAnnual());
+  public void testIsFrequencyAnnual() {
+    assertFalse(Frequency.ofDays(0).isAnnual());
+    assertFalse(Frequency.ofDays(3).isAnnual());
     //
-    assertEquals(false,Frequency.ofWeeks(0).isAnnual());
-    assertEquals(false,Frequency.ofWeeks(3).isAnnual());
+    assertFalse(Frequency.ofWeeks(0).isAnnual());
+    assertFalse(Frequency.ofWeeks(3).isAnnual());
     //
-    assertEquals(false,Frequency.ofMonths(0).isAnnual());
-    assertEquals(false,Frequency.ofMonths(5).isAnnual());
-    assertEquals(true,Frequency.ofMonths(12).isAnnual());
-    assertEquals(true,Frequency.ofMonths(24).isAnnual());
+    assertFalse(Frequency.ofMonths(0).isAnnual());
+    assertFalse(Frequency.ofMonths(5).isAnnual());
+    assertTrue(Frequency.ofMonths(12).isAnnual());
+    assertTrue(Frequency.ofMonths(24).isAnnual());
   }
 
   @Test

@@ -650,7 +650,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
   //calculate the number of days between the specified dates, using validated inputs
   abstract int calculateDays(LocalDate startDate, LocalDate endDate);
 
-  String shortName;
+  final String shortName;
 
   StandardDayCountConvention(String shortName) {
     this.shortName = shortName;

@@ -54,7 +54,7 @@ public interface DayCountConvention {
    * the two dates, but the '30/360 ISDA' will return a value based on 30 day months.
    *
    * @param startDate  the start date
-   * @param endDate  the sendd date, which may not be before the start date
+   * @param endDate  the end date, which may not be before the start date
    * @return the number of days, as determined by the day count
    */
   int days(LocalDate startDate, LocalDate endDate);

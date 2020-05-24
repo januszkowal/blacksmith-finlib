@@ -7,7 +7,6 @@ import org.blacksmith.finlib.basic.Amount;
 public class TermScheduleGenerator implements ScheduleGenerator {
 
   private final ScheduleParameters scheduleParameters;
-  private Schedule schedule;
 
   public TermScheduleGenerator(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
@@ -16,7 +15,7 @@ public class TermScheduleGenerator implements ScheduleGenerator {
   
   @Override
   public Schedule generate() {
-    this.schedule = new Schedule();
+    var schedule = new Schedule();
     ScheduleInfo scheduleInfo = createScheduleInfo(scheduleParameters,scheduleParameters.getStartDate(),scheduleParameters.getMaturityDate());
     double rate = 7 / 100.0;
     double interest =

@@ -1,11 +1,8 @@
 package org.blacksmith.finlib.math.xirr.dto;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.DoubleSummaryStatistics;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import org.blacksmith.finlib.math.xirr.Cashflow;
 import org.blacksmith.finlib.math.xirr.XirrCalculator;
 
@@ -104,7 +101,7 @@ public class XirrStats {
 
   public void validate() {
     if (startDate == null) {
-      throw new IllegalArgumentException("No cashflows to anaylze");
+      throw new IllegalArgumentException("No cashflows to analyze");
     }
 
     if (startDate.equals(endDate)) {

@@ -1,8 +1,8 @@
 package org.blacksmith.finlib.math.solver;
 
-public interface SolverBuilder<S extends Solver,F extends Function> {
-  SolverBuilder<S,F> withFunction(F function);
-  SolverBuilder<S,F> withTolerance(double tolerance);
-  SolverBuilder<S,F> withIterations(long iterations);
+public interface SolverBuilder<F extends Function,S extends Solver<F>> {
+  SolverBuilder<F,S> withFunction(F function);
+  SolverBuilder<F,S> withTolerance(double tolerance);
+  SolverBuilder<F,S> withIterations(long iterations);
   S build();
 }

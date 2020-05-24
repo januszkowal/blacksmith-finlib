@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
 
 public class AdjustableDate {
+
   private final LocalDate unadjusted;
   private final BusinessDayConvention convention;
 
@@ -13,6 +14,12 @@ public class AdjustableDate {
   }
 
   public static AdjustableDate of(LocalDate unadjusted, BusinessDayConvention convention) {
-    return new AdjustableDate(unadjusted,convention);
+    return new AdjustableDate(unadjusted, convention);
   }
+
+  public LocalDate getUnadjusted() {
+    return this.unadjusted;
+  }
+
+  public BusinessDayConvention getConvention() {return this.convention;}
 }

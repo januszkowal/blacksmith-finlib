@@ -21,7 +21,7 @@ public class XirrCalculatorSteps {
   double xirrBiCalcResult;
   double xirrNewtonRaphsonResult;
   @Given("Create schedule")
-  public void certificationName(DataTable table) throws Throwable {
+  public void certificationName(DataTable table) {
     this.xirrBiCalcResult = 0.0;
     this.xirrNewtonRaphsonResult = 0.0;
     this.cashflows = table.asMaps().stream()
