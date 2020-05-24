@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
@@ -16,39 +18,44 @@ import org.blacksmith.finlib.calendar.HolidayPolicy;
 public class CombinedHolidayPolicy implements HolidayPolicy {
   private static final String NULL_POLICIES_MESSAGE = "Null policies list not allowed";
   
-  private List<HolidayPolicy> holidayPolicies = new ArrayList<>();
+  private List<HolidayPolicy> policies = new ArrayList<>();
   
   public CombinedHolidayPolicy(){}
   
-  public CombinedHolidayPolicy(Collection<HolidayPolicy> holidayPolicies){
-    addPolicies(holidayPolicies);
+  public CombinedHolidayPolicy(Collection<HolidayPolicy> policies){
+    addPolicies(policies);
   }
   
-  public CombinedHolidayPolicy(HolidayPolicy... holidayPolicies){
-    addPolicies(holidayPolicies);
+  public CombinedHolidayPolicy(HolidayPolicy... policies){
+    addPolicies(policies);
   }
   
-  public static CombinedHolidayPolicy of (Collection<HolidayPolicy> holidayPolicies){
-    return new CombinedHolidayPolicy(holidayPolicies);
+  public static CombinedHolidayPolicy of (Collection<HolidayPolicy> policies){
+    return new CombinedHolidayPolicy(policies);
   }
   
-  public static CombinedHolidayPolicy of (HolidayPolicy... holidayPolicies){
-    return new CombinedHolidayPolicy(holidayPolicies);
+  public static CombinedHolidayPolicy of (HolidayPolicy... policies){
+    return new CombinedHolidayPolicy(policies);
   }
 
-  public void addPolicies(HolidayPolicy...holidayPolicies) {
-    Validate.notEmpty(holidayPolicies, NULL_POLICIES_MESSAGE);
-    this.holidayPolicies.addAll(Arrays.stream(holidayPolicies).collect(Collectors.toList()));
+  public void addPolicy(HolidayPolicy policy) {
+    Validate.notEmpty(policies, NULL_POLICIES_MESSAGE);
+    this.policies.add(policy);
+  }
+
+  public void addPolicies(HolidayPolicy...policies) {
+    Validate.notEmpty(policies, NULL_POLICIES_MESSAGE);
+    this.policies.addAll(List.of(policies));
   }
   
   public void addPolicies(Collection<HolidayPolicy> holidayPolicies) {
     Validate.notEmpty(holidayPolicies, "Null holiday policy not allowed");
-    this.holidayPolicies.addAll(holidayPolicies);
+    this.policies.addAll(holidayPolicies);
   }
   
   @Override
   public boolean isHoliday(LocalDate date) {
-    return holidayPolicies.stream()
+    return policies.stream()
         .map(hp->hp.isHoliday(date))
         .filter(ih->ih)
         .findFirst().orElse(false);
@@ -59,17 +66,21 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   }
 
   public static class CombinedHolidayPolicyBuilder {
-    private Collection<HolidayPolicy> holidayProviders;
-    public CombinedHolidayPolicyBuilder policies(HolidayPolicy...policies) {
-      this.holidayProviders = Arrays.stream(policies).collect(Collectors.toList());
+    private List<HolidayPolicy> policies = new ArrayList<>();
+    public CombinedHolidayPolicyBuilder policy(HolidayPolicy policy) {
+      this.policies.add(policy);
       return this;
     }
-    public CombinedHolidayPolicyBuilder policies(Collection<HolidayPolicy> providers) {
-      this.holidayProviders = providers;
+    public CombinedHolidayPolicyBuilder policies(HolidayPolicy...policies) {
+      this.policies.addAll(List.of(policies));
+      return this;
+    }
+    public CombinedHolidayPolicyBuilder policies(Collection<HolidayPolicy> policies) {
+      this.policies.addAll(policies);
       return this;
     }
     public CombinedHolidayPolicy build() {
-      return new CombinedHolidayPolicy(holidayProviders);
+      return new CombinedHolidayPolicy(policies);
     }
   }
 }

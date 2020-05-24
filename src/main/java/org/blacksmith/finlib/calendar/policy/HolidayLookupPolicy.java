@@ -1,10 +1,12 @@
 package org.blacksmith.finlib.calendar.policy;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.MonthDay;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 import org.blacksmith.finlib.calendar.helper.DateToPartConverter;
+import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +25,19 @@ public class HolidayLookupPolicy<U> implements HolidayPolicy {
   }
 
   public static <U> HolidayLookupPolicy<U> of (DateToPartConverter<U> converter, HolidayLookupProvider<U> provider) {
-    return new HolidayLookupPolicy<>(converter,provider);
+    return new HolidayLookupPolicy<U>(converter,provider);
+  }
+
+  public static HolidayLookupPolicy<LocalDate> ofDay(HolidayLookupProvider<LocalDate> provider) {
+    return new HolidayLookupPolicy<LocalDate>(StandardDateToPartConverters.DAY, provider);
+  }
+
+  public static HolidayLookupPolicy<MonthDay> ofMonthDay(HolidayLookupProvider<MonthDay> provider) {
+    return new HolidayLookupPolicy<MonthDay>(StandardDateToPartConverters.MONTH_DAY, provider);
+  }
+
+  public static HolidayLookupPolicy<DayOfWeek> ofWeekDay(HolidayLookupProvider<DayOfWeek> provider) {
+    return new HolidayLookupPolicy<DayOfWeek>(StandardDateToPartConverters.WEEK_DAY, provider);
   }
 
   @Override

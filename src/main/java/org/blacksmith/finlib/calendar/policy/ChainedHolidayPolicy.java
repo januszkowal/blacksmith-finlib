@@ -16,17 +16,11 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   private final HolidayPolicy next;
   
   private Set<HolidayPolicy> policies = new LinkedHashSet<>();
-  
-  public ChainedHolidayPolicy(Collection<HolidayPolicy> providers, HolidayPolicy next) {
-    Validate.notEmpty(providers, NULL_PROVIDERS_MESSAGE);
+
+  public ChainedHolidayPolicy(Collection<HolidayPolicy> policies, HolidayPolicy next) {
+    Validate.notEmpty(policies, NULL_PROVIDERS_MESSAGE);
     this.next = next;
-    this.policies.addAll(providers);
-  }
-  
-  public ChainedHolidayPolicy(HolidayPolicy...providers) {
-    Validate.notEmpty(providers, NULL_PROVIDERS_MESSAGE);
-    this.next = null;
-    this.policies.addAll(Arrays.stream(providers).collect(Collectors.toList()));
+    this.policies.addAll(policies);
   }
   
   @Override
@@ -43,18 +37,20 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   }
   
   public static class ChainedHolidayPolicyBuilder {
-    private HolidayPolicy next;
+
     private Collection<HolidayPolicy> holidayProviders;
-    public ChainedHolidayPolicyBuilder next(HolidayPolicy next) {
-      this.next = next;
-      return this;
-    }
+    private HolidayPolicy next;
+
     public ChainedHolidayPolicyBuilder policies(HolidayPolicy...policies) {
       this.holidayProviders = Arrays.stream(policies).collect(Collectors.toList());
       return this;
     }
     public ChainedHolidayPolicyBuilder policies(Collection<HolidayPolicy> providers) {
       this.holidayProviders = providers;
+      return this;
+    }
+    public ChainedHolidayPolicyBuilder next(HolidayPolicy next) {
+      this.next = next;
       return this;
     }
     public ChainedHolidayPolicy build() {

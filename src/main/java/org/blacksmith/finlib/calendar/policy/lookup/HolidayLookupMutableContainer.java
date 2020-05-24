@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.calendar.policy;
+package org.blacksmith.finlib.calendar.policy.lookup;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupProvider;
 
 public class HolidayLookupMutableContainer<U> implements HolidayLookupProvider<U> {
 

@@ -5,7 +5,7 @@ import java.time.MonthDay;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
 import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.HolidayLookupContainer;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupContainer;
 import org.blacksmith.finlib.calendar.policy.HolidayLookupPolicy;
 import org.blacksmith.finlib.calendar.policy.WeekDayPolicy;
 import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;

@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.calendar.policy;
+package org.blacksmith.finlib.calendar.policy.lookup;
 
 import java.util.Collection;
 import java.util.HashSet;

@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupContainer;
 
 public class WeekDayPolicy extends HolidayLookupPolicy<DayOfWeek> {
 

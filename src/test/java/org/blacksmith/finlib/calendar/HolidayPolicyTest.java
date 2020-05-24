@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.blacksmith.finlib.calendar.policy.ChainedHolidayPolicy;
 import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.HolidayLookupContainer;
+import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupContainer;
 import org.blacksmith.finlib.calendar.policy.HolidayLookupPolicy;
 import org.blacksmith.finlib.calendar.policy.WeekDayPolicy;
 import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
@@ -62,7 +62,7 @@ public class HolidayPolicyTest {
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,6,10)
     ).stream().collect(Collectors.toSet());
-    HolidayPolicy policy = HolidayLookupPolicy.of(StandardDateToPartConverters.YEAR_DAY,
+    HolidayPolicy policy = HolidayLookupPolicy.of(StandardDateToPartConverters.DAY,
         HolidayLookupContainer.of(days));
     assertEquals(false,policy.isHoliday(LocalDate.of(2019,1,15)));
     assertEquals(true,policy.isHoliday(LocalDate.of(2019,5,15)));
@@ -108,19 +108,18 @@ public class HolidayPolicyTest {
   }
   @Test
   public void holidayPolicyGroup() {
-    Set<MonthDay> hset1 = Arrays.asList(
+    Set<MonthDay> hset1 = Set.of(
         MonthDay.of(5,15),
         MonthDay.of(6,10),
         MonthDay.of(12,25),
-        MonthDay.of(12,26)
-    ).stream().collect(Collectors.toSet());
-    Set<LocalDate> hset2 = Arrays.asList(
+        MonthDay.of(12,26));
+    Set<LocalDate> hset2 = Set.of(
         LocalDate.of(2019,7,15),
         LocalDate.of(2019,9,10)
-    ).stream().collect(Collectors.toSet());
+    );
     HolidayPolicy policy1 = new HolidayLookupPolicy<MonthDay>(StandardDateToPartConverters.MONTH_DAY,
         HolidayLookupContainer.of(hset1));
-    HolidayPolicy policy2 = new HolidayLookupPolicy<LocalDate>(StandardDateToPartConverters.YEAR_DAY,
+    HolidayPolicy policy2 = new HolidayLookupPolicy<LocalDate>(StandardDateToPartConverters.DAY,
         HolidayLookupContainer.of(hset2));
 
     HolidayPolicy[] hpa = {policy1,policy2};
