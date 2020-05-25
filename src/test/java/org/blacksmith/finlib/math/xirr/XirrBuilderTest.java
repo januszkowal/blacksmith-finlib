@@ -19,7 +19,7 @@ public class XirrBuilderTest {
   @Test
   public void withTransactions_1_year_growth() {
     // computes the xirr on 1 year growth of 10%
-    final double xirr = XirrCalculator.builder()
+    final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
@@ -31,7 +31,7 @@ public class XirrBuilderTest {
   @Test
   public void withTransactions_1_year_decline() {
     // computes the negative xirr on 1 year decline of 10%
-    final double xirr = XirrCalculator.builder()
+    final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
@@ -48,7 +48,7 @@ public class XirrBuilderTest {
     System.out.println("builder build:" + builder.build());
     Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
 
-    final double xirr = XirrCalculator.builder()
+    final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withSolverBuilder(builder)
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"),-1000),
@@ -68,14 +68,13 @@ public class XirrBuilderTest {
     final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = setUpNewtonRaphsonBuilder();
     Mockito.when(builder.build().findRoot(guess)).thenReturn(expected);
 
-    final double xirr = XirrCalculator.builder()
+    final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withGuess(guess)
         .withSolverBuilder(builder)
         .withCashflows(List.of(
             Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
             Cashflow.of(LocalDate.parse("2011-01-01"), 1000))
         ).build().xirr();
-
     // Correct answer is 0, but we are ensuring that Xirr is using the
     // builder we supplied
     assertEquals(expected, xirr, 0);

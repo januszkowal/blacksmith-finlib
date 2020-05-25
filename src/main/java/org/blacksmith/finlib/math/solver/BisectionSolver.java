@@ -8,12 +8,9 @@ public class BisectionSolver extends AbstractSolver<Function> {
   private final double minArg;
   private final double maxArg;
 
-  private final Function function;
-
   public BisectionSolver(Function function,
       long maxIterations, double tolerance, double minArg, double maxArg) {
     super(function, maxIterations, tolerance);
-    this.function = function;
     this.minArg = minArg;
     this.maxArg = maxArg;
   }

@@ -10,43 +10,48 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.blacksmith.finlib.math.solver.BiSectionAlgorithm;
+import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
+import org.blacksmith.finlib.math.solver.Function1stDerivative;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.xirr.Cashflow;
-import org.blacksmith.finlib.math.xirr.XirrCalculator;
+import org.blacksmith.finlib.math.xirr.XirrCalculatorBuilder;
 
 @Slf4j
 public class XirrCalculatorSteps {
+
   List<Cashflow> cashflows;
   double xirrBiCalcResult;
   double xirrNewtonRaphsonResult;
+
   @Given("Create schedule")
   public void certificationName(DataTable table) {
     this.xirrBiCalcResult = 0.0;
     this.xirrNewtonRaphsonResult = 0.0;
     this.cashflows = table.asMaps().stream()
-        .map(fields-> Cashflow.of(LocalDate.parse(fields.get("on")),Double.parseDouble(fields.get("amount"))))
+        .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
         .collect(Collectors.toList());
-    log.info("Schedule:{}",cashflows);
+    log.info("Schedule:{}", cashflows);
   }
 
   @When("Xirr calculate")
   public void calculateXirr() {
     log.info("Calc BiSection");
-    var calculatorBiCalc = new XirrCalculator(cashflows,
-        BiSectionAlgorithm.builder()
+    var calculatorBiCalc = XirrCalculatorBuilder.builder()
+        .withSolverBuilder(BiSectionSolverBuilder.builder()
             .withMinArg(-1)
-            .withMaxArg(2), null);
+            .withMaxArg(2))
+        .withCashflows(cashflows).build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr();
     log.info("Calc NewtonRaphson");
-    var calculatorNewtonRapshon = new XirrCalculator(cashflows,
-        NewtonRaphsonSolverBuilder.builder(), null);
+    var calculatorNewtonRapshon = XirrCalculatorBuilder.<Function1stDerivative>builder()
+        .withCashflows(cashflows)
+        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder()).build();
     this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr();
   }
 
   @Then("Xirr result must be {double}")
   public void verifyResult(double result) {
-    assertEquals(result,xirrBiCalcResult, 0.000_000_1,"BiSection result different");
-    assertEquals(result,xirrNewtonRaphsonResult, 0.000_000_1, "NewtonRaphson result different");
+    assertEquals(result, xirrBiCalcResult, 0.000_000_1, "BiSection result different");
+    assertEquals(result, xirrNewtonRaphsonResult, 0.000_000_1, "NewtonRaphson result different");
   }
 }
