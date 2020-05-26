@@ -22,6 +22,18 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
   public LocalDate getEndDate(LocalDate pmtUnadjusted, LocalDate pmtAdjusted) {
     return scheduleParameters.isLinkCouponLengthWitPayment() ? pmtAdjusted : pmtUnadjusted;
   }
+
+  private ScheduleInfo createScheduleInfo(ScheduleParameters scheduleParameters, LocalDate couponStartDate, LocalDate couponEndDate) {
+    return ScheduleInfo.builder()
+        .isEndOfMonthConvention(scheduleParameters.isEndOfMonthConvention())
+        .couponFrequency(scheduleParameters.getCouponFrequency())
+        .startDate(scheduleParameters.getStartDate())
+        .maturityDate(scheduleParameters.getMaturityDate())
+        .couponStartDate(couponStartDate)
+        .couponEndDate(couponEndDate)
+        .startInterestRate(scheduleParameters.getStartInterestRate())
+        .build();
+  }
   
   private void addInterestCashflow(LocalDate startDate, LocalDate endDate,LocalDate pmtDate) {
     ScheduleInfo scheduleInfo = createScheduleInfo(scheduleParameters,startDate,endDate);
@@ -53,7 +65,7 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
     int i = refDate.compareTo(scheduleParameters.getStartDate()) > 0 ? -1 : 0;
     while(cashflowStartDate.isBefore(scheduleParameters.getMaturityDate())) {
       i++;
-      cashflowPmtDateUnadjusted = scheduleParameters.getCouponFrequency().plus(refDate,i);
+      cashflowPmtDateUnadjusted = scheduleParameters.getCouponFrequency().addTo(refDate,i);
       cashflowPmtDateAdjusted = scheduleParameters.getBusinessDayConvention().adjust(cashflowPmtDateUnadjusted,scheduleParameters.getBusinessDayCalendar());
       if (cashflowPmtDateAdjusted.isAfter(scheduleParameters.getMaturityDate())) {
         cashflowPmtDateAdjusted = scheduleParameters.getMaturityDate();

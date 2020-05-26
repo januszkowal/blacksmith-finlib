@@ -1,16 +1,19 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Builder.Default;
+import lombok.experimental.SuperBuilder;
 import org.blacksmith.finlib.basic.Amount;
 import lombok.Builder;
 import lombok.Data;
+import org.blacksmith.finlib.basic.Rate;
 
-@Data(staticConstructor="of")
-@Builder
-public class Cashflow {
-  private LocalDate startDate;  
-  private LocalDate endDate;
+@SuperBuilder
+public class Cashflow extends BaseCashflow {
+
   private LocalDate paymentDate;
-  private Amount notional;
-  private Amount amount;
+  @Builder.Default
+  private List<SubCashflow> subCashflows = new ArrayList<>();
 }

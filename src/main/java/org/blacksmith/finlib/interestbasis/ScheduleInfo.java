@@ -20,7 +20,7 @@ public class ScheduleInfo {
   private LocalDate couponEndDate;
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
-  private Rate rate;
+  private Rate startInterestRate;
   private Amount notional;
 
   public Amount getNotional(LocalDate date) {

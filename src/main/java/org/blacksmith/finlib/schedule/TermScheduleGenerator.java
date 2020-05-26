@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.schedule;
 
+import java.time.LocalDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.basic.Amount;
@@ -11,13 +12,23 @@ public class TermScheduleGenerator implements ScheduleGenerator {
   public TermScheduleGenerator(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
   }
-  
-  
+
+  private ScheduleInfo createScheduleInfo(ScheduleParameters scheduleParameters, LocalDate couponStartDate, LocalDate couponEndDate) {
+    return ScheduleInfo.builder()
+        .isEndOfMonthConvention(scheduleParameters.isEndOfMonthConvention())
+        .couponFrequency(scheduleParameters.getCouponFrequency())
+        .startDate(scheduleParameters.getStartDate())
+        .maturityDate(scheduleParameters.getMaturityDate())
+        .couponStartDate(couponStartDate)
+        .couponEndDate(couponEndDate)
+        .startInterestRate(scheduleParameters.getStartInterestRate())
+        .build();
+  }
   @Override
   public Schedule generate() {
     var schedule = new Schedule();
     ScheduleInfo scheduleInfo = createScheduleInfo(scheduleParameters,scheduleParameters.getStartDate(),scheduleParameters.getMaturityDate());
-    double rate = 7 / 100.0;
+    double rate = scheduleParameters.getStartInterestRate().doubleValue() / 100.0;
     double interest =
         scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
         rate*

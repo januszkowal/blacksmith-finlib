@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Period;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.Locale;
 import org.blacksmith.commons.datetime.DateOperation;
 import org.blacksmith.commons.datetime.TimeUnit;
@@ -23,9 +25,8 @@ public class Frequency implements Serializable, DateOperation {
   @ToString.Include
   private final int amount;
   @ToString.Include
-  private final Period period;
-  @ToString.Include
   private final String name;
+  private final Period period;
 
   /**
    * Serialization version.
@@ -153,7 +154,7 @@ public class Frequency implements Serializable, DateOperation {
    */
   public static final Frequency TERM = new Frequency(TERM_YEARS, TimeUnit.YEAR, "TERM");
 
-  public Frequency(Period period) {
+  public Frequency(final Period period) {
     if (period.getYears() > 0) {
       this.unit = TimeUnit.YEAR;
       this.amount = period.getYears();
@@ -356,18 +357,37 @@ public class Frequency implements Serializable, DateOperation {
     }
   }
 
-  public String periodName(final int amount, final TimeUnit unit) {
+  private String periodName(final int amount, final TimeUnit unit) {
     return amount + unit.symbol();
   }
 
   @Override
-  public <R extends Temporal> R plus(R t, int amount) {
-    return this.unit.plus(t,this.amount*amount);
+  public <T extends Temporal> T addTo(T t, int i) {
+    return this.unit.addTo(t,i*amount);
   }
-
 
   @Override
-  public <R extends Temporal> R minus(R t, int amount) {
-    return this.unit.plus(t,this.amount*amount);
+  public <T extends Temporal> T minusFrom(T t, int i) {
+    return this.unit.minusFrom(t,i*amount);
   }
+
+//  @Override
+//  public <R extends Temporal> R plus(R t, int amount) {
+//    return this.unit.plus(t,this.amount*amount);
+//  }
+//
+//  @Override
+//  public <R extends Temporal> R plus(R t) {
+//    return this.unit.plus(t,this.amount);
+//  }
+//
+//  @Override
+//  public <R extends Temporal> R minus(R t, int amount) {
+//    return this.unit.plus(t,this.amount*amount);
+//  }
+//
+//  @Override
+//  public <R extends Temporal> R minus(R t) {
+//    return this.unit.plus(t,this.amount);
+//  }
 }
