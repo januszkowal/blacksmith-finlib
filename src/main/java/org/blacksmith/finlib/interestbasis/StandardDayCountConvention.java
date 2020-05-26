@@ -196,10 +196,9 @@ public enum StandardDayCountConvention implements DayCountConvention {
       Frequency freq = scheduleInfo.getCouponFrequency();
       boolean eom = scheduleInfo.isEndOfMonthConvention();
 
-
       // final period, also handling single period schedules
       if (nextCouponDate.equals(scheduleEndDate)) {
-        LocalDate endCalculated = eom(startDate, startDate.plus(freq.getPeriod()), eom);
+        LocalDate endCalculated = eom(startDate, freq.addTo(startDate), eom);
         if (endCalculated.isBefore(scheduleEndDate))
           return initPeriod(startDate, endDate, nextCouponDate, freq, eom);
         else
@@ -216,13 +215,13 @@ public enum StandardDayCountConvention implements DayCountConvention {
     // calculate nominal periods backwards from couponDate
     private double initPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponDate, Frequency freq, boolean eom) {
       LocalDate subPeriodEnd = couponDate;
-      LocalDate subPeriodStart = eom(couponDate, subPeriodEnd.minus(freq.getPeriod()), eom);
+      LocalDate subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
 //      LOGGER.debug("initPeriod subStart={} subEnd={} startDate={} endDate{}",subPeriodStart,subPeriodEnd,startDate,endDate);
       double result = 0;
       while (subPeriodStart.isAfter(startDate)) {
         result += calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
         subPeriodEnd = subPeriodStart;
-        subPeriodStart = eom(couponDate, subPeriodEnd.minus(freq.getPeriod()), eom);
+        subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
 //        LOGGER.debug("from final periodStart={} periodEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       }
       return result + calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
@@ -231,13 +230,13 @@ public enum StandardDayCountConvention implements DayCountConvention {
     // calculate nominal periods forwards from couponDate
     private double finalPeriod(LocalDate couponDate, LocalDate endDate, Frequency freq, boolean eom) {
       LocalDate subPeriodStart = couponDate;
-      LocalDate subPeriodEnd = eom(couponDate, subPeriodStart.plus(freq.getPeriod()), eom);
+      LocalDate subPeriodEnd = eom(couponDate, freq.addTo(subPeriodStart), eom);
 //      LOGGER.debug("finalPeriod subStart={} subEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       double result = 0;
       while (subPeriodEnd.isBefore(endDate)) {
         result += calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
         subPeriodStart = subPeriodEnd;
-        subPeriodEnd = eom(couponDate, subPeriodEnd.plus(freq.getPeriod()), eom);
+        subPeriodEnd = eom(couponDate, freq.addTo(subPeriodEnd), eom);
       }
       return result + calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
     }

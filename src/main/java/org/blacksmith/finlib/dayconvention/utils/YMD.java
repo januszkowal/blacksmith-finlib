@@ -2,6 +2,7 @@ package org.blacksmith.finlib.dayconvention.utils;
 
 import java.time.LocalDate;
 
+@SuppressWarnings("unused")
 public class YMD {
   int year;
   int month;

@@ -7,7 +7,6 @@ import lombok.ToString;
 @ToString
 public class Schedule {
   private final List<Cashflow> cashflows = new ArrayList<>();
-  
   public List<Cashflow> getCashflow() {
     return this.cashflows;
   }

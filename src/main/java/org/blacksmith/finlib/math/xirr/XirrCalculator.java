@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.finlib.math.solver.Function;
 import org.blacksmith.finlib.math.solver.Function1stDerivative;
-import org.blacksmith.finlib.math.solver.SolverBuilder;
+import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
@@ -41,27 +41,21 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-public class XirrCalculator implements Function1stDerivative {
+public class XirrCalculator<F extends Function> implements Function1stDerivative {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
   private static final double DAYS_IN_YEAR = 365;
 
-  /**
-   * Convenience method for getting an instance of a {@link Builder}.
-   *
-   * @return new Builder
-   */
-  public static Builder builder() {
-    return new Builder();
-  }
-
   private List<XirrCashflow> xirrCashflows;
   private final XirrStats stats;
 
-  private final SolverBuilder solverBuilder;
+  private final Solver<F> solver;
   private Double guess;
   private long iterations = 0L;
+
+  @SuppressWarnings("unchecked")
+  private F getFunction() {return (F)this;}
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -72,16 +66,16 @@ public class XirrCalculator implements Function1stDerivative {
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder<?,?> solverBuilder) {
-    this(cashflows, solverBuilder, null);
+  public XirrCalculator(Collection<Cashflow> cashflows, Solver<F> solver) {
+    this(cashflows, solver, null);
   }
 
-  public XirrCalculator(Collection<Cashflow> cashflows, SolverBuilder<?,?> solverBuilder, Double guess) {
-    Validate.notNull(solverBuilder, "Solver must be not null");
+  public XirrCalculator(Collection<Cashflow> cashflows, Solver<F> solver, Double guess) {
+    Validate.notNull(solver, "Solver builder must be not null");
     Validate.notEmpty(cashflows, "Cashflows must be not empty");
-    List<Cashflow> gcsws = groupCashflows(cashflows);
-    stats = XirrStats.fromCashflows(gcsws);
-    this.xirrCashflows = gcsws.stream()
+    List<Cashflow> groupedCashflows = groupCashflows(cashflows);
+    stats = XirrStats.fromCashflows(groupedCashflows);
+    this.xirrCashflows = groupedCashflows.stream()
         .map(this::createXirrCashflow)
         .collect(Collectors.toList());
     if (xirrCashflows.size() < 2) {
@@ -89,7 +83,7 @@ public class XirrCalculator implements Function1stDerivative {
     }
     stats.validate();
 
-    this.solverBuilder = solverBuilder;
+    this.solver = solver;
     this.guess = guess;
   }
 
@@ -135,9 +129,6 @@ public class XirrCalculator implements Function1stDerivative {
         .sum();
   }
 
-  private Function fff() {return this;}
-  private Function1stDerivative fffx() {return this;}
-
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
    *
@@ -156,60 +147,24 @@ public class XirrCalculator implements Function1stDerivative {
 
     log.debug("Total={} Incomes={} Outcomes={}", stats.getTotal(), stats.getIncomes(), stats.getOutcomes());
 
-    var solver = solverBuilder
-        .withFunction(this)
-        .build();
     double xirr;
     try {
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(guess);
+      xirr = solver.findRoot(getFunction(),guess);
       this.iterations = solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     } catch (OverflowException oe) {
       log.warn("Guess sign changed due to overflow,{}", solver.getStats());
       this.iterations = solver.getIterations();
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(-guess);
+      xirr = solver.findRoot(getFunction(),-guess);
       this.iterations += solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     }
     return xirr;
   }
 
-  /**
-   * Builder for {@link XirrCalculator} instances.
-   */
-  public static class Builder {
-
-    private Collection<Cashflow> cashflows = null;
-    private SolverBuilder<?,?> solverBuilder = null;
-    private Double guess = null;
-
-    public Builder() {
-    }
-
-    public Builder withCashflows(Collection<Cashflow> txs) {
-      this.cashflows = txs;
-      return this;
-    }
-
-    public Builder withSolverBuilder(SolverBuilder<?,?> solverBuilder) {
-      this.solverBuilder = solverBuilder;
-      return this;
-    }
-
-    public Builder withGuess(double guess) {
-      this.guess = guess;
-      return this;
-    }
-
-    public XirrCalculator build() {
-      return new XirrCalculator(cashflows, solverBuilder, guess);
-    }
-  }
-
   public long getIterations() {
     return this.iterations;
   }
-
 }
