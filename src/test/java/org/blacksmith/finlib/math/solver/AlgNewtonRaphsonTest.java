@@ -51,34 +51,34 @@ public class AlgNewtonRaphsonTest {
 
   @Test
   public void sqrt() {
-    Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(funSqrt)
+    Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(funSqrt)
         .build();
-    assertEquals(2, nr.inverse(4, 4.0), TOLERANCE);
-    assertEquals(-3, nr.inverse(9, -9.0), TOLERANCE);
-    assertEquals(25, nr.inverse(625, 625.0), TOLERANCE);
+    assertEquals(2, nr.inverse(funSqrt,4, 4.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(funSqrt,9, -9.0), TOLERANCE);
+    assertEquals(25, nr.inverse(funSqrt,625, 625.0), TOLERANCE);
   }
 
   @Test
   public void cubeRoot() {
-    Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(funCubeRoot)
+    Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(funCubeRoot)
         .build();
-    assertEquals(2, nr.inverse(8, 8.0), TOLERANCE);
-    assertEquals(-3, nr.inverse(-27, 27.0), TOLERANCE);
-    assertEquals(25, nr.inverse(15_625, 15_625.0), TOLERANCE);
+    assertEquals(2, nr.inverse(funCubeRoot,8, 8.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(funCubeRoot,-27, 27.0), TOLERANCE);
+    assertEquals(25, nr.inverse(funCubeRoot,15_625, 15_625.0), TOLERANCE);
   }
 
   @Test
   public void quadratic() {
-    Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(funQuadratic)
+    Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(funQuadratic)
         .build();
-    assertEquals(4, nr.findRoot(10.0), TOLERANCE);
-    assertEquals(-3, nr.findRoot(-10.0), TOLERANCE);
+    assertEquals(4, nr.findRoot(funQuadratic,10.0), TOLERANCE);
+    assertEquals(-3, nr.findRoot(funQuadratic,-10.0), TOLERANCE);
     // Inflection point when derivative is zero => x = 1/2
-    assertEquals(4, nr.findRoot(.51), TOLERANCE);
-    assertEquals(-3, nr.findRoot(.49), TOLERANCE);
+    assertEquals(4, nr.findRoot(funQuadratic,.51), TOLERANCE);
+    assertEquals(-3, nr.findRoot(funQuadratic,.49), TOLERANCE);
   }
 
   @Test
@@ -95,11 +95,11 @@ public class AlgNewtonRaphsonTest {
       }
     };
     Assertions.assertThrows(ZeroValuedDerivativeException.class, () -> {
-      Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-          .withFunction(function)
+      Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+          //.withFunction(function)
           .build();
       // Inflection point when derivative is zero => x = 1/2
-      nr.findRoot(.5);
+      nr.findRoot(function,.5);
       fail("Expected zero-valued derivative");
     });
   }
@@ -120,10 +120,10 @@ public class AlgNewtonRaphsonTest {
       }
     };
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(function)
+        //.withFunction(function)
         .build();
     try {
-      nr.findRoot(3.0);
+      nr.findRoot(function,3.0);
       fail("Expected non-convergence");
     } catch (ZeroValuedDerivativeException e) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -147,10 +147,10 @@ public class AlgNewtonRaphsonTest {
       }
     };
     Assertions.assertThrows(NonconvergenceException.class, () -> {
-      Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-          .withFunction(function)
+      Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+          //.withFunction(function)
           .build();
-      nr.findRoot(1.0);
+      nr.findRoot(function,1.0);
       fail("Expected non-convergence");
     });
   }
@@ -168,10 +168,10 @@ public class AlgNewtonRaphsonTest {
       }
     };
     try {
-      Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-          .withFunction(function)
+      Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+          //.withFunction(function)
           .build();
-      nr.findRoot(1.0);
+      nr.findRoot(function,1.0);
       fail("Expected non-convergence");
     } catch (NonconvergenceException ne) {
       assertEquals(1, ne.getInitialGuess(), TOLERANCE);
@@ -192,11 +192,11 @@ public class AlgNewtonRaphsonTest {
         return Double.MIN_NORMAL;
       }
     };
-    Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(function)
+    Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(function)
         .build();
     try {
-      nr.findRoot(3.0);
+      nr.findRoot(function,3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       ne.printStackTrace();
@@ -220,10 +220,10 @@ public class AlgNewtonRaphsonTest {
       }
     };
     NewtonRaphsonSolver nr =  NewtonRaphsonSolverBuilder.builder()
-        .withFunction(function)
+        //.withFunction(function)
         .build();
     try {
-      nr.findRoot(3.0);
+      nr.findRoot(function,3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -248,10 +248,10 @@ public class AlgNewtonRaphsonTest {
       }
     };
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(function)
+        //.withFunction(function)
         .build();
     try {
-      nr.findRoot(3.0);
+      nr.findRoot(function,3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -277,13 +277,13 @@ public class AlgNewtonRaphsonTest {
         return 2*x;
       }
     };
-    Solver<?> nr = NewtonRaphsonSolverBuilder.builder()
-        .withFunction(function)
+    Solver<Function1stDerivative> nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(function)
         .withTolerance(tolerance)
         .build();
-    assertEquals(4, nr.inverse(16, 16.0), tolerance);
-    assertEquals(15, nr.inverse(225, 225.0), tolerance);
-    assertEquals(1.414_213_562_3, nr.inverse(2, 2.0), tolerance);
+    assertEquals(4, nr.inverse(function,16, 16.0), tolerance);
+    assertEquals(15, nr.inverse(function,225, 225.0), tolerance);
+    assertEquals(1.414_213_562_3, nr.inverse(function,2, 2.0), tolerance);
   }
 
 }

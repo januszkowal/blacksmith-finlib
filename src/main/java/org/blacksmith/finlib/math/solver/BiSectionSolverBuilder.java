@@ -27,7 +27,7 @@ public class BiSectionSolverBuilder extends AbstractSolverBuilder<Function,Bisec
 
   @Override
   public BisectionSolver build() {
-    return new BisectionSolver(this.function, this.iterations, this.tolerance,
+    return new BisectionSolver(this.iterations, this.tolerance,
         this.minArg, this.maxArg);
   }
 }

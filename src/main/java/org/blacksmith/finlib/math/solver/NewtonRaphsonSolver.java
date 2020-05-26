@@ -9,12 +9,12 @@ public class NewtonRaphsonSolver extends AbstractSolver<Function1stDerivative> {
 
   private static final Logger log = LoggerFactory.getLogger(NewtonRaphsonSolver.class);
 
-  public NewtonRaphsonSolver(Function1stDerivative function, long maxIterations, double tolerance) {
-    super(function, maxIterations, tolerance);
+  public NewtonRaphsonSolver(long maxIterations, double tolerance) {
+    super(maxIterations, tolerance);
   }
 
   @Override
-  public double solve(double target, double guess) {
+  public double solve(Function1stDerivative function, double target, double guess) {
     resetCounter();
     setInitialGuess(guess);
     setCandidate(guess);

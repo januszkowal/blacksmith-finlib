@@ -7,12 +7,14 @@ import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
 
 import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.eq;
 
 public class XirrBuilderTest {
 
@@ -46,7 +48,7 @@ public class XirrBuilderTest {
 
     final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = setUpNewtonRaphsonBuilder();
     System.out.println("builder build:" + builder.build());
-    Mockito.when(builder.build().findRoot(ArgumentMatchers.anyDouble())).thenReturn(expected);
+    Mockito.when(builder.build().findRoot(any(Function1stDerivative.class), anyDouble())).thenReturn(expected);
 
     final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withSolverBuilder(builder)
@@ -66,7 +68,7 @@ public class XirrBuilderTest {
     final double guess = 3;
 
     final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = setUpNewtonRaphsonBuilder();
-    Mockito.when(builder.build().findRoot(guess)).thenReturn(expected);
+    Mockito.when(builder.build().findRoot(any(Function1stDerivative.class), eq(guess))).thenReturn(expected);
 
     final double xirr = XirrCalculatorBuilder.<Function1stDerivative>builder()
         .withGuess(guess)
@@ -84,7 +86,7 @@ public class XirrBuilderTest {
   {
     final SolverBuilder<Function1stDerivative,Solver<Function1stDerivative>> builder = Mockito.mock(SolverBuilder.class);
     final Solver<Function1stDerivative> solver = Mockito.mock(Solver.class);
-    Mockito.when(builder.withFunction(ArgumentMatchers.any())).thenReturn(builder);
+    //Mockito.when(builder.withFunction(ArgumentMatchers.any())).thenReturn(builder);
     Mockito.when(builder.build()).thenReturn(solver);
     return builder;
   }

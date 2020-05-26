@@ -32,6 +32,6 @@ public class XirrCalculatorBuilder<F extends Function> {
   }
 
   public XirrCalculator<F> build() {
-    return new XirrCalculator<>(cashflows, solverBuilder, guess);
+    return new XirrCalculator<>(cashflows, solverBuilder.build(), guess);
   }
 }

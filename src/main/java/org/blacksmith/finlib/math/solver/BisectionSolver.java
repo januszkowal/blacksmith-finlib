@@ -8,15 +8,14 @@ public class BisectionSolver extends AbstractSolver<Function> {
   private final double minArg;
   private final double maxArg;
 
-  public BisectionSolver(Function function,
-      long maxIterations, double tolerance, double minArg, double maxArg) {
-    super(function, maxIterations, tolerance);
+  public BisectionSolver(long maxIterations, double tolerance, double minArg, double maxArg) {
+    super(maxIterations, tolerance);
     this.minArg = minArg;
     this.maxArg = maxArg;
   }
 
   @Override
-  public double solve(double target, double guess) {
+  public double solve(Function function, double target, double guess) {
     resetCounter();
     setInitialGuess(guess);
     double a = this.minArg;

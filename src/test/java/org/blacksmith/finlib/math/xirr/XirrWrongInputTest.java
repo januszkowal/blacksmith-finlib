@@ -54,7 +54,7 @@ public class XirrWrongInputTest {
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), -2000)
-      ), BiSectionSolverBuilder.builder(),null).xirr();
+      ), BiSectionSolverBuilder.builder().build(),null).xirr();
       fail("Expected exception for all transactions are negative");
     });
   }
@@ -67,7 +67,7 @@ public class XirrWrongInputTest {
           Cashflow.of(LocalDate.parse("2010-01-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), 0)
-      ), BiSectionSolverBuilder.builder(),null).xirr();
+      ), BiSectionSolverBuilder.builder().build(),null).xirr();
       fail("Expected exception for all transactions are non-negative");
     });
   }
