@@ -21,7 +21,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   ONE_ONE("1/1") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return 1d;
     }
     @Override
@@ -44,7 +44,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * */
   ACT_360("ACT/360") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return daysBetween(startDate, endDate) / 360d;
     }
 
@@ -64,7 +64,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * */
   ACT_364("ACT/364") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return daysBetween(startDate, endDate) / 364d;
     }
 
@@ -87,7 +87,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * */
   ACT_365("ACT/365") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return daysBetween(startDate, endDate) / 365d;
     }
 
@@ -109,7 +109,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * */
   ACT_365_25("ACT/365.25") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return daysBetween(startDate, endDate) / 365.25d;
     }
 
@@ -132,7 +132,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   ACT_365_ACT("ACT/365 ACT") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       int days = daysBetween(startDate, endDate);
       //end date included
       double denominator = isLeapDayInPeriod(startDate,endDate) ? 366d : 365d;
@@ -158,21 +158,18 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   ACT_ACT_ISDA("ACT/ACT ISDA") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       int y1 = startDate.getYear();
       int y2 = endDate.getYear();
       int firstYearLength = startDate.lengthOfYear();
       if (y1 == y2) {
         int actualDays = endDate.getDayOfYear() - startDate.getDayOfYear();
-//        LOGGER.debug("ACT_ACT_ISDA actualDays={} firstYearLength={}",actualDays,firstYearLength);
         return (double)actualDays / firstYearLength;
       }
       else {
         int firstRemainderOfYear = firstYearLength - startDate.getDayOfYear() + 1;
         int secondRemainderOfYear = endDate.getDayOfYear() - 1;
         int secondYearLength = endDate.lengthOfYear();
-//        LOGGER.debug("ACT_ACT_ISDA firstRemainderOfYear={} firstYearLength={} secondRemainderOfYear={} secondYearLength={}",
-//            firstRemainderOfYear,firstYearLength,secondRemainderOfYear,secondYearLength);
         return (double)firstRemainderOfYear / firstYearLength +
             (double)secondRemainderOfYear / secondYearLength +
             (y2 - y1 - 1);
@@ -216,13 +213,11 @@ public enum StandardDayCountConvention implements DayCountConvention {
     private double initPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponDate, Frequency freq, boolean eom) {
       LocalDate subPeriodEnd = couponDate;
       LocalDate subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
-//      LOGGER.debug("initPeriod subStart={} subEnd={} startDate={} endDate{}",subPeriodStart,subPeriodEnd,startDate,endDate);
       double result = 0;
       while (subPeriodStart.isAfter(startDate)) {
         result += calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
         subPeriodEnd = subPeriodStart;
         subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
-//        LOGGER.debug("from final periodStart={} periodEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       }
       return result + calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
     }
@@ -231,7 +226,6 @@ public enum StandardDayCountConvention implements DayCountConvention {
     private double finalPeriod(LocalDate couponDate, LocalDate endDate, Frequency freq, boolean eom) {
       LocalDate subPeriodStart = couponDate;
       LocalDate subPeriodEnd = eom(couponDate, freq.addTo(subPeriodStart), eom);
-//      LOGGER.debug("finalPeriod subStart={} subEnd={} endDate{}",subPeriodStart,subPeriodEnd,endDate);
       double result = 0;
       while (subPeriodEnd.isBefore(endDate)) {
         result += calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
@@ -255,7 +249,6 @@ public enum StandardDayCountConvention implements DayCountConvention {
 
     // calculate the result
     private double calc(LocalDate prevNominal, LocalDate curNominal, LocalDate start, LocalDate end, Frequency freq) {
-//      LOGGER.debug("calc prev={} end={}",prevNominal,end);
       if (end.isAfter(prevNominal)) {
         long curNominalEpochDay = curNominal.toEpochDay();
         long prevNominalEpochDay = prevNominal.toEpochDay();
@@ -263,8 +256,6 @@ public enum StandardDayCountConvention implements DayCountConvention {
         long endEpochDay = end.toEpochDay();
         double periodDays = (double)curNominalEpochDay - prevNominalEpochDay;
         double actualDays = (double)Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
-//        LOGGER.debug("calc curNominalEpochDay={} prevNominalEpochDay={} actualDays={} periodDays={} freqPerYear={}",curNominalEpochDay,prevNominalEpochDay,actualDays,
-//            periodDays, freq.eventsPerYear());
         return actualDays / (freq.eventsPerYear() * periodDays);
       }
       return 0;
@@ -291,12 +282,11 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   ACT_ACT_AFB("ACT/ACT AFB") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       final int years = yearsBetween(startDate, endDate);
       final LocalDate remainedPeriodEndDate = (years==0) ? endDate: endDate.minusYears(years);
       final int remainedPeriodDays = daysBetween(startDate, remainedPeriodEndDate);
       final double remainedPeriodYearLength = isLeapDayInPeriod(startDate,remainedPeriodEndDate) ? 366d : 365d;
-//      LOGGER.debug("ACT_ACT_AFB years={} remainedPeriodDays={} remainedPeriodYearLength={}",years,remainedPeriodDays,remainedPeriodYearLength);
       return years + (remainedPeriodDays / remainedPeriodYearLength);
     }
 
@@ -320,7 +310,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   ACT_ACT_YEAR("ACT/ACT YEAR") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       final int years = yearsBetween(startDate, endDate);
       final LocalDate remainedPeriodStartDate = years==0 ? startDate : startDate.plusYears(years);
       final int remainedPeriodDays = daysBetween(remainedPeriodStartDate, endDate);
@@ -370,7 +360,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   NL_360("NL/360") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.days365(startDate, endDate) / 360d;
     }
 
@@ -393,7 +383,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   NL_365("NL/365") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.days365(startDate, endDate) / 365d;
     }
 
@@ -418,7 +408,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   D30_360_ISDA("30/360 ISDA") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30ISDA(startDate, endDate) / 360d;
     }
 
@@ -500,7 +490,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
   // US thirty day months / 360 with fixed EOM rule
   D30_U_360_EOM("30U/360 EOM") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30USEOM(startDate, endDate) / 360d;
     }
 
@@ -525,7 +515,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   D30_360_PSA("30/360 PSA") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30PSA(startDate, endDate) / 360d;
     }
 
@@ -550,7 +540,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   D30_E_360("30E/360") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30E(startDate, endDate) / 360d;
     }
 
@@ -574,7 +564,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   D30_E_365("30E/365") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30E(startDate, endDate) / 365d;
     }
 
@@ -597,7 +587,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
   D30_EPLUS_360("30E+/360") {
     @Override
-    public double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
+    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return DayCountUtils.daysBetween30EPlus(startDate, endDate) / 360d;
     }
 
@@ -637,15 +627,8 @@ public enum StandardDayCountConvention implements DayCountConvention {
     return calculateDays(startDate, endDate);
   }
 
-  // calculate the year fraction, using validated inputs
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return calculateYearFractionSimple(startDate, endDate);
-  }
+  abstract protected double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
 
-  protected double calculateYearFractionSimple(LocalDate startDate, LocalDate endDate) {
-      return 0d;
-  }
-    
   //calculate the number of days between the specified dates, using validated inputs
   abstract int calculateDays(LocalDate startDate, LocalDate endDate);
 
