@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.math.xirr.dto;
 
-import java.time.LocalDate;
 import org.blacksmith.finlib.math.xirr.Cashflow;
 
 /**
@@ -8,8 +7,6 @@ import org.blacksmith.finlib.math.xirr.Cashflow;
  * conveniently for calculating purposes (present and derivative)
  */
 public final class XirrCashflow {
-  /** The date of cashlow */
-  private final LocalDate date;
   /** The amount of the cashflow. */
   private final double amount;
   /** The number of years for which the cashflow applies, including
@@ -17,14 +14,13 @@ public final class XirrCashflow {
   private final double years;
 
 
-  public XirrCashflow(LocalDate date, double amount, double years) {
+  public XirrCashflow(double amount, double years) {
     this.amount = amount;
-    this.date = date;
     this.years = years;
   }
 
-  public static XirrCashflow of(LocalDate date, double amount, double years) {
-    return new XirrCashflow(date,amount,years);
+  public static XirrCashflow of(double amount, double years) {
+    return new XirrCashflow(amount,years);
   }
   /**
    * Future value of the cashflow at the given rate.
@@ -79,7 +75,5 @@ public final class XirrCashflow {
     }
   }
 
-  public LocalDate getDate() { return this.date;}
-  public double getAmount() { return  this.amount;}
-  public XirrCashflow negate() {return new XirrCashflow(this.date,-this.amount,this.years);}
+  public XirrCashflow negate() {return new XirrCashflow(-this.amount,this.years);}
 }

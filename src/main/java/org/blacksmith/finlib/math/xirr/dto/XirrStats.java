@@ -46,18 +46,6 @@ public class XirrStats {
   }
 
   public static XirrStats fromCashflows(Collection<Cashflow> cashflows) {
-    /*final XirrStats result = new XirrStats();
-    result.startDate = csws.stream().map(Cashflow::getDate).min(LocalDate::compareTo).orElse(null);
-    result.endDate = csws.stream().map(Cashflow::getDate).max(LocalDate::compareTo).orElse(null);
-    final DoubleSummaryStatistics amountStatistics = csws.stream()
-        .collect(Collectors.summarizingDouble(Cashflow::getAmount));
-    result.minAmount = amountStatistics.getMin();
-    result.maxAmount = amountStatistics.getMax();
-    result.total = amountStatistics.getSum();
-    result.incomes = csws.stream().filter(csw->csw.getAmount()>0.0)
-        .collect(Collectors.summingDouble(Cashflow::getAmount));
-    result.outcomes = -csws.stream().filter(csw->csw.getAmount()<0.0)
-        .collect(Collectors.summingDouble(Cashflow::getAmount));*/
     XirrStats result = cashflows.stream().collect(XirrStats.collector());
     result.validate();
     return result;

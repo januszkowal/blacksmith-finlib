@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.calendar;
 
-import java.time.Period;
 import org.blacksmith.commons.datetime.TimeUnit;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.junit.jupiter.api.Test;
@@ -48,6 +47,30 @@ public class FrequencyTest {
 
     assertEquals(1.0d/12,Frequency.ofYears(1).eventsPerMonth(),0.0);
     assertEquals(1.0d/24,Frequency.ofYears(2).eventsPerMonth(),0.0);
+  }
+
+  @Test
+  public void eventsPerMonthIntTest() {
+    assertEquals(0,Frequency.ofDays(30).eventsPerMonthInt());
+    assertEquals(1,Frequency.ofDays(31).eventsPerMonthInt());
+    assertEquals(1,Frequency.ofMonths(1).eventsPerMonthInt());
+    assertEquals(0,Frequency.ofMonths(2).eventsPerMonthInt());
+  }
+
+  @Test
+  public void toPeriodsTest() {
+    assertEquals("P30D",Frequency.ofDays(30).toPeriod().toString());
+    assertEquals("P14D",Frequency.ofWeeks(2).toPeriod().toString());
+    assertEquals("P2M",Frequency.ofMonths(2).toPeriod().toString());
+    assertEquals("P2Y",Frequency.ofYears(2).toPeriod().toString());
+  }
+
+  @Test
+  public void toStringTest() {
+    assertEquals("P30D",Frequency.ofDays(30).toString());
+    assertEquals("P2W",Frequency.ofWeeks(2).toString());
+    assertEquals("P2M",Frequency.ofMonths(2).toString());
+    assertEquals("P2Y",Frequency.ofYears(2).toString());
   }
 
 }

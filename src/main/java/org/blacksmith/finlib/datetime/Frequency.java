@@ -14,17 +14,17 @@ import lombok.ToString;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+//@ToString(onlyExplicitlyIncluded = true)
 public class Frequency implements Serializable, DateOperation {
   @EqualsAndHashCode.Include
-  @ToString.Include
+//  @ToString.Include
   private final TimeUnit unit;
   @EqualsAndHashCode.Include
-  @ToString.Include
+//  @ToString.Include
   private final int amount;
   @ToString.Include
   private final String name;
-  private final Period period;
+//  private final Period period;
 
   /**
    * Serialization version.
@@ -165,21 +165,21 @@ public class Frequency implements Serializable, DateOperation {
       this.unit = TimeUnit.DAY;
       this.amount = period.getDays();
     }
-    this.period = frequencyToPeriod(this.amount,this.unit);
+//    this.period = frequencyToPeriod(this.amount,this.unit);
     this.name = periodName(this.amount,this.unit);
   }
 
   public Frequency (final int amount, final TimeUnit unit) {
     this.unit = unit;
     this.amount = amount;
-    this.period = frequencyToPeriod(this.amount,this.unit);
+//    this.period = frequencyToPeriod(this.amount,this.unit);
     this.name = periodName(this.amount,this.unit);
   }
 
   public Frequency (final int amount, final TimeUnit unit, String name) {
     this.unit = unit;
     this.amount = amount;
-    this.period = frequencyToPeriod(amount,unit);
+//    this.period = frequencyToPeriod(amount,unit);
     this.name = name;
   }
 
@@ -194,6 +194,10 @@ public class Frequency implements Serializable, DateOperation {
     else {
       return new Frequency(days,TimeUnit.DAY);
     }
+  }
+
+  public static Frequency ofDaysWithoutAlignToWeeks(int days) {
+    return new Frequency(days,TimeUnit.DAY);
   }
 
   /**
@@ -325,6 +329,11 @@ public class Frequency implements Serializable, DateOperation {
     }
   }
 
+  @Override
+  public String toString() {
+    return "P" + amount + unit.symbol();
+  }
+
   public double eventsPerYear() {
     switch (unit) {
       case DAY:
@@ -381,24 +390,4 @@ public class Frequency implements Serializable, DateOperation {
   public <T extends Temporal> T minusFrom(T t, int i) {
     return this.unit.minusFrom(t,i*amount);
   }
-
-//  @Override
-//  public <R extends Temporal> R plus(R t, int amount) {
-//    return this.unit.plus(t,this.amount*amount);
-//  }
-//
-//  @Override
-//  public <R extends Temporal> R plus(R t) {
-//    return this.unit.plus(t,this.amount);
-//  }
-//
-//  @Override
-//  public <R extends Temporal> R minus(R t, int amount) {
-//    return this.unit.plus(t,this.amount*amount);
-//  }
-//
-//  @Override
-//  public <R extends Temporal> R minus(R t) {
-//    return this.unit.plus(t,this.amount);
-//  }
 }

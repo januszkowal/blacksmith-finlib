@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.xirr;
 
-import java.util.Collection;
+import java.util.List;
 import org.blacksmith.finlib.math.solver.Function;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 
@@ -9,14 +9,14 @@ public class XirrCalculatorBuilder<F extends Function> {
     return new XirrCalculatorBuilder<>();
   }
 
-  private Collection<Cashflow> cashflows = null;
+  private List<Cashflow> cashflows = null;
   private SolverBuilder<F,?> solverBuilder = null;
   private Double guess = null;
 
   public XirrCalculatorBuilder() {
   }
 
-  public XirrCalculatorBuilder<F> withCashflows(Collection<Cashflow> txs) {
+  public XirrCalculatorBuilder<F> withCashflows(List<Cashflow> txs) {
     this.cashflows = txs;
     return this;
   }

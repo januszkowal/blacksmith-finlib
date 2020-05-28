@@ -11,14 +11,10 @@ import org.blacksmith.finlib.calendar.helper.StandardDateToPartConverters;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @DisplayName("BusinessDayCalendarTest")
 @ExtendWith(org.blacksmith.test.TimingExtension.class)
 public class BusinessDayCalendarTest {
-  private static final Logger LOGGER = LoggerFactory.getLogger(BusinessDayCalendarTest.class);
-
   @Test
   public void holidayByWeekDay1() {
     /*

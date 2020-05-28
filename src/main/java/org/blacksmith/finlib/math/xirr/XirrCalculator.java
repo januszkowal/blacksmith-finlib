@@ -46,6 +46,7 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
   private static final double DAYS_IN_YEAR = 365;
+  private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
 
   private List<XirrCashflow> xirrCashflows;
   private final XirrStats stats;
@@ -66,15 +67,16 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(Collection<Cashflow> cashflows, Solver<F> solver) {
+  public XirrCalculator(List<Cashflow> cashflows, Solver<F> solver) {
     this(cashflows, solver, null);
   }
 
-  public XirrCalculator(Collection<Cashflow> cashflows, Solver<F> solver, Double guess) {
+  public XirrCalculator(List<Cashflow> cashflows, Solver<F> solver, Double guess) {
     Validate.notNull(solver, "Solver builder must be not null");
     Validate.notEmpty(cashflows, "Cashflows must be not empty");
     List<Cashflow> groupedCashflows = groupCashflows(cashflows);
-    stats = XirrStats.fromCashflows(groupedCashflows);
+    List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
+    stats = XirrStats.fromCashflows(statsCashflows);
     this.xirrCashflows = groupedCashflows.stream()
         .map(this::createXirrCashflow)
         .collect(Collectors.toList());
@@ -101,7 +103,7 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
   }
 
   private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getDate(), cashflow.getAmount(),
+    return new XirrCashflow(cashflow.getAmount(),
         DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
   }
 

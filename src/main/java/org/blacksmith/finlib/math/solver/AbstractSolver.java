@@ -55,9 +55,7 @@ public abstract class AbstractSolver<F extends Function> implements Solver<F> {
     return this.maxIterations;
   }
 
-  public double getTolerance() {
-    return this.tolerance;
-  }
+  public double getTolerance() { return this.tolerance; }
 
   public boolean isTargetAchieved() {
     return Math.abs(functionValue)<tolerance;
