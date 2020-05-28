@@ -1,5 +1,7 @@
 package org.blacksmith.finlib.math.xirr.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.blacksmith.finlib.math.xirr.Cashflow;
 
 /**
@@ -76,4 +78,8 @@ public final class XirrCashflow {
   }
 
   public XirrCashflow negate() {return new XirrCashflow(-this.amount,this.years);}
+
+  public static List<XirrCashflow> negate(List<XirrCashflow> cashflows) {
+    return cashflows.stream().map(XirrCashflow::negate).collect(Collectors.toList());
+  }
 }

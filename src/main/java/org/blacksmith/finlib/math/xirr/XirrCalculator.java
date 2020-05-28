@@ -89,10 +89,6 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
     this.guess = guess;
   }
 
-  public void reverseCashflows() {
-    this.xirrCashflows = xirrCashflows.stream().map(XirrCashflow::negate).collect(Collectors.toList());
-  }
-
   public List<Cashflow> groupCashflows(Collection<Cashflow> cashflows) {
     return cashflows.stream()
         .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summingDouble(Cashflow::getAmount)))
