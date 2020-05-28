@@ -17,10 +17,8 @@ import lombok.ToString;
 //@ToString(onlyExplicitlyIncluded = true)
 public class Frequency implements Serializable, DateOperation {
   @EqualsAndHashCode.Include
-//  @ToString.Include
   private final TimeUnit unit;
   @EqualsAndHashCode.Include
-//  @ToString.Include
   private final int amount;
   @ToString.Include
   private final String name;
@@ -331,7 +329,7 @@ public class Frequency implements Serializable, DateOperation {
 
   @Override
   public String toString() {
-    return "P" + amount + unit.symbol();
+    return String.format("P%d%s",amount,unit.symbol());
   }
 
   public double eventsPerYear() {
