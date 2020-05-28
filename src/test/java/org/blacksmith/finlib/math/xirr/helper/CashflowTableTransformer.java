@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.cucumber;
+package org.blacksmith.finlib.math.xirr.helper;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.datatable.TableTransformer;
