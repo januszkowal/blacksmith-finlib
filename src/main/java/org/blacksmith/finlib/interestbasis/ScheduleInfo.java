@@ -1,16 +1,17 @@
 package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
+import lombok.Value;
 import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.basic.Rate;
 import org.blacksmith.finlib.datetime.Frequency;
 import lombok.Builder;
 import lombok.Data;
 
-@Data
+@Value
 @Builder
 public class ScheduleInfo {
-  public static ScheduleInfo SIMPLE_SCHEDULE_INFO = builder()
+  public static ScheduleInfo SIMPLE_SCHEDULE_INFO1 = builder()
       .isEndOfMonthConvention(true)
       .build();
 

@@ -67,25 +67,26 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
    * next business day if Sun/Mon, otherwise previous
    */
   NEAREST("Nearest") {
-   @Override
-   public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
-     if (calendar.isBusinessDay(date)) {
-       return date;
-     }
-     if (date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.MONDAY) {
-       return calendar.next(date);
-     } else {
-       return calendar.previous(date);
-     }
-   }
- };
+    @Override
+    public LocalDate adjust(LocalDate date, BusinessDayCalendar calendar) {
+      if (calendar.isBusinessDay(date)) {
+        return date;
+      }
+      if (date.getDayOfWeek() == DayOfWeek.SUNDAY || date.getDayOfWeek() == DayOfWeek.MONDAY) {
+        return calendar.next(date);
+      } else {
+        return calendar.previous(date);
+      }
+    }
+  };
   final String shortName;
-  private static final Map<String, StandardBusinessDayConvention> shortNameMap =
-      Arrays.stream(StandardBusinessDayConvention.values()).collect(Collectors.toMap(StandardBusinessDayConvention::getShortName, e -> e));
-
   StandardBusinessDayConvention(String shortName) {
     this.shortName = shortName;
   }
+
+  private static final Map<String, StandardBusinessDayConvention> shortNameMap =
+      Arrays.stream(StandardBusinessDayConvention.values())
+          .collect(Collectors.toMap(StandardBusinessDayConvention::getShortName, e -> e));
 
   public String getShortName() {
     return this.shortName;
