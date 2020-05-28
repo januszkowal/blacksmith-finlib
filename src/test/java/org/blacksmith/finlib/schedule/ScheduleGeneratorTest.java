@@ -20,7 +20,7 @@ import org.blacksmith.finlib.basic.Amount;
 
 public class ScheduleGeneratorTest {
   private final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratorTest.class);
-  private ScheduleParameters createScheduleParamters1() {
+  private ScheduleParameters createScheduleParameters1() {
     HolidayLookupContainer<MonthDay> hyc = HolidayLookupContainer.of(MonthDay.of(1,1),
       MonthDay.of(5,1),
       MonthDay.of(5,3),
@@ -44,7 +44,7 @@ public class ScheduleGeneratorTest {
 
   @Test
   public void testSchedule1() {
-    ScheduleGenerator generator = ScheduleGeneratorFactory.of().getGenerator(createScheduleParamters1());
+    ScheduleGenerator generator = ScheduleGeneratorFactory.of().getGenerator(createScheduleParameters1());
     LOGGER.info("schedule={}",generator.generate());
   }
 }

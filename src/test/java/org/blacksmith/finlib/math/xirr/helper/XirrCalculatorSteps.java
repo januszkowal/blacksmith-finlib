@@ -3,6 +3,7 @@ package org.blacksmith.finlib.math.xirr.helper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -23,13 +24,36 @@ public class XirrCalculatorSteps {
   double xirrBiCalcResult;
   double xirrNewtonRaphsonResult;
 
-  @Given("Create schedule")
-  public void certificationName(DataTable table) {
-    this.xirrBiCalcResult = 0.0;
-    this.xirrNewtonRaphsonResult = 0.0;
-    this.cashflows = table.asMaps().stream()
+  /* create single row*/
+//  @DataTableType
+//  public Cashflow createCashflow(Map<String, String> entry) {
+//    return Cashflow.of(LocalDate.parse(entry.get("on")),Double.parseDouble(entry.get("amount")));
+//  }
+
+  /* create whole table */
+  @DataTableType
+  public List<Cashflow> createCashflow(DataTable table) {
+    return table.asMaps().stream()
         .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
         .collect(Collectors.toList());
+  }
+
+  /* creating cashflows inside */
+//  @Given("Create schedule")
+//  public void createScheduleName(DataTable table) {
+//    this.xirrBiCalcResult = 0.0;
+//    this.xirrNewtonRaphsonResult = 0.0;
+//    this.cashflows = table.asMaps().stream()
+//        .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
+//        .collect(Collectors.toList());
+//    log.info("Schedule:{}", cashflows);
+//  }
+
+  @Given("Create schedule")
+  public void createSchedule(List<Cashflow> cashflows) {
+    this.xirrBiCalcResult = 0.0;
+    this.xirrNewtonRaphsonResult = 0.0;
+    this.cashflows = cashflows;
     log.info("Schedule:{}", cashflows);
   }
 

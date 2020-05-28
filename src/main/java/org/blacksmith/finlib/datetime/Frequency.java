@@ -327,6 +327,10 @@ public class Frequency implements Serializable, DateOperation {
 
   public double eventsPerYear() {
     switch (unit) {
+      case DAY:
+        return amount / 365d;
+      case WEEK:
+        return 52d / amount;
       case MONTH:
         return 12d / amount;
       case QUARTER:
@@ -335,24 +339,33 @@ public class Frequency implements Serializable, DateOperation {
         return 2d / amount;
       case YEAR:
         return 1d / amount;
+
       default:
         return 0;
     }
   }
 
-  public int eventsPerMonth() {
+  public double eventsPerMonth() {
     switch (unit) {
+      case DAY:
+        return amount*12/365d;
+      case WEEK:
+        return amount*7*12/365d;
       case MONTH:
-        return amount;
+        return 1d/amount;
       case QUARTER:
-        return amount/3;
+        return 1d/(amount*3);
       case HALF_YEAR:
-        return amount/6;
+        return 1d/(6*amount);
       case YEAR:
-        return amount/12;
+        return 1d/(12*amount);
       default:
         return 0;
     }
+  }
+
+  public int eventsPerMonthInt() {
+    return (int)eventsPerMonth();
   }
 
   private String periodName(final int amount, final TimeUnit unit) {
