@@ -14,7 +14,6 @@ import lombok.ToString;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-//@ToString(onlyExplicitlyIncluded = true)
 public class Frequency implements Serializable, DateOperation {
   @EqualsAndHashCode.Include
   private final TimeUnit unit;

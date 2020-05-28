@@ -24,12 +24,6 @@ public class XirrCalculatorSteps {
   double xirrBiCalcResult;
   double xirrNewtonRaphsonResult;
 
-  /* create single row*/
-//  @DataTableType
-//  public Cashflow createCashflow(Map<String, String> entry) {
-//    return Cashflow.of(LocalDate.parse(entry.get("on")),Double.parseDouble(entry.get("amount")));
-//  }
-
   /* create whole table */
   @DataTableType
   public List<Cashflow> createCashflow(DataTable table) {
@@ -37,17 +31,6 @@ public class XirrCalculatorSteps {
         .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
         .collect(Collectors.toList());
   }
-
-  /* creating cashflows inside */
-//  @Given("Create schedule")
-//  public void createScheduleName(DataTable table) {
-//    this.xirrBiCalcResult = 0.0;
-//    this.xirrNewtonRaphsonResult = 0.0;
-//    this.cashflows = table.asMaps().stream()
-//        .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
-//        .collect(Collectors.toList());
-//    log.info("Schedule:{}", cashflows);
-//  }
 
   @Given("Create schedule")
   public void createSchedule(List<Cashflow> cashflows) {
