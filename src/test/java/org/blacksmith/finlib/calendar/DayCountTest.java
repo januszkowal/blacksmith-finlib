@@ -156,16 +156,16 @@ public class DayCountTest extends DayCountBaseTest {
         LocalDate.of(1999,2,1),
         LocalDate.of(1999,7,1),
         null));
-//    assertEquals(150/365d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
-//        LocalDate.of(1999,2,1),
-//        LocalDate.of(1999,7,1),
-//        ScheduleInfo.builder()
-//            .startDate(LocalDate.of(1999,2,1))
-//            .endDate(LocalDate.of(2000,7,1))
-//            .couponStartDate(LocalDate.of(1999,2,1))
-//            .couponEndDate(LocalDate.of(1999,7,1))
-//            .couponFrequency(Frequency.P1Y)
-//            .build()));
+    assertEquals(150/365d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
+        LocalDate.of(1999,2,1),
+        LocalDate.of(1999,7,1),
+        ScheduleInfo.builder()
+            .startDate(LocalDate.of(1999,2,1))
+            .endDate(LocalDate.of(2000,7,1))
+            .couponStartDate(LocalDate.of(1999,2,1))
+            .couponEndDate(LocalDate.of(1999,7,1))
+            .couponFrequency(Frequency.P1Y)
+            .build()));
     //second period
     assertEquals(366/366d,StandardDayCountConvention.ACT_ACT_AFB.yearFraction(
         LocalDate.of(1999,7,1),
@@ -197,16 +197,16 @@ public class DayCountTest extends DayCountBaseTest {
         LocalDate.of(2003,7,15),
         null));
     //assertEquals(334/365d,StandardDayCountConvention.ACT_ACT_ICMA.yearFraction(
-//    assertEquals(181/362d+153/368d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
-//        LocalDate.of(2002,8,15),
-//        LocalDate.of(2003,7,15),
-//        ScheduleInfo.builder()
-//            .startDate(LocalDate.of(2002,8,15))
-//            .endDate(LocalDate.of(2004,1,15))
-//            .couponStartDate(LocalDate.of(2002,8,15))
-//            .couponEndDate(LocalDate.of(2003,7,15))
-//            .couponFrequency(Frequency.P6M)
-//            .build()));
+    assertEquals(181/362d+153/368d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
+        LocalDate.of(2002,8,15),
+        LocalDate.of(2003,7,15),
+        ScheduleInfo.builder()
+            .startDate(LocalDate.of(2002,8,15))
+            .endDate(LocalDate.of(2004,1,15))
+            .couponStartDate(LocalDate.of(2002,8,15))
+            .couponEndDate(LocalDate.of(2003,7,15))
+            .couponFrequency(Frequency.P6M)
+            .build()));
     //second period
     assertEquals(184/365d,StandardDayCountConvention.ACT_ACT_AFB.yearFraction(
         LocalDate.of(2003,7,15),
@@ -252,16 +252,16 @@ public class DayCountTest extends DayCountBaseTest {
         LocalDate.of(2000,1,30),
         LocalDate.of(2000,6,30),
         null));
-//    assertEquals(152/364d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
-//        LocalDate.of(2000,1,30),
-//        LocalDate.of(2000,6,30),
-//        ScheduleInfo.builder()
-//            .startDate(LocalDate.of(1999,7,30))
-//            .endDate(LocalDate.of(2000,6,30))
-//            .couponStartDate(LocalDate.of(2000,1,30))
-//            .couponEndDate(LocalDate.of(2000,6,30))
-//            .couponFrequency(Frequency.P6M)
-//            .build()));
+    assertEquals(152/364d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
+        LocalDate.of(2000,1,30),
+        LocalDate.of(2000,6,30),
+        ScheduleInfo.builder()
+            .startDate(LocalDate.of(1999,7,30))
+            .endDate(LocalDate.of(2000,6,30))
+            .couponStartDate(LocalDate.of(2000,1,30))
+            .couponEndDate(LocalDate.of(2000,6,30))
+            .couponFrequency(Frequency.P6M)
+            .build()));
     //3e
     assertEquals(152/366d,StandardDayCountConvention.ACT_ACT_AFB.yearFraction(
         LocalDate.of(1999,11,30),
@@ -271,16 +271,16 @@ public class DayCountTest extends DayCountBaseTest {
         LocalDate.of(1999,11,30),
         LocalDate.of(2000,4,30),
         null));
-//    assertEquals(91/364d+61/368d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
-//        LocalDate.of(1999,11,30),
-//        LocalDate.of(2000,4,30),
-//        ScheduleInfo.builder()
-//            .startDate(LocalDate.of(1999,11,30))
-//            .endDate(LocalDate.of(2000,4,30))
-//            .couponStartDate(LocalDate.of(1999,11,30))
-//            .couponEndDate(LocalDate.of(2000,4,30))
-//            .couponFrequency(Frequency.P3M)
-//            .build()));
+    assertEquals(91/364d+61/368d,StandardDayCountConvention.ACT_ACT_ISMA.yearFraction(
+        LocalDate.of(1999,11,30),
+        LocalDate.of(2000,4,30),
+        ScheduleInfo.builder()
+            .startDate(LocalDate.of(1999,11,30))
+            .endDate(LocalDate.of(2000,4,30))
+            .couponStartDate(LocalDate.of(1999,11,30))
+            .couponEndDate(LocalDate.of(2000,4,30))
+            .couponFrequency(Frequency.P3M)
+            .build()));
   }
 
   @Test
