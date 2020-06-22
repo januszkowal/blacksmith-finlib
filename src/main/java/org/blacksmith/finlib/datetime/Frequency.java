@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Locale;
+import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.commons.datetime.DateOperation;
 import org.blacksmith.commons.datetime.TimeUnit;
 import lombok.EqualsAndHashCode;
@@ -20,7 +22,10 @@ public class Frequency implements Serializable, DateOperation {
   @EqualsAndHashCode.Include
   private final int amount;
   @ToString.Include
-  private final String name;
+  private String name;
+  boolean isAnnual;
+  private int eventsPerYear;
+  private double eventsPerYearEstimate;
 //  private final Period period;
 
   /**
@@ -149,35 +154,94 @@ public class Frequency implements Serializable, DateOperation {
    */
   public static final Frequency TERM = new Frequency(TERM_YEARS, TimeUnit.YEAR, "TERM");
 
+
   public Frequency(final Period period) {
-    if (period.getYears() > 0) {
-      this.unit = TimeUnit.YEAR;
-      this.amount = period.getYears();
+    //TODO multi-unit periods
+    if (period.getUnits().size()>0 && period.getDays()>0) {
+      throw new IllegalArgumentException("Multiple unit period not supported");
     }
-    else if (period.getMonths() > 0) {
+    if (period.getYears() > 0) {
+      if (period.getMonths()==0) {
+        this.unit = TimeUnit.YEAR;
+        this.amount = period.getYears();
+      }
+      else {
+        this.unit = TimeUnit.MONTH;
+        this.amount = (int)period.toTotalMonths();
+      }
+    } else if (period.getMonths() > 0) {
       this.unit = TimeUnit.MONTH;
       this.amount = period.getMonths();
-    }
-    else {
+    } else {
       this.unit = TimeUnit.DAY;
       this.amount = period.getDays();
     }
-//    this.period = frequencyToPeriod(this.amount,this.unit);
-    this.name = periodName(this.amount,this.unit);
+    setEventsPerYear();
   }
 
   public Frequency (final int amount, final TimeUnit unit) {
     this.unit = unit;
     this.amount = amount;
-//    this.period = frequencyToPeriod(this.amount,this.unit);
     this.name = periodName(this.amount,this.unit);
+    setEventsPerYear();
+  }
+
+  private void setEventsPerYear() {
+    if (amount==0) {
+      eventsPerYear = 0;
+      eventsPerYearEstimate = 0;
+      return;
+    }
+    double secs = 0d;
+//    this.period = frequencyToPeriod(this.amount,this.unit);
+    switch(unit) {
+      case DAY:
+        secs = amount * ChronoUnit.DAYS.getDuration().getSeconds();
+        eventsPerYear = (364 % amount == 0) ? 364 / amount : 0;
+        eventsPerYearEstimate = 364d / amount;
+        //eventsPerYearEstimate = ChronoUnit.YEARS.getDuration().getSeconds() / secs;
+        break;
+      case WEEK:
+        secs = amount * ChronoUnit.WEEKS.getDuration().getSeconds();
+        int days = amount * 7;
+        eventsPerYear = (364 % days == 0) ? 364 / days : 0;
+        eventsPerYearEstimate = 364d / days;
+        //eventsPerYearEstimate = ChronoUnit.YEARS.getDuration().getSeconds() / secs;
+        break;
+      case MONTH:
+        isAnnual = amount % 12 ==0;
+        eventsPerYear = (12 % amount == 0) ? 12 / amount : 0;
+        eventsPerYearEstimate = 12d / amount;
+        break;
+      case QUARTER:
+        isAnnual = amount % 4 ==0;
+        eventsPerYear = (4 % amount == 0) ? 4 / amount : 0;
+        eventsPerYearEstimate = 4d / amount;
+        break;
+      case HALF_YEAR:
+        isAnnual = amount % 2 ==0;
+        eventsPerYear = (2 % amount == 0) ? 2 / amount : 0;
+        eventsPerYearEstimate = 2d / amount;
+        break;
+      case YEAR:
+        isAnnual = true;
+        eventsPerYear = (1 % amount == 0) ? 1 / amount : 0;
+        eventsPerYearEstimate = 1d / amount;
+        break;
+    }
   }
 
   public Frequency (final int amount, final TimeUnit unit, String name) {
     this.unit = unit;
     this.amount = amount;
-//    this.period = frequencyToPeriod(amount,unit);
     this.name = name;
+  }
+
+  public static Frequency of(String period) {
+    Validate.checkStringLength(period,2,10);
+    int amount = Integer.parseInt(period,0,period.length()-1,10);
+    TimeUnit unit = TimeUnit.ofSymbol(period.substring(period.length()-1));
+    return new Frequency(amount,unit);
   }
 
   public static Frequency ofPeriod(Period period) {
@@ -296,11 +360,7 @@ public class Frequency implements Serializable, DateOperation {
 
 
   public boolean isAnnual() {
-    return (amount!=0)&&(
-        (unit==TimeUnit.YEAR) ||
-        (unit==TimeUnit.MONTH && amount%12==0) ||
-        (unit==TimeUnit.QUARTER && amount%4==0) ||
-        (unit==TimeUnit.HALF_YEAR && amount%2==0));
+    return isAnnual;
   }
 
   public Period toPeriod() {
@@ -328,50 +388,15 @@ public class Frequency implements Serializable, DateOperation {
 
   @Override
   public String toString() {
-    return String.format("P%d%s",amount,unit.symbol());
+    return String.format("%d%s",amount,unit.symbol());
   }
 
-  public double eventsPerYear() {
-    switch (unit) {
-      case DAY:
-        return amount / 365d;
-      case WEEK:
-        return 52d / amount;
-      case MONTH:
-        return 12d / amount;
-      case QUARTER:
-        return 4d / amount;
-      case HALF_YEAR:
-        return 2d / amount;
-      case YEAR:
-        return 1d / amount;
-
-      default:
-        return 0;
-    }
+  public int eventsPerYear() {
+    return this.eventsPerYear;
   }
 
-  public double eventsPerMonth() {
-    switch (unit) {
-      case DAY:
-        return amount*12/365d;
-      case WEEK:
-        return amount*7*12/365d;
-      case MONTH:
-        return 1d/amount;
-      case QUARTER:
-        return 1d/(amount*3);
-      case HALF_YEAR:
-        return 1d/(6*amount);
-      case YEAR:
-        return 1d/(12*amount);
-      default:
-        return 0;
-    }
-  }
-
-  public int eventsPerMonthInt() {
-    return (int)eventsPerMonth();
+  public double eventsPerYearEstimate() {
+    return this.eventsPerYearEstimate;
   }
 
   private String periodName(final int amount, final TimeUnit unit) {

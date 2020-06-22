@@ -1,22 +1,20 @@
 package org.blacksmith.finlib.calendar;
 
-import org.blacksmith.commons.datetime.TimeUnit;
-import org.blacksmith.finlib.datetime.Frequency;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.blacksmith.commons.datetime.TimeUnit;
+import org.blacksmith.finlib.datetime.Frequency;
+import org.junit.jupiter.api.Test;
+
 public class FrequencyTest {
   @Test
-  public void testIsFrequencyAnnual() {
+  public void annual() {
     assertFalse(Frequency.ofDays(0).isAnnual());
     assertFalse(Frequency.ofDays(3).isAnnual());
-    //
     assertFalse(Frequency.ofWeeks(0).isAnnual());
     assertFalse(Frequency.ofWeeks(3).isAnnual());
-    //
     assertFalse(Frequency.ofMonths(0).isAnnual());
     assertFalse(Frequency.ofMonths(5).isAnnual());
     assertTrue(Frequency.ofMonths(12).isAnnual());
@@ -27,38 +25,54 @@ public class FrequencyTest {
   }
 
   @Test
-  public void eventsPerMonthTest() {
-    assertEquals(30d*12/365,Frequency.ofDays(30).eventsPerMonth(),0.0);
-    assertEquals(1d*12/365,Frequency.ofDays(1).eventsPerMonth(),0.0);
-    assertEquals(3d*12/365,Frequency.ofDays(3).eventsPerMonth(),0.0);
-    assertEquals(14d*12/365,Frequency.ofDays(14).eventsPerMonth(),0.0);
-    assertEquals(15d*12/365,Frequency.ofDays(15).eventsPerMonth(),0.0);
-    assertEquals(28d*12/365,Frequency.ofDays(28).eventsPerMonth(),0.0);
-
-    assertEquals(1.0d,Frequency.ofMonths(1).eventsPerMonth(),0.0);
-    assertEquals(0.5d,Frequency.ofMonths(2).eventsPerMonth(),0.0);
-    assertEquals(1.0d/3,Frequency.ofMonths(3).eventsPerMonth(),0.0);
-    assertEquals(0.25,Frequency.ofMonths(4).eventsPerMonth(),0.0);
-
-    assertEquals(1.0d/6,new Frequency(1, TimeUnit.HALF_YEAR).eventsPerMonth(),0.0);
-    assertEquals(1.0d/12,new Frequency(2, TimeUnit.HALF_YEAR).eventsPerMonth(),0.0);
-    assertEquals(1.0d/18,new Frequency(3, TimeUnit.HALF_YEAR).eventsPerMonth(),0.0);
-    assertEquals(1.0d/24,new Frequency(4, TimeUnit.HALF_YEAR).eventsPerMonth(),0.0);
-
-    assertEquals(1.0d/12,Frequency.ofYears(1).eventsPerMonth(),0.0);
-    assertEquals(1.0d/24,Frequency.ofYears(2).eventsPerMonth(),0.0);
+  public void yearFraction() {
+    assertEquals(0,Frequency.ofDays(0).eventsPerYear());
+    assertEquals(0d,Frequency.ofDays(10).eventsPerYear(),0d);
+    assertEquals(364d/17,Frequency.ofDays(17).eventsPerYearEstimate(),0d);
+    assertEquals(1d,Frequency.ofDays(364).eventsPerYear(),0d);
+    //
+    assertEquals(0,Frequency.ofMonths(0).eventsPerYear());
+    assertEquals(12,Frequency.ofMonths(1).eventsPerYear());
+    assertEquals(12d,Frequency.ofMonths(1).eventsPerYearEstimate(),0d);
+    assertEquals(4,Frequency.ofMonths(3).eventsPerYear());
+    assertEquals(4d,Frequency.ofMonths(3).eventsPerYearEstimate(),0d);
+    assertEquals(0,Frequency.ofMonths(5).eventsPerYear());
+    assertEquals(12/5d,Frequency.ofMonths(5).eventsPerYearEstimate(),0d);
+    assertEquals(2,Frequency.ofMonths(6).eventsPerYear());
+    assertEquals(2d,Frequency.ofMonths(6).eventsPerYearEstimate(),0d);
+    assertEquals(0,Frequency.ofMonths(9).eventsPerYear());
+    assertEquals(12/9d,Frequency.ofMonths(9).eventsPerYearEstimate(),0d);
+    assertEquals(1,Frequency.ofMonths(12).eventsPerYear());
+    assertEquals(1d,Frequency.ofMonths(12).eventsPerYearEstimate(),0d);
+    assertEquals(0,Frequency.ofMonths(14).eventsPerYear());
+    assertEquals(12/14d,Frequency.ofMonths(14).eventsPerYearEstimate(),0d);
+    assertEquals(0,Frequency.ofMonths(24).eventsPerYear());
+    assertEquals(12/24d,Frequency.ofMonths(24).eventsPerYearEstimate(),0d);
+    //
+    assertEquals(0,Frequency.ofYears(0).eventsPerYear());
+    assertEquals(0d,Frequency.ofYears(0).eventsPerYearEstimate(),0d);
+    assertEquals(1,Frequency.ofYears(1).eventsPerYear());
+    assertEquals(1d,Frequency.ofYears(1).eventsPerYearEstimate(),0d);
+    assertEquals(0,Frequency.ofYears(3).eventsPerYear());
+    assertEquals(1/3d,Frequency.ofYears(3).eventsPerYearEstimate(),0d);
+    //
+    assertEquals(0,Frequency.ofWeeks(3).eventsPerYear());
+    assertEquals(364/21d,Frequency.ofWeeks(3).eventsPerYearEstimate(),0d);
+    //
+    assertEquals(4,new Frequency(1, TimeUnit.QUARTER).eventsPerYear());
+    assertEquals(4d,new Frequency(1, TimeUnit.QUARTER).eventsPerYearEstimate(),0d);
+    assertEquals(2,new Frequency(2, TimeUnit.QUARTER).eventsPerYear());
+    assertEquals(2d,new Frequency(2, TimeUnit.QUARTER).eventsPerYearEstimate(),0d);
+    assertEquals(0,new Frequency(3, TimeUnit.QUARTER).eventsPerYear());
+    assertEquals(4/3d,new Frequency(3, TimeUnit.QUARTER).eventsPerYearEstimate(),0d);
+    assertEquals(1,new Frequency(4, TimeUnit.QUARTER).eventsPerYear());
+    assertEquals(1d,new Frequency(4, TimeUnit.QUARTER).eventsPerYearEstimate(),0d);
+    assertEquals(0,new Frequency(6, TimeUnit.QUARTER).eventsPerYear());
+    assertEquals(4/6d,new Frequency(6, TimeUnit.QUARTER).eventsPerYearEstimate(),0d);
   }
 
   @Test
-  public void eventsPerMonthIntTest() {
-    assertEquals(0,Frequency.ofDays(30).eventsPerMonthInt());
-    assertEquals(1,Frequency.ofDays(31).eventsPerMonthInt());
-    assertEquals(1,Frequency.ofMonths(1).eventsPerMonthInt());
-    assertEquals(0,Frequency.ofMonths(2).eventsPerMonthInt());
-  }
-
-  @Test
-  public void toPeriodsTest() {
+  public void frequencyToPeriodStringConversion() {
     assertEquals("P30D",Frequency.ofDays(30).toPeriod().toString());
     assertEquals("P14D",Frequency.ofWeeks(2).toPeriod().toString());
     assertEquals("P2M",Frequency.ofMonths(2).toPeriod().toString());
@@ -66,11 +80,19 @@ public class FrequencyTest {
   }
 
   @Test
-  public void toStringTest() {
-    assertEquals("P30D",Frequency.ofDays(30).toString());
-    assertEquals("P2W",Frequency.ofWeeks(2).toString());
-    assertEquals("P2M",Frequency.ofMonths(2).toString());
-    assertEquals("P2Y",Frequency.ofYears(2).toString());
+  public void frequencyToPeriodConversion() {
+    assertEquals("30D",Frequency.ofDays(30).toString());
+    assertEquals("2W",Frequency.ofWeeks(2).toString());
+    assertEquals("2M",Frequency.ofMonths(2).toString());
+    assertEquals("2Y",Frequency.ofYears(2).toString());
+  }
+
+  @Test
+  public void stringToFrequencyConversion() {
+    assertEquals("P30D",Frequency.of("30D").toPeriod().toString());
+    assertEquals("P14D",Frequency.of("2W").toPeriod().toString());
+    assertEquals("P2M",Frequency.of("2M").toPeriod().toString());
+    assertEquals("P2Y",Frequency.of("2Y").toPeriod().toString());
   }
 
 }
