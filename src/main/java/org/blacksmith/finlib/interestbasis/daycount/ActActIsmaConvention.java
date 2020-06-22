@@ -64,7 +64,7 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
       periodEnd = periodStart;
       periodStart = eom(couponEndDate, freq.minusFrom(periodEnd), eom);
     }
-    return result + calcPeriod(periodStart, calcDate, couponStartDate, periodEnd, freq);
+    return result + calcPeriod(couponStartDate, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
   }
 
 
@@ -81,7 +81,7 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
       periodStart = periodEnd;
       periodEnd = eom(couponStartDate, freq.addTo(periodEnd), eom);
     }
-    return result + calcPeriod(periodStart, calcDate, periodStart, couponEndDate, freq);
+    return result + calcPeriod(periodStart, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
   }
 
   private double regularPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq) {
@@ -107,7 +107,8 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
     long periodStartEpochDay = periodStart.toEpochDay();
     long periodEndEpochDay = periodEnd.toEpochDay();
     long periodDays = periodEndEpochDay - periodStartEpochDay;
-    long actualDays = Math.min(calcEndEpochDay, periodEndEpochDay) - Math.max(calcStartEpochDay,periodStartEpochDay);
+//    long actualDays = Math.min(calcEndEpochDay, periodEndEpochDay) - Math.max(calcStartEpochDay,periodStartEpochDay);
+    long actualDays = calcEndEpochDay - calcStartEpochDay;
     double denominator = getDenominator(freq, periodDays);
     log.debug("period factor={}/{} pd={} calc={}#{} pe={}#{}",
         actualDays, denominator, periodDays,
