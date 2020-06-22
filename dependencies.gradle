@@ -1,0 +1,14 @@
+ext.libs = [
+        lombok: [
+                'org.projectlombok:lombok:' + lombokVersion],
+        groovy: [
+                'org.codehaus.groovy:groovy:' + groovyVersion,
+                'org.codehaus.groovy:groovy-json:' + groovyVersion,
+                'org.codehaus.groovy:groovy-jsr223:' + groovyVersion,
+                'org.codehaus.groovy:groovy-dateutil:' + groovyVersion],
+        groovyTest: [
+                'org.codehaus.groovy:groovy-test-junit5:' + groovyVersion],
+        cucumberTest: [
+                'io.cucumber:cucumber-java:5.7.0',
+                'io.cucumber:cucumber-junit:5.7.0']
+]

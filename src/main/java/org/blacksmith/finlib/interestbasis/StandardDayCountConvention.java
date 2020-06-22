@@ -1,35 +1,41 @@
 package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.datetime.Frequency;
-import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
-import org.blacksmith.finlib.dayconvention.utils.YMD;
+import org.blacksmith.finlib.interestbasis.daycount.Act365ActConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActAct365LConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActActAfbConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActActIsdaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActActIsmaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActActYearConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30EConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30EIsdaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30EPlusConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30EPsaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30IsdaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30UConvention;
+import org.blacksmith.finlib.interestbasis.daycount.D30USEomConvention;
+import org.blacksmith.finlib.interestbasis.daycount.NLConvention;
+import org.blacksmith.finlib.interestbasis.daycount.DayCountConventionCalculator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static java.lang.Math.toIntExact;
-import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
-import static org.blacksmith.commons.datetime.DateUtils.yearsBetween;
-import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
-import static org.blacksmith.commons.datetime.DateUtils.isLeapDayInPeriod;
-import static org.blacksmith.commons.datetime.DateUtils.nextLeapDay;
 
-//TR:A,B,C,D,E,F,G,J,K,L,N
 public enum StandardDayCountConvention implements DayCountConvention {
 
   /**
    * Always one
    */
-  ONE_ONE("1/1") {
+  ONE_ONE("1/1", new DayCountConventionCalculator() {
+    @Override
+    public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+      return 1;
+    }
+
     @Override
     public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return 1d;
     }
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return 1;
-    }
-
-  },
+  }),
 
   /**
    * Name:  ACT/360
@@ -42,17 +48,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Definition: 2006 ISDA definitions 4.16e and ICMA rule 251.1(i) part 1
    * TR: E=ACT/360
    * */
-  ACT_360("ACT/360") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return daysBetween(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return daysBetween(startDate, endDate);
-    }
-  },
+  ACT_360("ACT/360", new ActConvention(360d)),
 
   /**
    * Name ACT/364
@@ -62,17 +58,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    *  The numerator is the actual number of days in the requested period.
    *  The denominator is always 364.
    * */
-  ACT_364("ACT/364") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return daysBetween(startDate, endDate) / 364d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return toIntExact(daysBetween(startDate, endDate));
-    }
-  },
+  ACT_364("ACT/364", new ActConvention(364d)),
 
   /**
    * Name:  ACT/365
@@ -81,21 +67,11 @@ public enum StandardDayCountConvention implements DayCountConvention {
    *  The result is a simple division.
    *  The numerator is the actual number of days in the requested period.
    *  The denominator is always 360.
-   * Also known: 'English'
+   * Also known: 'English', ACT/365F
    * Definition: 2006 ISDA definitions 4.16d
    * TR: F=ACT/365
    * */
-  ACT_365("ACT/365") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return daysBetween(startDate, endDate) / 365d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return toIntExact(daysBetween(startDate, endDate));
-    }
-  },
+  ACT_365("ACT/365", new ActConvention((365d))),
 
   /**
    * Name:  ACT/365.25
@@ -107,17 +83,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Also known:
    * Definition:
    * */
-  ACT_365_25("ACT/365.25") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return daysBetween(startDate, endDate) / 365.25d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return daysBetween(startDate, endDate);
-    }
-  },
+  ACT_365_25("ACT/365.25", new ActConvention(365.25d)),
 
   /**
    * Name: ACT/365 ACT
@@ -130,20 +96,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Also known: 'Act/365A'
    * Definition: 2006 ISDA definitions 4.16b
    */
-  ACT_365_ACT("ACT/365 ACT") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      int days = daysBetween(startDate, endDate);
-      //end date included
-      double denominator = isLeapDayInPeriod(startDate,endDate) ? 366d : 365d;
-      return days / denominator;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return daysBetween(startDate, endDate);
-    }
-  },
+  ACT_365_ACT("ACT/365 ACT", new Act365ActConvention()),
 
   /**
    * Name: ACT/ACT ISDA
@@ -156,116 +109,10 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Definition: 2006 ISDA definitions 4.16b
    * TR: J=ACT/ACT (ISDA)
    */
-  ACT_ACT_ISDA("ACT/ACT ISDA") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      int y1 = startDate.getYear();
-      int y2 = endDate.getYear();
-      int firstYearLength = startDate.lengthOfYear();
-      if (y1 == y2) {
-        int actualDays = endDate.getDayOfYear() - startDate.getDayOfYear();
-        return (double)actualDays / firstYearLength;
-      }
-      else {
-        int firstRemainderOfYear = firstYearLength - startDate.getDayOfYear() + 1;
-        int secondRemainderOfYear = endDate.getDayOfYear() - 1;
-        int secondYearLength = endDate.lengthOfYear();
-        return (double)firstRemainderOfYear / firstYearLength +
-            (double)secondRemainderOfYear / secondYearLength +
-            (y2 - y1 - 1);
-      }
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return daysBetween(startDate, endDate);
-    }
-  },
+  ACT_ACT_ISDA("ACT/ACT ISDA", new ActActIsdaConvention()),
 
   // complex ICMA calculation
-  ACT_ACT_ISMA("ACT/ACT ISMA") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      // calculation is based on the schedule period, firstDate assumed to be the start of the period
-      LocalDate scheduleStartDate = scheduleInfo.getStartDate();
-      LocalDate scheduleEndDate = scheduleInfo.getMaturityDate();
-      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate();
-      Frequency freq = scheduleInfo.getCouponFrequency();
-      boolean eom = scheduleInfo.isEndOfMonthConvention();
-
-      // final period, also handling single period schedules
-      if (nextCouponDate.equals(scheduleEndDate)) {
-        LocalDate endCalculated = eom(startDate, freq.addTo(startDate), eom);
-        if (endCalculated.isBefore(scheduleEndDate))
-          return initPeriod(startDate, endDate, nextCouponDate, freq, eom);
-        else
-          return finalPeriod(startDate, endDate, freq, eom);
-      }
-      // initial period
-      else if (scheduleStartDate.equals(startDate)) {
-        return initPeriod(startDate, endDate, nextCouponDate, freq, eom);
-      }
-      else
-        return otherPeriod(startDate,endDate,nextCouponDate,freq);
-    }
-    
-    // calculate nominal periods backwards from couponDate
-    private double initPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponDate, Frequency freq, boolean eom) {
-      LocalDate subPeriodEnd = couponDate;
-      LocalDate subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
-      double result = 0;
-      while (subPeriodStart.isAfter(startDate)) {
-        result += calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
-        subPeriodEnd = subPeriodStart;
-        subPeriodStart = eom(couponDate, freq.minusFrom(subPeriodEnd), eom);
-      }
-      return result + calc(subPeriodStart, subPeriodEnd, startDate, endDate, freq);
-    }
-
-    // calculate nominal periods forwards from couponDate
-    private double finalPeriod(LocalDate couponDate, LocalDate endDate, Frequency freq, boolean eom) {
-      LocalDate subPeriodStart = couponDate;
-      LocalDate subPeriodEnd = eom(couponDate, freq.addTo(subPeriodStart), eom);
-      double result = 0;
-      while (subPeriodEnd.isBefore(endDate)) {
-        result += calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
-        subPeriodStart = subPeriodEnd;
-        subPeriodEnd = eom(couponDate, freq.addTo(subPeriodEnd), eom);
-      }
-      return result + calc(subPeriodStart, subPeriodEnd, subPeriodStart, endDate, freq);
-    }
-    
-    private double otherPeriod(LocalDate startDate, LocalDate endDate, LocalDate couponEndDate, Frequency freq) {
-      int actualDays = daysBetween(startDate, endDate);
-      int periodDays = daysBetween(startDate, couponEndDate);
-      return (double)actualDays / (freq.eventsPerYear() * periodDays);      
-    }
-
-
-    // apply eom convention
-    private LocalDate eom(LocalDate base, LocalDate calc, boolean eom) {
-      return (eom && base.getDayOfMonth() == base.lengthOfMonth() ? calc.withDayOfMonth(calc.lengthOfMonth()) : calc);
-    }
-
-    // calculate the result
-    private double calc(LocalDate prevNominal, LocalDate curNominal, LocalDate start, LocalDate end, Frequency freq) {
-      if (end.isAfter(prevNominal)) {
-        long curNominalEpochDay = curNominal.toEpochDay();
-        long prevNominalEpochDay = prevNominal.toEpochDay();
-        long startEpochDay = start.toEpochDay();
-        long endEpochDay = end.toEpochDay();
-        double periodDays = (double)curNominalEpochDay - prevNominalEpochDay;
-        double actualDays = (double)Math.min(endEpochDay, curNominalEpochDay) - Math.max(startEpochDay, prevNominalEpochDay);
-        return actualDays / (freq.eventsPerYear() * periodDays);
-      }
-      return 0;
-    }
-
-    @Override
-    public int calculateDays(LocalDate firstDate, LocalDate secondDate) {
-      return daysBetween(firstDate, secondDate);
-    }
-  },
+  ACT_ACT_ISMA("ACT/ACT ISMA",new ActActIsmaConvention()),
 
   /**
    * Name: ACT/ACT AFB
@@ -280,21 +127,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: ACT_ACT_AFB
    * TR: G=ACT/ACT
    */
-  ACT_ACT_AFB("ACT/ACT AFB") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      final int years = yearsBetween(startDate, endDate);
-      final LocalDate remainedPeriodEndDate = (years==0) ? endDate: endDate.minusYears(years);
-      final int remainedPeriodDays = daysBetween(startDate, remainedPeriodEndDate);
-      final double remainedPeriodYearLength = isLeapDayInPeriod(startDate,remainedPeriodEndDate) ? 366d : 365d;
-      return years + (remainedPeriodDays / remainedPeriodYearLength);
-    }
-
-    @Override
-    public int calculateDays(LocalDate firstDate, LocalDate calcDate) {
-      return daysBetween(firstDate, calcDate);
-    }
-  },
+  ACT_ACT_AFB("ACT/ACT AFB", new ActActAfbConvention()),
 
   /**
    * Name: ACT/ACT YEAR
@@ -308,44 +141,12 @@ public enum StandardDayCountConvention implements DayCountConvention {
    *  The result is the number of whole years plus the result of the division.
    * Strata: ACT_ACT_YEAR
    */
-  ACT_ACT_YEAR("ACT/ACT YEAR") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      final int years = yearsBetween(startDate, endDate);
-      final LocalDate remainedPeriodStartDate = years==0 ? startDate : startDate.plusYears(years);
-      final int remainedPeriodDays = daysBetween(remainedPeriodStartDate, endDate);
-      final double remainedPeriodYearLength = daysBetween(remainedPeriodStartDate, remainedPeriodStartDate.plusYears(1));
-      return years + remainedPeriodDays/remainedPeriodYearLength;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate calcDate) {
-      return daysBetween(startDate, calcDate);
-    }
-  },
+  ACT_ACT_YEAR("ACT/ACT YEAR", new ActActYearConvention()),
 
 
   // actual days / 365 or 366
   //TODO CHECK
-  ACT_365L("Act/365L") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      int actualDays = daysBetween(startDate, endDate);
-      // calculation is based on the end of the schedule period (next coupon date) and annual/non-annual frequency
-      LocalDate nextCouponDate = scheduleInfo.getCouponEndDate();
-      if (scheduleInfo.getCouponFrequency().isAnnual()) {
-        LocalDate nextLeap = nextLeapDay(startDate);
-        return actualDays / (nextLeap.isAfter(nextCouponDate) ? 365d : 366d);
-      } else {
-        return actualDays / (nextCouponDate.isLeapYear() ? 366d : 365d);
-      }
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate calcDate) {
-      return daysBetween(startDate, calcDate);
-    }
-  },
+  ACT_365L("Act/365L", new ActAct365LConvention()),
 
   /**
    * Name: NL/360
@@ -358,17 +159,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Also known: 'ACT/360 No Leap'
    * TR: C=365/360
    */
-  NL_360("NL/360") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.days365(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.days365(startDate, endDate);
-    }
-  },
+  NL_360("NL/360", new NLConvention(360d)),
 
   /**
    * Name: NL/365
@@ -381,17 +172,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Also known: 'ACT/365 No Leap'
    * TR: D=365/365
    */
-  NL_365("NL/365") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.days365(startDate, endDate) / 365d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.days365(startDate, endDate);
-    }
-  },
+  NL_365("NL/365", new NLConvention(365d)),
 
   /**
    * Name: D30_360_ISDA
@@ -406,17 +187,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: THIRTY_360_ISDA
    * TR: L=30/360 ISDA
    */
-  D30_360_ISDA("30/360 ISDA") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30ISDA(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30ISDA(startDate, endDate);
-    }
-  },
+  D30_360_ISDA("30/360 ISDA", new D30IsdaConvention(360d)),
 
   /**
    * Name: D30_E_360_ISDA
@@ -433,41 +204,10 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: THIRTY_E_360_ISDA
    * TR:
    */
-  D30_E_360_ISDA("30E/360 ISDA") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      YMD date1 = YMD.of(startDate);
-      YMD date2 = YMD.of(endDate);
-      if (date1.getDay()==31 || isLastDayOfFebruary(startDate)) {
-        date1.setDay(30);
-      }
-      if (date2.getDay()==31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getMaturityDate()))) {
-        date2.setDay(30);
-      }
-      return DayCountUtils.days360(date1,date2) / 360d;
-    }
+  D30_E_360_ISDA("30E/360 ISDA", new D30EIsdaConvention(360d)),
 
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate calcDate) {
-      return DayCountUtils.daysBetween30EISDA(startDate,calcDate);
-    }
-  },
   // US thirty day months / 360 with dynamic EOM rule
-  D30_U_360("30U/360") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      if (scheduleInfo.isEndOfMonthConvention()) {
-        return D30_U_360_EOM.calculateYearFraction(startDate, endDate, scheduleInfo);
-      } else {
-        return D30_360_ISDA.calculateYearFraction(startDate, endDate, scheduleInfo);
-      }
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate calcDate) {
-      return D30_360_ISDA.days(startDate, calcDate);
-    }
-  },
+  D30U_360("30U/360", new D30UConvention(360d)),
 
   /**
    * Name: 30U/360 EOM
@@ -488,17 +228,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    */
 
   // US thirty day months / 360 with fixed EOM rule
-  D30_U_360_EOM("30U/360 EOM") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30USEOM(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30USEOM(startDate, endDate);
-    }
-  },
+  D30U_360_EOM("30U/360 EOM", new D30USEomConvention(360d)),
 
   /**
    * Name: 30/360 PSA
@@ -513,17 +243,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: THIRTY_360_PSA
    * TR: N=30G/360 BMA
    */
-  D30_360_PSA("30/360 PSA") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30PSA(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30PSA(startDate, endDate);
-    }
-  },
+  D30_360_PSA("30/360 PSA", new D30EPsaConvention(360d)),
 
   /**
    * Name: 30E/360
@@ -538,17 +258,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: THIRTY_E_360
    * TR: A=30/360
    */
-  D30_E_360("30E/360") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30E(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30E(startDate, endDate);
-    }
-  },
+  D30E_360("30E/360", new D30EConvention(360d)),
 
   /**
    * Name: 30E/365
@@ -562,17 +272,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Definition:
    * TR: B=30/365
    */
-  D30_E_365("30E/365") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30E(startDate, endDate) / 365d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30E(startDate, endDate);
-    }
-  },
+  D30E_365("30E/365", new D30EConvention(365d)),
 
   /**
    * Name: 30E+/360
@@ -585,57 +285,24 @@ public enum StandardDayCountConvention implements DayCountConvention {
    * Strata: THIRTY_EPLUS_360
    * TR: K=30E+/360
    */
-  D30_EPLUS_360("30E+/360") {
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return DayCountUtils.daysBetween30EPlus(startDate, endDate) / 360d;
-    }
-
-    @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate) {
-      return DayCountUtils.daysBetween30EPlus(startDate,endDate);
-    }
-  };
+  D30EPLUS_360("30E+/360", new D30EPlusConvention(360d));
 
   @Override
   public double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    if (endDate.isBefore(startDate)) {
-      throw new IllegalArgumentException("Dates must be in time-line order");
-    }
-    if (scheduleInfo!=null) {
-      if (startDate.isBefore(scheduleInfo.getStartDate())) {
-        throw new IllegalArgumentException("Dates must be in time-line order");
-      }
-      if (endDate.isAfter(scheduleInfo.getMaturityDate())) {
-        throw new IllegalArgumentException("Dates must be in time-line order");
-      }
-    }
-    if (endDate.isEqual(startDate)) {
-      return 0;
-    }
-    return calculateYearFraction(startDate, endDate, scheduleInfo);
+    return calculator.yearFraction(startDate, endDate, scheduleInfo);
   }
 
   @Override
-  public int days(LocalDate startDate, LocalDate endDate) {
-    if (endDate.isBefore(startDate)) {
-      throw new IllegalArgumentException("Dates must be in time-line order");
-    }
-    if (endDate.isEqual(startDate)) {
-      return 0;
-    }
-    return calculateDays(startDate, endDate);
+  public int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+    return calculator.days(startDate, endDate, scheduleInfo);
   }
 
-  abstract protected double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
-
-  //calculate the number of days between the specified dates, using validated inputs
-  abstract int calculateDays(LocalDate startDate, LocalDate endDate);
-
   final String shortName;
+  final DayCountConventionCalculator calculator;
 
-  StandardDayCountConvention(String shortName) {
+  StandardDayCountConvention(String shortName, DayCountConventionCalculator calculator) {
     this.shortName = shortName;
+    this.calculator = calculator;
   }
   public String getShortName() {
     return this.shortName;

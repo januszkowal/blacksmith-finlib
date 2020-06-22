@@ -18,26 +18,28 @@ targetCompatibility = JavaVersion.VERSION_11
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
+apply from: 'dependencies.gradle'
+
 repositories {
     mavenLocal()
     jcenter()
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.10'
-    testCompile 'org.projectlombok:lombok:1.18.10'
-    annotationProcessor 'org.projectlombok:lombok:1.18.10'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.10'
+    compileOnly libs.lombok
+    testCompile libs.lombok
+    annotationProcessor libs.lombok
+    testAnnotationProcessor libs.lombok
     implementation 'org.blacksmith:blacksmith-commons:0.1.2'
     implementation 'org.blacksmith:blacksmith-finlib-basic:0.1.2'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    api libs.groovy
 
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     testCompile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.1.0'
-    testImplementation 'io.cucumber:cucumber-java:5.7.0'
-    testImplementation 'io.cucumber:cucumber-junit:5.7.0'
+    testImplementation libs.cucumberTest
     testImplementation 'org.junit.jupiter:junit-jupiter:5.6.2'
     testImplementation 'org.junit.vintage:junit-vintage-engine:5.6.2'
     testImplementation 'org.hamcrest:hamcrest-library:2.1'

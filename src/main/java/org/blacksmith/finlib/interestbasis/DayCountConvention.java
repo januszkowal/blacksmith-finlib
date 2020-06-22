@@ -55,7 +55,8 @@ public interface DayCountConvention {
    *
    * @param startDate  the start date
    * @param endDate  the end date, which may not be before the start date
+   * @param scheduleInfo schedule information
    * @return the number of days, as determined by the day count
    */
-  int days(LocalDate startDate, LocalDate endDate);
+  int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
 }

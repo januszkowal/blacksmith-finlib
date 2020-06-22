@@ -18,10 +18,9 @@ public class TermScheduleGenerator implements ScheduleGenerator {
         .isEndOfMonthConvention(scheduleParameters.isEndOfMonthConvention())
         .couponFrequency(scheduleParameters.getCouponFrequency())
         .startDate(scheduleParameters.getStartDate())
-        .maturityDate(scheduleParameters.getMaturityDate())
+        .endDate(scheduleParameters.getMaturityDate())
         .couponStartDate(couponStartDate)
         .couponEndDate(couponEndDate)
-        .startInterestRate(scheduleParameters.getStartInterestRate())
         .build();
   }
   @Override
@@ -29,19 +28,19 @@ public class TermScheduleGenerator implements ScheduleGenerator {
     var schedule = new Schedule();
     ScheduleInfo scheduleInfo = createScheduleInfo(scheduleParameters,scheduleParameters.getStartDate(),scheduleParameters.getMaturityDate());
     double rate = scheduleParameters.getStartInterestRate().doubleValue() / 100.0;
-    double interest =
-        scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
-        rate*
-        scheduleInfo.getNotional(scheduleInfo.getCouponStartDate()).doubleValue();
+//    double interest = 0;
+//        scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
+//        rate*
+//        scheduleInfo.getNotional(scheduleInfo.getCouponStartDate()).doubleValue();
     
-    Cashflow cashflow = Cashflow.builder()
-        .startDate(scheduleParameters.getStartDate())
-        .endDate(scheduleParameters.getMaturityDate())
-        .paymentDate(scheduleParameters.getMaturityDate())
-        .notional(scheduleParameters.getNotional())
-        .amount(Amount.of(interest))
-        .build();
-    schedule.getCashflow().add(cashflow);
+//    Cashflow cashflow = Cashflow.builder()
+//        .startDate(scheduleParameters.getStartDate())
+//        .endDate(scheduleParameters.getMaturityDate())
+//        .paymentDate(scheduleParameters.getMaturityDate())
+//        .notional(scheduleParameters.getNotional())
+//        .amount(Amount.of(interest))
+//        .build();
+//    schedule.getCashflow().add(cashflow);
     return schedule;
   }
 }

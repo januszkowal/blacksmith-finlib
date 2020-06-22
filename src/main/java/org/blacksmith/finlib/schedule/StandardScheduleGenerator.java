@@ -28,10 +28,9 @@ public class StandardScheduleGenerator implements ScheduleGenerator {
         .isEndOfMonthConvention(scheduleParameters.isEndOfMonthConvention())
         .couponFrequency(scheduleParameters.getCouponFrequency())
         .startDate(scheduleParameters.getStartDate())
-        .maturityDate(scheduleParameters.getMaturityDate())
+        .endDate(scheduleParameters.getMaturityDate())
         .couponStartDate(couponStartDate)
         .couponEndDate(couponEndDate)
-        .startInterestRate(scheduleParameters.getStartInterestRate())
         .build();
   }
   
