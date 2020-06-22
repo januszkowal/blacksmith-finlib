@@ -1,10 +1,12 @@
 package org.blacksmith.finlib.calendar;
 
+import java.time.format.DateTimeFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.DayCountConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.Period;
@@ -19,15 +21,33 @@ import static org.blacksmith.commons.datetime.DateUtils.nextOrSameLeapDay;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class DayCountTest {
+public class DayCountTest extends DayCountBaseTest {
+
+  public void assertDayCountMethod(StandardDayCountConvention method, String s1, String s2, int expectedDays, double expectedFactor) {
+    LocalDate d1 = LocalDate.parse(s1, DateTimeFormatter.BASIC_ISO_DATE);
+    LocalDate d2 = LocalDate.parse(s2, DateTimeFormatter.BASIC_ISO_DATE);
+    Assertions.assertEquals(expectedDays,method.days(d1,d2,null));
+    Assertions.assertEquals(expectedFactor,method.yearFraction(d1,d2,null));
+  }
+
+  @Test
+  public void assertDayCountMethod() {
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20190101","20190131",30,30/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20190201","20190228",27,27/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20190201","20190301",28,28/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20200101","20200131",30,30/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20200201","20200228",27,27/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20200201","20200229",28,28/360d);
+    assertDayCountMethod(StandardDayCountConvention.ACT_360,"20200201","20200301",29,29/360d);
+  }
 
   private void printFactor(DayCountConvention basis, LocalDate startDate, LocalDate endDate) {
     System.out.println(basis.toString() + ":"+basis.yearFraction(startDate,endDate,
         ScheduleInfo.builder()
             .couponEndDate(endDate)
             .couponStartDate(startDate)
-            .maturityDate(endDate)
             .startDate(startDate)
+            .endDate(endDate)
             .build()));
   }
   private DayCountConvention testRemaining1() {
@@ -47,7 +67,7 @@ public class DayCountTest {
         return yearsx + (actualDays / (nextLeap.isBefore(end) ? 366d : 365d));
       }
 
-      public int days(LocalDate firstDate, LocalDate secondDate) {
+      public int days(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
         return 0;
       }
     };
@@ -63,8 +83,8 @@ public class DayCountTest {
         StandardDayCountConvention.NL_360, StandardDayCountConvention.NL_365,
         StandardDayCountConvention.D30_360_ISDA,
         StandardDayCountConvention.D30_360_PSA,
-        StandardDayCountConvention.D30_E_360, StandardDayCountConvention.D30_E_365,
-        StandardDayCountConvention.D30_EPLUS_360, StandardDayCountConvention.D30_U_360_EOM,
+        StandardDayCountConvention.D30E_360, StandardDayCountConvention.D30E_365,
+        StandardDayCountConvention.D30EPLUS_360, StandardDayCountConvention.D30U_360_EOM,
         StandardDayCountConvention.ACT_ACT_YEAR, StandardDayCountConvention.ACT_ACT_AFB);
     basiss.forEach(b->printFactor(b,startDate,endDate));
     printFactor(testRemaining1(),startDate, endDate);
@@ -99,7 +119,7 @@ public class DayCountTest {
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(2003,11,1))
-            .maturityDate(LocalDate.of(2008,5,1))
+            .endDate(LocalDate.of(2008,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -110,7 +130,7 @@ public class DayCountTest {
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,11,1))
-            .maturityDate(LocalDate.of(2004,5,1))
+            .endDate(LocalDate.of(2004,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -121,7 +141,7 @@ public class DayCountTest {
         LocalDate.of(2004,5,1),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1998,11,1))
-            .maturityDate(LocalDate.of(2008,5,1))
+            .endDate(LocalDate.of(2008,5,1))
             .couponStartDate(LocalDate.of(2003,11,1))
             .couponEndDate(LocalDate.of(2004,5,1))
             .couponFrequency(Frequency.P6M)
@@ -141,7 +161,7 @@ public class DayCountTest {
         LocalDate.of(1999,7,1),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,2,1))
-            .maturityDate(LocalDate.of(2000,7,1))
+            .endDate(LocalDate.of(2000,7,1))
             .couponStartDate(LocalDate.of(1999,2,1))
             .couponEndDate(LocalDate.of(1999,7,1))
             .couponFrequency(Frequency.P1Y)
@@ -160,7 +180,7 @@ public class DayCountTest {
         LocalDate.of(2000,7,1),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,2,1))
-            .maturityDate(LocalDate.of(2000,7,1))
+            .endDate(LocalDate.of(2000,7,1))
             .couponStartDate(LocalDate.of(1999,7,1))
             .couponEndDate(LocalDate.of(2000,7,1))
             .couponFrequency(Frequency.P1Y)
@@ -182,7 +202,7 @@ public class DayCountTest {
         LocalDate.of(2003,7,15),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(2002,8,15))
-            .maturityDate(LocalDate.of(2004,1,15))
+            .endDate(LocalDate.of(2004,1,15))
             .couponStartDate(LocalDate.of(2002,8,15))
             .couponEndDate(LocalDate.of(2003,7,15))
             .couponFrequency(Frequency.P6M)
@@ -201,7 +221,7 @@ public class DayCountTest {
         LocalDate.of(2004,1,15),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(2002,8,15))
-            .maturityDate(LocalDate.of(2004,1,15))
+            .endDate(LocalDate.of(2004,1,15))
             .couponStartDate(LocalDate.of(2003,7,15))
             .couponEndDate(LocalDate.of(2004,1,15))
             .couponFrequency(Frequency.P6M)
@@ -218,7 +238,7 @@ public class DayCountTest {
         LocalDate.of(2000,1,30),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,7,30))
-            .maturityDate(LocalDate.of(2000,6,30))
+            .endDate(LocalDate.of(2000,6,30))
             .couponStartDate(LocalDate.of(1999,7,30))
             .couponEndDate(LocalDate.of(2000,1,30))
             .couponFrequency(Frequency.P6M)
@@ -237,7 +257,7 @@ public class DayCountTest {
         LocalDate.of(2000,6,30),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,7,30))
-            .maturityDate(LocalDate.of(2000,6,30))
+            .endDate(LocalDate.of(2000,6,30))
             .couponStartDate(LocalDate.of(2000,1,30))
             .couponEndDate(LocalDate.of(2000,6,30))
             .couponFrequency(Frequency.P6M)
@@ -256,7 +276,7 @@ public class DayCountTest {
         LocalDate.of(2000,4,30),
         ScheduleInfo.builder()
             .startDate(LocalDate.of(1999,11,30))
-            .maturityDate(LocalDate.of(2000,4,30))
+            .endDate(LocalDate.of(2000,4,30))
             .couponStartDate(LocalDate.of(1999,11,30))
             .couponEndDate(LocalDate.of(2000,4,30))
             .couponFrequency(Frequency.P3M)
