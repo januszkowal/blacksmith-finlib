@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.math.xirr.helper;
+package org.blacksmith.finlib.cucumber;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -47,13 +47,12 @@ public class XirrCalculatorSteps {
         .withSolverBuilder(BiSectionSolverBuilder.builder()
             .withMinArg(-1)
             .withMaxArg(2))
-        .withCashflows(cashflows).build();
-    this.xirrBiCalcResult = calculatorBiCalc.xirr();
+        .build();
+    this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);
     log.info("Calc NewtonRaphson");
     var calculatorNewtonRapshon = XirrCalculatorBuilder.<Function1stDerivative>builder()
-        .withCashflows(cashflows)
         .withSolverBuilder(NewtonRaphsonSolverBuilder.builder()).build();
-    this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr();
+    this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr(cashflows);
   }
 
   @Then("Xirr result must be {double}")

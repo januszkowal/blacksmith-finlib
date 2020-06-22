@@ -47,11 +47,12 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
 
   private static final double DAYS_IN_YEAR = 365;
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
+  private final Solver<F> solver;
 
   private List<XirrCashflow> xirrCashflows;
-  private final XirrStats stats;
+  private XirrStats stats;
 
-  private final Solver<F> solver;
+
   private Double guess;
   private long iterations = 0L;
 
@@ -61,30 +62,17 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
   /**
    * Construct an Xirr instance for the given cashflows.
    *
-   * @param cashflows the cashflows
    * @throws IllegalArgumentException if there are fewer than 2 cashflows
    * @throws IllegalArgumentException if all the cashflows are on the same date
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(List<Cashflow> cashflows, Solver<F> solver) {
-    this(cashflows, solver, null);
+  public XirrCalculator(Solver<F> solver) {
+    this(solver, null);
   }
 
-  public XirrCalculator(List<Cashflow> cashflows, Solver<F> solver, Double guess) {
+  public XirrCalculator(Solver<F> solver, Double guess) {
     Validate.notNull(solver, "Solver builder must be not null");
-    Validate.notEmpty(cashflows, "Cashflows must be not empty");
-    List<Cashflow> groupedCashflows = groupCashflows(cashflows);
-    List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
-    stats = XirrStats.fromCashflows(statsCashflows);
-    this.xirrCashflows = groupedCashflows.stream()
-        .map(this::createXirrCashflow)
-        .collect(Collectors.toList());
-    if (xirrCashflows.size() < 2) {
-      throw new IllegalArgumentException("Must have at least two dates");
-    }
-    stats.validate();
-
     this.solver = solver;
     this.guess = guess;
   }
@@ -129,12 +117,24 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
 
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
-   *
+   * @param cashflows the cashflows
    * @return the irregular rate of return of the cashflows
    * @throws ZeroValuedDerivativeException if the derivative is 0 while executing the Newton-Raphson method
    * @throws NonconvergenceException       if the Newton-Raphson method fails to converge in the
    */
-  public double xirr() {
+  public double xirr(List<Cashflow> cashflows) {
+    Validate.notEmpty(cashflows, "Cashflows must be not empty");
+    List<Cashflow> groupedCashflows = groupCashflows(cashflows);
+    List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
+    stats = XirrStats.fromCashflows(statsCashflows);
+    this.xirrCashflows = groupedCashflows.stream()
+        .map(this::createXirrCashflow)
+        .collect(Collectors.toList());
+    if (xirrCashflows.size() < 2) {
+      throw new IllegalArgumentException("Must have at least two dates");
+    }
+    stats.validate();
+
     final double years = DAYS.between(stats.getStartDate(), stats.getEndDate()) / DAYS_IN_YEAR;
     if (stats.getMaxAmount() == 0) {
       return -1; // Total loss
