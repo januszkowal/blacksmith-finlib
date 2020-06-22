@@ -31,10 +31,24 @@ public class DayConventionSteps {
   final GroovyShell shell = new GroovyShell();
   private ScheduleInfo.ScheduleInfoBuilder scheduleInfoBuilder;
 
+  @Given("Interest accrual - frequency {frequency} settlement date {date} maturity date {date}")
+  public void setScheduleInfo1(Frequency frequency, LocalDate settlementDate, LocalDate maturityDate) {
+    this.scheduleInfoBuilder = ScheduleInfo.builder()
+        .isEndOfMonthConvention(false)
+        .couponFrequency(frequency)
+        .startDate(settlementDate)
+        .endDate(maturityDate);
+  }
+
+  @And("^For Day Convention (.*)$")
+  public void setDayConvention1(StandardDayCountConvention convention) {
+    this.convention = convention;
+  }
+
   @Given("^Day Convention is (.*)$")
   public void setDayConvention(StandardDayCountConvention convention) {
     this.convention = convention;
-    this.scheduleInfoBuilder = null;
+    //this.scheduleInfoBuilder = null;
   }
   @And("Schedule parameters frequency {frequency} settlement date {date} maturity date {date}")
   public void setScheduleInfo(Frequency frequency, LocalDate settlementDate, LocalDate maturityDate) {
@@ -44,14 +58,16 @@ public class DayConventionSteps {
         .startDate(settlementDate)
         .endDate(maturityDate);
   }
+
   @Then("Day Convention verification")
-  public void verifySchedule(List<ConventionInput> input) {
+  public void verifySchedule1(List<ConventionInput> input) {
     input.forEach(i->{
       log.info("calculate row");
       assertEquals(i.getDays(),convention.days(i.getStartDate(),i.getEndDate(),i.scheduleInfo),()-> MessageFormat.format("days for startDate={0} endDate={1}",i.getStartDate(),i.getEndDate()));
       assertEquals(i.getFraction(),convention.yearFraction(i.getStartDate(),i.getEndDate(),i.scheduleInfo),()-> MessageFormat.format("fraction for startDate={0} endDate={1}",i.getStartDate(),i.getEndDate()));
     });
   }
+
 
   @DataTableType
   public List<ConventionInput> createCashflow(DataTable table) {
@@ -62,7 +78,7 @@ public class DayConventionSteps {
             Validate.notNull(scheduleInfoBuilder,"Schedule builder is null");
             schInfo = scheduleInfoBuilder
                 .couponStartDate(LocalDate.parse(fields.get("start")))
-                .couponEndDate(LocalDate.parse(fields.get("cend")))
+                .couponEndDate(LocalDate.parse(fields.get("cend")==null ? fields.get("end") : fields.get("cend")))
                 .build();
           }
           var builder = ConventionInput.builder()

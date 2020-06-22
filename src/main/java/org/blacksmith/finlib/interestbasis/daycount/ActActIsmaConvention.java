@@ -35,12 +35,13 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
 
     // final period, also handling single period schedules
     if (couponEndDate.equals(scheduleEndDate)) {
-      LocalDate endCalculated = eom(startDate, freq.addTo(startDate), eom);
-      if (endCalculated.isBefore(scheduleEndDate)) {
-        return backwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-      } else {
-        return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-      }
+//      LocalDate endCalculated = eom(startDate, freq.addTo(startDate), eom);
+//      if (endCalculated.isBefore(scheduleEndDate)) {
+//        return backwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+//      } else {
+//        return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+//      }
+      return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
     }
     // initial period
     else if (scheduleStartDate.equals(startDate)) {
