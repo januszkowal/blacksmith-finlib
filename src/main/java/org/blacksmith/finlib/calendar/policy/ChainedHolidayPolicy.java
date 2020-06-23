@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public class ChainedHolidayPolicy implements HolidayPolicy {
@@ -18,7 +18,7 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   private final Set<HolidayPolicy> policies = new LinkedHashSet<>();
 
   public ChainedHolidayPolicy(Collection<HolidayPolicy> policies, HolidayPolicy next) {
-    Validate.notEmpty(policies, NULL_PROVIDERS_MESSAGE);
+    ArgChecker.notEmpty(policies, NULL_PROVIDERS_MESSAGE);
     this.next = next;
     this.policies.addAll(policies);
   }

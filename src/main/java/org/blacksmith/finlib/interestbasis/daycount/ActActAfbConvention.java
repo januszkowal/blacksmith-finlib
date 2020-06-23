@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 public class ActActAfbConvention implements DayCountConventionCalculator {
+
   @Override
   public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return DateUtils.daysBetween(startDate, endDate);

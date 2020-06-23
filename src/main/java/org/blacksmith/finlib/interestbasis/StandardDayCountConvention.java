@@ -5,7 +5,7 @@ import org.blacksmith.finlib.interestbasis.daycount.Act365ActConvention;
 import org.blacksmith.finlib.interestbasis.daycount.ActAct365LConvention;
 import org.blacksmith.finlib.interestbasis.daycount.ActActAfbConvention;
 import org.blacksmith.finlib.interestbasis.daycount.ActActIsdaConvention;
-import org.blacksmith.finlib.interestbasis.daycount.ActActIsmaConvention;
+import org.blacksmith.finlib.interestbasis.daycount.ActActIcmaConvention;
 import org.blacksmith.finlib.interestbasis.daycount.ActActYearConvention;
 import org.blacksmith.finlib.interestbasis.daycount.ActConvention;
 import org.blacksmith.finlib.interestbasis.daycount.D30EConvention;
@@ -112,7 +112,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
   ACT_ACT_ISDA("ACT/ACT ISDA", new ActActIsdaConvention()),
 
   // complex ICMA calculation
-  ACT_ACT_ISMA("ACT/ACT ISMA",new ActActIsmaConvention()),
+  ACT_ACT_ICMA("ACT/ACT ICMA",new ActActIcmaConvention()),
 
   /**
    * Name: ACT/ACT AFB
@@ -297,8 +297,8 @@ public enum StandardDayCountConvention implements DayCountConvention {
     return calculator.days(startDate, endDate, scheduleInfo);
   }
 
-  final String shortName;
-  final DayCountConventionCalculator calculator;
+  private final String shortName;
+  private final DayCountConventionCalculator calculator;
 
   StandardDayCountConvention(String shortName, DayCountConventionCalculator calculator) {
     this.shortName = shortName;

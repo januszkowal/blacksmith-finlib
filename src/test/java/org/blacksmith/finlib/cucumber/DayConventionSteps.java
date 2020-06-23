@@ -5,21 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.DataTableType;
-import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.is.En;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.blacksmith.commons.arg.Validate;
-import org.blacksmith.commons.datetime.TimeUnit;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
@@ -31,32 +26,23 @@ public class DayConventionSteps {
   final GroovyShell shell = new GroovyShell();
   private ScheduleInfo.ScheduleInfoBuilder scheduleInfoBuilder;
 
-  @Given("Interest accrual - frequency {frequency} settlement date {date} maturity date {date}")
-  public void setScheduleInfo1(Frequency frequency, LocalDate settlementDate, LocalDate maturityDate) {
+  @Given("Interest coupon - frequency {frequency} settlement date {date} maturity date {date}")
+  public void setInterestCouponWithParameters(Frequency frequency, LocalDate settlementDate, LocalDate maturityDate) {
     this.scheduleInfoBuilder = ScheduleInfo.builder()
         .isEndOfMonthConvention(false)
         .couponFrequency(frequency)
         .startDate(settlementDate)
         .endDate(maturityDate);
+  }
+
+  @Given("Interest coupon simple")
+  public void setInterestCouponSimple() {
+    this.scheduleInfoBuilder = null;
   }
 
   @And("^For Day Convention (.*)$")
-  public void setDayConvention1(StandardDayCountConvention convention) {
-    this.convention = convention;
-  }
-
-  @Given("^Day Convention is (.*)$")
   public void setDayConvention(StandardDayCountConvention convention) {
     this.convention = convention;
-    //this.scheduleInfoBuilder = null;
-  }
-  @And("Schedule parameters frequency {frequency} settlement date {date} maturity date {date}")
-  public void setScheduleInfo(Frequency frequency, LocalDate settlementDate, LocalDate maturityDate) {
-    this.scheduleInfoBuilder = ScheduleInfo.builder()
-        .isEndOfMonthConvention(false)
-        .couponFrequency(frequency)
-        .startDate(settlementDate)
-        .endDate(maturityDate);
   }
 
   @Then("Day Convention verification")
@@ -74,8 +60,8 @@ public class DayConventionSteps {
     return table.asMaps().stream()
         .map(fields-> {
           ScheduleInfo schInfo = null;
-          if (convention==StandardDayCountConvention.ACT_ACT_ISMA) {
-            Validate.notNull(scheduleInfoBuilder,"Schedule builder is null");
+          if (convention==StandardDayCountConvention.ACT_ACT_ICMA) {
+            ArgChecker.notNull(scheduleInfoBuilder,"Schedule builder is null");
             schInfo = scheduleInfoBuilder
                 .couponStartDate(LocalDate.parse(fields.get("start")))
                 .couponEndDate(LocalDate.parse(fields.get("cend")==null ? fields.get("end") : fields.get("cend")))

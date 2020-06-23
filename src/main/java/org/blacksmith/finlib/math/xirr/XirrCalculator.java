@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.math.solver.Function;
 import org.blacksmith.finlib.math.solver.Function1stDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
@@ -72,7 +72,7 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
   }
 
   public XirrCalculator(Solver<F> solver, Double guess) {
-    Validate.notNull(solver, "Solver builder must be not null");
+    ArgChecker.notNull(solver, "Solver builder must be not null");
     this.solver = solver;
     this.guess = guess;
   }
@@ -123,7 +123,7 @@ public class XirrCalculator<F extends Function> implements Function1stDerivative
    * @throws NonconvergenceException       if the Newton-Raphson method fails to converge in the
    */
   public double xirr(List<Cashflow> cashflows) {
-    Validate.notEmpty(cashflows, "Cashflows must be not empty");
+    ArgChecker.notEmpty(cashflows, "Cashflows must be not empty");
     List<Cashflow> groupedCashflows = groupCashflows(cashflows);
     List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
     stats = XirrStats.fromCashflows(statsCashflows);

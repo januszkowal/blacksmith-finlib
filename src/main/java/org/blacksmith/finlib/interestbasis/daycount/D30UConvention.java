@@ -14,6 +14,11 @@ public class D30UConvention implements DayCountConventionCalculator {
   }
 
   @Override
+  public boolean requireScheduleInfo() {
+    return true;
+  }
+
+  @Override
   public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return thirtyIsda.calculateDays(startDate,endDate,scheduleInfo);
   }

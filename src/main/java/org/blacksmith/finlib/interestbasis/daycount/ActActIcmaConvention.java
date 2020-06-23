@@ -4,13 +4,19 @@ import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
 
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
-import org.blacksmith.commons.arg.Validate;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.datetime.Frequency;
+import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
+import org.blacksmith.finlib.dayconvention.utils.YMD;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 @Slf4j
-public class ActActIsmaConvention implements DayCountConventionCalculator {
+public class ActActIcmaConvention implements DayCountConventionCalculator {
+
+  @Override
+  public boolean requireScheduleInfo() {
+    return true;
+  }
 
   @Override
   public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
@@ -19,12 +25,6 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
 
   @Override
   public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    Validate.notNull(scheduleInfo, "Schedule info must be not null");
-    Validate.notNull(scheduleInfo.getStartDate(), "Schedule start date must be not null");
-    Validate.notNull(scheduleInfo.getEndDate(), "Schedule end date must be not null");
-    //Validate.notNull(scheduleInfo.getCouponStartDate(), "Coupon start date must be not null");
-    Validate.notNull(scheduleInfo.getCouponEndDate(), "Coupon end date must be not null");
-    Validate.notNull(scheduleInfo.getCouponFrequency(), "Frequency must be not null");
     // calculation is based on the schedule period, firstDate assumed to be the start of the period
     LocalDate scheduleStartDate = scheduleInfo.getStartDate();
     LocalDate scheduleEndDate = scheduleInfo.getEndDate();
@@ -32,23 +32,21 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
     LocalDate couponEndDate = scheduleInfo.getCouponEndDate();
     Frequency freq = scheduleInfo.getCouponFrequency();
     boolean eom = scheduleInfo.isEndOfMonthConvention();
-
-    // final period, also handling single period schedules
     if (couponEndDate.equals(scheduleEndDate)) {
-//      LocalDate endCalculated = eom(startDate, freq.addTo(startDate), eom);
-//      if (endCalculated.isBefore(scheduleEndDate)) {
-//        return backwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-//      } else {
-//        return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-//      }
+      //final period calculated forward from last coupon start date
       return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
     }
-    // initial period
     else if (scheduleStartDate.equals(startDate)) {
+      // initial period calculated backward from first coupon end date
       return backwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-    } else {
-      //return regularPeriod(endDate, couponStartDate, couponEndDate, freq);
-      return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+    }
+    else {
+      if (isRegularPeriod(endDate, scheduleInfo)) {
+        return regularPeriod(endDate, couponStartDate, couponEndDate, freq);
+      }
+      else {
+        return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+      }
     }
   }
 
@@ -60,12 +58,14 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
     LocalDate periodStart = eom(couponEndDate, freq.minusFrom(periodEnd), eom);
     double result = 0;
     while (periodStart.isAfter(couponStartDate)) {
-      if (calcDate.isAfter(periodStart))
-        result += calcPeriod(periodStart, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
+      if (calcDate.isAfter(periodStart)) {
+        result += calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+      }
       periodEnd = periodStart;
       periodStart = eom(couponEndDate, freq.minusFrom(periodEnd), eom);
     }
-    return result + calcPeriod(couponStartDate, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
+    log.info("last: {} {} {}",calcDate,periodEnd,DateUtils.min(calcDate,periodEnd));
+    return result + calcPeriod(couponStartDate, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
   }
 
 
@@ -77,12 +77,13 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
     LocalDate periodEnd = eom(couponStartDate, freq.addTo(periodStart), eom);
     double result = 0;
     while (periodEnd.isBefore(couponEndDate)) {
-      if (calcDate.isAfter(periodStart))
-        result += calcPeriod(periodStart, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
+      if (calcDate.isAfter(periodStart)) {
+        result += calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+      }
       periodStart = periodEnd;
       periodEnd = eom(couponStartDate, freq.addTo(periodEnd), eom);
     }
-    return result + calcPeriod(periodStart, DateUtils.min(calcDate,periodEnd), periodStart, periodEnd, freq);
+    return result + calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
   }
 
   private double regularPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq) {
@@ -98,11 +99,8 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
   }
 
   // calculate the result
-  private double calcPeriod(LocalDate calcStart, LocalDate calcEnd, LocalDate periodStart, LocalDate periodEnd, Frequency freq) {
-    //if (calcStart.isBefore(periodStart)) return 0;
-    //if (calcStart.isAfter(periodEnd)) return 0;
-    //if (calcEnd.isBefore(periodStart)) return 0;
-    //if (calcEnd.isAfter(periodEnd)) return 0;
+  private double calcPeriod(LocalDate calcStart, LocalDate calcEnd, LocalDate periodStart, LocalDate periodEnd,
+      Frequency freq) {
     long calcStartEpochDay = calcStart.toEpochDay();
     long calcEndEpochDay = calcEnd.toEpochDay();
     long periodStartEpochDay = periodStart.toEpochDay();
@@ -113,13 +111,37 @@ public class ActActIsmaConvention implements DayCountConventionCalculator {
     double denominator = getDenominator(freq, periodDays);
     log.debug("period factor={}/{} pd={} calc={}#{} pe={}#{}",
         actualDays, denominator, periodDays,
-        calcStart,calcEnd, periodStart, periodEnd);
+        calcStart, calcEnd, periodStart, periodEnd);
     return denominator == 0d ? 0d : actualDays / denominator;
+  }
+
+  public static boolean isRegularPeriod(LocalDate calcDate, ScheduleInfo scheduleInfo) {
+    if (scheduleInfo.getCouponFrequency().getEventsPerYear() == 0) {
+      return false;
+    }
+    if (DayCountUtils.months360(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate()) != scheduleInfo
+        .getCouponFrequency().getMonths()) {
+      return false;
+    }
+
+    if (scheduleInfo.isEndOfMonthConvention()) {
+      //ACT/ACT Ultimo
+      YMD start = YMD.of(scheduleInfo.getCouponStartDate());
+      YMD end = YMD.of(scheduleInfo.getCouponEndDate());
+      return (start.getDay() == end.getDay()) ||
+          (!DateUtils.isValidDate(start.getYear(), start.getMonth(), end.getDay()) && DateUtils
+              .isLastDayOfMonth(scheduleInfo.getCouponEndDate())) ||
+          (!DateUtils.isValidDate(end.getYear(), end.getMonth(), start.getDay()) && DateUtils
+              .isLastDayOfMonth(scheduleInfo.getCouponStartDate()));
+    } else {
+      //ACT/ACT Normal
+      return DateUtils.isLastDayOfMonth(scheduleInfo.getCouponStartDate()) &&
+          DateUtils.isLastDayOfMonth(scheduleInfo.getCouponEndDate());
+    }
   }
 
   private double getDenominator(Frequency frequency, long periodDays) {
     return frequency.eventsPerYear() * periodDays;
-    //return periodDays;
   }
 
   // apply eom convention

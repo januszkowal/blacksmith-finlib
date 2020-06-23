@@ -1,26 +1,18 @@
 package org.blacksmith.finlib.interestbasis.daycount;
 
 import java.time.LocalDate;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 public interface DayCountConventionCalculator {
   default void verify(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    if (endDate.isBefore(startDate)) {
-      throw new IllegalArgumentException("Dates must be in time-line order");
-    }
-    if (scheduleInfo!=null) {
-      if (startDate.isBefore(scheduleInfo.getStartDate())) {
-        throw new IllegalArgumentException("Dates must be in time-line order");
-      }
-      if (endDate.isAfter(scheduleInfo.getEndDate())) {
-        throw new IllegalArgumentException("Dates must be in time-line order");
-      }
-      if (startDate.isBefore(scheduleInfo.getCouponStartDate())) {
-        throw new IllegalArgumentException("Start musn't be before coupon start");
-      }
-      if (endDate.isAfter(scheduleInfo.getCouponEndDate())) {
-        throw new IllegalArgumentException("End musn't be after coupon end");
-      }
+    ArgChecker.inOrderOrEqual(startDate,endDate,()->"StartDate and EndDate must be in time-line order");
+    if (requireScheduleInfo()) {
+      ArgChecker.notNull(scheduleInfo,()->"Schedule info must be not null");
+      ArgChecker.inOrderOrEqual(scheduleInfo.getStartDate(),startDate,()->"PeriodStartDate and CouponStartDate must be in time-line order");
+      ArgChecker.inOrderOrEqual(endDate,scheduleInfo.getEndDate(),()->"PeriodEndDate and CouponEndDate must be in time-line order");
+      ArgChecker.inOrderOrEqual(scheduleInfo.getCouponStartDate(),startDate,()->"StartDate musn't be before CouponStartDate");
+      ArgChecker.inOrderOrEqual(endDate,scheduleInfo.getCouponEndDate(),()->"EndDate musn't be after CouponEndDate");
     }
   }
   default int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
@@ -34,6 +26,10 @@ public interface DayCountConventionCalculator {
       return 0;
     }
     return calculateYearFraction(startDate, endDate, scheduleInfo);
+  }
+
+  default boolean requireScheduleInfo() {
+    return false;
   }
 
   int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);

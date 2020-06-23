@@ -2,7 +2,7 @@ package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.commons.datetime.DateRange;
 import org.blacksmith.commons.datetime.DateUtils;
 
@@ -28,7 +28,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default boolean isBusinessDay(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return !isHoliday(date);
   }
 
@@ -45,7 +45,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate shift(LocalDate date, int amount) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = date;
     if (amount > 0) {
       for (int i = 0; i < amount; i++) {
@@ -69,7 +69,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate next(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = date.plusDays(1);
     return isHoliday(adjusted) ? next(adjusted) : adjusted;
   }
@@ -82,7 +82,7 @@ public interface BusinessDayCalendar {
    * @return Next n-th business day
    */
   default LocalDate next(LocalDate date, int amount) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = date;
     for (int i = 0; i < amount; i++) {
       adjusted = next(adjusted);
@@ -102,7 +102,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate nextOrSame(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return isHoliday(date) ? next(date) : date;
   }
 
@@ -116,7 +116,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previous(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = date.minusDays(1);
     return isHoliday(adjusted) ? previous(adjusted) : adjusted;
   }
@@ -129,7 +129,7 @@ public interface BusinessDayCalendar {
    * @return Prior n-th business day
    */
   default LocalDate previous(LocalDate date, int amount) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = date;
     for (int i = 0; i < amount; i++) {
       adjusted = previous(adjusted);
@@ -149,7 +149,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previousOrSame(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return isHoliday(date) ? previous(date) : date;
   }
 
@@ -171,7 +171,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate nextSameOrLastInMonth(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = nextOrSame(date);
     return (adjusted.getMonthValue() != date.getMonthValue() ? previous(adjusted) : adjusted);
   }
@@ -194,7 +194,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the calculation is outside the supported range
    */
   default LocalDate previousSameOrLastInMonth(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     LocalDate adjusted = previousOrSame(date);
     return (adjusted.getMonthValue() != date.getMonthValue() ? next(date) : adjusted);
   }
@@ -209,7 +209,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default boolean isLastBusinessDayOfMonth(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return isBusinessDay(date) && next(date).getMonthValue() != date.getMonthValue();
   }
 
@@ -223,7 +223,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if the date is outside the supported range
    */
   default LocalDate lastBusinessDayOfMonth(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return previousOrSame(date.withDayOfMonth(date.lengthOfMonth()));
   }
 
@@ -238,7 +238,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if either date is outside the supported range
    */
   default Stream<LocalDate> businessDays(DateRange range) {
-    Validate.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
+    ArgChecker.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
     return DateUtils.stream(range)
         .filter(this::isBusinessDay);
   }
@@ -252,7 +252,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if either date is outside the supported range
    */
   default int businessDaysCount(DateRange range) {
-    Validate.notNull(range);
+    ArgChecker.notNull(range);
     return Math.toIntExact(businessDays(range).count());
   }
 
@@ -267,7 +267,7 @@ public interface BusinessDayCalendar {
    * @throws IllegalArgumentException if either date is outside the supported range
    */
   default Stream<LocalDate> holidays(DateRange range) {
-    Validate.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
+    ArgChecker.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
     return DateUtils.stream(range)
         .filter(this::isHoliday);
   }

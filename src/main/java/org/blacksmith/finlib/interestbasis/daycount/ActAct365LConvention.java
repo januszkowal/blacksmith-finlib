@@ -8,6 +8,12 @@ import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 public class ActAct365LConvention implements DayCountConventionCalculator {
+
+  @Override
+  public boolean requireScheduleInfo() {
+    return true;
+  }
+
   @Override
   public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     int actualDays = DateUtils.daysBetween(startDate, endDate);

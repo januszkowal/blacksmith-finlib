@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 /**
@@ -35,17 +35,17 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   }
 
   public void addPolicy(HolidayPolicy policy) {
-    Validate.notEmpty(policies, NULL_POLICIES_MESSAGE);
+    ArgChecker.notEmpty(policies, NULL_POLICIES_MESSAGE);
     this.policies.add(policy);
   }
 
   public void addPolicies(HolidayPolicy...policies) {
-    Validate.notEmpty(policies, NULL_POLICIES_MESSAGE);
+    ArgChecker.notEmpty(policies, NULL_POLICIES_MESSAGE);
     this.policies.addAll(List.of(policies));
   }
   
   public void addPolicies(Collection<HolidayPolicy> holidayPolicies) {
-    Validate.notEmpty(holidayPolicies, "Null holiday policy not allowed");
+    ArgChecker.notEmpty(holidayPolicies, "Null holiday policy not allowed");
     this.policies.addAll(holidayPolicies);
   }
   

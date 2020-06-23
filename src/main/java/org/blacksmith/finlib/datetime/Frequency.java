@@ -7,12 +7,12 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Locale;
-import org.blacksmith.commons.arg.Validate;
-import org.blacksmith.commons.datetime.DateOperation;
-import org.blacksmith.commons.datetime.TimeUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.blacksmith.commons.arg.ArgChecker;
+import org.blacksmith.commons.datetime.DateOperation;
+import org.blacksmith.commons.datetime.TimeUnit;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -24,6 +24,7 @@ public class Frequency implements Serializable, DateOperation {
   @ToString.Include
   private String name;
   boolean isAnnual;
+  private int months;
   private int eventsPerYear;
   private double eventsPerYearEstimate;
 //  private final Period period;
@@ -176,20 +177,18 @@ public class Frequency implements Serializable, DateOperation {
       this.unit = TimeUnit.DAY;
       this.amount = period.getDays();
     }
-    setEventsPerYear();
+    setEvents();
   }
 
   public Frequency (final int amount, final TimeUnit unit) {
     this.unit = unit;
     this.amount = amount;
     this.name = periodName(this.amount,this.unit);
-    setEventsPerYear();
+    setEvents();
   }
 
-  private void setEventsPerYear() {
+  private void setEvents() {
     if (amount==0) {
-      eventsPerYear = 0;
-      eventsPerYearEstimate = 0;
       return;
     }
     double secs = 0d;
@@ -212,21 +211,25 @@ public class Frequency implements Serializable, DateOperation {
         isAnnual = amount % 12 ==0;
         eventsPerYear = (12 % amount == 0) ? 12 / amount : 0;
         eventsPerYearEstimate = 12d / amount;
+        months = amount;
         break;
       case QUARTER:
         isAnnual = amount % 4 ==0;
         eventsPerYear = (4 % amount == 0) ? 4 / amount : 0;
         eventsPerYearEstimate = 4d / amount;
+        months = amount * 3;
         break;
       case HALF_YEAR:
         isAnnual = amount % 2 ==0;
         eventsPerYear = (2 % amount == 0) ? 2 / amount : 0;
         eventsPerYearEstimate = 2d / amount;
+        months = amount * 6;
         break;
       case YEAR:
         isAnnual = true;
         eventsPerYear = (1 % amount == 0) ? 1 / amount : 0;
         eventsPerYearEstimate = 1d / amount;
+        months = amount * 12;
         break;
     }
   }
@@ -238,7 +241,7 @@ public class Frequency implements Serializable, DateOperation {
   }
 
   public static Frequency of(String period) {
-    Validate.checkStringLength(period,2,10);
+    ArgChecker.checkStringLength(period,2,10);
     int amount = Integer.parseInt(period,0,period.length()-1,10);
     TimeUnit unit = TimeUnit.ofSymbol(period.substring(period.length()-1));
     return new Frequency(amount,unit);
@@ -361,6 +364,10 @@ public class Frequency implements Serializable, DateOperation {
 
   public boolean isAnnual() {
     return isAnnual;
+  }
+
+  public int getMonths() {
+    return  this.months;
   }
 
   public Period toPeriod() {

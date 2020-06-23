@@ -5,8 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.blacksmith.commons.arg.Validate;
-import org.blacksmith.finlib.calendar.policy.lookup.HolidayLookupProvider;
+import org.blacksmith.commons.arg.ArgChecker;
 
 public class HolidayLookupMutableContainer<U> implements HolidayLookupProvider<U> {
 
@@ -26,18 +25,18 @@ public class HolidayLookupMutableContainer<U> implements HolidayLookupProvider<U
   }
 
   public void add(U holiday) {
-    Validate.notNull(holiday, "Null holiday not allowed");
+    ArgChecker.notNull(holiday, "Null holiday not allowed");
     this.holidays.add(holiday);
   }
 
   public void addAll(Collection<U> holidays) {
-    Validate.notNull(holidays, "Null holidays list not allowed");
+    ArgChecker.notNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(holidays);
   }
 
   @SafeVarargs
   public final void addAll(U...holidays) {
-    Validate.notNull(holidays, "Null holidays list not allowed");
+    ArgChecker.notNull(holidays, "Null holidays list not allowed");
     this.holidays.addAll(Arrays.stream(holidays).collect(Collectors.toSet()));
   }
 

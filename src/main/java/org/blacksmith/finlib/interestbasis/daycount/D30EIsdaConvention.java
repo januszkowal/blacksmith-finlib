@@ -14,6 +14,11 @@ public class D30EIsdaConvention extends AbstractSimpleConvention {
   }
 
   @Override
+  public boolean requireScheduleInfo() {
+    return true;
+  }
+
+  @Override
   public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     YMD date1 = YMD.of(startDate);
     YMD date2 = YMD.of(endDate);

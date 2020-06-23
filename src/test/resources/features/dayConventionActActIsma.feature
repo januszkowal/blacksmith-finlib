@@ -1,7 +1,7 @@
 Feature: Act/Act Isma Day Count Conventions
   Scenario: ACT/ACT ISMA - simple 4Y/1Y
-    Given Day Convention is ACT_ACT_ISMA
-    And Schedule parameters frequency 1Y settlement date 2019-03-01 maturity date 2023-03-01
+    Given Interest coupon - frequency 1Y settlement date 2019-03-01 maturity date 2023-03-01
+    And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
       | start      | end        | cend       | days | fraction    |
       | 2019-03-01 | 2020-03-01 | 2020-03-01 | 366  | 1.0         |
@@ -10,8 +10,8 @@ Feature: Act/Act Isma Day Count Conventions
       | 2022-03-01 | 2023-03-01 | 2023-03-01 | 365  | 1.0         |
 
   Scenario: ACT/ACT ISMA - simple 4Y/6M
-    Given Day Convention is ACT_ACT_ISMA
-    And Schedule parameters frequency 6M settlement date 2019-03-01 maturity date 2023-03-01
+    Given Interest coupon - frequency 6M settlement date 2019-03-01 maturity date 2023-03-01
+    And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
       | start      | end        | cend       | days | fraction           |
       #start 0d/1Y

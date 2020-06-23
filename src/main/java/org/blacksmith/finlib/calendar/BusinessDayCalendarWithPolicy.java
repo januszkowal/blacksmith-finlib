@@ -1,13 +1,13 @@
 package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
-import org.blacksmith.commons.arg.Validate;
+import org.blacksmith.commons.arg.ArgChecker;
 
 public class BusinessDayCalendarWithPolicy implements BusinessDayCalendar {
   private final HolidayPolicy holidayPolicy;
 
   public BusinessDayCalendarWithPolicy(HolidayPolicy holidayPolicy) {
-    Validate.notNull(holidayPolicy, "Null holiday policy not allowed");
+    ArgChecker.notNull(holidayPolicy, "Null holiday policy not allowed");
     this.holidayPolicy = holidayPolicy;
   }
 
@@ -16,7 +16,7 @@ public class BusinessDayCalendarWithPolicy implements BusinessDayCalendar {
   }
 
   public boolean isHoliday(LocalDate date) {
-    Validate.notNull(date);
+    ArgChecker.notNull(date);
     return holidayPolicy.isHoliday(date);
   }
 }
