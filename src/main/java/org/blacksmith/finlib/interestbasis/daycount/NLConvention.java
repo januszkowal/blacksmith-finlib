@@ -12,6 +12,6 @@ public class NLConvention extends AbstractSimpleConvention {
 
   @Override
   public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, endDate) - DateUtils.numberOfLeapDays(startDate, endDate.minusDays(1));
+    return DateUtils.daysBetween(startDate, endDate) - DateUtils.numberOfLeapDays(startDate, endDate);
   }
 }

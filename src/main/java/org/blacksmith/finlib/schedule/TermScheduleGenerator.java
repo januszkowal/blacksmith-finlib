@@ -3,7 +3,6 @@ package org.blacksmith.finlib.schedule;
 import java.time.LocalDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.basic.Amount;
 
 public class TermScheduleGenerator implements ScheduleGenerator {
 
