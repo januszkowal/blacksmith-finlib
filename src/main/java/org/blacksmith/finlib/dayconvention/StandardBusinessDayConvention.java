@@ -85,8 +85,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   }
 
   private static final Map<String, StandardBusinessDayConvention> shortNameMap =
-      Arrays.stream(StandardBusinessDayConvention.values())
-          .collect(Collectors.toMap(StandardBusinessDayConvention::getShortName, e -> e));
+      EnumUtils.getEnumAttrMap(StandardBusinessDayConvention.class,StandardBusinessDayConvention::getShortName);
 
   public String getShortName() {
     return this.shortName;
