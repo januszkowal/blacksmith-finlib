@@ -239,7 +239,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> businessDays(DateRange range) {
     ArgChecker.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
-    return DateUtils.stream(range)
+    return DateUtils.streamOfDates(range)
         .filter(this::isBusinessDay);
   }
 
@@ -268,7 +268,7 @@ public interface BusinessDayCalendar {
    */
   default Stream<LocalDate> holidays(DateRange range) {
     ArgChecker.inOrderOrEqual(range.getLowerInclusive(), range.getUpperInclusive(), "Start date must be later or equal than end date");
-    return DateUtils.stream(range)
+    return DateUtils.streamOfDates(range)
         .filter(this::isHoliday);
   }
   /**
