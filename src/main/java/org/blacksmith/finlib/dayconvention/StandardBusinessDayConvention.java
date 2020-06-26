@@ -85,7 +85,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   }
 
   private static final Map<String, StandardBusinessDayConvention> shortNameMap =
-      EnumUtils.getEnumAttrMap(StandardBusinessDayConvention.class,StandardBusinessDayConvention::getShortName);
+      EnumUtils.getAttrEnumMap(StandardBusinessDayConvention.class,StandardBusinessDayConvention::getShortName);
 
   public String getShortName() {
     return this.shortName;
