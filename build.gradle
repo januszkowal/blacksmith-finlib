@@ -36,9 +36,9 @@ dependencies {
     compile libs.jackson
     api libs.groovy
     testCompile libs.logback
-    testCompile libs.mockitoTest
-    testImplementation libs.cucumberTest
-    testImplementation libs.junitTest
+    testCompile libs.mockito
+    testImplementation libs.cucumber
+    testImplementation libs.junit
     testImplementation libs.blacksmithTest
     testImplementation libs.apacheCommonsMath
 }

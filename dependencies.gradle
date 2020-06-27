@@ -13,6 +13,8 @@ ext.libs = [
                 'org.codehaus.groovy:groovy-json:' + groovyVersion,
                 'org.codehaus.groovy:groovy-jsr223:' + groovyVersion,
                 'org.codehaus.groovy:groovy-dateutil:' + groovyVersion],
+        groovyTest: [
+                'org.codehaus.groovy:groovy-test-junit5:' + groovyVersion],
         jackson: [
                 'com.fasterxml.jackson.core:jackson-databind:' + jacksonVersion],
         slf4jApi: [
@@ -23,19 +25,17 @@ ext.libs = [
         blacksmithCommons: [
                 'org.blacksmith:blacksmith-commons:' + blacksmithCommonsVersion],
         blacksmithFinlibBasic: [
-                'org.blacksmith:blacksmith-finlib-basic:' + blacksmithFinlibBasicVersion],
+                'org.blacksmith:blacksmith-finlib-basic:' + blacksmithFinlibVersion],
         blacksmithTest: [
                 'org.blacksmith:blacksmith-test:' + blacksmithTestVersion],
-        assertjTest: [
+        assertj: [
                 'org.assertj:assertj-core:' + assertjVersion],
-        groovyTest: [
-                'org.codehaus.groovy:groovy-test-junit5:' + groovyVersion],
-        cucumberTest: [
+        cucumber: [
                 'io.cucumber:cucumber-java:' + cucumberVersion,
                 'io.cucumber:cucumber-junit:' + cucumberVersion],
-        junitTest: [
+        junit: [
                 'org.junit.jupiter:junit-jupiter:' + junitVersion],
-        mockitoTest: [
+        mockito: [
                 'org.mockito:mockito-core:' + mockitoVersion
         ]
 ]
