@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
+import org.blacksmith.finlib.basic.Amount;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 
@@ -27,19 +28,18 @@ public class TermScheduleGenerator implements ScheduleGenerator {
     var schedule = new Schedule();
     ScheduleInfo scheduleInfo = createScheduleInfo(scheduleParameters,scheduleParameters.getStartDate(),scheduleParameters.getMaturityDate());
     double rate = scheduleParameters.getStartInterestRate().doubleValue() / 100.0;
-//    double interest = 0;
-//        scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
-//        rate*
-//        scheduleInfo.getNotional(scheduleInfo.getCouponStartDate()).doubleValue();
+    double interest = scheduleParameters.getBasis().yearFraction(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate(), scheduleInfo)*
+        rate*
+        scheduleParameters.getNotional().getValue().doubleValue();
     
-//    Cashflow cashflow = Cashflow.builder()
-//        .startDate(scheduleParameters.getStartDate())
-//        .endDate(scheduleParameters.getMaturityDate())
-//        .paymentDate(scheduleParameters.getMaturityDate())
-//        .notional(scheduleParameters.getNotional())
-//        .amount(Amount.of(interest))
-//        .build();
-//    schedule.getCashflow().add(cashflow);
+    Cashflow cashflow = Cashflow.builder()
+        .startDate(scheduleParameters.getStartDate())
+        .endDate(scheduleParameters.getMaturityDate())
+        .paymentDate(scheduleParameters.getMaturityDate())
+        .notional(scheduleParameters.getNotional())
+        .amount(Amount.of(interest))
+        .build();
+    schedule.getCashflow().add(cashflow);
     return schedule;
   }
 }

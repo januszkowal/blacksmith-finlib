@@ -41,6 +41,7 @@ dependencies {
     testImplementation libs.junit
     testImplementation libs.blacksmithTest
     testImplementation libs.apacheCommonsMath
+    testImplementation 'org.hamcrest:hamcrest-library:2.1'
 }
 
 configurations {
