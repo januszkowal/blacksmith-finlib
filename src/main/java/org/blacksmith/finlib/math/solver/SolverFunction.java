@@ -1,5 +1,5 @@
 package org.blacksmith.finlib.math.solver;
 
-public interface Function {
+public interface SolverFunction {
   double value(double arg);
 }

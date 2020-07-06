@@ -5,7 +5,7 @@ import lombok.ToString;
 import org.blacksmith.finlib.rates.MarketData;
 
 @ToString
-public abstract class BasicMarketData<K,V> implements MarketData<K,V> {
+public class BasicMarketData<K,V> implements MarketData<K,V> {
 
   protected final LocalDate date;
   protected final V value;

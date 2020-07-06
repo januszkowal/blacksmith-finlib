@@ -3,7 +3,7 @@ package org.blacksmith.finlib.cucumber;
 import io.cucumber.java.ParameterType;
 import java.time.LocalDate;
 import org.blacksmith.commons.datetime.TimeUnit;
-import org.blacksmith.finlib.datetime.Frequency;
+import org.blacksmith.finlib.basic.datetime.Frequency;
 
 public class Converters {
   @ParameterType(name="frequency",value="(\\d+)(D|W|M|Q|H|Y)")

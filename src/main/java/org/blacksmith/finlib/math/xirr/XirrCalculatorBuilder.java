@@ -1,10 +1,10 @@
 package org.blacksmith.finlib.math.xirr;
 
-import org.blacksmith.finlib.math.solver.Function;
+import org.blacksmith.finlib.math.solver.SolverFunction;
 import org.blacksmith.finlib.math.solver.SolverBuilder;
 
-public class XirrCalculatorBuilder<F extends Function> {
-  public static <F extends Function> XirrCalculatorBuilder<F> builder() {
+public class XirrCalculatorBuilder<F extends SolverFunction> {
+  public static <F extends SolverFunction> XirrCalculatorBuilder<F> builder() {
     return new XirrCalculatorBuilder<>();
   }
 

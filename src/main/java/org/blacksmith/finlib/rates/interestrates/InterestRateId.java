@@ -2,7 +2,7 @@ package org.blacksmith.finlib.rates.interestrates;
 
 import lombok.Value;
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.basic.Currency;
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.rates.MarketDataId;
 
 @Value(staticConstructor = "of")

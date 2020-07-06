@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.math.solver.Function;
-import org.blacksmith.finlib.math.solver.Function1stDerivative;
+import org.blacksmith.finlib.math.solver.SolverFunction;
+import org.blacksmith.finlib.math.solver.SolverFunction1stDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-public class XirrCalculator<F extends Function> implements Function1stDerivative {
+public class XirrCalculator<F extends SolverFunction> implements SolverFunction1stDerivative {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 

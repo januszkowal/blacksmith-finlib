@@ -13,20 +13,19 @@ import org.blacksmith.finlib.rates.MarketDataService;
 public class MarketDataMemoryService<K extends MarketDataId, V>
     implements MarketDataService<K, V> {
 
-  private Map<K, List<BasicMarketDataHolder<K, V>>> marketData = new HashMap<K, List<BasicMarketDataHolder<K, V>>>();
+  private final Map<K, List<MarketDataHolder<K, V>>> marketData = new HashMap<>();
 
-  public void setMarketData(List<BasicMarketDataHolder<K, V>> m) {
+  public void setMarketData(List<MarketDataHolder<K, V>> m) {
     this.marketData.clear();
-    marketData.putAll(m.stream().collect(Collectors.groupingBy(e -> e.getKey())));
+    marketData.putAll(m.stream().collect(Collectors.groupingBy(MarketDataHolder::getKey)));
   }
 
   @Override
   public MarketData<K, V> getRate(MarketDataId key, LocalDate date) {
     return marketData.getOrDefault(key, Collections.emptyList()).stream()
-        .filter(m -> m.getKey().equals(key) && m.getMarketData().getDate().compareTo(date) <= 0)
-        .sorted(BasicMarketDataHolder.marketDataDateComparator.reversed())
-        .findFirst()
-        .map(BasicMarketDataHolder::getMarketData)
+        .filter(m->m.getMarketData().getDate().compareTo(date) <= 0)
+        .max(MarketDataHolder.marketDataDateComparator)
+        .map(MarketDataHolder::getMarketData)
         .orElse(null);
   }
 }

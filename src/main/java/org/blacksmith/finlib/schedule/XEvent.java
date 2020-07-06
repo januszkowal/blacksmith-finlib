@@ -1,15 +1,18 @@
 package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 
-@SuperBuilder
-public class BaseCashflow {
-  private LocalDate startDate;  
+@Data
+public class XEvent {
+  private LocalDate startDate;
   private LocalDate endDate;
+  private LocalDate paymentDate;
+  private Amount principal;
   private Rate rate;
-  private Amount notional;
   private Amount amount;
+  private Amount principalPayment;
+  private Amount interestPayment;
 }

@@ -3,7 +3,7 @@ package org.blacksmith.finlib.dayconvention;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.datetime.Frequency;
+import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.DayCountConvention;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;

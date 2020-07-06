@@ -2,23 +2,23 @@ package org.blacksmith.finlib.dayconvention.utils;
 
 import java.time.LocalDate;
 
-public class YMD {
+public class YmdDate {
   int year;
   int month;
   int day;
 
-  public YMD(final int year, final int month, final int day) {
+  public YmdDate(final int year, final int month, final int day) {
     this.year = year;
     this.month = month;
     this.day = day;
   }
 
-  public static YMD of(LocalDate date) {
-    return new YMD(date.getYear(),date.getMonthValue(),date.getDayOfMonth());
+  public static YmdDate of(LocalDate date) {
+    return new YmdDate(date.getYear(),date.getMonthValue(),date.getDayOfMonth());
   }
 
-  public static YMD of(final int year, final int month, final int day) {
-    return new YMD(year,month,day);
+  public static YmdDate of(final int year, final int month, final int day) {
+    return new YmdDate(year,month,day);
   }
 
   public int getYear() { return this.year;}
@@ -29,7 +29,13 @@ public class YMD {
   public void setDay(final int day) { this.day = day;}
 
   public void setFirstDayOfNextMonth() {
-    this.month++;
+    if (month==12) {
+      this.month = 1;
+      this.year++;
+    }
+    else {
+      this.month++;
+    }
     this.day=1;
   }
 

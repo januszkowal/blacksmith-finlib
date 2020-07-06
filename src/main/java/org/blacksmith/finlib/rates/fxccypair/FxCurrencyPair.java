@@ -2,8 +2,8 @@ package org.blacksmith.finlib.rates.fxccypair;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.blacksmith.finlib.basic.Currency;
-import org.blacksmith.finlib.basic.CurrencyPair;
+import org.blacksmith.finlib.basic.currency.Currency;
+import org.blacksmith.finlib.basic.currency.CurrencyPair;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)

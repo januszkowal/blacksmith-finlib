@@ -3,7 +3,7 @@ package org.blacksmith.finlib.math.solver;
 /**
  * Builder for {@link BisectionSolver} instances.
  */
-public class BiSectionSolverBuilder extends AbstractSolverBuilder<Function,BisectionSolver> {
+public class BiSectionSolverBuilder extends AbstractSolverBuilder<SolverFunction,BisectionSolver> {
 
   private double minArg = Double.MIN_VALUE;
   private double maxArg = Double.MAX_VALUE;
@@ -15,19 +15,19 @@ public class BiSectionSolverBuilder extends AbstractSolverBuilder<Function,Bisec
     return new BiSectionSolverBuilder();
   }
 
-  public BiSectionSolverBuilder withMinArg(double minArg) {
+  public BiSectionSolverBuilder minArg(double minArg) {
     this.minArg = minArg;
     return this;
   }
 
-  public BiSectionSolverBuilder withMaxArg(double maxArg) {
+  public BiSectionSolverBuilder maxArg(double maxArg) {
     this.maxArg = maxArg;
     return this;
   }
 
   @Override
   public BisectionSolver build() {
-    return new BisectionSolver(this.iterations, this.tolerance,
-        this.minArg, this.maxArg);
+    return new BisectionSolver(this.argAligner, this.iterations, this.tolerance,
+        this.minArg, this.maxArg, this.breakIfTheSameCandidate);
   }
 }

@@ -5,9 +5,9 @@ import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.commons.datetime.DateUtils;
-import org.blacksmith.finlib.datetime.Frequency;
+import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
-import org.blacksmith.finlib.dayconvention.utils.YMD;
+import org.blacksmith.finlib.dayconvention.utils.YmdDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 @Slf4j
@@ -126,8 +126,8 @@ public class ActActIcmaConvention implements DayCountConventionCalculator {
 
     if (scheduleInfo.isEndOfMonthConvention()) {
       //ACT/ACT Ultimo
-      YMD start = YMD.of(scheduleInfo.getCouponStartDate());
-      YMD end = YMD.of(scheduleInfo.getCouponEndDate());
+      YmdDate start = YmdDate.of(scheduleInfo.getCouponStartDate());
+      YmdDate end = YmdDate.of(scheduleInfo.getCouponEndDate());
       return (start.getDay() == end.getDay()) ||
           (!DateUtils.isValidDate(start.getYear(), start.getMonth(), end.getDay()) && DateUtils
               .isLastDayOfMonth(scheduleInfo.getCouponEndDate())) ||

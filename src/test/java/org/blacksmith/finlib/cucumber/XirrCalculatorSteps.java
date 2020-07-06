@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
-import org.blacksmith.finlib.math.solver.Function1stDerivative;
+import org.blacksmith.finlib.math.solver.SolverFunction1stDerivative;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.xirr.Cashflow;
 import org.blacksmith.finlib.math.xirr.XirrCalculatorBuilder;
@@ -45,12 +45,12 @@ public class XirrCalculatorSteps {
     log.info("Calc BiSection");
     var calculatorBiCalc = XirrCalculatorBuilder.builder()
         .withSolverBuilder(BiSectionSolverBuilder.builder()
-            .withMinArg(-1)
-            .withMaxArg(2))
+            .minArg(-1)
+            .maxArg(2))
         .build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);
     log.info("Calc NewtonRaphson");
-    var calculatorNewtonRapshon = XirrCalculatorBuilder.<Function1stDerivative>builder()
+    var calculatorNewtonRapshon = XirrCalculatorBuilder.<SolverFunction1stDerivative>builder()
         .withSolverBuilder(NewtonRaphsonSolverBuilder.builder()).build();
     this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr(cashflows);
   }

@@ -10,10 +10,10 @@ public class AlgBiSectionTest {
 
   @Test
   public void sqrt2a() {
-    Function f = x->x*x;
-    Solver<Function> nr = BiSectionSolverBuilder.builder()
-        .withMinArg(0)
-        .withMaxArg(30)
+    SolverFunction f = x->x*x;
+    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+        .minArg(0)
+        .maxArg(30)
         //.withFunction(x->x*x)
         .build();
     assertEquals(2, nr.inverse(f,4, 0.0), TOLERANCE);
@@ -23,10 +23,10 @@ public class AlgBiSectionTest {
 
   @Test
   public void sqrt2ab() {
-    Function f = x->x*x;
-    Solver<Function> nr = BiSectionSolverBuilder.builder()
-        .withMinArg(-30)
-        .withMaxArg(30)
+    SolverFunction f = x->x*x;
+    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+        .minArg(-30)
+        .maxArg(30)
         //.withFunction(x->x*x)
         .build();
     assertEquals(-2, nr.inverse(f,4, 0.0), TOLERANCE);
@@ -36,10 +36,10 @@ public class AlgBiSectionTest {
 
   @Test
   public void cubeRoot() {
-    Function f = x->x*x*x;
-    Solver<Function> nr = BiSectionSolverBuilder.builder()
-        .withMinArg(-30)
-        .withMaxArg(30)
+    SolverFunction f = x->x*x*x;
+    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+        .minArg(-30)
+        .maxArg(30)
         //.withFunction(x->x*x*x)
         .build();
     assertEquals(2, nr.inverse(f,8, 8.0), TOLERANCE);
@@ -49,10 +49,10 @@ public class AlgBiSectionTest {
 
   @Test
   public void quadratic_a() {
-    Function f = x->(x-4)*(x+3);
-    Solver<Function> nr = BiSectionSolverBuilder.builder()
-        .withMinArg(-30)
-        .withMaxArg(30)
+    SolverFunction f = x->(x-4)*(x+3);
+    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+        .minArg(-30)
+        .maxArg(30)
         //.withFunction(x->(x-4)*(x+3))
         .build();
     assertEquals(-3, nr.findRoot(f,0.0), TOLERANCE);
@@ -64,10 +64,10 @@ public class AlgBiSectionTest {
 
   @Test
   public void quadratic_b() {
-    Function f = x->(x-4)*(x+3);
-    Solver<Function> nr = BiSectionSolverBuilder.builder()
-        .withMinArg(0)
-        .withMaxArg(30)
+    SolverFunction f = x->(x-4)*(x+3);
+    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+        .minArg(0)
+        .maxArg(30)
         //.withFunction(x->(x-4)*(x+3))
         .build();
     assertEquals(4, nr.findRoot(f,0.0), TOLERANCE);

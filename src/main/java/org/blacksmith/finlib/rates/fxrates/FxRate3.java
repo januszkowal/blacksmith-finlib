@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import lombok.Value;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.commons.datetime.DateUtils;
-import org.blacksmith.finlib.basic.Rate;
+import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.MarketData;
 import org.blacksmith.finlib.rates.basic.BasicMarketData;
 import org.blacksmith.finlib.rates.fxrates.FxRate3.FxRateValues;
 
-public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements FxRateOperatoins<FxRate3> {
+public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements FxRateOperations<FxRate3> {
 
   public FxRate3(LocalDate date, FxRateValues rate) {
     super(date, rate);
@@ -61,6 +61,11 @@ public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements 
   }
 
   @Override
+  public FxRate3 divide(double divisor, int decimalPlaces) {
+    return new FxRate3(this.date, this.value.divide(divisor, decimalPlaces));
+  }
+
+  @Override
   public FxRate3 crossDivide(double factor, FxRate3 divisor, int decimalPlaces) {
     return FxRate3.of(DateUtils.max(this.date, divisor.date),
         (this.value.buyRate.doubleValue() * factor) / divisor.value.buyRate.doubleValue(),
@@ -99,6 +104,13 @@ public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements 
           Rate.of(this.buyRate.doubleValue() * multiplicand, decimalPlaces),
           Rate.of(this.sellRate.doubleValue() * multiplicand, decimalPlaces),
           Rate.of(this.avgRate.doubleValue() * multiplicand, decimalPlaces));
+    }
+
+    public FxRateValues divide(double divisor, int decimalPlaces) {
+      return new FxRateValues(
+          Rate.of(this.buyRate.doubleValue() / divisor, decimalPlaces),
+          Rate.of(this.sellRate.doubleValue() / divisor, decimalPlaces),
+          Rate.of(this.avgRate.doubleValue() / divisor, decimalPlaces));
     }
 
     public FxRateValues inverse() {

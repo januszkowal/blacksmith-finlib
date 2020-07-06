@@ -8,7 +8,7 @@ public class DayCountUtils {
     return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
   }
 
-  public static int days360(YMD date1, YMD date2) {
+  public static int days360(YmdDate date1, YmdDate date2) {
     return days360(date1.getYear(), date1.getMonth(), date1.getDay(), date2.getYear(), date2.getMonth(), date2.getDay());
   }
 

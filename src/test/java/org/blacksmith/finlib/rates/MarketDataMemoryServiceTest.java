@@ -1,12 +1,11 @@
 package org.blacksmith.finlib.rates;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.blacksmith.finlib.basic.Currency;
-import org.blacksmith.finlib.basic.Rate;
+import org.blacksmith.finlib.basic.currency.Currency;
+import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.BasicMarketDataHolder;
 import org.blacksmith.finlib.rates.basic.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.interestrates.InterestRate;
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 class MarketDataMemoryServiceTest {
 
-  static MarketDataMemoryService<InterestRateId, Rate> interestRateService =
+  static final MarketDataMemoryService<InterestRateId, Rate> interestRateService =
       new MarketDataMemoryService<>();
 
   @BeforeAll

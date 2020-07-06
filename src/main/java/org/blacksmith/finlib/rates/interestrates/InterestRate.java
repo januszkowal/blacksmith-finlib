@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.rates.interestrates;
 
 import java.time.LocalDate;
-import org.blacksmith.finlib.basic.Rate;
+import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.BasicMarketData;
 
 public class InterestRate extends BasicMarketData<InterestRateId,Rate> {

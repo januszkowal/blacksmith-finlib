@@ -1,11 +1,11 @@
 package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
-import lombok.Value;
-import org.blacksmith.finlib.basic.Amount;
-import org.blacksmith.finlib.basic.Rate;
-import org.blacksmith.finlib.datetime.Frequency;
 import lombok.Builder;
+import lombok.Value;
+import org.blacksmith.finlib.basic.datetime.Frequency;
+import org.blacksmith.finlib.basic.numbers.Amount;
+import org.blacksmith.finlib.basic.numbers.Rate;
 
 @Value
 @Builder
