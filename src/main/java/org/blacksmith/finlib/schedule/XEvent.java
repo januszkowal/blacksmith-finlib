@@ -10,9 +10,10 @@ public class XEvent {
   private LocalDate startDate;
   private LocalDate endDate;
   private LocalDate paymentDate;
+  private Amount amount;
+  //
   private Amount principal;
   private Rate rate;
-  private Amount amount;
   private Amount principalPayment;
   private Amount interestPayment;
 }

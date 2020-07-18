@@ -1,72 +1,95 @@
 package org.blacksmith.finlib.schedule.policy;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.DecimalRounded;
+import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.math.solver.SolverFunction1stDerivative;
-import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
+import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.schedule.SchedulePolicy;
-import org.blacksmith.finlib.schedule.XEvent;
+import org.blacksmith.finlib.schedule.ScheduleComposePolicy;
+import org.blacksmith.finlib.schedule.events.Event;
+import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
+import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
 
 @Slf4j
-public class AnnuityPolicy extends AbstractPolicy implements SchedulePolicy {
+public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements ScheduleComposePolicy {
 
-  public AnnuityPolicy(ScheduleParameters scheduleParameters, List<XEvent> cashflows) {
-    super(scheduleParameters, cashflows);
+  private final AlgSolverBuilder solverBuilder;
+
+  public AnnuityPolicy(AlgSolverBuilder solverBuilder, ScheduleParameters scheduleParameters) {
+    super(scheduleParameters);
+    this.solverBuilder = solverBuilder;
   }
 
   @Override
-  public void update() {
-    var solver = createSolver();
-    solver.solve(solverFunction(), 0.00d, getEstimatedPayment());
-    log.info("final :{}", cashflowsToString());
+  public List<CashflowInterestEvent> create(List<ScheduleInterestEvent> events) {
+    var cashflows = events.stream()
+        .map(se->CashflowInterestEvent.builder()
+            .startDate(se.getStartDate())
+            .endDate(se.getEndDate())
+            .paymentDate(se.getPaymentDate())
+            .interestRate(scheduleParameters.getStartInterestRate())
+            .build())
+        .collect(Collectors.toList());
+    return update(cashflows);
   }
 
-  public Solver<SolverFunction1stDerivative> createSolver() {
-//      public Solver<Function> createSolver() {
+  @Override
+  public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {
+    Solver<SolverFunctionDerivative> solver = createSolver(cashflows);
+    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue()/cashflows.size();
+    var maxPmt = scheduleParameters.getPrincipal().doubleValue()/2d;
+    var sf = solverFunction(cashflows);
+    solver.findRoot(sf, getEstimatedPayment(cashflows), minPmt, maxPmt);
+    log.info("final :{}", Event.eventsToString(cashflows));
+    return cashflows;
+  }
+
+  public Solver<SolverFunctionDerivative> createSolver(List<CashflowInterestEvent> cashflows) {
+    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue()/cashflows.size();
+    var maxPmt = scheduleParameters.getPrincipal().doubleValue()/2d;
     return
-//            return
-//              BiSectionSolverBuilder.builder()
-        NewtonRaphsonSolverBuilder.builder()
-//                    .minArg(1.0d)
-//                    .maxArg(scheduleParameters.getPrincipal().doubleValue())
+        solverBuilder
             .tolerance(0.01d)
             .iterations(1000)
-            .argAligner((a) -> Amount.of(a).doubleValue())
-            .breakIfTheSameCandidate(true)
+            .breakIfCandidateNotChanging(true)
             .build();
   }
 
-  public SolverFunction1stDerivative solverFunction() {
-    return new SolverFunction1stDerivative() {
+  public SolverFunctionDerivative solverFunction(List<CashflowInterestEvent> cashflows) {
+    return new SolverFunctionDerivative() {
       @Override
-      public double derivative(double arg) {
-        return scheduleDerivativeValue(arg);
+      public double getDerivative(double arg) {
+        return scheduleDerivativeValue(cashflows,arg);
       }
 
       @Override
-      public double value(double arg) {
-        return recalculateAnnuity(arg);
+      public double getValue(double arg) {
+        return recalculateAnnuity(cashflows,arg);
       }
+
+      @Override
+      public double alignCandidate(double arg) {return Rate.of(arg,2).doubleValue();}
     };
   }
 
-  public double recalculateAnnuity(double arg) {
+  public double recalculateAnnuity(List<CashflowInterestEvent> cashflows, double arg) {
     Amount currentPrincipal = scheduleParameters.getPrincipal();
     Amount nextPrincipal = Amount.ZERO;
     Amount principalPayment = Amount.ZERO;
     Amount payment = Amount.of(arg);
     Amount interestPayment = Amount.ZERO;
-    for (int i = 0; i < cashflows.size(); i++) {
-      var cashflow = cashflows.get(i);
+    for (CashflowInterestEvent cashflow : cashflows) {
       cashflow.setPrincipal(currentPrincipal);
-      if (currentPrincipal.compareTo(scheduleParameters.getEndPrincipal())>0) {
-        interestPayment = calculateCouponInterest(cashflow);
+      if (currentPrincipal.compareTo(scheduleParameters.getEndPrincipal()) > 0) {
+        interestPayment = calculateInterest(cashflow);
         Amount maxPrincipalPayment = currentPrincipal.subtract(scheduleParameters.getEndPrincipal());
         Amount paymentAvailable = payment.subtract(interestPayment);
         if (paymentAvailable.isNegative()) {
@@ -77,12 +100,12 @@ public class AnnuityPolicy extends AbstractPolicy implements SchedulePolicy {
           nextPrincipal = currentPrincipal.subtract(principalPayment);
         }
       } else {
-        interestPayment = Amount.ZERO;
         principalPayment = Amount.ZERO;
+        interestPayment = currentPrincipal.isPositive() ? calculateInterest(cashflow) : Amount.ZERO;
       }
-      cashflow.setInterestPayment(interestPayment);
+      cashflow.setInterest(interestPayment);
       cashflow.setPrincipalPayment(principalPayment);
-      cashflow.setAmount(cashflow.getPrincipalPayment().add(cashflow.getInterestPayment()));
+      cashflow.setAmount(cashflow.getPrincipalPayment().add(cashflow.getInterest()));
       currentPrincipal = nextPrincipal;
     }
 
@@ -92,16 +115,16 @@ public class AnnuityPolicy extends AbstractPolicy implements SchedulePolicy {
       cashflow.setPrincipalPayment(cashflow.getPrincipalPayment().add(unpaidPrincipal));
     }
     double total = cashflows.stream()
-        .mapToDouble(c->payment.doubleValue()-c.getInterestPayment().doubleValue()-c.getPrincipalPayment().doubleValue())
+        .mapToDouble(c->payment.doubleValue()-c.getInterest().doubleValue()-c.getPrincipalPayment().doubleValue())
         .sum();
     log.debug("$$$ pmt amount: {} principal:{} disc: {}", arg, currentPrincipal, total);
-    log.debug("schedule:{}", cashflowsToString());
+    log.debug("schedule:{}", Event.eventsToString(cashflows));
     return total;
   }
 
-  public double scheduleDerivativeValue(double arg) {
-    var sumPrincipalPayment = cashflows.stream().map(XEvent::getPrincipal).mapToDouble(Amount::doubleValue).sum();
-    var sumInterestPayment = cashflows.stream().map(XEvent::getInterestPayment).mapToDouble(Amount::doubleValue).sum();
+  public double scheduleDerivativeValue(List<CashflowInterestEvent> cashflows, double arg) {
+    var sumPrincipalPayment = cashflows.stream().map(CashflowInterestEvent::getPrincipal).mapToDouble(Amount::doubleValue).sum();
+    var sumInterestPayment = cashflows.stream().map(CashflowInterestEvent::getInterest).mapToDouble(Amount::doubleValue).sum();
     if (sumInterestPayment==0.0d) {
       return sumPrincipalPayment;
     } else {
@@ -110,7 +133,7 @@ public class AnnuityPolicy extends AbstractPolicy implements SchedulePolicy {
     }
   }
 
-  private double getEstimatedPayment() {
+  private double getEstimatedPayment(List<CashflowInterestEvent> cashflows) {
     double principal = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue();
     if (scheduleParameters.getStartInterestRate().isZero()) {
       return principal / cashflows.size();

@@ -1,50 +1,51 @@
 package org.blacksmith.finlib.schedule;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.basic.numbers.Rate;
+
+import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.schedule.events.ScheduleEvent;
+import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
+import org.blacksmith.finlib.rates.interestrates.InterestRateService;
+import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
+import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
 import org.blacksmith.finlib.schedule.policy.AnnuityPolicy;
+import org.blacksmith.finlib.schedule.policy.NormalPolicy;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ScheduleGenerator {
 
   private final ScheduleParameters scheduleParameters;
+  private final ScheduleComposePolicy schedulePolicy;
+  private final InterestRateService interestRateService;
+  private final PrincipalsHolder principalHolder;
 
-  List<XEvent> cashflows = new ArrayList<>();
-
-  public ScheduleGenerator(ScheduleParameters scheduleParameters) {
+  public ScheduleGenerator(ScheduleParameters scheduleParameters,
+      InterestRateService interestRateService,
+      PrincipalsHolder principalsHolder) {
     this.scheduleParameters = scheduleParameters;
+    this.interestRateService = interestRateService;
+    this.principalHolder = principalsHolder;
+    this.schedulePolicy = createSchedulePolicy();
   }
 
-  public List<XEvent> generate(List<ScheduleEvent> events) {
-    init(events);
-    SchedulePolicy policy = new AnnuityPolicy(scheduleParameters,cashflows);
-    policy.update();
-    return cashflows;
-  }
-
-  private void init(List<ScheduleEvent> events) {
-    cashflows.clear();
-    for (ScheduleEvent event : events) {
-      var cashflow = new XEvent();
-      cashflow.setStartDate(event.getStartDate());
-      cashflow.setEndDate(event.getEndDate());
-      cashflow.setPaymentDate(event.getPaymentDate());
-      //cashflow.setNotional(getNotional(event.getStartDate()));
-      cashflow.setRate(Rate.of(scheduleParameters.getStartInterestRate()));
-      cashflows.add(cashflow);
+  private ScheduleComposePolicy createSchedulePolicy() {
+    if (scheduleParameters.getAlgorithm()== InterestAlghoritm.ANNUITY) {
+      return new AnnuityPolicy(
+          AlgSolverBuilder.builder(AlgSolverBuilder.SolverAlgorithm.BI_SECTION),
+          scheduleParameters);
+    }
+    else {
+      return new NormalPolicy(scheduleParameters,principalHolder,interestRateService);
     }
   }
 
-
-  public Amount getPrincipal(LocalDate date) {
-    return scheduleParameters.getPrincipal();
+  public List<CashflowInterestEvent> create(List<ScheduleInterestEvent> events) {
+    return schedulePolicy.create(events);
   }
-
+  public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {
+    return schedulePolicy.update(cashflows);
+  }
 }

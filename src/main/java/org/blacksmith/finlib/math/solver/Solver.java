@@ -4,9 +4,10 @@ import java.util.Map;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
 public interface Solver<F extends SolverFunction> {
-  double solve(F function, double target, double guess);
+  double solve(final F function, double target, double guess, double min, double max);
   /**
    * Find the input value to the function which yields the given
    * <code>target</code>, starting at the <code>guess</code>.  More precisely,
@@ -22,8 +23,8 @@ public interface Solver<F extends SolverFunction> {
    * @throws NonconvergenceException if the method fails to converge in the
    *                                 given number of iterations
    */
-  default double inverse(F function, double target, double guess) {
-    return solve(function, target, guess);
+  default double inverse(final F function, double target, double guess, double min, double max) {
+    return solve(function, target, guess, min, max);
   }
   /**
    * Equivalent to <code>inverse(0, guess)</code>.
@@ -34,10 +35,10 @@ public interface Solver<F extends SolverFunction> {
    * @param guess the value to start at
    * @return an input to the function which yields zero within the given
    *         tolerance
-   * @see #inverse(F, double, double)
+   * @see #inverse(F, double, double, double, double)
    */
-  default double findRoot(final F function, final double guess) {
-    return solve(function, 0 , guess);
+  default double findRoot(final F function, final double guess, double min, double max) {
+    return solve(function, 0 , guess, min, max);
   }
 
   Double getInitialGuess();

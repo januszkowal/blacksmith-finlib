@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.schedule.events.ScheduleEvent.SubEvent;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleEventsGenerator;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleRateResetEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +17,8 @@ public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator 
   private final static Logger log = LoggerFactory.getLogger(StandardScheduleEventsGenerator.class);
 
   @Override
-  public List<ScheduleEvent> generate(ScheduleParameters scheduleParameters) {
-    List<ScheduleEvent> schedule = new ArrayList<>();
+  public List<ScheduleInterestEvent> generate(ScheduleParameters scheduleParameters) {
+    List<ScheduleInterestEvent> schedule = new ArrayList<>();
     LocalDate refDate = scheduleParameters.getFirstCouponDate();
     LocalDate cashflowStartDate = scheduleParameters.getStartDate();
     LocalDate cashflowPmtDateUnadjusted;
@@ -34,18 +36,18 @@ public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator 
         cashflowPmtDateAdjusted = scheduleParameters.getMaturityDate();
         cashflowEndDate = cashflowPmtDateAdjusted;
       } else {
-        cashflowEndDate = getEndDate(scheduleParameters, cashflowPmtDateUnadjusted, cashflowPmtDateAdjusted);
+        cashflowEndDate = adjustEndDate(scheduleParameters, cashflowPmtDateUnadjusted, cashflowPmtDateAdjusted);
       }
-      var cashflowBuilder = ScheduleEvent.builder()
+      var cashflowBuilder = ScheduleInterestEvent.builder()
           .startDate(cashflowStartDate)
           .endDate(cashflowEndDate)
           .paymentDateUnadjusted(cashflowPmtDateUnadjusted)
           .paymentDate(cashflowPmtDateAdjusted);
       if (scheduleParameters.getRateResetFrequency() != null
           && scheduleParameters.getRateResetFrequency() != scheduleParameters.getCouponFrequency()) {
-        List<ScheduleEvent.SubEvent> subCashflows = generateSubEvents(scheduleParameters, cashflowStartDate,
+        List<ScheduleRateResetEvent> subEvents = generateSubEvents(scheduleParameters, cashflowStartDate,
             cashflowEndDate);
-        cashflowBuilder.subEvents(subCashflows);
+        cashflowBuilder.subEvents(subEvents);
       }
       schedule.add(cashflowBuilder.build());
       cashflowStartDate = cashflowEndDate;
@@ -54,22 +56,26 @@ public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator 
     return Collections.unmodifiableList(schedule);
   }
 
-  private List<SubEvent> generateSubEvents(ScheduleParameters scheduleParameters, LocalDate startDate,
+  private List<ScheduleRateResetEvent> generateSubEvents(ScheduleParameters scheduleParameters, LocalDate startDate,
       LocalDate endDate) {
-    List<SubEvent> subEvents = new ArrayList<>();
+    List<ScheduleRateResetEvent> subEvents = new ArrayList<>();
     LocalDate subCashflowStartDate = startDate;
     while (subCashflowStartDate.isBefore(endDate)) {
       LocalDate subCashflowEndDateUnadjusted =
           DateUtils.min(endDate,
               scheduleParameters.getRateResetFrequency()
                   .addToWithEomAdjust(subCashflowStartDate, scheduleParameters.isEndOfMonthConvention()));
-      subEvents.add(SubEvent.of(subCashflowStartDate, subCashflowEndDateUnadjusted));
+      subEvents.add(ScheduleRateResetEvent.builder()
+          .startDate(subCashflowStartDate)
+          .endDate(subCashflowEndDateUnadjusted)
+          .isRateReset(true)
+          .build());
       subCashflowStartDate = subCashflowEndDateUnadjusted;
     }
     return subEvents;
   }
 
-  private LocalDate getEndDate(ScheduleParameters scheduleParameters, LocalDate pmtUnadjusted, LocalDate pmtAdjusted) {
+  private LocalDate adjustEndDate(ScheduleParameters scheduleParameters, LocalDate pmtUnadjusted, LocalDate pmtAdjusted) {
     return scheduleParameters.isLinkCouponLengthWitPayment() ? pmtAdjusted : pmtUnadjusted;
   }
 }

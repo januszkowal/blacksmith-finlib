@@ -16,10 +16,17 @@ import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
+import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
-import org.blacksmith.finlib.schedule.events.ScheduleEvent;
+import org.blacksmith.finlib.schedule.events.Event;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.events.InterestEventSrc;
 import org.blacksmith.finlib.schedule.events.StandardScheduleEventsGenerator;
+import org.blacksmith.finlib.schedule.events.schedule.PrincipalUpdatePolicyByAmount;
+import org.blacksmith.finlib.schedule.events.schedule.PrincipalsGenerator;
+import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +44,7 @@ public class ScheduleGeneratorTest {
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
         CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN,ymdProvider));
     return ScheduleParameters.builder()
+        .algorithm(InterestAlghoritm.ANNUITY)
         .firstCouponDate(LocalDate.of(2019,1,1))
         .startDate(LocalDate.of(2019,1,3))
         .maturityDate(LocalDate.of(2021,1,1))        
@@ -56,16 +64,28 @@ public class ScheduleGeneratorTest {
   @Test
   public void testSchedule1() {
     var scheduleParameters = createScheduleParameters1();
-    var events = new StandardScheduleEventsGenerator().generate(scheduleParameters);
-    LOGGER.info("events={}",scheduleText1(events));
-    ScheduleGenerator generator = new ScheduleGenerator(scheduleParameters);
-    var schedule = generator.generate(events);
+    var scheduleInterestEvents = new StandardScheduleEventsGenerator().generate(scheduleParameters);
+    //
+    PrincipalsHolder ph;
+    if (scheduleParameters.getAlgorithm()==InterestAlghoritm.DECREASING_PRINCIPAL) {
+      var pg = new PrincipalsGenerator(false,false);
+      var startDates = Event.getDates(scheduleInterestEvents,ScheduleInterestEvent::getStartDate);
+      var principalResetDates = pg.generate(scheduleParameters.getPrincipal(),
+          startDates, new PrincipalUpdatePolicyByAmount(scheduleParameters.getEndPrincipal(),Amount.TEN));
+      ph = new PrincipalsHolder(scheduleParameters.getPrincipal(),principalResetDates);
+    }
+    else {
+      ph = new PrincipalsHolder(scheduleParameters.getPrincipal());
+    }
+    LOGGER.info("events={}",scheduleText1(scheduleInterestEvents));
+    ScheduleGenerator generator = new ScheduleGenerator(scheduleParameters,null,ph);
+    var schedule = generator.create(scheduleInterestEvents);
     //LOGGER.info("schedule:{}",scheduleText2(schedule));
   }
 
-  private String scheduleText1(List<ScheduleEvent> events) {
+  private String scheduleText1(List<ScheduleInterestEvent> events) {
     return events.stream()
-        .map(ScheduleEvent::toString)
+        .map(ScheduleInterestEvent::toString)
         .collect(Collectors.joining("\n"));
   }
 

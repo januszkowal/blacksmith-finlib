@@ -1,12 +1,11 @@
 package org.blacksmith.finlib.math.solver;
 
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+
 /**
  * Builder for {@link NewtonRaphsonSolver} instances.
  */
-public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<SolverFunction1stDerivative, NewtonRaphsonSolver> {
-
-  public NewtonRaphsonSolverBuilder() {
-  }
+public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative,Solver<SolverFunctionDerivative>> {
 
   public static NewtonRaphsonSolverBuilder builder() {
     return new NewtonRaphsonSolverBuilder();
@@ -14,6 +13,6 @@ public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<SolverFunc
 
   @Override
   public NewtonRaphsonSolver build() {
-    return new NewtonRaphsonSolver(this.argAligner, this.iterations, this.tolerance, this.breakIfTheSameCandidate);
+    return new NewtonRaphsonSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
   }
 }

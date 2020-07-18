@@ -2,19 +2,30 @@ package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
 import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
+import org.blacksmith.finlib.schedule.InterestRateType;
+
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 public class ScheduleParameters {
+  private Currency currency;
   private Amount principal;
   private Amount endPrincipal;
+  @Builder.Default
+  private InterestRateType interestRateType = InterestRateType.CONST;
   private Rate startInterestRate;
+  @Builder.Default
+  private Rate interestRateAddMargin = Rate.ZERO;
+  @Builder.Default
+  private Rate interestRateMulMargin = Rate.ONE;
+  private String interestTable;
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
   private Frequency rateResetFrequency;

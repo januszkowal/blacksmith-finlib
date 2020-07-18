@@ -7,8 +7,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.math.solver.SolverFunction;
-import org.blacksmith.finlib.math.solver.SolverFunction1stDerivative;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-public class XirrCalculator<F extends SolverFunction> implements SolverFunction1stDerivative {
+public class XirrCalculator<F extends SolverFunction> implements SolverFunctionDerivative {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
@@ -97,7 +97,7 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunction1
    * @param rate the rate of return
    * @return the present value of the investment if it had been subject to the given rate of return
    */
-  public double value(final double rate) {
+  public double getValue(final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.futureValue(rate))
         .sum();
@@ -148,14 +148,14 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunction1
     double xirr;
     try {
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),guess);
+      xirr = solver.findRoot(getFunction(),guess, -1d, 2d);
       this.iterations = solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     } catch (OverflowException oe) {
       log.warn("Guess sign changed due to overflow,{}", solver.getStats());
       this.iterations = solver.getIterations();
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),-guess);
+      xirr = solver.findRoot(getFunction(),-guess, -1d, 2d);
       this.iterations += solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     }
