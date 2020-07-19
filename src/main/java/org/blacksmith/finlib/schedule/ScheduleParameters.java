@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.interestbasis;
+package org.blacksmith.finlib.schedule;
 
 import java.time.LocalDate;
 import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
@@ -7,6 +7,8 @@ import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
+import org.blacksmith.finlib.interestbasis.DayCountConvention;
+import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
 import org.blacksmith.finlib.schedule.InterestRateType;
 
 import lombok.Builder;
@@ -16,8 +18,10 @@ import lombok.Data;
 @Builder
 public class ScheduleParameters {
   private Currency currency;
-  private Amount principal;
-  private Amount endPrincipal;
+  @Builder.Default
+  private Amount principal = Amount.ZERO;
+  @Builder.Default
+  private Amount endPrincipal = Amount.ZERO;
   @Builder.Default
   private InterestRateType interestRateType = InterestRateType.CONST;
   private Rate startInterestRate;

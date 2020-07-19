@@ -26,6 +26,6 @@ public class XirrCalculatorBuilder {
   }
 
   public XirrCalculator build() {
-    return new XirrCalculator(solverBuilder.build(), guess);
+    return new XirrCalculator<>(solverBuilder.build(), guess);
   }
 }

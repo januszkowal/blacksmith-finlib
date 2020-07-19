@@ -60,8 +60,8 @@ public class FxRateServiceImpl implements FxRateService {
     if (p2 == null) {
       throw new IllegalArgumentException("Unknown pair " + k2.getPairName());
     }
-    MarketData<FxRateId, FxRateValues> r1 = getSourceFxRate(k1, date);
-    MarketData<FxRateId, FxRateValues> r2 = getSourceFxRate(k2, date);
+    MarketData<FxRateValues> r1 = getSourceFxRate(k1, date);
+    MarketData<FxRateValues> r2 = getSourceFxRate(k2, date);
     if (r1 != null && r2 != null) {
       if (inverse) {
         double factor = p1.getFactor()/p2.getFactor();

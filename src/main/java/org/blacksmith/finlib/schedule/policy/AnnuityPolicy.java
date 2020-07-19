@@ -8,15 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.DecimalRounded;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.interestbasis.ScheduleParameters;
+import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.schedule.ScheduleComposePolicy;
 import org.blacksmith.finlib.schedule.events.Event;
 import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
+import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 
 @Slf4j
 public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements ScheduleComposePolicy {
@@ -29,7 +28,7 @@ public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements Sc
   }
 
   @Override
-  public List<CashflowInterestEvent> create(List<ScheduleInterestEvent> events) {
+  public List<CashflowInterestEvent> create(List<TimetableInterestEntry> events) {
     var cashflows = events.stream()
         .map(se->CashflowInterestEvent.builder()
             .startDate(se.getStartDate())

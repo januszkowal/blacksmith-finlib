@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.schedule.events.Event;
 import org.blacksmith.finlib.schedule.events.InterestEventSrc;
 
 import lombok.AccessLevel;
@@ -29,10 +28,20 @@ public class RateResetEvent implements InterestEventSrc {
   Amount interest = Amount.ZERO;
 
   @Builder.Default
-  boolean isRateReset=true;
+  boolean isRateReset = true;
 
   @Override
   public LocalDate getEventDate() {
     return this.startDate;
+  }
+
+  public RateResetEvent copy() {
+    return builder()
+        .startDate(startDate)
+        .endDate(endDate)
+        .principal(principal)
+        .interestRate(interestRate)
+        .interest(interest)
+        .build();
   }
 }

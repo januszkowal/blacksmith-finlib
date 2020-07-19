@@ -5,7 +5,7 @@ import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.BasicMarketData;
 
-public class FxRate1 extends BasicMarketData<FxRateId, Rate> implements FxRateOperations<FxRate1> {
+public class FxRate1 extends BasicMarketData<Rate> implements FxRateOperations<FxRate1> {
 
   public FxRate1(LocalDate date, Rate rate) {
     super(date,rate);

@@ -8,14 +8,14 @@ import org.blacksmith.finlib.rates.MarketData;
 public class BasicMarketDataHolder<K, V> implements MarketDataHolder<K, V> {
 
   private final K key;
-  private final MarketData<K, V> marketData;
+  private final MarketData<V> marketData;
 
-  public BasicMarketDataHolder(K key, MarketData<K, V> marketData) {
+  public BasicMarketDataHolder(K key, MarketData<V> marketData) {
     this.key = key;
     this.marketData = marketData;
   }
 
-  public static <K, V> BasicMarketDataHolder<K, V> of(K key, MarketData<K, V> marketData) {
+  public static <K, V> BasicMarketDataHolder<K, V> of(K key, MarketData<V> marketData) {
     return new BasicMarketDataHolder<>(key, marketData);
   }
 
@@ -39,7 +39,7 @@ public class BasicMarketDataHolder<K, V> implements MarketDataHolder<K, V> {
 //    }
 
   @Override
-  public MarketData<K, V> getMarketData() {
+  public MarketData<V> getMarketData() {
     return this.marketData;
   }
 }

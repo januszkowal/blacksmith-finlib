@@ -10,7 +10,7 @@ import org.blacksmith.finlib.rates.MarketData;
 import org.blacksmith.finlib.rates.basic.BasicMarketData;
 import org.blacksmith.finlib.rates.fxrates.FxRate3.FxRateValues;
 
-public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements FxRateOperations<FxRate3> {
+public class FxRate3 extends BasicMarketData<FxRateValues> implements FxRateOperations<FxRate3> {
 
   public FxRate3(LocalDate date, FxRateValues rate) {
     super(date, rate);
@@ -47,7 +47,7 @@ public class FxRate3 extends BasicMarketData<FxRateId, FxRateValues> implements 
     return new FxRate3(date,new FxRateValues(Rate.of(buyRate),Rate.of(sellRate),Rate.of(avgRate)));
   }
 
-  public static FxRate3 of (MarketData<?, FxRateValues> marketData) {
+  public static FxRate3 of (MarketData<FxRateValues> marketData) {
     return FxRate3.of(marketData.getDate(),marketData.getValue());
   }
 

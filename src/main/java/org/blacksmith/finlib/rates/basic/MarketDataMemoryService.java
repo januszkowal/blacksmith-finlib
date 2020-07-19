@@ -21,7 +21,7 @@ public class MarketDataMemoryService<K extends MarketDataId, V>
   }
 
   @Override
-  public MarketData<K, V> getRate(MarketDataId key, LocalDate date) {
+  public MarketData<V> getRate(MarketDataId key, LocalDate date) {
     return marketData.getOrDefault(key, Collections.emptyList()).stream()
         .filter(m->m.getMarketData().getDate().compareTo(date) <= 0)
         .max(MarketDataHolder.marketDataDateComparator)

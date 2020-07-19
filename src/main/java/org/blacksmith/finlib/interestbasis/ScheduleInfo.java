@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.basic.numbers.Rate;
 
 @Value
 @Builder
@@ -20,12 +18,4 @@ public class ScheduleInfo {
   private LocalDate couponEndDate;
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
-
-  public Amount getNotional(LocalDate date) {
-    return Amount.ZERO;
-  }
-
-  public Rate getRate(LocalDate date) {
-    return Rate.ZERO;
-  }
 }

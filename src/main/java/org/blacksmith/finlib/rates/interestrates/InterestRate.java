@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.BasicMarketData;
 
-public class InterestRate extends BasicMarketData<InterestRateId,Rate> {
+public class InterestRate extends BasicMarketData<Rate> {
 
   public InterestRate(LocalDate valueDate, Rate rate) {
     super(valueDate,rate);

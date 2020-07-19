@@ -3,6 +3,7 @@ package org.blacksmith.finlib.schedule.events.interest;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.blacksmith.commons.datetime.DateRange;
 import org.blacksmith.finlib.basic.numbers.Amount;
@@ -40,6 +41,20 @@ public class CashflowInterestEvent implements InterestEvent {
 
   @Builder.Default
   List<RateResetEvent> subEvents = new ArrayList<>();
+
+  public CashflowInterestEvent copy() {
+    return builder()
+        .startDate(startDate)
+        .endDate(endDate)
+        .paymentDate(paymentDate)
+        .principal(principal)
+        .interestRate(interestRate)
+        .interest(interest)
+        .amount(amount)
+        .principalPayment(principalPayment)
+        .subEvents(subEvents.stream().map(RateResetEvent::copy).collect(Collectors.toList()))
+        .build();
+  }
 
   public RateResetEvent getSubEventInRange(LocalDate date) {
     return subEvents.stream()
@@ -84,6 +99,10 @@ public class CashflowInterestEvent implements InterestEvent {
 
   public RateResetEvent firstRateReset() {
     return subEvents.isEmpty() ? null : subEvents.get(0);
+  }
+
+  public static List<CashflowInterestEvent> copy(List<CashflowInterestEvent> src) {
+    return src.stream().map(CashflowInterestEvent::copy).collect(Collectors.toList());
   }
 
   public boolean setPrincipal(Amount principal) {

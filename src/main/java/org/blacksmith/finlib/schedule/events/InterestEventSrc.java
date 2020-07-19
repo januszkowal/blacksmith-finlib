@@ -2,7 +2,6 @@ package org.blacksmith.finlib.schedule.events;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.blacksmith.commons.datetime.DateRange;
 import org.blacksmith.finlib.basic.numbers.Amount;

@@ -26,8 +26,8 @@ public interface DayCountConvention {
    * The result of this method will be negative if the first date is after the second date.
    * The result is calculated using {@link #yearFraction(LocalDate, LocalDate, ScheduleInfo)}.
    * <p>
-   * This uses a simple {@link ScheduleParameters} which has the end-of-month convention
-   * set to true, but throws an exception for other methods.
+   * This uses a simple {@link ScheduleInfo} which has the end-of-month convention
+   * set to true, but throws an exception for other methods.ScheduleInfo
    * Certain implementations of {@code DayCount} need the missing information,
    * and thus will throw an exception.
    *

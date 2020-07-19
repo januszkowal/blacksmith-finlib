@@ -1,24 +1,20 @@
-package org.blacksmith.finlib.schedule.events;
+package org.blacksmith.finlib.schedule.timetable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.commons.datetime.DateUtils;
-import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleEventsGenerator;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleRateResetEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.blacksmith.finlib.schedule.ScheduleParameters;
 
-public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator {
-
-  private final static Logger log = LoggerFactory.getLogger(StandardScheduleEventsGenerator.class);
+public class StandardTimetableGenerator implements TimetableGenerator {
 
   @Override
-  public List<ScheduleInterestEvent> generate(ScheduleParameters scheduleParameters) {
-    List<ScheduleInterestEvent> schedule = new ArrayList<>();
+  public List<TimetableInterestEntry> generate(ScheduleParameters scheduleParameters) {
+    ArgChecker.notNull(scheduleParameters,"Schedule parameters must be not null");
+    List<TimetableInterestEntry> schedule = new ArrayList<>();
     LocalDate refDate = scheduleParameters.getFirstCouponDate();
     LocalDate cashflowStartDate = scheduleParameters.getStartDate();
     LocalDate cashflowPmtDateUnadjusted;
@@ -38,16 +34,15 @@ public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator 
       } else {
         cashflowEndDate = adjustEndDate(scheduleParameters, cashflowPmtDateUnadjusted, cashflowPmtDateAdjusted);
       }
-      var cashflowBuilder = ScheduleInterestEvent.builder()
+      var cashflowBuilder = TimetableInterestEntry.builder()
           .startDate(cashflowStartDate)
           .endDate(cashflowEndDate)
           .paymentDateUnadjusted(cashflowPmtDateUnadjusted)
           .paymentDate(cashflowPmtDateAdjusted);
       if (scheduleParameters.getRateResetFrequency() != null
           && scheduleParameters.getRateResetFrequency() != scheduleParameters.getCouponFrequency()) {
-        List<ScheduleRateResetEvent> subEvents = generateSubEvents(scheduleParameters, cashflowStartDate,
-            cashflowEndDate);
-        cashflowBuilder.subEvents(subEvents);
+        cashflowBuilder.subEvents(generateSubEvents(scheduleParameters, cashflowStartDate,
+            cashflowEndDate));
       }
       schedule.add(cashflowBuilder.build());
       cashflowStartDate = cashflowEndDate;
@@ -56,19 +51,18 @@ public class StandardScheduleEventsGenerator implements ScheduleEventsGenerator 
     return Collections.unmodifiableList(schedule);
   }
 
-  private List<ScheduleRateResetEvent> generateSubEvents(ScheduleParameters scheduleParameters, LocalDate startDate,
+  private List<TimetableInterestEntry.TimetableRateResetEntry> generateSubEvents(ScheduleParameters scheduleParameters, LocalDate startDate,
       LocalDate endDate) {
-    List<ScheduleRateResetEvent> subEvents = new ArrayList<>();
+    List<TimetableInterestEntry.TimetableRateResetEntry> subEvents = new ArrayList<>();
     LocalDate subCashflowStartDate = startDate;
     while (subCashflowStartDate.isBefore(endDate)) {
       LocalDate subCashflowEndDateUnadjusted =
           DateUtils.min(endDate,
               scheduleParameters.getRateResetFrequency()
                   .addToWithEomAdjust(subCashflowStartDate, scheduleParameters.isEndOfMonthConvention()));
-      subEvents.add(ScheduleRateResetEvent.builder()
+      subEvents.add(TimetableInterestEntry.TimetableRateResetEntry.builder()
           .startDate(subCashflowStartDate)
           .endDate(subCashflowEndDateUnadjusted)
-          .isRateReset(true)
           .build());
       subCashflowStartDate = subCashflowEndDateUnadjusted;
     }

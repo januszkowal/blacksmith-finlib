@@ -1,10 +1,8 @@
 package org.blacksmith.finlib.schedule.policy;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.interestbasis.ScheduleParameters;
-import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.schedule.events.InterestEventSrc;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
 
 public class AbstractScheduleAlgorithmPolicy {
   protected final ScheduleParameters scheduleParameters;

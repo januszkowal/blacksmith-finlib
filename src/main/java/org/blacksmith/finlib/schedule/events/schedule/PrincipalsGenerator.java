@@ -28,7 +28,7 @@ public class PrincipalsGenerator {
     } else {
       startIndex = 1;
       if (addInitial) {
-        events.add(SchedulePrincipalEvent.of(events.get(0).getDate(), startPrincipal));
+        events.add(SchedulePrincipalEvent.of(eventDates.get(0), startPrincipal));
       }
     }
     Amount priorPrincipal = startPrincipal;

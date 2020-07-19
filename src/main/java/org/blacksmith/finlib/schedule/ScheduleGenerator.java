@@ -3,12 +3,11 @@ package org.blacksmith.finlib.schedule;
 import java.util.List;
 
 import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
-import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
+import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 import org.blacksmith.finlib.schedule.policy.AnnuityPolicy;
 import org.blacksmith.finlib.schedule.policy.NormalPolicy;
 
@@ -42,7 +41,7 @@ public class ScheduleGenerator {
     }
   }
 
-  public List<CashflowInterestEvent> create(List<ScheduleInterestEvent> events) {
+  public List<CashflowInterestEvent> create(List<TimetableInterestEntry> events) {
     return schedulePolicy.create(events);
   }
   public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {

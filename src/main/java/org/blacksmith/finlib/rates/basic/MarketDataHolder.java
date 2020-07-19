@@ -5,7 +5,7 @@ import org.blacksmith.finlib.rates.MarketData;
 
 public interface MarketDataHolder<K,V> {
   K getKey();
-  MarketData<K, V> getMarketData();
+  MarketData<V> getMarketData();
 
   Comparator<MarketDataHolder<?,?>> marketDataDateComparator =
 //      Comparator.comparing(m->m.getDate());

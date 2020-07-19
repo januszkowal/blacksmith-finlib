@@ -5,7 +5,7 @@ import lombok.ToString;
 import org.blacksmith.finlib.rates.MarketData;
 
 @ToString
-public class BasicMarketData<K,V> implements MarketData<K,V> {
+public class BasicMarketData<V> implements MarketData<V> {
 
   protected final LocalDate date;
   protected final V value;
@@ -23,5 +23,9 @@ public class BasicMarketData<K,V> implements MarketData<K,V> {
   @Override
   public V getValue() {
     return this.value;
+  }
+
+  public static <V> BasicMarketData<V> of(LocalDate date, V value) {
+    return new BasicMarketData<>(date,value);
   }
 }

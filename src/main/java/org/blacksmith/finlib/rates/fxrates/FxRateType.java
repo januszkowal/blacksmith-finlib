@@ -16,11 +16,11 @@ public enum FxRateType {
     this.rateExtractor = rateExtractor;
   }
 
-  public Rate extractRate(MarketData<?, FxRateValues> rate) {
+  public Rate extractRate(MarketData<FxRateValues> rate) {
     return rateExtractor.extract(rate);
   }
 
-  public FxRate1 extractFxRate(MarketData<?, FxRateValues> rate) {
+  public FxRate1 extractFxRate(MarketData<FxRateValues> rate) {
     return FxRate1.of(rate.getDate(),rateExtractor.extract(rate));
   }
 }

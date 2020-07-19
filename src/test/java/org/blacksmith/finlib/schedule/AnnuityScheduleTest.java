@@ -17,22 +17,19 @@ import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
-import org.blacksmith.finlib.interestbasis.ScheduleParameters;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.blacksmith.finlib.schedule.events.Event;
-import org.blacksmith.finlib.schedule.events.InterestEvent;
-import org.blacksmith.finlib.schedule.events.InterestEventSrc;
-import org.blacksmith.finlib.schedule.events.StandardScheduleEventsGenerator;
+import org.blacksmith.finlib.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalUpdatePolicyByAmount;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalsGenerator;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
-import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
+import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScheduleGeneratorTest {
-  private final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratorTest.class);
+public class AnnuityScheduleTest {
+  private final Logger LOGGER = LoggerFactory.getLogger(AnnuityScheduleTest.class);
   private ScheduleParameters createScheduleParameters1() {
     DatePartProvider<MonthDay> hyc = DatePartInMemoryProvider.of(MonthDay.of(1,1),
       MonthDay.of(5,1),
@@ -64,12 +61,12 @@ public class ScheduleGeneratorTest {
   @Test
   public void testSchedule1() {
     var scheduleParameters = createScheduleParameters1();
-    var scheduleInterestEvents = new StandardScheduleEventsGenerator().generate(scheduleParameters);
+    var scheduleInterestEvents = new StandardTimetableGenerator().generate(scheduleParameters);
     //
     PrincipalsHolder ph;
     if (scheduleParameters.getAlgorithm()==InterestAlghoritm.DECREASING_PRINCIPAL) {
       var pg = new PrincipalsGenerator(false,false);
-      var startDates = Event.getDates(scheduleInterestEvents,ScheduleInterestEvent::getStartDate);
+      var startDates = Event.getDates(scheduleInterestEvents, TimetableInterestEntry::getStartDate);
       var principalResetDates = pg.generate(scheduleParameters.getPrincipal(),
           startDates, new PrincipalUpdatePolicyByAmount(scheduleParameters.getEndPrincipal(),Amount.TEN));
       ph = new PrincipalsHolder(scheduleParameters.getPrincipal(),principalResetDates);
@@ -83,15 +80,10 @@ public class ScheduleGeneratorTest {
     //LOGGER.info("schedule:{}",scheduleText2(schedule));
   }
 
-  private String scheduleText1(List<ScheduleInterestEvent> events) {
+  private String scheduleText1(List<TimetableInterestEntry> events) {
     return events.stream()
-        .map(ScheduleInterestEvent::toString)
+        .map(TimetableInterestEntry::toString)
         .collect(Collectors.joining("\n"));
   }
 
-  private String scheduleText2(List<XEvent> events) {
-    return events.stream()
-        .map(XEvent::toString)
-        .collect(Collectors.joining("\n"));
-  }
 }
