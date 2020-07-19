@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.blacksmith.commons.counter.BooleanStateCounter;
+import org.blacksmith.commons.property.PropertyUpdater;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.interestbasis.ScheduleParameters;
@@ -12,12 +14,12 @@ import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.InterestRateType;
 import org.blacksmith.finlib.schedule.ScheduleComposePolicy;
-import org.blacksmith.finlib.schedule.events.InterestEvent;
 import org.blacksmith.finlib.schedule.events.InterestEventSrc;
 import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
 import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
 import org.blacksmith.finlib.schedule.events.schedule.ScheduleInterestEvent;
+import org.blacksmith.finlib.schedule.events.schedule.SchedulePrincipalEvent;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,24 +62,27 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
 
   @Override
   public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {
-    splitResets(cashflows);
-    boolean principalsUpdated = updatePrincipals(cashflows);
-    boolean ratesUpdated = updateRates(cashflows);
-    if (principalsUpdated || ratesUpdated) {
+    BooleanStateCounter change = new BooleanStateCounter();
+    change.update(splitResets(cashflows));
+    change.update(updatePrincipals(cashflows));
+    change.update(updateRates(cashflows));
+    if (change.hasTrue()) {
       calculateInterest(cashflows);
     }
     return cashflows;
   }
 
   private boolean updateRates(List<CashflowInterestEvent> cashflows) {
-    boolean changed = false;
+    BooleanStateCounter change = new BooleanStateCounter();
     Rate newRate = Rate.ZERO;
+    PropertyUpdater<CashflowInterestEvent,Rate> cashflowRateUpdater =
+        new PropertyUpdater<>(CashflowInterestEvent::getInterestRate,CashflowInterestEvent::setInterestRate);
+    PropertyUpdater<RateResetEvent,Rate> rateResetRateUpdater =
+        new PropertyUpdater<>(RateResetEvent::getInterestRate,RateResetEvent::setInterestRate);
     for (CashflowInterestEvent cashflow: cashflows) {
       if (cashflow.getSubEvents().isEmpty()) {
         newRate = getInterestRate(cashflow.getStartDate(),cashflow.getEndDate());
-        if (cashflow.setInterestRate(newRate)) {
-          changed = true;
-        }
+        change.update(cashflowRateUpdater.set(cashflow,newRate));
       }
       else {
         for (int i=0; i<cashflow.getSubEvents().size(); i++) {
@@ -85,16 +90,12 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
           if (i==0 || rr.isRateReset()) {
             newRate = getInterestRate(rr.getStartDate(),rr.getEndDate());
           }
-          if (rr.setInterestRate(newRate)) {
-            changed = true;
-          }
+          change.update(rateResetRateUpdater.set(rr,newRate));
         }
-        if (cashflow.setInterestRate(cashflow.firstRateReset().getInterestRate())) {
-          changed = true;
-        }
+        change.update(cashflowRateUpdater.set(cashflow,cashflow.firstRateReset().getInterestRate()));
       }
     }
-    return changed;
+    return change.hasTrue();
   }
 
   private void calculateInterest(List<CashflowInterestEvent> cashflows) {
@@ -140,36 +141,37 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
     }
   }
 
-  private void splitResets(List<CashflowInterestEvent> cashflows) {
-    if (principalsHolder.isEmpty()) return;
-    principalsHolder.getEvents().forEach(pe->{
+  private boolean splitResets(List<CashflowInterestEvent> cashflows) {
+    if (principalsHolder.isEmpty()) return false;
+    BooleanStateCounter stateCounter = new BooleanStateCounter();
+    for (SchedulePrincipalEvent pe: principalsHolder.getEvents()) {
       var ie = InterestEventSrc.getEventInRange(cashflows,pe.getDate());
       if (ie!=null) {
-        ie.splitRateReset(pe.getDate());
+        stateCounter.update(ie.splitSubEvent(pe.getDate()));
       }
-    });
+    }
+    return stateCounter.hasTrue();
   }
 
   private boolean updatePrincipals(List<CashflowInterestEvent> cashflows) {
-    boolean changed=false;
+    BooleanStateCounter stateCounter = new BooleanStateCounter();
+    PropertyUpdater<CashflowInterestEvent,Amount> cashflowPrincipalUpdater =
+        new PropertyUpdater<>(CashflowInterestEvent::getPrincipal,CashflowInterestEvent::setPrincipal);
+    PropertyUpdater<RateResetEvent,Amount> rateResetPrincipalUpdater =
+        new PropertyUpdater<>(RateResetEvent::getPrincipal,RateResetEvent::setPrincipal);
     for (CashflowInterestEvent cashflow: cashflows) {
       if (cashflow.getSubEvents().isEmpty()) {
         Amount newPrincipal = principalsHolder.getPrincipal(cashflow.getStartDate());
-        if (cashflow.setPrincipal(newPrincipal)) {
-          changed = true;
-        }
+        stateCounter.update(cashflowPrincipalUpdater.set(cashflow,newPrincipal));
       }
       else {
         for (RateResetEvent rr: cashflow.getSubEvents()) {
-          if (rr.setPrincipal(principalsHolder.getPrincipal(rr.getStartDate()))) {
-            changed = true;
-          }
+          Amount newPrincipal = principalsHolder.getPrincipal(rr.getStartDate());
+          stateCounter.update(rateResetPrincipalUpdater.set(rr,newPrincipal));
         }
-        if (cashflow.setPrincipal(cashflow.firstRateReset().getPrincipal())) {
-          changed = true;
-        }
+        stateCounter.update(cashflowPrincipalUpdater.set(cashflow,cashflow.firstRateReset().getPrincipal()));
       }
     }
-    return changed;
+    return stateCounter.hasTrue();
   }
 }

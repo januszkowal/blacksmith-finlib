@@ -31,22 +31,6 @@ public class RateResetEvent implements InterestEventSrc {
   @Builder.Default
   boolean isRateReset=true;
 
-  public boolean setInterestRate(Rate interestRate) {
-    boolean result = this.interestRate.equals(interestRate);
-    if (!result) {
-      this.interestRate = interestRate;
-    }
-    return result;
-  }
-
-  public boolean setPrincipal(Amount principal) {
-    boolean result = this.principal.equals(principal);
-    if (!result) {
-      this.principal = principal;
-    }
-    return result;
-  }
-
   @Override
   public LocalDate getEventDate() {
     return this.startDate;
