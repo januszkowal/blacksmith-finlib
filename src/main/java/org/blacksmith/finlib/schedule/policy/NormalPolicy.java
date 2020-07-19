@@ -1,23 +1,18 @@
 package org.blacksmith.finlib.schedule.policy;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.blacksmith.commons.counter.BooleanStateCounter;
-import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.schedule.ScheduleParameters;
-import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
-import org.blacksmith.finlib.schedule.InterestRateType;
 import org.blacksmith.finlib.schedule.ScheduleComposePolicy;
 import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
 import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
 import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.helper.PrincipalUpdater;
 import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +22,14 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
 
   private final PrincipalsHolder principalsHolder;
   private final InterestRateService interestRateService;
+  private final InterestCalculator interestCalculator;
 
   public NormalPolicy(ScheduleParameters scheduleParameters,
       PrincipalsHolder principalsHolder, InterestRateService interestRateService) {
     super(scheduleParameters);
     this.principalsHolder = principalsHolder;
     this.interestRateService = interestRateService;
+    this.interestCalculator = new InterestCalculator(scheduleParameters);
   }
 
   public Function<List<CashflowInterestEvent>, List<CashflowInterestEvent>> getUpdater() {
@@ -67,7 +64,7 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
             .build())
         .collect(Collectors.toList());
     cashflows = getUpdater().apply(cashflows);
-    calculateInterest(cashflows);
+    cashflows = this.interestCalculator.apply(cashflows);
     return cashflows;
   }
 
@@ -79,46 +76,8 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
     var updated = getUpdater().apply(cashflows);
     if (!CollectionUtils.isEqualCollection(original, updated)) {
       log.info("Recalculate interest");
-      calculateInterest(updated);
+      updated = this.interestCalculator.apply(updated);
     }
     return updated;
-  }
-
-  private void calculateInterest(List<CashflowInterestEvent> cashflows) {
-    for (CashflowInterestEvent cashflow : cashflows) {
-      if (cashflow.getSubEvents().isEmpty()) {
-        Amount interest = calculateInterest(cashflow);
-        cashflow.setInterest(interest);
-        cashflow.setAmount(interest);
-      } else {
-        cashflow.getSubEvents().forEach(rr -> {
-          Amount interest = calculateInterest(rr);
-          rr.setInterest(interest);
-        });
-        Amount interestSum = cashflow.getSubEvents().stream()
-            .map(RateResetEvent::getInterest)
-            .reduce(Amount.ZERO, Amount::add);
-        cashflow.setInterest(interestSum);
-        cashflow.setAmount(interestSum);
-      }
-    }
-  }
-
-  private Rate getInterestRate(LocalDate startDate, LocalDate endDate) {
-    if (scheduleParameters.getInterestRateType() == InterestRateType.CONST) {
-      return scheduleParameters.getStartInterestRate();
-    } else {
-      InterestRateId rateKey = InterestRateId.of(scheduleParameters.getInterestTable(),
-          scheduleParameters.getCouponFrequency().toString(),
-          scheduleParameters.getCurrency());
-      //fixingDate
-      return Optional.ofNullable(interestRateService.getRateValue(rateKey, startDate))
-          .map(r -> r.multiply(scheduleParameters.getInterestRateMulMargin()))
-          .orElse(Rate.ZERO)
-          .add(scheduleParameters.getInterestRateAddMargin());
-      //      xrate := Yield_Pkg.get_fra_DD(IntParam.yieldCurveId,
-      //          IntParam.ccyId, Accpkg.procdate, resetDate, endDate + 1);
-
-    }
   }
 }

@@ -21,10 +21,12 @@ import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements ScheduleComposePolicy {
 
   private final AlgSolverBuilder solverBuilder;
+  private final InterestCalculator interestCalculator;
 
   public AnnuityPolicy(AlgSolverBuilder solverBuilder, ScheduleParameters scheduleParameters) {
     super(scheduleParameters);
     this.solverBuilder = solverBuilder;
+    this.interestCalculator = new InterestCalculator(scheduleParameters);
   }
 
   @Override
@@ -82,13 +84,13 @@ public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements Sc
   public double recalculateAnnuity(List<CashflowInterestEvent> cashflows, double arg) {
     Amount currentPrincipal = scheduleParameters.getPrincipal();
     Amount nextPrincipal = Amount.ZERO;
-    Amount principalPayment = Amount.ZERO;
+    Amount principalPayment;
     Amount payment = Amount.of(arg);
-    Amount interestPayment = Amount.ZERO;
+    Amount interestPayment;
     for (CashflowInterestEvent cashflow : cashflows) {
       cashflow.setPrincipal(currentPrincipal);
       if (currentPrincipal.compareTo(scheduleParameters.getEndPrincipal()) > 0) {
-        interestPayment = calculateInterest(cashflow);
+        interestPayment = interestCalculator.calculateInterest(cashflow);
         Amount maxPrincipalPayment = currentPrincipal.subtract(scheduleParameters.getEndPrincipal());
         Amount paymentAvailable = payment.subtract(interestPayment);
         if (paymentAvailable.isNegative()) {
@@ -100,7 +102,7 @@ public class AnnuityPolicy extends AbstractScheduleAlgorithmPolicy implements Sc
         }
       } else {
         principalPayment = Amount.ZERO;
-        interestPayment = currentPrincipal.isPositive() ? calculateInterest(cashflow) : Amount.ZERO;
+        interestPayment = currentPrincipal.isPositive() ? interestCalculator.calculateInterest(cashflow) : Amount.ZERO;
       }
       cashflow.setInterest(interestPayment);
       cashflow.setPrincipalPayment(principalPayment);
