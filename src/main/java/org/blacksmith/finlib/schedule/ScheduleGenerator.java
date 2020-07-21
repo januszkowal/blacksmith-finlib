@@ -5,11 +5,12 @@ import java.util.List;
 import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.policy.ScheduleAlgorithm;
 import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
-import org.blacksmith.finlib.schedule.policy.AnnuityPolicy;
-import org.blacksmith.finlib.schedule.policy.NormalPolicy;
+import org.blacksmith.finlib.schedule.policy.AnnuityScheduleAlgorithm;
+import org.blacksmith.finlib.schedule.policy.StandardScheduleAlgorithm;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduleGenerator {
 
   private final ScheduleParameters scheduleParameters;
-  private final ScheduleComposePolicy schedulePolicy;
+  private final ScheduleAlgorithm schedulePolicy;
   private final InterestRateService interestRateService;
   private final PrincipalsHolder principalHolder;
 
@@ -30,21 +31,21 @@ public class ScheduleGenerator {
     this.schedulePolicy = createSchedulePolicy();
   }
 
-  private ScheduleComposePolicy createSchedulePolicy() {
+  private ScheduleAlgorithm createSchedulePolicy() {
     if (scheduleParameters.getAlgorithm()== InterestAlghoritm.ANNUITY) {
-      return new AnnuityPolicy(
+      return new AnnuityScheduleAlgorithm(
           AlgSolverBuilder.builder(AlgSolverBuilder.SolverAlgorithm.BI_SECTION),
           scheduleParameters);
     }
     else {
-      return new NormalPolicy(scheduleParameters,principalHolder,interestRateService);
+      return new StandardScheduleAlgorithm(scheduleParameters,principalHolder,interestRateService);
     }
   }
 
-  public List<CashflowInterestEvent> create(List<TimetableInterestEntry> events) {
+  public List<InterestEvent> create(List<TimetableInterestEntry> events) {
     return schedulePolicy.create(events);
   }
-  public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {
+  public List<InterestEvent> update(List<InterestEvent> cashflows) {
     return schedulePolicy.update(cashflows);
   }
 }

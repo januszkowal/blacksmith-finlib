@@ -1,14 +1,14 @@
-package org.blacksmith.finlib.schedule.helper;
+package org.blacksmith.finlib.schedule.policy.helper;
 
 import java.util.List;
 
 import org.blacksmith.commons.counter.BooleanStateCounter;
 import org.blacksmith.commons.property.PropertyUpdater;
 import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.schedule.ScheduleUpdater;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
-import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.events.RateResetEvent;
+import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
 
 public class PrincipalUpdater implements ScheduleUpdater {
   private final PrincipalsHolder principalsHolder;
@@ -18,13 +18,13 @@ public class PrincipalUpdater implements ScheduleUpdater {
   }
 
   @Override
-  public List<CashflowInterestEvent> apply(List<CashflowInterestEvent> cashflows) {
+  public List<InterestEvent> apply(List<InterestEvent> cashflows) {
     BooleanStateCounter stateCounter = new BooleanStateCounter();
-    PropertyUpdater<CashflowInterestEvent, Amount> cashflowPrincipalUpdater =
-        new PropertyUpdater<>(CashflowInterestEvent::getPrincipal,CashflowInterestEvent::setPrincipal);
+    PropertyUpdater<InterestEvent, Amount> cashflowPrincipalUpdater =
+        new PropertyUpdater<>(InterestEvent::getPrincipal, InterestEvent::setPrincipal);
     PropertyUpdater<RateResetEvent,Amount> rateResetPrincipalUpdater =
         new PropertyUpdater<>(RateResetEvent::getPrincipal,RateResetEvent::setPrincipal);
-    for (CashflowInterestEvent cashflow: cashflows) {
+    for (InterestEvent cashflow: cashflows) {
       if (cashflow.getSubEvents().isEmpty()) {
         Amount newPrincipal = principalsHolder.getPrincipal(cashflow.getStartDate());
         stateCounter.update(cashflowPrincipalUpdater.set(cashflow,newPrincipal));

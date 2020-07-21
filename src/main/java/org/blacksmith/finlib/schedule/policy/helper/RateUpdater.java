@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.schedule.policy;
+package org.blacksmith.finlib.schedule.policy.helper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,9 +11,9 @@ import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.InterestRateType;
-import org.blacksmith.finlib.schedule.ScheduleUpdater;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
+import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.events.RateResetEvent;
 
 public class RateUpdater implements ScheduleUpdater {
   private final ScheduleParameters scheduleParameters;
@@ -25,14 +25,14 @@ public class RateUpdater implements ScheduleUpdater {
   }
 
   @Override
-  public List<CashflowInterestEvent> apply(List<CashflowInterestEvent> cashflows) {
+  public List<InterestEvent> apply(List<InterestEvent> cashflows) {
     BooleanStateCounter change = new BooleanStateCounter();
     Rate newRate = Rate.ZERO;
-    PropertyUpdater<CashflowInterestEvent,Rate> cashflowRateUpdater =
-        new PropertyUpdater<>(CashflowInterestEvent::getInterestRate,CashflowInterestEvent::setInterestRate);
+    PropertyUpdater<InterestEvent,Rate> cashflowRateUpdater =
+        new PropertyUpdater<>(InterestEvent::getInterestRate, InterestEvent::setInterestRate);
     PropertyUpdater<RateResetEvent,Rate> rateResetRateUpdater =
         new PropertyUpdater<>(RateResetEvent::getInterestRate,RateResetEvent::setInterestRate);
-    for (CashflowInterestEvent cashflow: cashflows) {
+    for (InterestEvent cashflow: cashflows) {
       if (cashflow.getSubEvents().isEmpty()) {
         newRate = getInterestRate(cashflow.getStartDate(),cashflow.getEndDate());
         change.update(cashflowRateUpdater.set(cashflow,newRate));

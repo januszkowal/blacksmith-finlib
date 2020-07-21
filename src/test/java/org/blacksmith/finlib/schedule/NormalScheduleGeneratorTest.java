@@ -19,7 +19,7 @@ import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
 import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
-import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.schedule.timetable.TimetableGeneratorFactory;
 import org.junit.jupiter.api.Test;

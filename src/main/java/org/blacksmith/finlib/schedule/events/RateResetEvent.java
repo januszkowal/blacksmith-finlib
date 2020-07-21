@@ -1,10 +1,9 @@
-package org.blacksmith.finlib.schedule.events.interest;
+package org.blacksmith.finlib.schedule.events;
 
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.schedule.events.InterestEventSrc;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RateResetEvent implements InterestEventSrc {
+public class RateResetEvent implements Event {
   @NonNull
   LocalDate startDate;
   @NonNull

@@ -8,31 +8,34 @@ import org.apache.commons.collections.CollectionUtils;
 import org.blacksmith.commons.counter.BooleanStateCounter;
 import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
-import org.blacksmith.finlib.schedule.ScheduleComposePolicy;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
-import org.blacksmith.finlib.schedule.events.schedule.PrincipalsHolder;
-import org.blacksmith.finlib.schedule.helper.PrincipalUpdater;
+import org.blacksmith.finlib.schedule.policy.helper.InterestUpdater;
+import org.blacksmith.finlib.schedule.policy.helper.PrincipalUpdater;
+import org.blacksmith.finlib.schedule.policy.helper.RateResetSplitUpdater;
+import org.blacksmith.finlib.schedule.policy.helper.RateUpdater;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.events.RateResetEvent;
+import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.helper.CascadeFunction;
 import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements ScheduleComposePolicy {
+public class StandardScheduleAlgorithm extends AbstractScheduleAlgorithm implements ScheduleAlgorithm {
 
   private final PrincipalsHolder principalsHolder;
   private final InterestRateService interestRateService;
-  private final InterestCalculator interestCalculator;
+  private final InterestUpdater interestCalculator;
 
-  public NormalPolicy(ScheduleParameters scheduleParameters,
+  public StandardScheduleAlgorithm(ScheduleParameters scheduleParameters,
       PrincipalsHolder principalsHolder, InterestRateService interestRateService) {
     super(scheduleParameters);
     this.principalsHolder = principalsHolder;
     this.interestRateService = interestRateService;
-    this.interestCalculator = new InterestCalculator(scheduleParameters);
+    this.interestCalculator = new InterestUpdater(scheduleParameters);
   }
 
-  public Function<List<CashflowInterestEvent>, List<CashflowInterestEvent>> getUpdater() {
+  public Function<List<InterestEvent>, List<InterestEvent>> getUpdater() {
     return new CascadeFunction<>(List.of(
         new RateResetSplitUpdater(principalsHolder),
         new PrincipalUpdater(principalsHolder),
@@ -40,16 +43,16 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
     ));
   }
 
-  public Function<List<CashflowInterestEvent>, List<CashflowInterestEvent>> getUpdater1() {
+  public Function<List<InterestEvent>, List<InterestEvent>> getUpdater1() {
     return new RateResetSplitUpdater(principalsHolder)
         .andThen(new PrincipalUpdater(principalsHolder))
         .andThen(new RateUpdater(scheduleParameters, interestRateService));
   }
 
   @Override
-  public List<CashflowInterestEvent> create(List<TimetableInterestEntry> events) {
+  public List<InterestEvent> create(List<TimetableInterestEntry> events) {
     var cashflows = events.stream()
-        .map(se -> CashflowInterestEvent.builder()
+        .map(se -> InterestEvent.builder()
             .startDate(se.getStartDate())
             .endDate(se.getEndDate())
             .paymentDate(se.getPaymentDate())
@@ -69,10 +72,10 @@ public class NormalPolicy extends AbstractScheduleAlgorithmPolicy implements Sch
   }
 
   @Override
-  public List<CashflowInterestEvent> update(List<CashflowInterestEvent> cashflows) {
+  public List<InterestEvent> update(List<InterestEvent> cashflows) {
     BooleanStateCounter change = new BooleanStateCounter();
     //keep original to detect if changed
-    var original = CashflowInterestEvent.copy(cashflows);
+    var original = InterestEvent.copy(cashflows);
     var updated = getUpdater().apply(cashflows);
     if (!CollectionUtils.isEqualCollection(original, updated)) {
       log.info("Recalculate interest");

@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.schedule.policy;
+package org.blacksmith.finlib.schedule.helper;
 
 import java.util.List;
 import java.util.function.Function;

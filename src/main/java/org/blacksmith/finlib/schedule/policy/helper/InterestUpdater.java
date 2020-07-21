@@ -1,23 +1,22 @@
-package org.blacksmith.finlib.schedule.policy;
+package org.blacksmith.finlib.schedule.policy.helper;
 
 import java.util.List;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.schedule.ScheduleParameters;
-import org.blacksmith.finlib.schedule.ScheduleUpdater;
-import org.blacksmith.finlib.schedule.events.InterestEventSrc;
-import org.blacksmith.finlib.schedule.events.interest.CashflowInterestEvent;
-import org.blacksmith.finlib.schedule.events.interest.RateResetEvent;
+import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
+import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.events.RateResetEvent;
 
-public class InterestCalculator implements ScheduleUpdater {
+public class InterestUpdater implements ScheduleUpdater {
   private final ScheduleParameters scheduleParameters;
 
-  public InterestCalculator(ScheduleParameters scheduleParameters) {
+  public InterestUpdater(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
   }
   @Override
-  public List<CashflowInterestEvent> apply(List<CashflowInterestEvent> cashflows) {
-    for (CashflowInterestEvent cashflow : cashflows) {
+  public List<InterestEvent> apply(List<InterestEvent> cashflows) {
+    for (InterestEvent cashflow : cashflows) {
       if (cashflow.getSubEvents().isEmpty()) {
         Amount interest = calculateInterest(cashflow);
         cashflow.setInterest(interest);
@@ -37,7 +36,13 @@ public class InterestCalculator implements ScheduleUpdater {
     return cashflows;
   }
 
-  public Amount calculateInterest(InterestEventSrc ie) {
+  public Amount calculateInterest(InterestEvent ie) {
+    double fraction = scheduleParameters.getBasis()
+        .yearFraction(ie.getStartDate(), ie.getEndDate(), null);
+    return Amount.of(ie.getPrincipal().doubleValue() * fraction * ie.getInterestRate().doubleValue() / 100d);
+  }
+
+  public Amount calculateInterest(RateResetEvent ie) {
     double fraction = scheduleParameters.getBasis()
         .yearFraction(ie.getStartDate(), ie.getEndDate(), null);
     return Amount.of(ie.getPrincipal().doubleValue() * fraction * ie.getInterestRate().doubleValue() / 100d);

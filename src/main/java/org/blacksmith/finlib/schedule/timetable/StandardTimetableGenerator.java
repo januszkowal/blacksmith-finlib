@@ -13,7 +13,7 @@ public class StandardTimetableGenerator implements TimetableGenerator {
 
   @Override
   public List<TimetableInterestEntry> generate(ScheduleParameters scheduleParameters) {
-    ArgChecker.notNull(scheduleParameters,"Schedule parameters must be not null");
+    ArgChecker.notNull(scheduleParameters, "Schedule parameters must be not null");
     List<TimetableInterestEntry> schedule = new ArrayList<>();
     LocalDate refDate = scheduleParameters.getFirstCouponDate();
     LocalDate cashflowStartDate = scheduleParameters.getStartDate();
@@ -21,9 +21,8 @@ public class StandardTimetableGenerator implements TimetableGenerator {
     LocalDate cashflowPmtDateAdjusted;
     LocalDate cashflowEndDate;
 
-    int i = refDate.compareTo(scheduleParameters.getStartDate()) > 0 ? -1 : 0;
+    int i = refDate.compareTo(scheduleParameters.getStartDate()) > 0 ? 0 : 1;
     while (cashflowStartDate.isBefore(scheduleParameters.getMaturityDate())) {
-      i++;
       cashflowPmtDateUnadjusted = scheduleParameters.getCouponFrequency()
           .addToWithEomAdjust(refDate, i, scheduleParameters.isEndOfMonthConvention());
       cashflowPmtDateAdjusted = scheduleParameters.getBusinessDayConvention()
@@ -46,6 +45,7 @@ public class StandardTimetableGenerator implements TimetableGenerator {
       }
       schedule.add(cashflowBuilder.build());
       cashflowStartDate = cashflowEndDate;
+      i++;
     }
 
     return Collections.unmodifiableList(schedule);
@@ -57,9 +57,8 @@ public class StandardTimetableGenerator implements TimetableGenerator {
     LocalDate subCashflowStartDate = startDate;
     while (subCashflowStartDate.isBefore(endDate)) {
       LocalDate subCashflowEndDateUnadjusted =
-          DateUtils.min(endDate,
-              scheduleParameters.getRateResetFrequency()
-                  .addToWithEomAdjust(subCashflowStartDate, scheduleParameters.isEndOfMonthConvention()));
+          DateUtils.min(endDate, scheduleParameters.getRateResetFrequency()
+              .addToWithEomAdjust(subCashflowStartDate, scheduleParameters.isEndOfMonthConvention()));
       subEvents.add(TimetableInterestEntry.TimetableRateResetEntry.builder()
           .startDate(subCashflowStartDate)
           .endDate(subCashflowEndDateUnadjusted)

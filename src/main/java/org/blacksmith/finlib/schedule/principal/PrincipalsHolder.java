@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.schedule.events.schedule;
+package org.blacksmith.finlib.schedule.principal;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -8,14 +8,15 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.numbers.Amount;
+import org.blacksmith.finlib.schedule.events.PrincipalEvent;
 
 import static java.util.stream.Collectors.collectingAndThen;
 
 public class PrincipalsHolder {
-  private final List<SchedulePrincipalEvent> events;
+  private final List<PrincipalEvent> events;
   private final Amount startPrincipal;
 
-  public PrincipalsHolder(Amount startPrincipal, List<SchedulePrincipalEvent> events) {
+  public PrincipalsHolder(Amount startPrincipal, List<PrincipalEvent> events) {
     ArgChecker.notNull(startPrincipal);
     ArgChecker.isTrue(startPrincipal.isPositive(),"Start principal must be greater than 0");
     ArgChecker.notNull(events,"Events must be not null");
@@ -33,7 +34,7 @@ public class PrincipalsHolder {
     return events.isEmpty() ? startPrincipal : events.stream()
         .filter(e -> e.getDate().compareTo(date) <= 0)
         .sorted(Comparator.reverseOrder())
-        .map(SchedulePrincipalEvent::getPrincipal)
+        .map(PrincipalEvent::getPrincipal)
         .findFirst()
         .orElse(startPrincipal);
   }
@@ -43,7 +44,7 @@ public class PrincipalsHolder {
         .anyMatch(e->e.getDate().equals(date));
   }
 
-  public List<SchedulePrincipalEvent> getEvents() {
+  public List<PrincipalEvent> getEvents() {
     return this.events;
   }
 

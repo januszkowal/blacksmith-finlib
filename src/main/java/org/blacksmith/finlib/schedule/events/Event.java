@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public interface Event extends Comparable<Event> {
+  /* Execution date & sorting*/
   LocalDate getEventDate();
 
   default int compareTo(Event e) {
@@ -25,6 +26,6 @@ public interface Event extends Comparable<Event> {
   static String eventsToString(List<? extends Event> cashflows) {
     return cashflows.stream()
         .map(Event::toString)
-        .collect(Collectors.joining("\n","\n",""));
+        .collect(Collectors.joining(System.lineSeparator(),System.lineSeparator(),""));
   }
 }
