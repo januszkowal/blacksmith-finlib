@@ -20,7 +20,7 @@ import org.blacksmith.finlib.interestbasis.daycount.DayCountConventionCalculator
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public enum StandardDayCountConvention implements DayCountConvention {
+public enum StandardInterestBasis implements InterestBasis {
 
   /**
    * Always one
@@ -146,7 +146,7 @@ public enum StandardDayCountConvention implements DayCountConvention {
 
   // actual days / 365 or 366
   //TODO CHECK
-  ACT_365L("Act/365L", new ActAct365LConvention()),
+  ACT_365L("ACT/365L", new ActAct365LConvention()),
 
   /**
    * Name: NL/360
@@ -300,12 +300,12 @@ public enum StandardDayCountConvention implements DayCountConvention {
   private final String shortName;
   private final DayCountConventionCalculator calculator;
 
-  StandardDayCountConvention(String shortName, DayCountConventionCalculator calculator) {
+  StandardInterestBasis(String shortName, DayCountConventionCalculator calculator) {
     this.shortName = shortName;
     this.calculator = calculator;
   }
   public String getShortName() {
     return this.shortName;
   }
-  private static final Logger LOGGER = LoggerFactory.getLogger(StandardDayCountConvention.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(StandardInterestBasis.class);
 }

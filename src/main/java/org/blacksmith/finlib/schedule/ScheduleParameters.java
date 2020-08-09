@@ -7,9 +7,8 @@ import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
-import org.blacksmith.finlib.interestbasis.DayCountConvention;
-import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
-import org.blacksmith.finlib.schedule.InterestRateType;
+import org.blacksmith.finlib.interestbasis.InterestBasis;
+import org.blacksmith.finlib.interestbasis.InterestAlgoritm;
 
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +22,7 @@ public class ScheduleParameters {
   @Builder.Default
   private Amount endPrincipal = Amount.ZERO;
   @Builder.Default
-  private InterestRateType interestRateType = InterestRateType.CONST;
+  private InterestRateIndexation indexation = InterestRateIndexation.FIXED;
   private Rate startInterestRate;
   @Builder.Default
   private Rate interestRateAddMargin = Rate.ZERO;
@@ -33,11 +32,11 @@ public class ScheduleParameters {
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
   private Frequency rateResetFrequency;
-  private DayCountConvention basis;
+  private InterestBasis basis;
   private BusinessDayConvention businessDayConvention;
   private BusinessDayCalendar businessDayCalendar;
   @Builder.Default
-  private InterestAlghoritm algorithm=InterestAlghoritm.NORMAL;
+  private InterestAlgoritm algorithm= InterestAlgoritm.SIMPLE;
   @Builder.Default
   private boolean linkCouponLengthWitPayment=true;
   private LocalDate startDate;

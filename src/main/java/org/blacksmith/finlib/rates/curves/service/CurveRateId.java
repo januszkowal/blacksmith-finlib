@@ -9,19 +9,21 @@ import lombok.Value;
 @Value
 public class CurveRateId implements MarketDataId {
   private final String curve;
-  private final Currency ccy;
+  private final Currency currency;
 
-  public CurveRateId(String curve, Currency ccy) {
+  public CurveRateId(String curve, Currency currency) {
     ArgChecker.notEmpty(curve);
-    ArgChecker.notNull(ccy);
+    ArgChecker.notNull(currency);
     this.curve = curve;
-    this.ccy = ccy;
+    this.currency = currency;
   }
 
-  public static CurveRateId of (String curve, Currency ccy) {
-    return new CurveRateId(curve, ccy);
+  public static CurveRateId of(String curve, Currency currency) {
+    return new CurveRateId(curve, currency);
   }
-  public static CurveRateId of (String curve, String ccy) {
-    return new CurveRateId(curve, Currency.of(ccy));
+
+  public static CurveRateId of(String curve, String currency) {
+
+    return new CurveRateId(curve, Currency.of(currency));
   }
 }

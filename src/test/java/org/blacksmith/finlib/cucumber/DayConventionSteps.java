@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
-import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
+import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
 
 @Slf4j
 public class DayConventionSteps {
 
-  private StandardDayCountConvention convention;
+  private StandardInterestBasis convention;
   final GroovyShell shell = new GroovyShell();
   private ScheduleInfo.ScheduleInfoBuilder scheduleInfoBuilder;
 
@@ -41,7 +41,7 @@ public class DayConventionSteps {
   }
 
   @And("^For Day Convention (.*)$")
-  public void setDayConvention(StandardDayCountConvention convention) {
+  public void setDayConvention(StandardInterestBasis convention) {
     this.convention = convention;
   }
 
@@ -60,7 +60,7 @@ public class DayConventionSteps {
     return table.asMaps().stream()
         .map(fields-> {
           ScheduleInfo schInfo = null;
-          if (convention==StandardDayCountConvention.ACT_ACT_ICMA) {
+          if (convention== StandardInterestBasis.ACT_ACT_ICMA) {
             ArgChecker.notNull(scheduleInfoBuilder,"Schedule builder is null");
             schInfo = scheduleInfoBuilder
                 .couponStartDate(LocalDate.parse(fields.get("start")))

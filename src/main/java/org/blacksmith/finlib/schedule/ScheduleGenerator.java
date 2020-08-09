@@ -2,7 +2,7 @@ package org.blacksmith.finlib.schedule;
 
 import java.util.List;
 
-import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
+import org.blacksmith.finlib.interestbasis.InterestAlgoritm;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.events.InterestEvent;
@@ -32,19 +32,19 @@ public class ScheduleGenerator {
   }
 
   private ScheduleAlgorithm createSchedulePolicy() {
-    if (scheduleParameters.getAlgorithm()== InterestAlghoritm.ANNUITY) {
+    if (scheduleParameters.getAlgorithm() == InterestAlgoritm.ANNUITY) {
       return new AnnuityScheduleAlgorithm(
           AlgSolverBuilder.builder(AlgSolverBuilder.SolverAlgorithm.BI_SECTION),
           scheduleParameters);
-    }
-    else {
-      return new StandardScheduleAlgorithm(scheduleParameters,principalHolder,interestRateService);
+    } else {
+      return new StandardScheduleAlgorithm(scheduleParameters, principalHolder, interestRateService);
     }
   }
 
   public List<InterestEvent> create(List<TimetableInterestEntry> events) {
     return schedulePolicy.create(events);
   }
+
   public List<InterestEvent> update(List<InterestEvent> cashflows) {
     return schedulePolicy.update(cashflows);
   }

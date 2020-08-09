@@ -16,8 +16,8 @@ import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
-import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
-import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
+import org.blacksmith.finlib.interestbasis.InterestAlgoritm;
+import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
 import org.blacksmith.finlib.schedule.events.Event;
 import org.blacksmith.finlib.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.schedule.principal.PrincipalUpdatePolicyByAmount;
@@ -41,13 +41,13 @@ public class AnnuityScheduleTest {
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
         CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN,ymdProvider));
     return ScheduleParameters.builder()
-        .algorithm(InterestAlghoritm.ANNUITY)
+        .algorithm(InterestAlgoritm.ANNUITY)
         .firstCouponDate(LocalDate.of(2019,1,1))
         .startDate(LocalDate.of(2019,1,3))
         .maturityDate(LocalDate.of(2021,1,1))        
         .couponFrequency(Frequency.P3M)
         .rateResetFrequency(Frequency.P1M)
-        .basis(StandardDayCountConvention.ACT_365)
+        .basis(StandardInterestBasis.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
         .startInterestRate(Rate.of(5.0d))
         .businessDayCalendar(cal)
@@ -64,7 +64,7 @@ public class AnnuityScheduleTest {
     var scheduleInterestEvents = new StandardTimetableGenerator().generate(scheduleParameters);
     //
     PrincipalsHolder ph;
-    if (scheduleParameters.getAlgorithm()==InterestAlghoritm.DECREASING_PRINCIPAL) {
+    if (scheduleParameters.getAlgorithm()== InterestAlgoritm.DECREASING_PRINCIPAL) {
       var pg = new PrincipalsGenerator(false,false);
       var startDates = Event.getDates(scheduleInterestEvents, TimetableInterestEntry::getStartDate);
       var principalResetDates = pg.generate(scheduleParameters.getPrincipal(),

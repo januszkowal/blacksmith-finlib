@@ -2,7 +2,7 @@ package org.blacksmith.finlib.interestbasis;
 
 import java.time.LocalDate;
 
-public interface DayCountConvention {
+public interface InterestBasis {
   /**
    * Gets the year fraction between the specified dates.
    * <p>

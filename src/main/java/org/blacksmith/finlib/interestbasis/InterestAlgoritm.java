@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.interestbasis;
 
-public enum InterestAlghoritm {
-  NORMAL,
+public enum InterestAlgoritm {
+  SIMPLE,
   ANNUITY,
   DECREASING_PRINCIPAL
 }

@@ -16,8 +16,8 @@ import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
-import org.blacksmith.finlib.interestbasis.InterestAlghoritm;
-import org.blacksmith.finlib.interestbasis.StandardDayCountConvention;
+import org.blacksmith.finlib.interestbasis.InterestAlgoritm;
+import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.schedule.timetable.StandardTimetableGenerator;
@@ -43,14 +43,14 @@ public class NormalScheduleGeneratorTest {
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
         CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN,ymdProvider));
     return ScheduleParameters.builder()
-        .algorithm(InterestAlghoritm.NORMAL)
+        .algorithm(InterestAlgoritm.SIMPLE)
         .currency(Currency.PLN)
         .firstCouponDate(LocalDate.of(2019,1,1))
         .startDate(LocalDate.of(2019,1,3))
         .maturityDate(LocalDate.of(2021,1,1))
         .couponFrequency(Frequency.P3M)
         .rateResetFrequency(Frequency.P1M)
-        .basis(StandardDayCountConvention.ACT_365)
+        .basis(StandardInterestBasis.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
         .startInterestRate(Rate.of(5.0d))
         .businessDayCalendar(cal)
@@ -58,7 +58,7 @@ public class NormalScheduleGeneratorTest {
         .principal(Amount.of(1000000L))
         //        .endPrincipal(Amount.of(200000L))
         .endPrincipal(Amount.of(0L))
-        .interestRateType(InterestRateType.VARIABLE)
+        .indexation(org.blacksmith.finlib.schedule.InterestRateIndexation.FLOATING)
         .interestTable("LIBOR")
         .build();
   }

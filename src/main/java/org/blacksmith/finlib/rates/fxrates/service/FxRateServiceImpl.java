@@ -39,7 +39,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private FxCurrencyPair getPair(FxRateId key) {
-    return this.ccyPairProvider.getPair(key.getFromCcy().getIsoCode(), key.getToCcy().getIsoCode());
+    return this.ccyPairProvider.getPair(key.getFromCcy().getCurrencyCode(), key.getToCcy().getCurrencyCode());
   }
 
   private FxRate3 getSourceFxRate(FxRateId key, LocalDate date) {
