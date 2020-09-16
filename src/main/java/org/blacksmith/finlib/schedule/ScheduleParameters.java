@@ -23,7 +23,7 @@ public class ScheduleParameters {
   private Amount endPrincipal = Amount.ZERO;
   @Builder.Default
   private InterestRateIndexation indexation = InterestRateIndexation.FIXED;
-  private Rate startInterestRate;
+  private Rate fixedRate;
   @Builder.Default
   private Rate interestRateAddMargin = Rate.ZERO;
   @Builder.Default

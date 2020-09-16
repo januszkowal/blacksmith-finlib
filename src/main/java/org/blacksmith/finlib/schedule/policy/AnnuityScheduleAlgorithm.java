@@ -36,7 +36,7 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
             .startDate(se.getStartDate())
             .endDate(se.getEndDate())
             .paymentDate(se.getPaymentDate())
-            .interestRate(scheduleParameters.getStartInterestRate())
+            .interestRate(scheduleParameters.getFixedRate())
             .build())
         .collect(Collectors.toList());
     return update(cashflows);
@@ -129,18 +129,18 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
     if (sumInterestPayment==0.0d) {
       return sumPrincipalPayment;
     } else {
-      double fff = scheduleParameters.getStartInterestRate().doubleValue();
+      double fff = scheduleParameters.getFixedRate().doubleValue();
       return sumPrincipalPayment / (sumInterestPayment*fff);
     }
   }
 
   private double getEstimatedPayment(List<InterestEvent> cashflows) {
     double principal = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue();
-    if (scheduleParameters.getStartInterestRate().isZero()) {
+    if (scheduleParameters.getFixedRate().isZero()) {
       return principal / cashflows.size();
     } else {
       double periodicInterestRate =
-          (scheduleParameters.getStartInterestRate().doubleValue() / 100) / scheduleParameters.getCouponFrequency()
+          (scheduleParameters.getFixedRate().doubleValue() / 100) / scheduleParameters.getCouponFrequency()
               .eventsPerYearEstimate();
       double x = Math.pow((1.0d + periodicInterestRate), cashflows.size());
       return principal * (periodicInterestRate * x) / (x - 1.0d);

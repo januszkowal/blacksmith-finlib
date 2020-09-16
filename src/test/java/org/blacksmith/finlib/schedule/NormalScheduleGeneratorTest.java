@@ -52,7 +52,7 @@ public class NormalScheduleGeneratorTest {
         .rateResetFrequency(Frequency.P1M)
         .basis(StandardInterestBasis.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
-        .startInterestRate(Rate.of(5.0d))
+        .fixedRate(Rate.of(5.0d))
         .businessDayCalendar(cal)
         .isEndOfMonthConvention(true)
         .principal(Amount.of(1000000L))

@@ -57,7 +57,7 @@ public class RateUpdater implements ScheduleUpdater {
 
   private Rate getInterestRate(LocalDate startDate, LocalDate endDate) {
     if (scheduleParameters.getIndexation() == InterestRateIndexation.FIXED) {
-      return scheduleParameters.getStartInterestRate();
+      return scheduleParameters.getFixedRate();
     } else {
       InterestRateId rateKey = InterestRateId.of(scheduleParameters.getInterestTable(),
           scheduleParameters.getCouponFrequency().toString(),
