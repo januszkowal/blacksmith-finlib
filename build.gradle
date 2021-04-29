@@ -11,14 +11,16 @@ plugins {
     id 'maven-publish'
 }
 
+apply from: 'dependencies.gradle'
+
 group = 'org.blacksmith'
-version = '0.1.2'
+version = blacksmithFinlibVersion
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
 
-apply from: 'dependencies.gradle'
+
 
 repositories {
     mavenLocal()

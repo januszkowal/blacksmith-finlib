@@ -2,8 +2,9 @@ package org.blacksmith.finlib.dayconvention;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Map;
+
 import org.blacksmith.commons.enums.EnumUtils;
+import org.blacksmith.commons.enums.SingleEnumCache;
 import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
 
 public enum StandardBusinessDayConvention implements BusinessDayConvention {
@@ -78,19 +79,20 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
     }
   };
   final private String shortName;
+
   StandardBusinessDayConvention(String shortName) {
     this.shortName = shortName;
   }
 
-  private static final Map<String, StandardBusinessDayConvention> shortNameMap =
-      EnumUtils.getAttrEnumMap(StandardBusinessDayConvention.class,StandardBusinessDayConvention::shortName);
+  private static final SingleEnumCache<String, StandardBusinessDayConvention> cache =
+      new SingleEnumCache<>(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName, true);
 
   public String shortName() {
     return this.shortName;
   }
 
   public static StandardBusinessDayConvention fromShortName(String shortName) {
-    return shortNameMap.get(shortName);
+    return cache.get(shortName);
   }
 
   public static StandardBusinessDayConvention fromName(String name) {

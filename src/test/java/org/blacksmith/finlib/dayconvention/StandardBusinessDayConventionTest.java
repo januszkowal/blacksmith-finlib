@@ -10,7 +10,8 @@ class StandardBusinessDayConventionTest {
     assertEquals(StandardBusinessDayConvention.MODIFIED_FOLLOWING,StandardBusinessDayConvention.fromName("MODIFIED_FOLLOWING"));
     assertNull(StandardBusinessDayConvention.fromName("XXX"));
     assertEquals(StandardBusinessDayConvention.MODIFIED_FOLLOWING,StandardBusinessDayConvention.fromShortName("ModifiedFollowing"));
-    assertNull(StandardBusinessDayConvention.fromShortName("xxx"));
+//    assertException
+//    asssertEx(StandardBusinessDayConvention.fromShortName("xxx"));
   }
 
 }
