@@ -1,6 +1,8 @@
 ext.libs = [
         apacheCommons: [
                 'org.apache.commons:commons-lang3:' + apacheCommonsVersion],
+        apacheCommonsCollections: [
+                'org.apache.commons:commons-collections4:' + apacheCommonsCollectionsVersion],
         apacheCommonsMath: [
                 'org.apache.commons:commons-math3:' + apacheCommonsMathVersion],
         commonsBeanutils: [
