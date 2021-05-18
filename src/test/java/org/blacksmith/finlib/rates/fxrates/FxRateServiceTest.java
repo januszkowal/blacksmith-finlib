@@ -12,7 +12,6 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.basic.BasicMarketDataHolder;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
-import org.blacksmith.finlib.rates.fxrates.FxRate3.FxRateValues;
 import org.blacksmith.finlib.rates.fxrates.service.FxRateService;
 import org.blacksmith.finlib.rates.fxrates.service.FxRateServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -34,7 +33,7 @@ class FxRateServiceTest {
       "YYYPLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 10d),
       "XXXYYY", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), true, 0d));
 
-  private static final MarketDataMemoryService<FxRateId, FxRateValues> fxRateSourceService =
+  private static final MarketDataMemoryService<FxRateId, FxRate3.FxRate3Values> fxRateSourceService =
       new MarketDataMemoryService<>();
 
   @BeforeAll

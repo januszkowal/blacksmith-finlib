@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface MarketDataService<K extends MarketDataId, V> {
+public interface MarketDataService<K, V> {
   MarketData<V> getRate(K key, LocalDate date);
 
   default <R> R getRateValue(K key, LocalDate date, Function<MarketData<V>,R> valueExtractor) {

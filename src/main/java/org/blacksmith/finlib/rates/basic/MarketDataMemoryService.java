@@ -10,7 +10,7 @@ import org.blacksmith.finlib.rates.MarketData;
 import org.blacksmith.finlib.rates.MarketDataId;
 import org.blacksmith.finlib.rates.MarketDataService;
 
-public class MarketDataMemoryService<K extends MarketDataId, V>
+public class MarketDataMemoryService<K, V>
     implements MarketDataService<K, V> {
 
   private final Map<K, List<MarketDataHolder<K, V>>> marketData = new HashMap<>();
@@ -21,7 +21,7 @@ public class MarketDataMemoryService<K extends MarketDataId, V>
   }
 
   @Override
-  public MarketData<V> getRate(MarketDataId key, LocalDate date) {
+  public MarketData<V> getRate(K key, LocalDate date) {
     return marketData.getOrDefault(key, Collections.emptyList()).stream()
         .filter(m->m.getMarketData().getDate().compareTo(date) <= 0)
         .max(MarketDataHolder.marketDataDateComparator)
