@@ -32,22 +32,51 @@ import static org.mockito.ArgumentMatchers.any;
 
 @Slf4j
 public class NormalScheduleGeneratorTest {
+  public InterestRateService createInterestRateService1() {
+    var interestRateService = Mockito.mock(InterestRateService.class);
+    //Mockito.when(interestRateService.getRate(any(),any())).thenReturn(BasicMarketData.of(LocalDate.now(),Rate.of(3d)));
+    Mockito.when(interestRateService.getRateValue(any(), any())).thenReturn(Rate.of(3d));
+    return interestRateService;
+  }
+
+  @Test
+  public void schedule1() {
+    var interestRateService = createInterestRateService1();
+    var scheduleParameters = createScheduleParameters1();
+    var timetableGenerator = TimetableGeneratorFactory.getTimetableGenerator(scheduleParameters);
+    assertEquals(StandardTimetableGenerator.class, timetableGenerator.getClass());
+    var timetable = timetableGenerator.generate(scheduleParameters);
+    assertEquals(8, timetable.size());
+    PrincipalsHolder principalsHolder = new PrincipalsHolder(scheduleParameters.getPrincipal());
+    ScheduleGenerator scheduleGenerator = new ScheduleGenerator(scheduleParameters,
+        interestRateService,
+        principalsHolder);
+    var schedule = scheduleGenerator.create(timetable);
+    assertEquals(8, schedule.size());
+    //    assertEquals(3,schedule.get(0).getInterestRate());
+    log.info("schedule1: {}", schedule);
+    Mockito.when(interestRateService.getRateValue(any(), any()))
+        .thenReturn(Rate.of(2d));
+    var schedule2 = scheduleGenerator.update(schedule);
+    log.info("schedule2: {}", schedule);
+  }
+
   private ScheduleParameters createScheduleParameters1() {
-    DatePartProvider<MonthDay> hyc = DatePartInMemoryProvider.of(MonthDay.of(1,1),
-        MonthDay.of(5,1),
-        MonthDay.of(5,3),
-        MonthDay.of(12,25),
-        MonthDay.of(12,26));
-    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY,hyc);
+    DatePartProvider<MonthDay> hyc = DatePartInMemoryProvider.of(MonthDay.of(1, 1),
+        MonthDay.of(5, 1),
+        MonthDay.of(5, 3),
+        MonthDay.of(12, 25),
+        MonthDay.of(12, 26));
+    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY, hyc);
 
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
-        CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN,ymdProvider));
+        CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgoritm.SIMPLE)
         .currency(Currency.PLN)
-        .firstCouponDate(LocalDate.of(2019,1,1))
-        .startDate(LocalDate.of(2019,1,3))
-        .maturityDate(LocalDate.of(2021,1,1))
+        .firstCouponDate(LocalDate.of(2019, 1, 1))
+        .startDate(LocalDate.of(2019, 1, 3))
+        .maturityDate(LocalDate.of(2021, 1, 1))
         .couponFrequency(Frequency.P3M)
         .rateResetFrequency(Frequency.P1M)
         .basis(StandardInterestBasis.ACT_365)
@@ -61,37 +90,6 @@ public class NormalScheduleGeneratorTest {
         .indexation(org.blacksmith.finlib.schedule.InterestRateIndexation.FLOATING)
         .interestTable("LIBOR")
         .build();
-  }
-
-  public InterestRateService createInterestRateService1() {
-    var interestRateService = Mockito.mock(InterestRateService.class);
-    //Mockito.when(interestRateService.getRate(any(),any())).thenReturn(BasicMarketData.of(LocalDate.now(),Rate.of(3d)));
-    Mockito.when(interestRateService.getRateValue(any(),any())).thenReturn(Rate.of(3d));
-    return interestRateService;
-  }
-
-
-
-  @Test
-  public void schedule1() {
-    var interestRateService = createInterestRateService1();
-    var scheduleParameters = createScheduleParameters1();
-    var timetableGenerator = TimetableGeneratorFactory.getTimetableGenerator(scheduleParameters);
-    assertEquals(StandardTimetableGenerator.class,timetableGenerator.getClass());
-    var timetable = timetableGenerator.generate(scheduleParameters);
-    assertEquals(8,timetable.size());
-    PrincipalsHolder principalsHolder = new PrincipalsHolder(scheduleParameters.getPrincipal());
-    ScheduleGenerator scheduleGenerator = new ScheduleGenerator(scheduleParameters,
-        interestRateService,
-        principalsHolder);
-    var schedule = scheduleGenerator.create(timetable);
-    assertEquals(8,schedule.size());
-//    assertEquals(3,schedule.get(0).getInterestRate());
-    log.info("schedule1: {}",schedule);
-    Mockito.when(interestRateService.getRateValue(any(),any()))
-        .thenReturn(Rate.of(2d));
-    var schedule2 = scheduleGenerator.update(schedule);
-    log.info("schedule2: {}",schedule);
   }
 
 }

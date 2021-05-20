@@ -7,10 +7,10 @@ import java.util.stream.IntStream;
 
 import org.blacksmith.commons.counter.BooleanStateCounter;
 import org.blacksmith.finlib.schedule.events.InterestEvent;
-import org.blacksmith.finlib.schedule.events.RateResetEvent;
 import org.blacksmith.finlib.schedule.events.PrincipalEvent;
-import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
+import org.blacksmith.finlib.schedule.events.RateResetEvent;
 import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
+import org.blacksmith.finlib.schedule.principal.PrincipalsHolder;
 
 public class RateResetSplitUpdater implements ScheduleUpdater {
   private final PrincipalsHolder principalsHolder;
@@ -32,15 +32,15 @@ public class RateResetSplitUpdater implements ScheduleUpdater {
       }
     }
     //remove splits
-    for (InterestEvent cashflow: cashflows) {
-      if (cashflow.getSubEvents().size()>1) {
+    for (InterestEvent cashflow : cashflows) {
+      if (cashflow.getSubEvents().size() > 1) {
         List<LocalDate> redudantResets = IntStream.range(1, cashflow.getSubEvents().size()).boxed()
             .map(rridx -> cashflow.getSubEvents().get(rridx))
             .filter(rr -> !rr.isRateReset())
             .filter(rr -> !principalsHolder.contains(rr.getStartDate()))
             .map(RateResetEvent::getStartDate)
             .collect(Collectors.toList());
-        redudantResets.forEach(resetDate-> stateCounter.update(cashflow.consolidateSubEvent(resetDate)));
+        redudantResets.forEach(resetDate -> stateCounter.update(cashflow.consolidateSubEvent(resetDate)));
       }
 
     }

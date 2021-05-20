@@ -1,8 +1,10 @@
 package org.blacksmith.finlib.rates.basic;
 
 import java.time.LocalDate;
-import lombok.ToString;
+
 import org.blacksmith.finlib.rates.MarketData;
+
+import lombok.ToString;
 
 @ToString
 public class BasicMarketData<V> implements MarketData<V> {
@@ -15,6 +17,10 @@ public class BasicMarketData<V> implements MarketData<V> {
     this.value = value;
   }
 
+  public static <V> BasicMarketData<V> of(LocalDate date, V value) {
+    return new BasicMarketData<>(date, value);
+  }
+
   @Override
   public LocalDate getDate() {
     return this.date;
@@ -23,9 +29,5 @@ public class BasicMarketData<V> implements MarketData<V> {
   @Override
   public V getValue() {
     return this.value;
-  }
-
-  public static <V> BasicMarketData<V> of(LocalDate date, V value) {
-    return new BasicMarketData<>(date,value);
   }
 }

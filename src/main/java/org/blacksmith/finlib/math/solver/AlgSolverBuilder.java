@@ -3,14 +3,9 @@ package org.blacksmith.finlib.math.solver;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 
 public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>>
-    implements SolverBuilder<SolverFunctionDerivative,Solver<SolverFunctionDerivative>> {
+    implements SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> {
 
   private SolverAlgorithm algorithm = SolverAlgorithm.BI_SECTION;
-
-  public enum SolverAlgorithm {
-    BI_SECTION,
-    NEWTON_RAPHSON
-  }
 
   public AlgSolverBuilder() {
   }
@@ -35,5 +30,10 @@ public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunctionDeriva
     } else {
       return new NewtonRaphsonSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
     }
+  }
+
+  public enum SolverAlgorithm {
+    BI_SECTION,
+    NEWTON_RAPHSON
   }
 }

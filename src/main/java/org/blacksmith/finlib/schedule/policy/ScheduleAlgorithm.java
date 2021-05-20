@@ -7,5 +7,6 @@ import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
 
 public interface ScheduleAlgorithm {
   List<InterestEvent> create(List<TimetableInterestEntry> events);
+
   List<InterestEvent> update(List<InterestEvent> cashflows);
 }

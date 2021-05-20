@@ -5,17 +5,16 @@ import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 
 public class XirrCalculatorBuilder {
+  private SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> solverBuilder = null;
+  private Double guess = null;
+  public XirrCalculatorBuilder() {
+  }
+
   public static XirrCalculatorBuilder builder() {
     return new XirrCalculatorBuilder();
   }
 
-  private SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> solverBuilder = null;
-  private Double guess = null;
-
-  public XirrCalculatorBuilder() {
-  }
-
-  public XirrCalculatorBuilder withSolverBuilder(SolverBuilder<SolverFunctionDerivative,Solver<SolverFunctionDerivative>> solverBuilder) {
+  public XirrCalculatorBuilder withSolverBuilder(SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> solverBuilder) {
     this.solverBuilder = solverBuilder;
     return this;
   }

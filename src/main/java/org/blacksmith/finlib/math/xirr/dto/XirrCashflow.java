@@ -2,6 +2,7 @@ package org.blacksmith.finlib.math.xirr.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.blacksmith.finlib.math.xirr.Cashflow;
 
 /**
@@ -9,12 +10,15 @@ import org.blacksmith.finlib.math.xirr.Cashflow;
  * conveniently for calculating purposes (present and derivative)
  */
 public final class XirrCashflow {
-  /** The amount of the cashflow. */
+  /**
+   * The amount of the cashflow.
+   */
   private final double amount;
-  /** The number of years for which the cashflow applies, including
-   * fractional years. */
+  /**
+   * The number of years for which the cashflow applies, including
+   * fractional years.
+   */
   private final double years;
-
 
   public XirrCashflow(double amount, double years) {
     this.amount = amount;
@@ -22,10 +26,16 @@ public final class XirrCashflow {
   }
 
   public static XirrCashflow of(double amount, double years) {
-    return new XirrCashflow(amount,years);
+    return new XirrCashflow(amount, years);
   }
+
+  public static List<XirrCashflow> negate(List<XirrCashflow> cashflows) {
+    return cashflows.stream().map(XirrCashflow::negate).collect(Collectors.toList());
+  }
+
   /**
    * Future value of the cashflow at the given rate.
+   *
    * @param rate the rate of return
    * @return present value of the investment at the given rate
    */
@@ -61,6 +71,7 @@ public final class XirrCashflow {
 
   /**
    * Derivative of the present value of the investment at the given rate.
+   *
    * @param rate the rate of return
    * @return derivative of the present value at the given rate
    */
@@ -77,9 +88,7 @@ public final class XirrCashflow {
     }
   }
 
-  public XirrCashflow negate() {return new XirrCashflow(-this.amount,this.years);}
-
-  public static List<XirrCashflow> negate(List<XirrCashflow> cashflows) {
-    return cashflows.stream().map(XirrCashflow::negate).collect(Collectors.toList());
+  public XirrCashflow negate() {
+    return new XirrCashflow(-this.amount, this.years);
   }
 }

@@ -1,7 +1,6 @@
 package org.blacksmith.finlib.schedule.principal;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
-import org.blacksmith.finlib.schedule.principal.PrincipalUpdatePolicy;
 
 public class PrincipalUpdatePolicyByAmount implements PrincipalUpdatePolicy {
   private final Amount minimumRemainingAmount;
@@ -15,6 +14,6 @@ public class PrincipalUpdatePolicyByAmount implements PrincipalUpdatePolicy {
   @Override
   public Amount apply(Amount prior) {
     Amount calc = prior.subtract(subtrahent);
-    return calc.compareTo(minimumRemainingAmount)>=0 ? calc : minimumRemainingAmount;
+    return calc.compareTo(minimumRemainingAmount) >= 0 ? calc : minimumRemainingAmount;
   }
 }

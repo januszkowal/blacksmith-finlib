@@ -1,11 +1,12 @@
 package org.blacksmith.finlib.interestbasis.daycount;
 
-import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
-
 import java.time.LocalDate;
+
 import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
 import org.blacksmith.finlib.dayconvention.utils.YmdDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
+
+import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
 
 public class D30EIsdaConvention extends AbstractConstantDenominatorConvention {
 
@@ -27,6 +28,6 @@ public class D30EIsdaConvention extends AbstractConstantDenominatorConvention {
     if (date2.getDay() == 31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getEndDate()))) {
       date2.setDay(30);
     }
-    return DayCountUtils.days360(date1,date2);
+    return DayCountUtils.days360(date1, date2);
   }
 }

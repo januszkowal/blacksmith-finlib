@@ -78,17 +78,12 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
       }
     }
   };
+  private static final SingleEnumCache<String, StandardBusinessDayConvention> cache =
+      new SingleEnumCache<>(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName, true);
   final private String shortName;
 
   StandardBusinessDayConvention(String shortName) {
     this.shortName = shortName;
-  }
-
-  private static final SingleEnumCache<String, StandardBusinessDayConvention> cache =
-      new SingleEnumCache<>(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName, true);
-
-  public String shortName() {
-    return this.shortName;
   }
 
   public static StandardBusinessDayConvention fromShortName(String shortName) {
@@ -97,6 +92,10 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
 
   public static StandardBusinessDayConvention fromName(String name) {
     return EnumUtils.getEnumByName(StandardBusinessDayConvention.class, name);
+  }
+
+  public String shortName() {
+    return this.shortName;
   }
 
 }

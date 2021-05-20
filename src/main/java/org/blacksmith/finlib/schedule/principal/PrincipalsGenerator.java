@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.schedule.events.PrincipalEvent;
-import org.blacksmith.finlib.schedule.principal.PrincipalUpdatePolicy;
 
 public class PrincipalsGenerator {
   private final boolean updateFromFirst;
@@ -18,9 +17,10 @@ public class PrincipalsGenerator {
     this.addInitial = addInitial;
     this.updateFromFirst = updateFromFirst;
   }
+
   public List<PrincipalEvent> generate(Amount startPrincipal,
       List<LocalDate> dates, PrincipalUpdatePolicy principalUpdatePolicy) {
-    ArgChecker.notNull(startPrincipal,"Start principal must be not null");
+    ArgChecker.notNull(startPrincipal, "Start principal must be not null");
     ArgChecker.notEmpty(dates, "Dates list must be not empty");
     List<LocalDate> eventDates = dates.stream().sorted().collect(Collectors.toList());
     List<PrincipalEvent> events = new ArrayList<>();

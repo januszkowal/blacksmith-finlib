@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class InterestCalculatorTest {
   @Test
@@ -18,8 +17,8 @@ class InterestCalculatorTest {
     LocalDate interestDate2 = LocalDate.of(2020, 1, 3);
     assertThat(InterestCalculator.getFactor(interestDateBefore, startDate, endDate)).isEqualTo(0d);
     assertThat(InterestCalculator.getFactor(interestDate0, startDate, endDate)).isEqualTo(0d);
-    assertThat(InterestCalculator.getFactor(interestDate1, startDate, endDate)).isEqualTo(1d/31);
-    assertThat(InterestCalculator.getFactor(interestDate2, startDate, endDate)).isEqualTo(2d/31);
+    assertThat(InterestCalculator.getFactor(interestDate1, startDate, endDate)).isEqualTo(1d / 31);
+    assertThat(InterestCalculator.getFactor(interestDate2, startDate, endDate)).isEqualTo(2d / 31);
     assertThat(InterestCalculator.getFactor(endDate, startDate, endDate)).isEqualTo(1d);
     assertThat(InterestCalculator.getFactor(endDate, startDate, endDate)).isEqualTo(1d);
   }

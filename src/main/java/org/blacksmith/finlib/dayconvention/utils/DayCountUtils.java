@@ -3,7 +3,9 @@ package org.blacksmith.finlib.dayconvention.utils;
 import java.time.LocalDate;
 
 public class DayCountUtils {
-  private DayCountUtils() {}
+  private DayCountUtils() {
+  }
+
   public static long days360(int y1, int m1, int d1, int y2, int m2, int d2) {
     return 360 * (y2 - y1) + 30 * (m2 - m1) + (d2 - d1);
   }
@@ -18,6 +20,6 @@ public class DayCountUtils {
   }
 
   public static long months360(LocalDate date1, LocalDate date2) {
-    return 12*(date2.getYear()-date1.getYear()) + (date2.getMonthValue()-date1.getMonthValue());
+    return 12 * (date2.getYear() - date1.getYear()) + (date2.getMonthValue() - date1.getMonthValue());
   }
 }

@@ -1,28 +1,27 @@
 package org.blacksmith.finlib.rates.fxrates;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.groovy.util.Maps;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.basic.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.basic.BasicMarketDataHolder;
+import org.blacksmith.finlib.rates.basic.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxrates.service.FxRateService;
 import org.blacksmith.finlib.rates.fxrates.service.FxRateServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 class FxRateServiceTest {
 
   static final int DECIMAL_PLACES = 4;
   static final int OUTPUT_DECIMAL_PLACES = 6;
-
-  private static FxRateService rateService;
   private static final Map<String, FxCurrencyPair> pairs = Maps.of(
       "EUR/PLN", FxCurrencyPair.of(Currency.EUR, Currency.PLN, false, 1.0d),
       "USD/PLN", FxCurrencyPair.of(Currency.USD, Currency.PLN, false, 1.0d),
@@ -32,9 +31,9 @@ class FxRateServiceTest {
       "XXX/PLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 100d),
       "YYY/PLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 10d),
       "XXX/YYY", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), true, 0d));
-
   private static final MarketDataMemoryService<FxRateId, FxRate3.FxRate3Values> fxRateSourceService =
       new MarketDataMemoryService<>();
+  private static FxRateService rateService;
 
   @BeforeAll
   public static void setUp() {
@@ -51,24 +50,10 @@ class FxRateServiceTest {
             .of(FxRateId.of("YYY", "PLN"), FxRate3.of(LocalDate.parse("2020-01-01"), 40.7d, 41.5d, 42.6d))
     ));
     rateService = new FxRateServiceImpl(
-        (ccy1,ccy2)->pairs.get(ccy1+"/"+ccy2),
+        (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2),
         fxRateSourceService,
         Currency.PLN,
         DECIMAL_PLACES, OUTPUT_DECIMAL_PLACES);
-  }
-
-  private void assertRate3(double buyRate, double sellRate, double avgRate, FxRate3 rate3) {
-    assertNotNull(rate3);
-    assertEquals(Rate.of(buyRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
-        rate3.getValue().getBuyRate().doubleValue(), "Buy rate");
-    assertEquals(Rate.of(sellRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
-        rate3.getValue().getSellRate().doubleValue(), "Sell rate");
-    assertEquals(Rate.of(avgRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
-        rate3.getValue().getAvgRate().doubleValue(), "Avg rate");
-  }
-
-  private double rate(double rate) {
-    return Rate.of(rate, OUTPUT_DECIMAL_PLACES).doubleValue();
   }
 
   @Test
@@ -119,11 +104,25 @@ class FxRateServiceTest {
     assertRate3(1.25d / 4.0d / 100, 1.27d / 4.2d / 100, 1.2631d / 4.1235d / 100,
         rateService.getRate3(FxRateId.of("HUF", "EUR"), LocalDate.parse("2020-01-01")));
     //XXX->YYY
-    assertRate3(0.1d*17.3d / 40.7d, 0.1d*18.1d / 41.5d, 0.1d*19.25d / 42.6d,
+    assertRate3(0.1d * 17.3d / 40.7d, 0.1d * 18.1d / 41.5d, 0.1d * 19.25d / 42.6d,
         rateService.getRate3(FxRateId.of("XXX", "YYY"), LocalDate.parse("2020-01-01")));
     //YYY->XXX
-    assertRate3(10d*40.7d/17.3d, 10d*41.5d/18.1d, 10d*42.6d/19.25d,
+    assertRate3(10d * 40.7d / 17.3d, 10d * 41.5d / 18.1d, 10d * 42.6d / 19.25d,
         rateService.getRate3(FxRateId.of("YYY", "XXX"), LocalDate.parse("2020-01-01")));
+  }
+
+  private void assertRate3(double buyRate, double sellRate, double avgRate, FxRate3 rate3) {
+    assertNotNull(rate3);
+    assertEquals(Rate.of(buyRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
+        rate3.getValue().getBuyRate().doubleValue(), "Buy rate");
+    assertEquals(Rate.of(sellRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
+        rate3.getValue().getSellRate().doubleValue(), "Sell rate");
+    assertEquals(Rate.of(avgRate, OUTPUT_DECIMAL_PLACES).doubleValue(),
+        rate3.getValue().getAvgRate().doubleValue(), "Avg rate");
+  }
+
+  private double rate(double rate) {
+    return Rate.of(rate, OUTPUT_DECIMAL_PLACES).doubleValue();
   }
 
 }

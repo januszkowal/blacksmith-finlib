@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.interestbasis.daycount;
 
 import java.time.LocalDate;
+
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 public class D30UConvention implements DayCountConventionCalculator {
@@ -20,7 +21,7 @@ public class D30UConvention implements DayCountConventionCalculator {
 
   @Override
   public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return thirtyIsda.calculateDays(startDate,endDate,scheduleInfo);
+    return thirtyIsda.calculateDays(startDate, endDate, scheduleInfo);
   }
 
   @Override

@@ -24,21 +24,30 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StandardTimetableGeneratorTest {
+  @Test
+  public void schedule1() {
+    var scheduleParameters = createScheduleParameters1();
+    var generator = TimetableGeneratorFactory.getTimetableGenerator(scheduleParameters);
+    assertEquals(StandardTimetableGenerator.class, generator.getClass());
+    var schedule = generator.generate(scheduleParameters);
+    assertEquals(8, schedule.size());
+  }
+
   private ScheduleParameters createScheduleParameters1() {
-    DatePartProvider<MonthDay> hyc = DatePartInMemoryProvider.of(MonthDay.of(1,1),
-        MonthDay.of(5,1),
-        MonthDay.of(5,3),
-        MonthDay.of(12,25),
-        MonthDay.of(12,26));
-    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY,hyc);
+    DatePartProvider<MonthDay> hyc = DatePartInMemoryProvider.of(MonthDay.of(1, 1),
+        MonthDay.of(5, 1),
+        MonthDay.of(5, 3),
+        MonthDay.of(12, 25),
+        MonthDay.of(12, 26));
+    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY, hyc);
 
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
-        CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN,ymdProvider));
+        CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgoritm.SIMPLE)
-        .firstCouponDate(LocalDate.of(2019,1,1))
-        .startDate(LocalDate.of(2019,1,3))
-        .maturityDate(LocalDate.of(2021,1,1))
+        .firstCouponDate(LocalDate.of(2019, 1, 1))
+        .startDate(LocalDate.of(2019, 1, 3))
+        .maturityDate(LocalDate.of(2021, 1, 1))
         .couponFrequency(Frequency.P3M)
         .rateResetFrequency(Frequency.P1M)
         .basis(StandardInterestBasis.ACT_365)
@@ -50,14 +59,5 @@ public class StandardTimetableGeneratorTest {
         //        .endPrincipal(Amount.of(200000L))
         .endPrincipal(Amount.of(0L))
         .build();
-  }
-
-  @Test
-  public void schedule1() {
-    var scheduleParameters = createScheduleParameters1();
-    var generator = TimetableGeneratorFactory.getTimetableGenerator(scheduleParameters);
-    assertEquals(StandardTimetableGenerator.class,generator.getClass());
-    var schedule = generator.generate(scheduleParameters);
-    assertEquals(8,schedule.size());
   }
 }

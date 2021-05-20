@@ -18,8 +18,8 @@ public class PrincipalsHolder {
 
   public PrincipalsHolder(Amount startPrincipal, List<PrincipalEvent> events) {
     ArgChecker.notNull(startPrincipal);
-    ArgChecker.isTrue(startPrincipal.isPositive(),"Start principal must be greater than 0");
-    ArgChecker.notNull(events,"Events must be not null");
+    ArgChecker.isTrue(startPrincipal.isPositive(), "Start principal must be greater than 0");
+    ArgChecker.notNull(events, "Events must be not null");
     this.startPrincipal = startPrincipal;
     this.events = events.stream()
         .sorted()
@@ -27,7 +27,7 @@ public class PrincipalsHolder {
   }
 
   public PrincipalsHolder(Amount startPrincipal) {
-    this(startPrincipal,Collections.emptyList());
+    this(startPrincipal, Collections.emptyList());
   }
 
   public Amount getPrincipal(LocalDate date) {
@@ -41,7 +41,7 @@ public class PrincipalsHolder {
 
   public boolean contains(LocalDate date) {
     return events.stream()
-        .anyMatch(e->e.getDate().equals(date));
+        .anyMatch(e -> e.getDate().equals(date));
   }
 
   public List<PrincipalEvent> getEvents() {

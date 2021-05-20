@@ -1,8 +1,10 @@
 package org.blacksmith.finlib.rates.basic;
 
 import java.time.LocalDate;
-import lombok.ToString;
+
 import org.blacksmith.finlib.rates.MarketData;
+
+import lombok.ToString;
 
 @ToString
 public class BasicMarketDataHolder<K, V> implements MarketDataHolder<K, V> {
@@ -19,24 +21,24 @@ public class BasicMarketDataHolder<K, V> implements MarketDataHolder<K, V> {
     return new BasicMarketDataHolder<>(key, marketData);
   }
 
-    public static <K, V > BasicMarketDataHolder < K, V > of(K key, LocalDate date, V value) {
-      return new BasicMarketDataHolder<>(key, new BasicMarketData<>(date,value));
-    }
+  public static <K, V> BasicMarketDataHolder<K, V> of(K key, LocalDate date, V value) {
+    return new BasicMarketDataHolder<>(key, new BasicMarketData<>(date, value));
+  }
 
   @Override
   public K getKey() {
     return this.key;
   }
 
-//    @Override
-//    public LocalDate getDate () {
-//      return this.date;
-//    }
+  //    @Override
+  //    public LocalDate getDate () {
+  //      return this.date;
+  //    }
 
-//    @Override
-//    public V getValue () {
-//      return this.value;
-//    }
+  //    @Override
+  //    public V getValue () {
+  //      return this.value;
+  //    }
 
   @Override
   public MarketData<V> getMarketData() {

@@ -31,12 +31,6 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
     return solve(function, 0, guess);
   }
 
-  private void checkFunctionValue(FunctionValue fv) {
-    if (!Double.isFinite(fv.getPartialDerivative(1))) {
-      throw new OverflowException("Derivative overflow", this.getStats());
-    }
-  }
-
   @Override
   public double solve(SolverFunctionDerivative function, double target, double guess, double minArg, double maxArg) {
     this.function = function;
@@ -77,6 +71,20 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
     throw new NonconvergenceException(guess, maxIterations);
   }
 
+  @Override
+  public Map<String, ?> getStats() {
+    return Map.of(
+        "initialGuess", getInitialGuess(),
+        "iterations", getIterations(),
+        "candidate", getCandidate(),
+        "functionValue", getFunctionValue(),
+        "derivativeValue", getDerivativeValue());
+  }
+
+  public double getDerivativeValue() {
+    return this.derivativeValue;
+  }
+
   private void setDerivativeValue(double derivativeValue) {
     this.derivativeValue = derivativeValue;
     if (!Double.isFinite(derivativeValue)) {
@@ -86,17 +94,9 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
     }
   }
 
-  public double getDerivativeValue() {
-    return this.derivativeValue;
-  }
-
-  @Override
-  public Map<String, ?> getStats() {
-    return Map.of(
-        "initialGuess", getInitialGuess(),
-        "iterations", getIterations(),
-        "candidate", getCandidate(),
-        "functionValue", getFunctionValue(),
-        "derivativeValue", getDerivativeValue());
+  private void checkFunctionValue(FunctionValue fv) {
+    if (!Double.isFinite(fv.getPartialDerivative(1))) {
+      throw new OverflowException("Derivative overflow", this.getStats());
+    }
   }
 }

@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.interestbasis.daycount;
 
 import java.time.LocalDate;
+
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
@@ -9,6 +10,11 @@ public class ActAct365LConvention implements DayCountConventionCalculator {
   @Override
   public boolean requireScheduleInfo() {
     return true;
+  }
+
+  @Override
+  public long calculateDays(LocalDate startDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(startDate, calcDate);
   }
 
   @Override
@@ -25,11 +31,6 @@ public class ActAct365LConvention implements DayCountConventionCalculator {
     } else {
       return actualDays / (couponEndDate.isLeapYear() ? 366d : 365d);
     }
-  }
-
-  @Override
-  public long calculateDays(LocalDate startDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, calcDate);
   }
 
 }

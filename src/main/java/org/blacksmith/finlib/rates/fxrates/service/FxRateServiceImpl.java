@@ -7,7 +7,6 @@ import java.util.function.Function;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.MarketData;
 import org.blacksmith.finlib.rates.MarketDataService;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPairProvider;

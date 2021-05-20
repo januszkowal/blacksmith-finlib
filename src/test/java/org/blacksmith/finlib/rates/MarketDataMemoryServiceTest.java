@@ -1,9 +1,8 @@
 package org.blacksmith.finlib.rates;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDate;
 import java.util.List;
+
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.basic.BasicMarketDataHolder;
@@ -12,6 +11,8 @@ import org.blacksmith.finlib.rates.interestrates.InterestRate;
 import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarketDataMemoryServiceTest {
 

@@ -1,9 +1,10 @@
 package org.blacksmith.finlib.rates.fxrates;
 
-import lombok.Value;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.rates.MarketDataId;
+
+import lombok.Value;
 
 @Value
 public class FxRateId implements MarketDataId {
@@ -20,18 +21,20 @@ public class FxRateId implements MarketDataId {
     this.toCcy = toCcy;
   }
 
-  public static FxRateId of (String fromCcy, String toCcy) {
-    return new FxRateId("DEFAULT", Currency.of(fromCcy),Currency.of(toCcy));
-  }
-  public static FxRateId of (String table, String fromCcy, String toCcy) {
-    return new FxRateId(table, Currency.of(fromCcy),Currency.of(toCcy));
+  public static FxRateId of(String fromCcy, String toCcy) {
+    return new FxRateId("DEFAULT", Currency.of(fromCcy), Currency.of(toCcy));
   }
 
-  public static FxRateId of (Currency fromCcy, Currency toCcy) {
-    return new FxRateId("DEFAULT", fromCcy,toCcy);
+  public static FxRateId of(String table, String fromCcy, String toCcy) {
+    return new FxRateId(table, Currency.of(fromCcy), Currency.of(toCcy));
   }
-  public static FxRateId of (String table, Currency fromCcy, Currency toCcy) {
-    return new FxRateId(table, fromCcy,toCcy);
+
+  public static FxRateId of(Currency fromCcy, Currency toCcy) {
+    return new FxRateId("DEFAULT", fromCcy, toCcy);
+  }
+
+  public static FxRateId of(String table, Currency fromCcy, Currency toCcy) {
+    return new FxRateId(table, fromCcy, toCcy);
   }
 
   public String getPairName() {
@@ -39,6 +42,6 @@ public class FxRateId implements MarketDataId {
   }
 
   public FxRateId inverse() {
-    return new FxRateId(this.table, this.toCcy,this.fromCcy);
+    return new FxRateId(this.table, this.toCcy, this.fromCcy);
   }
 }

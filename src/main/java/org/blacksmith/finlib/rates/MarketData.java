@@ -4,5 +4,6 @@ import java.time.LocalDate;
 
 public interface MarketData<V> {
   LocalDate getDate();
+
   V getValue();
 }

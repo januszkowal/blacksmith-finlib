@@ -1,22 +1,23 @@
 package org.blacksmith.finlib.math.xirr;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.math.xirr.dto.XirrStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Calculates the irregular rate of return on a series of transactions.  The irregular rate of return is the constant
@@ -52,12 +53,8 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
   private List<XirrCashflow> xirrCashflows;
   private XirrStats stats;
 
-
   private Double guess;
   private long iterations = 0L;
-
-  @SuppressWarnings("unchecked")
-  private F getFunction() {return (F)this;}
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -86,11 +83,6 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
         .collect(Collectors.toList());
   }
 
-  private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getAmount(),
-        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
-  }
-
   /**
    * Calculates the future value of the investment if it had been subject to the given rate of return.
    *
@@ -117,6 +109,7 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
 
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
+   *
    * @param cashflows the cashflows
    * @return the irregular rate of return of the cashflows
    * @throws ZeroValuedDerivativeException if the derivative is 0 while executing the Newton-Raphson method
@@ -148,14 +141,14 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
     double xirr;
     try {
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),guess, -1d, 2d);
+      xirr = solver.findRoot(getFunction(), guess, -1d, 2d);
       this.iterations = solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     } catch (OverflowException oe) {
       log.warn("Guess sign changed due to overflow,{}", solver.getStats());
       this.iterations = solver.getIterations();
       log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),-guess, -1d, 2d);
+      xirr = solver.findRoot(getFunction(), -guess, -1d, 2d);
       this.iterations += solver.getIterations();
       log.debug("Completed after iterations={}", iterations);
     }
@@ -164,5 +157,15 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
 
   public long getIterations() {
     return this.iterations;
+  }
+
+  @SuppressWarnings("unchecked")
+  private F getFunction() {
+    return (F) this;
+  }
+
+  private XirrCashflow createXirrCashflow(Cashflow cashflow) {
+    return new XirrCashflow(cashflow.getAmount(),
+        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
   }
 }

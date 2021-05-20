@@ -10,6 +10,7 @@ import java.time.LocalDate;
  * withdrawals from your cash).  Positive amounts represent withdrawals from the
  * investment (deposits into cash).  Zero amounts are allowed in case your
  * investment is now worthless.
+ *
  * @see XirrCalculator
  */
 public final class Cashflow {
@@ -22,8 +23,8 @@ public final class Cashflow {
     this.amount = amount;
   }
 
-  public static Cashflow of (LocalDate date,double amount) {
-    return new Cashflow(date,amount);
+  public static Cashflow of(LocalDate date, double amount) {
+    return new Cashflow(date, amount);
   }
 
   public LocalDate getDate() {
@@ -34,7 +35,8 @@ public final class Cashflow {
     return amount;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "Cashflow{" +
         "date=" + date +
         ", amount=" + amount +

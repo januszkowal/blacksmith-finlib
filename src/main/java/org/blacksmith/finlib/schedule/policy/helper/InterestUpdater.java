@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.schedule.ScheduleParameters;
-import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
 import org.blacksmith.finlib.schedule.events.InterestEvent;
 import org.blacksmith.finlib.schedule.events.RateResetEvent;
+import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
 
 public class InterestUpdater implements ScheduleUpdater {
   private final ScheduleParameters scheduleParameters;
@@ -14,6 +14,7 @@ public class InterestUpdater implements ScheduleUpdater {
   public InterestUpdater(ScheduleParameters scheduleParameters) {
     this.scheduleParameters = scheduleParameters;
   }
+
   @Override
   public List<InterestEvent> apply(List<InterestEvent> cashflows) {
     for (InterestEvent cashflow : cashflows) {

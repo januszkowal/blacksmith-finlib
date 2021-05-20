@@ -41,6 +41,16 @@ public class InterestEvent implements Event {
   @Builder.Default
   List<RateResetEvent> subEvents = new ArrayList<>();
 
+  public static List<InterestEvent> copy(List<InterestEvent> src) {
+    return src.stream().map(InterestEvent::copy).collect(Collectors.toList());
+  }
+
+  public static InterestEvent getEventInRange(List<InterestEvent> interestEvents, LocalDate date) {
+    return interestEvents.stream()
+        .filter(ie -> DateRange.closedOpen(ie.getStartDate(), ie.getEndDate()).contains(date))
+        .findFirst().orElse(null);
+  }
+
   public InterestEvent copy() {
     return builder()
         .startDate(startDate)
@@ -57,19 +67,19 @@ public class InterestEvent implements Event {
 
   public RateResetEvent getSubEventInRange(LocalDate date) {
     return subEvents.stream()
-        .filter(ie-> DateRange.closedOpen(ie.getStartDate(),ie.getEndDate()).contains(date))
+        .filter(ie -> DateRange.closedOpen(ie.getStartDate(), ie.getEndDate()).contains(date))
         .findFirst().orElse(null);
   }
 
   public RateResetEvent getSubEvent(LocalDate date) {
     return subEvents.stream()
-        .filter(ie->ie.getStartDate().equals(date))
+        .filter(ie -> ie.getStartDate().equals(date))
         .findFirst().orElse(null);
   }
 
   /*
-  * Copy rate from splitted event
-  * */
+   * Copy rate from splitted event
+   * */
   public boolean splitSubEvent(LocalDate splitDate) {
     RateResetEvent rateReset1 = getSubEventInRange(splitDate);
     if (rateReset1 != null && !rateReset1.getStartDate().isEqual(splitDate)) {
@@ -81,17 +91,17 @@ public class InterestEvent implements Event {
           .build();
       rateReset1.setEndDate(splitDate);
       int idx = subEvents.indexOf(rateReset1);
-      subEvents.add(idx+1,rateReset2);
+      subEvents.add(idx + 1, rateReset2);
       return true;
     }
     return false;
   }
 
   public boolean consolidateSubEvent(LocalDate date) {
-    if (date.isAfter(this.startDate) && subEvents.size()>1) {
+    if (date.isAfter(this.startDate) && subEvents.size() > 1) {
       RateResetEvent rateReset2 = getSubEvent(date);
       int idx = subEvents.indexOf(rateReset2);
-      RateResetEvent rateReset1 = subEvents.get(idx-1);
+      RateResetEvent rateReset1 = subEvents.get(idx - 1);
       rateReset1.setEndDate(rateReset2.getEndDate());
       subEvents.remove(idx);
       return true;
@@ -101,16 +111,6 @@ public class InterestEvent implements Event {
 
   public RateResetEvent firstRateReset() {
     return subEvents.isEmpty() ? null : subEvents.get(0);
-  }
-
-  public static List<InterestEvent> copy(List<InterestEvent> src) {
-    return src.stream().map(InterestEvent::copy).collect(Collectors.toList());
-  }
-
-  public static InterestEvent getEventInRange(List<InterestEvent> interestEvents, LocalDate date) {
-    return interestEvents.stream()
-        .filter(ie-> DateRange.closedOpen(ie.getStartDate(),ie.getEndDate()).contains(date))
-        .findFirst().orElse(null);
   }
 
   @Override

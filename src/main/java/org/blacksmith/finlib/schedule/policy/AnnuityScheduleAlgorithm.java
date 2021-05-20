@@ -3,19 +3,19 @@ package org.blacksmith.finlib.schedule.policy;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.extern.slf4j.Slf4j;
-
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.DecimalRounded;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.schedule.policy.helper.InterestUpdater;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.schedule.events.Event;
 import org.blacksmith.finlib.schedule.events.InterestEvent;
+import org.blacksmith.finlib.schedule.policy.helper.InterestUpdater;
 import org.blacksmith.finlib.schedule.timetable.TimetableInterestEntry;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implements ScheduleAlgorithm {
@@ -32,7 +32,7 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   @Override
   public List<InterestEvent> create(List<TimetableInterestEntry> events) {
     var cashflows = events.stream()
-        .map(se-> InterestEvent.builder()
+        .map(se -> InterestEvent.builder()
             .startDate(se.getStartDate())
             .endDate(se.getEndDate())
             .paymentDate(se.getPaymentDate())
@@ -45,8 +45,8 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   @Override
   public List<InterestEvent> update(List<InterestEvent> cashflows) {
     Solver<SolverFunctionDerivative> solver = createSolver(cashflows);
-    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue()/cashflows.size();
-    var maxPmt = scheduleParameters.getPrincipal().doubleValue()/2d;
+    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
+    var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
     var sf = solverFunction(cashflows);
     solver.findRoot(sf, getEstimatedPayment(cashflows), minPmt, maxPmt);
     log.info("final :{}", Event.eventsToString(cashflows));
@@ -54,8 +54,8 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   }
 
   public Solver<SolverFunctionDerivative> createSolver(List<InterestEvent> cashflows) {
-    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue()/cashflows.size();
-    var maxPmt = scheduleParameters.getPrincipal().doubleValue()/2d;
+    var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
+    var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
     return
         solverBuilder
             .tolerance(0.01d)
@@ -68,16 +68,18 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
     return new SolverFunctionDerivative() {
       @Override
       public double getDerivative(double arg) {
-        return scheduleDerivativeValue(cashflows,arg);
+        return scheduleDerivativeValue(cashflows, arg);
+      }
+
+      @Override
+      public double alignCandidate(double arg) {
+        return Rate.of(arg, 2).doubleValue();
       }
 
       @Override
       public double getValue(double arg) {
-        return recalculateAnnuity(cashflows,arg);
+        return recalculateAnnuity(cashflows, arg);
       }
-
-      @Override
-      public double alignCandidate(double arg) {return Rate.of(arg,2).doubleValue();}
     };
   }
 
@@ -116,7 +118,7 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
       cashflow.setPrincipalPayment(cashflow.getPrincipalPayment().add(unpaidPrincipal));
     }
     double total = cashflows.stream()
-        .mapToDouble(c->payment.doubleValue()-c.getInterest().doubleValue()-c.getPrincipalPayment().doubleValue())
+        .mapToDouble(c -> payment.doubleValue() - c.getInterest().doubleValue() - c.getPrincipalPayment().doubleValue())
         .sum();
     log.debug("$$$ pmt amount: {} principal:{} disc: {}", arg, currentPrincipal, total);
     log.debug("schedule:{}", Event.eventsToString(cashflows));
@@ -126,11 +128,11 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   public double scheduleDerivativeValue(List<InterestEvent> cashflows, double arg) {
     var sumPrincipalPayment = cashflows.stream().map(InterestEvent::getPrincipal).mapToDouble(Amount::doubleValue).sum();
     var sumInterestPayment = cashflows.stream().map(InterestEvent::getInterest).mapToDouble(Amount::doubleValue).sum();
-    if (sumInterestPayment==0.0d) {
+    if (sumInterestPayment == 0.0d) {
       return sumPrincipalPayment;
     } else {
       double fff = scheduleParameters.getFixedRate().doubleValue();
-      return sumPrincipalPayment / (sumInterestPayment*fff);
+      return sumPrincipalPayment / (sumInterestPayment * fff);
     }
   }
 

@@ -7,13 +7,13 @@ import java.util.Optional;
 import org.blacksmith.commons.counter.BooleanStateCounter;
 import org.blacksmith.commons.property.PropertyUpdater;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.blacksmith.finlib.rates.interestrates.InterestRateService;
 import org.blacksmith.finlib.schedule.InterestRateIndexation;
-import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
+import org.blacksmith.finlib.schedule.ScheduleParameters;
 import org.blacksmith.finlib.schedule.events.InterestEvent;
 import org.blacksmith.finlib.schedule.events.RateResetEvent;
+import org.blacksmith.finlib.schedule.policy.ScheduleUpdater;
 
 public class RateUpdater implements ScheduleUpdater {
   private final ScheduleParameters scheduleParameters;

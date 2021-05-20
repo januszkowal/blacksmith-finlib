@@ -1,9 +1,10 @@
 package org.blacksmith.finlib.rates.fxccypair;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.currency.CurrencyPair;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
@@ -14,14 +15,14 @@ public class FxCurrencyPair extends CurrencyPair {
   private final boolean isFactor;
 
   public FxCurrencyPair(Currency base, Currency counter, boolean isCross, double factor) {
-    super(base,counter);
+    super(base, counter);
     this.isCross = isCross;
     this.factor = factor;
     this.isFactor = factor != 1.0d;
   }
 
   public static FxCurrencyPair of(Currency base, Currency counter, boolean isCross, double factor) {
-    return new FxCurrencyPair(base, counter,isCross,factor);
+    return new FxCurrencyPair(base, counter, isCross, factor);
   }
 
   public double getFactor() {

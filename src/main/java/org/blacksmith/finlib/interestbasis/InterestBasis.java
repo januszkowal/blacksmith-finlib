@@ -9,11 +9,11 @@ public interface InterestBasis {
    * Given two dates, this method returns the fraction of a year between these
    * dates according to the convention. The dates must be in order.
    *
-   * @param startDate  the period start date
-   * @param endDate    the period end date (exclusive)
-   * @param scheduleInfo  the schedule information
+   * @param startDate    the period start date
+   * @param endDate      the period end date (exclusive)
+   * @param scheduleInfo the schedule information
    * @return the year fraction, zero or greater
-   * @throws IllegalArgumentException if the dates are not in order
+   * @throws IllegalArgumentException      if the dates are not in order
    * @throws UnsupportedOperationException if the year fraction cannot be obtained
    */
   double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
@@ -31,9 +31,9 @@ public interface InterestBasis {
    * Certain implementations of {@code DayCount} need the missing information,
    * and thus will throw an exception.
    *
-   * @param startDate  the period start date
-   * @param endDate    the period end date (exclusive)
-   * @param scheduleInfo  the schedule information
+   * @param startDate    the period start date
+   * @param endDate      the period end date (exclusive)
+   * @param scheduleInfo the schedule information
    * @return the year fraction, may be negative
    * @throws UnsupportedOperationException if the year fraction cannot be obtained
    */
@@ -53,8 +53,8 @@ public interface InterestBasis {
    * For example, the 'Act/Act' day count will return the actual number of days between
    * the two dates, but the '30/360 ISDA' will return a value based on 30 day months.
    *
-   * @param startDate  the start date
-   * @param endDate  the end date (exclusive), which may not be before the start date
+   * @param startDate    the start date
+   * @param endDate      the end date (exclusive), which may not be before the start date
    * @param scheduleInfo schedule information
    * @return the number of days, as determined by the day count
    */

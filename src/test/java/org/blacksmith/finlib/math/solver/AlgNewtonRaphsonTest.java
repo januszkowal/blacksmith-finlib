@@ -1,16 +1,16 @@
 package org.blacksmith.finlib.math.solver;
 
-import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AlgNewtonRaphsonTest {
 
@@ -55,10 +55,10 @@ public class AlgNewtonRaphsonTest {
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         //.withFunction(funSqrt)
         .build();
-    assertEquals(2, nr.inverse(funSqrt,4, 4.0), TOLERANCE);
-    assertEquals(2, nr.inverse(funSqrt,4, 1.0), TOLERANCE);
-    assertEquals(-3, nr.inverse(funSqrt,9, -9.0), TOLERANCE);
-    assertEquals(25, nr.inverse(funSqrt,625, 625.0), TOLERANCE);
+    assertEquals(2, nr.inverse(funSqrt, 4, 4.0), TOLERANCE);
+    assertEquals(2, nr.inverse(funSqrt, 4, 1.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(funSqrt, 9, -9.0), TOLERANCE);
+    assertEquals(25, nr.inverse(funSqrt, 625, 625.0), TOLERANCE);
   }
 
   @Test
@@ -66,9 +66,9 @@ public class AlgNewtonRaphsonTest {
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         //.withFunction(funCubeRoot)
         .build();
-    assertEquals(2, nr.inverse(funCubeRoot,8, 8.0), TOLERANCE);
-    assertEquals(-3, nr.inverse(funCubeRoot,-27, 27.0), TOLERANCE);
-    assertEquals(25, nr.inverse(funCubeRoot,15_625, 15_625.0), TOLERANCE);
+    assertEquals(2, nr.inverse(funCubeRoot, 8, 8.0), TOLERANCE);
+    assertEquals(-3, nr.inverse(funCubeRoot, -27, 27.0), TOLERANCE);
+    assertEquals(25, nr.inverse(funCubeRoot, 15_625, 15_625.0), TOLERANCE);
   }
 
   @Test
@@ -76,11 +76,11 @@ public class AlgNewtonRaphsonTest {
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         //.withFunction(funQuadratic)
         .build();
-    assertEquals(4, nr.findRoot(funQuadratic,10.0), TOLERANCE);
-    assertEquals(-3, nr.findRoot(funQuadratic,-10.0), TOLERANCE);
+    assertEquals(4, nr.findRoot(funQuadratic, 10.0), TOLERANCE);
+    assertEquals(-3, nr.findRoot(funQuadratic, -10.0), TOLERANCE);
     // Inflection point when derivative is zero => x = 1/2
-    assertEquals(4, nr.findRoot(funQuadratic,.51), TOLERANCE);
-    assertEquals(-3, nr.findRoot(funQuadratic,.49), TOLERANCE);
+    assertEquals(4, nr.findRoot(funQuadratic, .51), TOLERANCE);
+    assertEquals(-3, nr.findRoot(funQuadratic, .49), TOLERANCE);
   }
 
   @Test
@@ -100,7 +100,7 @@ public class AlgNewtonRaphsonTest {
       NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
           .build();
       // Inflection point when derivative is zero => x = 1/2
-      nr.findRoot(function,.5);
+      nr.findRoot(function, .5);
       fail("Expected zero-valued derivative");
     });
   }
@@ -124,7 +124,7 @@ public class AlgNewtonRaphsonTest {
         //.withFunction(function)
         .build();
     try {
-      nr.findRoot(function,3.0);
+      nr.findRoot(function, 3.0);
       fail("Expected non-convergence");
     } catch (ZeroValuedDerivativeException e) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -151,7 +151,7 @@ public class AlgNewtonRaphsonTest {
       NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
           //.withFunction(function)
           .build();
-      nr.findRoot(function,1.0);
+      nr.findRoot(function, 1.0);
       fail("Expected non-convergence");
     });
   }
@@ -163,6 +163,7 @@ public class AlgNewtonRaphsonTest {
       public double getValue(double x) {
         return 2 * Math.signum(x);
       }
+
       @Override
       public double getDerivative(double x) {
         return 1;
@@ -172,7 +173,7 @@ public class AlgNewtonRaphsonTest {
       NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
           //.withFunction(function)
           .build();
-      nr.findRoot(function,1.0);
+      nr.findRoot(function, 1.0);
       fail("Expected non-convergence");
     } catch (NonconvergenceException ne) {
       assertEquals(1, ne.getInitialGuess(), TOLERANCE);
@@ -197,7 +198,7 @@ public class AlgNewtonRaphsonTest {
         //.withFunction(function)
         .build();
     try {
-      nr.findRoot(function,3.0);
+      nr.findRoot(function, 3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       ne.printStackTrace();
@@ -220,11 +221,11 @@ public class AlgNewtonRaphsonTest {
         return 1;
       }
     };
-    NewtonRaphsonSolver nr =  NewtonRaphsonSolverBuilder.builder()
+    NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         //.withFunction(function)
         .build();
     try {
-      nr.findRoot(function,3.0);
+      nr.findRoot(function, 3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -252,7 +253,7 @@ public class AlgNewtonRaphsonTest {
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         .build();
     try {
-      nr.findRoot(function,3.0);
+      nr.findRoot(function, 3.0);
       fail("Derivative value overflow");
     } catch (OverflowException ne) {
       assertEquals(3, nr.getInitialGuess(), TOLERANCE);
@@ -263,28 +264,27 @@ public class AlgNewtonRaphsonTest {
     }
   }
 
-
   @Test
   public void tolerance() {
     final double tolerance = TOLERANCE / 1000;
     var function = new SolverFunctionDerivative() {
       @Override
       public double getValue(double x) {
-        return x*x;
+        return x * x;
       }
 
       @Override
       public double getDerivative(double x) {
-        return 2*x;
+        return 2 * x;
       }
     };
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
         //.withFunction(function)
         //.tolerance(tolerance)
         .build();
-    assertEquals(4, nr.inverse(function,16, 16.0), tolerance);
-    assertEquals(15, nr.inverse(function,225, 225.0), tolerance);
-    assertEquals(1.414_213_562_3, nr.inverse(function,2, 2.0), tolerance);
+    assertEquals(4, nr.inverse(function, 16, 16.0), tolerance);
+    assertEquals(15, nr.inverse(function, 225, 225.0), tolerance);
+    assertEquals(1.414_213_562_3, nr.inverse(function, 2, 2.0), tolerance);
   }
 
 }

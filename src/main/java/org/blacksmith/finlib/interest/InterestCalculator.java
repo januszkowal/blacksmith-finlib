@@ -11,7 +11,7 @@ public class InterestCalculator {
     } else if (interestDate.compareTo(endDate) >= 0) {
       return 1d;
     } else {
-      return (double)DateUtils.daysBetween(startDate, interestDate) / DateUtils.daysBetween(startDate, endDate);
+      return (double) DateUtils.daysBetween(startDate, interestDate) / DateUtils.daysBetween(startDate, endDate);
     }
   }
 }

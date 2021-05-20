@@ -7,7 +7,7 @@ import org.blacksmith.finlib.schedule.ScheduleParameters;
 public class TimetableGeneratorFactory {
 
   public static TimetableGenerator getTimetableGenerator(ScheduleParameters scheduleParameters) {
-    ArgChecker.notNull(scheduleParameters,"Schedule parameters must be not null");
+    ArgChecker.notNull(scheduleParameters, "Schedule parameters must be not null");
     if ((scheduleParameters.getCouponFrequency() == null || scheduleParameters.getCouponFrequency() == Frequency.TERM) ||
         (scheduleParameters.getFirstCouponDate().compareTo(scheduleParameters.getMaturityDate()) >= 0)) {
       return new TermTimetableGenerator();

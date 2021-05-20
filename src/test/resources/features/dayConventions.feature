@@ -1,4 +1,5 @@
 Feature: Day Count Conventions
+
   Scenario: ONE/ONE convention
     Given Interest coupon simple
     And For Day Convention ONE_ONE
@@ -41,9 +42,9 @@ Feature: Day Count Conventions
     Given Interest coupon simple
     And For Day Convention ACT_365_25
     Then Day Convention verification
-      | start      | end        | days | fraction    |
-      | 2019-01-01 | 2019-01-31 | 30   | 30/365.25d  |
-      | 2019-01-01 | 2019-02-01 | 31   | 31/365.25d  |
+      | start      | end        | days | fraction   |
+      | 2019-01-01 | 2019-01-31 | 30   | 30/365.25d |
+      | 2019-01-01 | 2019-02-01 | 31   | 31/365.25d |
 
   Scenario: ACT/365 ACT
     Given Interest coupon simple
@@ -98,8 +99,8 @@ Feature: Day Count Conventions
     And For Day Convention D30EPLUS_360
     Then Day Convention verification
       | start      | end        | days | fraction |
-      | 2018-12-30 | 2019-01-01 | 1    |  1/360d  |
-      | 2018-12-31 | 2019-01-01 | 1    |  1/360d  |
+      | 2018-12-30 | 2019-01-01 | 1    | 1/360d   |
+      | 2018-12-31 | 2019-01-01 | 1    | 1/360d   |
       | 2018-12-31 | 2019-01-31 | 31   | 31/360d  |
       | 2019-01-01 | 2019-01-30 | 29   | 29/360d  |
       | 2019-01-01 | 2019-01-31 | 30   | 30/360d  |

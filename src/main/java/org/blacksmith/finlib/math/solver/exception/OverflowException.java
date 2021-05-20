@@ -10,14 +10,14 @@ import java.util.Map;
  */
 public class OverflowException extends ArithmeticException {
 
-  private final Map<String,?> stats;
+  private final Map<String, ?> stats;
 
-  public OverflowException(String message, Map<String,?> stats) {
+  public OverflowException(String message, Map<String, ?> stats) {
     super(message);
     this.stats = stats;
   }
 
-  public Map<String,?> getStats() {
+  public Map<String, ?> getStats() {
     return stats;
   }
 

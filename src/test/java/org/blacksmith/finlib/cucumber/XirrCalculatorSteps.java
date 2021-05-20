@@ -1,22 +1,23 @@
 package org.blacksmith.finlib.cucumber;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
+import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.math.xirr.Cashflow;
+import org.blacksmith.finlib.math.xirr.XirrCalculatorBuilder;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
-import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
-import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
-import org.blacksmith.finlib.math.xirr.Cashflow;
-import org.blacksmith.finlib.math.xirr.XirrCalculatorBuilder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 public class XirrCalculatorSteps {
@@ -46,8 +47,8 @@ public class XirrCalculatorSteps {
     log.info("Calc BiSection");
     var calculatorBiCalc = XirrCalculatorBuilder.builder()
         .withSolverBuilder(BiSectionSolverBuilder.builder()
-//            .minArg(-1)
-//            .maxArg(2)
+            //            .minArg(-1)
+            //            .maxArg(2)
             .asBuilder())
         .build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);

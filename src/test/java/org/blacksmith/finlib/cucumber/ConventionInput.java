@@ -1,9 +1,11 @@
 package org.blacksmith.finlib.cucumber;
 
 import java.time.LocalDate;
+
+import org.blacksmith.finlib.interestbasis.ScheduleInfo;
+
 import lombok.Builder;
 import lombok.Getter;
-import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
 @Getter
 @Builder

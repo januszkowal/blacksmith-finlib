@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.blacksmith.finlib.rates.MarketData;
-import org.blacksmith.finlib.rates.MarketDataId;
 import org.blacksmith.finlib.rates.MarketDataService;
 
 public class MarketDataMemoryService<K, V>
@@ -23,7 +23,7 @@ public class MarketDataMemoryService<K, V>
   @Override
   public MarketData<V> getRate(K key, LocalDate date) {
     return marketData.getOrDefault(key, Collections.emptyList()).stream()
-        .filter(m->m.getMarketData().getDate().compareTo(date) <= 0)
+        .filter(m -> m.getMarketData().getDate().compareTo(date) <= 0)
         .max(MarketDataHolder.marketDataDateComparator)
         .map(MarketDataHolder::getMarketData)
         .orElse(null);
