@@ -38,13 +38,14 @@ dependencies {
     implementation libs.apacheCommonsCollections
     api libs.groovy
     testCompileOnly libs.lombok
-    testCompileOnly libs.logback
-    testCompileOnly libs.mockito
+    testImplementation libs.logback
+    testImplementation libs.mockito
     testImplementation libs.cucumber
     testImplementation libs.junit
     testImplementation libs.blacksmithTest
     testImplementation libs.apacheCommonsMath
-    testImplementation 'org.hamcrest:hamcrest-library:2.1'
+    testImplementation libs.assertj
+//    testImplementation 'org.hamcrest:hamcrest-library:2.1'
 }
 
 configurations {

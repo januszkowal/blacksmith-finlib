@@ -7,13 +7,13 @@ import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 public class Act365ActConvention implements DayCountConventionCalculator {
 
   @Override
-  public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return DateUtils.daysBetween(startDate, endDate);
   }
 
   @Override
   public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    int actualDays = calculateDays(startDate, endDate,scheduleInfo);
+    long actualDays = calculateDays(startDate, endDate,scheduleInfo);
     double denominator = DateUtils.isLeapDayInPeriod(startDate,endDate) ? 366d : 365d;
     return actualDays / denominator;
   }

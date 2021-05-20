@@ -7,7 +7,7 @@ import org.blacksmith.finlib.dayconvention.utils.DayCountUtils;
 import org.blacksmith.finlib.dayconvention.utils.YmdDate;
 import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 
-public class D30EIsdaConvention extends AbstractSimpleConvention {
+public class D30EIsdaConvention extends AbstractConstantDenominatorConvention {
 
   public D30EIsdaConvention(double denominator) {
     super(denominator);
@@ -19,7 +19,7 @@ public class D30EIsdaConvention extends AbstractSimpleConvention {
   }
 
   @Override
-  public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     YmdDate date1 = YmdDate.of(startDate);
     YmdDate date2 = YmdDate.of(endDate);
     if (date1.getDay() == 31 || isLastDayOfFebruary(startDate))

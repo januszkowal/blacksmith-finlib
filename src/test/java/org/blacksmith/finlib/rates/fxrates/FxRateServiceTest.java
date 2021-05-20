@@ -24,14 +24,14 @@ class FxRateServiceTest {
 
   private static FxRateService rateService;
   private static final Map<String, FxCurrencyPair> pairs = Maps.of(
-      "EURPLN", FxCurrencyPair.of(Currency.EUR, Currency.PLN, false, 1.0d),
-      "USDPLN", FxCurrencyPair.of(Currency.USD, Currency.PLN, false, 1.0d),
-      "EURUSD", FxCurrencyPair.of(Currency.EUR, Currency.USD, true, 1.0d),
-      "HUFPLN", FxCurrencyPair.of(Currency.of("HUF"), Currency.PLN, false, 100d),
-      "EURHUF", FxCurrencyPair.of(Currency.EUR, Currency.of("HUF"), true, 0.0d),
-      "XXXPLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 100d),
-      "YYYPLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 10d),
-      "XXXYYY", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), true, 0d));
+      "EUR/PLN", FxCurrencyPair.of(Currency.EUR, Currency.PLN, false, 1.0d),
+      "USD/PLN", FxCurrencyPair.of(Currency.USD, Currency.PLN, false, 1.0d),
+      "EUR/USD", FxCurrencyPair.of(Currency.EUR, Currency.USD, true, 1.0d),
+      "HUF/PLN", FxCurrencyPair.of(Currency.of("HUF"), Currency.PLN, false, 100d),
+      "EUR/HUF", FxCurrencyPair.of(Currency.EUR, Currency.of("HUF"), true, 0.0d),
+      "XXX/PLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 100d),
+      "YYY/PLN", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), false, 10d),
+      "XXX/YYY", FxCurrencyPair.of(Currency.of("XXX"), Currency.of("YYY"), true, 0d));
 
   private static final MarketDataMemoryService<FxRateId, FxRate3.FxRate3Values> fxRateSourceService =
       new MarketDataMemoryService<>();
@@ -51,7 +51,7 @@ class FxRateServiceTest {
             .of(FxRateId.of("YYY", "PLN"), FxRate3.of(LocalDate.parse("2020-01-01"), 40.7d, 41.5d, 42.6d))
     ));
     rateService = new FxRateServiceImpl(
-        (ccy1,ccy2)->pairs.get(ccy1+ccy2),
+        (ccy1,ccy2)->pairs.get(ccy1+"/"+ccy2),
         fxRateSourceService,
         Currency.PLN,
         DECIMAL_PLACES, OUTPUT_DECIMAL_PLACES);

@@ -27,7 +27,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   ONE_ONE("1/1", new DayCountConventionCalculator() {
     @Override
-    public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+    public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
       return 1;
     }
 
@@ -293,7 +293,7 @@ public enum StandardInterestBasis implements InterestBasis {
   }
 
   @Override
-  public int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public long days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return calculator.days(startDate, endDate, scheduleInfo);
   }
 

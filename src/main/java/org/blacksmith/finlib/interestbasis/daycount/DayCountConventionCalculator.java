@@ -15,7 +15,7 @@ public interface DayCountConventionCalculator {
       ArgChecker.inOrderOrEqual(endDate,scheduleInfo.getCouponEndDate(),()->"EndDate musn't be after CouponEndDate");
     }
   }
-  default int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  default long days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     verify(startDate,endDate,scheduleInfo);
     return calculateDays(startDate, endDate, scheduleInfo);
   }
@@ -32,6 +32,6 @@ public interface DayCountConventionCalculator {
     return false;
   }
 
-  int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
+  long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
   double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
 }

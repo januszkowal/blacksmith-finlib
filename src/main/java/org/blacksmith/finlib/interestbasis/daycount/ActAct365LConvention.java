@@ -13,7 +13,7 @@ public class ActAct365LConvention implements DayCountConventionCalculator {
 
   @Override
   public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    int actualDays = DateUtils.daysBetween(startDate, endDate);
+    long actualDays = DateUtils.daysBetween(startDate, endDate);
     if (startDate.equals(endDate)) {
       return 0d;
     }
@@ -28,7 +28,7 @@ public class ActAct365LConvention implements DayCountConventionCalculator {
   }
 
   @Override
-  public int calculateDays(LocalDate startDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
+  public long calculateDays(LocalDate startDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
     return DateUtils.daysBetween(startDate, calcDate);
   }
 

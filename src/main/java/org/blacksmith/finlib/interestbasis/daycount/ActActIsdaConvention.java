@@ -7,7 +7,7 @@ import org.blacksmith.finlib.interestbasis.ScheduleInfo;
 public class ActActIsdaConvention implements DayCountConventionCalculator {
 
   @Override
-  public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return DateUtils.daysBetween(startDate, endDate);
   }
 

@@ -19,7 +19,7 @@ public class ActActIcmaConvention implements DayCountConventionCalculator {
   }
 
   @Override
-  public int calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
     return DateUtils.daysBetween(startDate, endDate);
   }
 
@@ -87,8 +87,8 @@ public class ActActIcmaConvention implements DayCountConventionCalculator {
   }
 
   private double regularPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq) {
-    int actualDays = daysBetween(couponStartDate, calcDate);
-    int periodDays = daysBetween(couponStartDate, couponEndDate);
+    long actualDays = daysBetween(couponStartDate, calcDate);
+    long periodDays = daysBetween(couponStartDate, couponEndDate);
     double denominator = getDenominator(freq, periodDays);
     log.debug("regular period: on={} cpn={}#{} factor={}/{}",
         calcDate,

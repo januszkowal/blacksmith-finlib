@@ -58,5 +58,5 @@ public interface InterestBasis {
    * @param scheduleInfo schedule information
    * @return the number of days, as determined by the day count
    */
-  int days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
+  long days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
 }
