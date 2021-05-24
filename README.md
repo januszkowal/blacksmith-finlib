@@ -4,19 +4,25 @@ Set of financial libraries
 
 ## 1. Market data
 
-### 1.1. Fx Rates
+### 1.1. Foreign Exchange rates - FxRates
 
 [See here](src/main/java/org/blacksmith/finlib/rates/fxrates)
 
-FxRateService - service that returns FxRates. One of the important parts of FxRate is Currency Pair, which defines the quotation between two
-different currencies. Currency Pair has the following attributes:
+FxRateService - service that helps converts between currencies.
+##### How to Exchange Currency
+Currency can be converted using an online currency exchange, or it can be performed manually.
+To use second method, you must first look up the exchange rate using an online exchange rate calculator or calculate if by yourself.
 
+Let's conduct a dollar-to-euro conversion, for example. First, look up the exchange rate online using a website such as xe.com, which will be quoted as the amount $1 can buy in euros or as the amount one euro will buy in dollars. If $1 buys 0.6250 euros, then $10,000 would equal 6,250 euros (because 10,000 x 0.6250 = 6,250). If the quote states that one euro buys $1.60, then $10,000 still would equal 6,250 euros (because 10,000/1.6000 = 6,250).
+One of the most important part of Foreign Exchange Rates is Currency Pair, which defines the quotation between two
+different currencies. 
+Quotation in other words defines how amount in one currency can be translated to another.
+
+Currency Pair has the following attributes:
 - base currency - eg. EUR, USD, JPY
 - counter currency - eg. EUR, USD, JPY
 - factor - defines additional factor. Some pairs, e.g. USD/JPY HUF/PLN are quoted at 100 to avoid low/high numbers
 - cross flag - if true, then fx rate must be calculated using three currencies: base, counter and domestic
-
-Moreover currency pair defines how FxRates should be stored.
 
 #### Example 1 - the domestic currency is EUR and the following pairs and rates are defined
 
