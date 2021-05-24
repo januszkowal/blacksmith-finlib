@@ -21,7 +21,6 @@ Moreover currency pair defines how FxRates should be stored.
 #### Example 1 - the domestic currency is EUR and the following pairs and rates are defined
 
 ##### Currency pairs
-
 |Base currency|Counter currency|Is cross|Factor|
 |:---:|:---:|:---:|:---:|
 |EUR|USD|No|1|
@@ -36,7 +35,6 @@ Moreover currency pair defines how FxRates should be stored.
 |HUF|PLN|Yes|-|
 
 #### Exchange rates
-
 |Date|Base currency|Counter currency|Exchange rate|
 |---|:---:|:---:|---:|
 |2020/05/15|EUR|USD|1.215|
@@ -45,7 +43,6 @@ Moreover currency pair defines how FxRates should be stored.
 |2020/05/15|EUR|PLN|4.55|
 
 #### Effective rates calculated using source rates and pairs
-
 |Date|From currency|To currency|Exchange rate|Description|
 |---|:---:|:---:|---:|:---:|
 |2020/05/15|EUR|HUF|348.669000|direct|
@@ -72,7 +69,6 @@ Moreover currency pair defines how FxRates should be stored.
 #### Example 2 - the domestic currency is PLN  and the following pairs and rates are defined
 
 ##### Currency pairs
-
 |Base currency|Counter currency|Is cross|Factor|
 |:---:|:---:|:---:|:---:|
 |EUR|PLN|No|1|
@@ -85,7 +81,13 @@ Moreover currency pair defines how FxRates should be stored.
 |USD|HUF|Yes|-|
 |USD|JPY|Yes|-|
 |JPY|HUF|Yes|-|
-
+#### Exchange rates
+|Date|Base currency|Counter currency|Exchange rate|
+|---|:---:|:---:|---:|
+| 2021-05-15 | EUR  | PLN | 4.5    |
+| 2021-05-15 | USD  | PLN | 3.74   |
+| 2021-05-15 | HUF  | PLN | 1.2863 |
+| 2021-05-15 | JPY  | PLN | 3.4249 |
 #### Effective rates calculated using source rates and pairs
 |Date|From currency|To currency|Exchange rate|Description|
 |---|:---:|:---:|---:|:---:|
