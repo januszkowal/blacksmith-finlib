@@ -6,7 +6,7 @@ Set of financial libraries
 
 ### 1.1. Fx Rates
 
-rates/fxrates
+[See here](src/main/java/org/blacksmith/finlib/rates/fxrates)
 
 FxRateService - service that returns FxRates. One of the important parts of FxRate is Currency Pair, which defines the quotation between two
 different currencies. Currency Pair has the following attributes:
@@ -109,24 +109,23 @@ Moreover currency pair defines how FxRates should be stored.
 |2021-05-15|USD|HUF|291.511194|cross|
 |2021-05-15|USD|PLN|3.750000|direct|
 |2021-05-15|USD|JPY| 109.489051|cross|
-### 2. Xirr
+## 2. Calculations
+### 2.1 Business day conventions
+[See here](src/main/java/org/blacksmith/finlib/dayconvention)
+### 2.2 Xirr
+[See here](src/main/java/org/blacksmith/finlib/math/xirr)
 
-math/xirr
-
-Calculates Xirr - the internal rate of return for cash flows. One of two methods can be used:
-
+Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
 - BiSection method
 - Newton-Raphson method
 
-Newton-Raphson method requires 2-3x fewer iterations than BiSection
+Newton-Raphson method consumes 2-3x fewer iterations than BiSection
 
 How to use? Look at the tests
 
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
 
-### 3. Interest calculation
-
-Calculates interest fraction between two dates double InterestBasis.yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo
-scheduleInfo)
+### 2.3 Interest calculation
+[See here](src/main/java/org/blacksmith/finlib/interest)
 

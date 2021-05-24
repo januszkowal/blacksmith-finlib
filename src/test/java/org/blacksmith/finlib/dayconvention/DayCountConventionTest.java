@@ -3,10 +3,10 @@ package org.blacksmith.finlib.dayconvention;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.interestbasis.InterestBasis;
-import org.blacksmith.finlib.interestbasis.ScheduleInfo;
-import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
-import org.blacksmith.finlib.interestbasis.daycount.ActActIcmaConvention;
+import org.blacksmith.finlib.interest.basis.InterestBasis;
+import org.blacksmith.finlib.interest.basis.ScheduleInfo;
+import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
+import org.blacksmith.finlib.interest.basis.daycount.ActActIcmaConvention;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

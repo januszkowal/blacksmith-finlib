@@ -2,6 +2,7 @@ package org.blacksmith.finlib.interest;
 
 import java.time.LocalDate;
 
+import org.blacksmith.finlib.interest.utils.InterestCalculator;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

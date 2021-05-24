@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.interestbasis.ScheduleInfo;
-import org.blacksmith.finlib.interestbasis.StandardInterestBasis;
+import org.blacksmith.finlib.interest.basis.ScheduleInfo;
+import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
