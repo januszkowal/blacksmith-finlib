@@ -6,9 +6,9 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.MarketData;
 
 public enum FxRateType {
-  BUY(r3 -> r3.getValue().getBuyRate()),
-  SELL(r3 -> r3.getValue().getSellRate()),
-  AVG(r3 -> r3.getValue().getAvgRate());
+  BUY(r3 -> r3.getValue().getBuy()),
+  SELL(r3 -> r3.getValue().getSell()),
+  AVG(r3 -> r3.getValue().getAvg());
 
   private final Function<FxRate3, Rate> rateExtractor;
 

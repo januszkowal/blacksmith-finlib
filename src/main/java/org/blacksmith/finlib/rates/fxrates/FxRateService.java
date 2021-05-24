@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.fxrates.service;
+package org.blacksmith.finlib.rates.fxrates;
 
 import java.time.LocalDate;
 import java.util.Optional;

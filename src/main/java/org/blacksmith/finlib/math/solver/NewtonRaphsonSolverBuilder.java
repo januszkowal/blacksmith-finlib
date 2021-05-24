@@ -13,6 +13,6 @@ public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<SolverFunc
 
   @Override
   public NewtonRaphsonSolver build() {
-    return new NewtonRaphsonSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
+    return new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging);
   }
 }

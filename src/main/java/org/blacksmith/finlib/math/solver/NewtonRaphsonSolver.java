@@ -19,10 +19,6 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
     super(maxIterations, tolerance, breakIfTheSameCandidate);
   }
 
-  public double solve(final SolverFunctionDerivative function, double target, double guess) {
-    return solve(function, target, guess, Double.MIN_VALUE, Double.MAX_VALUE);
-  }
-
   public double inverse(final SolverFunctionDerivative function, double target, double guess) {
     return solve(function, target, guess);
   }
@@ -32,49 +28,38 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
   }
 
   @Override
-  public double solve(SolverFunctionDerivative function, double target, double guess, double minArg, double maxArg) {
+  public double solve(SolverFunctionDerivative function, double target, double guess) {
     this.function = function;
-    resetCounter();
-    setInitialGuess(guess);
+    reset();
+    setInitialCandidate(guess);
+    //x0 = startValue
     setCandidate(guess);
-    //    org.apache.commons.math3.analysis.solvers.NewtonRaphsonSolver
     for (int i = 0; i < this.maxIterations; i++) {
       nextIteration();
-      FunctionValue fv = function.getFunctionValue(this.getCandidate());
-      //checkFunctionValue(fv);
+      // y0 = compute
+      final FunctionValue fv = function.computeValueAndDerivatives(this.getCandidate());
       setFunctionValue(fv.getValue() - target);
-      log.debug("i={} arg={} fv={} dv={}",
-          getIterations(), getCandidate(), getFunctionValue(), getDerivativeValue());
-      if (isTargetAchieved()) {
+      log.debug("i={} result {}", getIterations(), fv);
+      if (isResultDiffLessThanAccuracy()) {
         return this.getCandidate();
       } else {
         setDerivativeValue(fv.getPartialDerivative(1));
+        // x1 = x0 - (y0.value / y0.derivative)
         double x1 = this.getCandidate() - this.getFunctionValue() / this.getDerivativeValue();
-        if (Math.abs(x1 - this.getCandidate()) <= tolerance)
+        // x1 - x0 <= accuracy
+        if (Math.abs(x1 - this.getCandidate()) <= accuracy)
           return this.getCandidate();
+        //x0 = x1
         this.setCandidate(x1);
       }
     }
-    /*
-    * double x0 = startValue;
-        double x1;
-        while (true) {
-            final DerivativeStructure y0 = computeObjectiveValueAndDerivative(x0);
-            x1 = x0 - (y0.getValue() / y0.getPartialDerivative(1));
-            if (FastMath.abs(x1 - x0) <= absoluteAccuracy) {
-                return x1;
-            }
-
-            x0 = x1;
-        }
-    * */
     throw new NonconvergenceException(guess, maxIterations);
   }
 
   @Override
   public Map<String, ?> getStats() {
     return Map.of(
-        "initialGuess", getInitialGuess(),
+        "initialCandidate", getInitialCandidate(),
         "iterations", getIterations(),
         "candidate", getCandidate(),
         "functionValue", getFunctionValue(),
@@ -91,12 +76,6 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
       throw new OverflowException("Derivative value overflow", this.getStats());
     } else if (derivativeValue == 0.0d) {
       throw new ZeroValuedDerivativeException(this.getStats());
-    }
-  }
-
-  private void checkFunctionValue(FunctionValue fv) {
-    if (!Double.isFinite(fv.getPartialDerivative(1))) {
-      throw new OverflowException("Derivative overflow", this.getStats());
     }
   }
 }

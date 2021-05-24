@@ -5,32 +5,29 @@ import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
 public abstract class AbstractSolver<F extends SolverFunction> implements Solver<F> {
   protected final long maxIterations;
-  protected final double tolerance;
+  protected final double accuracy;
   protected final boolean breakIfTheSameCandidate;
-  protected Double initialGuess;
-  protected double priorCandidate = Double.MAX_VALUE;
-  protected int priorCandidateCount = 0;
+  protected Double initialCandidate;
   protected F function;
   //Values actualized during iteration
-  //Current iteration
-  private long iterations;
-  //Current function argument
-  private double candidate;
-  //Current function value
-  private double functionValue;
+  protected long iterations;
+  protected double candidate;
+  protected double functionValue;
+  protected double priorCandidate;
+  protected int priorCandidateCount;
 
-  public AbstractSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate) {
+  public AbstractSolver(long maxIterations, double accuracy, boolean breakIfTheSameCandidate) {
     this.maxIterations = maxIterations;
-    this.tolerance = tolerance;
+    this.accuracy = accuracy;
     this.breakIfTheSameCandidate = breakIfTheSameCandidate;
   }
 
-  public Double getInitialGuess() {
-    return this.initialGuess;
+  public Double getInitialCandidate() {
+    return this.initialCandidate;
   }
 
-  public void setInitialGuess(double initialGuess) {
-    this.initialGuess = initialGuess;
+  public void setInitialCandidate(double initialCandidate) {
+    this.initialCandidate = initialCandidate;
   }
 
   public long getMaxIterations() {
@@ -53,8 +50,7 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     } else {
       this.priorCandidateCount = 0;
     }
-
-    if (!Double.isFinite(candidate)) {
+    if (!Double.isFinite(this.candidate)) {
       throw new OverflowException("Candidate overflow", this.getStats());
     }
   }
@@ -70,8 +66,10 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     }
   }
 
-  public void resetCounter() {
+  public void reset() {
     iterations = 0;
+    priorCandidate = Double.MAX_VALUE;
+    priorCandidateCount = 0;
   }
 
   public void nextIteration() {
@@ -82,11 +80,11 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     return this.iterations;
   }
 
-  public double getTolerance() {
-    return this.tolerance;
+  public double getAccuracy() {
+    return this.accuracy;
   }
 
-  protected boolean isTargetAchieved() {
-    return Math.abs(functionValue) < tolerance;
+  protected boolean isResultDiffLessThanAccuracy() {
+    return Math.abs(functionValue) < accuracy;
   }
 }

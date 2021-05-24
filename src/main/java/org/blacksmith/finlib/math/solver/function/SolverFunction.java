@@ -5,5 +5,5 @@ public interface SolverFunction {
     return candidate;
   }
 
-  double getValue(double arg);
+  double computeValue(double arg);
 }

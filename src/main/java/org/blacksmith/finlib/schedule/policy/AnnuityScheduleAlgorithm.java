@@ -44,30 +44,31 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
 
   @Override
   public List<InterestEvent> update(List<InterestEvent> cashflows) {
-    Solver<SolverFunctionDerivative> solver = createSolver(cashflows);
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
+    Solver<SolverFunctionDerivative> solver = createSolver(cashflows, minPmt, maxPmt);
     var sf = solverFunction(cashflows);
-    solver.findRoot(sf, getEstimatedPayment(cashflows), minPmt, maxPmt);
+    solver.findRoot(sf, getEstimatedPayment(cashflows));
     log.info("final :{}", Event.eventsToString(cashflows));
     return cashflows;
   }
 
-  public Solver<SolverFunctionDerivative> createSolver(List<InterestEvent> cashflows) {
+  public Solver<SolverFunctionDerivative> createSolver(List<InterestEvent> cashflows, double minArg, double maxArg) {
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
-    return
-        solverBuilder
-            .tolerance(0.01d)
-            .iterations(1000)
-            .breakIfCandidateNotChanging(true)
-            .build();
+    return solverBuilder.tolerance(0.01d).minArg(minArg).maxArg(maxArg).maxIterations(1000).breakIfCandidateNotChanging(true)
+        .build();
   }
 
   public SolverFunctionDerivative solverFunction(List<InterestEvent> cashflows) {
     return new SolverFunctionDerivative() {
       @Override
-      public double getDerivative(double arg) {
+      public int numberOfDerivatives() {
+        return 1;
+      }
+
+      @Override
+      public double computeDerivative(int derivativeNumber, double arg) {
         return scheduleDerivativeValue(cashflows, arg);
       }
 
@@ -77,7 +78,7 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
       }
 
       @Override
-      public double getValue(double arg) {
+      public double computeValue(double arg) {
         return recalculateAnnuity(cashflows, arg);
       }
     };

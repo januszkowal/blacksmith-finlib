@@ -26,9 +26,9 @@ public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunctionDeriva
   @Override
   public Solver<SolverFunctionDerivative> build() {
     if (this.algorithm == SolverAlgorithm.BI_SECTION) {
-      return new BiSectionSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
+      return new BiSectionSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging, minArg, maxArg);
     } else {
-      return new NewtonRaphsonSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
+      return new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging);
     }
   }
 

@@ -1,5 +1,4 @@
 Feature: Xirr calculations
-
   Scenario: 1 year, 2 cashflows no growth
     Given Create schedule
       | on         | amount |
@@ -14,7 +13,6 @@ Feature: Xirr calculations
       | 2010-01-01 | -1000  |
       | 2011-01-01 | 1100   |
     When Xirr calculate
-    Then Xirr result must be 0.1
     Then Xirr result must be 0.1
 
   Scenario: 1 year decline #1

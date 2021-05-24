@@ -13,6 +13,6 @@ public class BiSectionSolverBuilder extends AbstractSolverBuilder<SolverFunction
 
   @Override
   public BiSectionSolver build() {
-    return new BiSectionSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
+    return new BiSectionSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging, this.minArg, this.maxArg);
   }
 }

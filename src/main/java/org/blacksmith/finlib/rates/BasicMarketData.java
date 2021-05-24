@@ -1,15 +1,15 @@
-package org.blacksmith.finlib.rates.basic;
+package org.blacksmith.finlib.rates;
 
 import java.time.LocalDate;
-
-import org.blacksmith.finlib.rates.MarketData;
 
 import lombok.ToString;
 
 @ToString
 public class BasicMarketData<V> implements MarketData<V> {
 
+  @ToString.Include
   protected final LocalDate date;
+  @ToString.Include
   protected final V value;
 
   public BasicMarketData(LocalDate date, V value) {

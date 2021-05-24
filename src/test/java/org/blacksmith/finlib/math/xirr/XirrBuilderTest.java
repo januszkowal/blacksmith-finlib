@@ -53,7 +53,7 @@ public class XirrBuilderTest {
 
     final SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> builder = setUpNewtonRaphsonBuilder();
     System.out.println("builder build:" + builder.build());
-    Mockito.when(builder.build().findRoot(any(SolverFunctionDerivative.class), anyDouble(), anyDouble(), anyDouble())).thenReturn(expected);
+    Mockito.when(builder.build().findRoot(any(SolverFunctionDerivative.class), anyDouble())).thenReturn(expected);
 
     final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
         .withSolverBuilder(builder)
@@ -74,7 +74,7 @@ public class XirrBuilderTest {
 
     final SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> builder = setUpNewtonRaphsonBuilder();
     Mockito.when(builder.build()
-        .findRoot(any(SolverFunctionDerivative.class), eq(guess), anyDouble(), anyDouble())).thenReturn(expected);
+        .findRoot(any(SolverFunctionDerivative.class), eq(guess))).thenReturn(expected);
 
     final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
         .withGuess(guess)

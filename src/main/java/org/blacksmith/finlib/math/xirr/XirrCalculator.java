@@ -54,7 +54,8 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
   private XirrStats stats;
 
   private Double guess;
-  private long iterations = 0L;
+  private long allIterations = 0L;
+  private long lastIterations = 0L;
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -89,7 +90,8 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
    * @param rate the rate of return
    * @return the present value of the investment if it had been subject to the given rate of return
    */
-  public double getValue(final double rate) {
+  @Override
+  public double computeValue(final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.futureValue(rate))
         .sum();
@@ -101,7 +103,8 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
    * @param rate the rate of return
    * @return derivative of the present value under the given rate
    */
-  public double derivative(final double rate) {
+  @Override
+  public double computeDerivative(int numberOfDerivative, final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.derivative(rate))
         .sum();
@@ -138,25 +141,49 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
 
     log.debug("Total={} Incomes={} Outcomes={}", stats.getTotal(), stats.getIncomes(), stats.getOutcomes());
 
-    double xirr;
+    double xirr = 0.0d;
+    log.debug("Start");
     try {
-      log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(), guess, -1d, 2d);
-      this.iterations = solver.getIterations();
-      log.debug("Completed after iterations={}", iterations);
+      if (guess == null) {
+        guess = (stats.getTotal() / stats.getOutcomes()) / years;
+      }
+      log.debug("Calculate 1st with Guess={}", guess);
+      xirr = calculateInternal(guess);
+      log.debug("Completed after iterations={}", lastIterations);
+      return xirr;
     } catch (OverflowException oe) {
-      log.warn("Guess sign changed due to overflow,{}", solver.getStats());
-      this.iterations = solver.getIterations();
-      log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(), -guess, -1d, 2d);
-      this.iterations += solver.getIterations();
-      log.debug("Completed after iterations={}", iterations);
+      log.warn("Overflow exception");
+    }
+
+    try {
+      guess = - (stats.getTotal() / stats.getIncomes()) / years;
+      log.debug("Calculate 2nd with Guess={}", guess);
+      xirr = calculateInternal(guess);
+      log.debug("Completed after iterations={}", lastIterations);
+      return xirr;
+    } catch (OverflowException oe) {
+      log.warn("Overflow exception");
     }
     return xirr;
   }
 
+  @Override
+  public int numberOfDerivatives() {
+    return 1;
+  }
+
+  private double calculateInternal(double guess) {
+    try {
+      return solver.findRoot(getFunction(), guess);
+    }
+    finally {
+      this.lastIterations = solver.getIterations();
+      this.allIterations += this.lastIterations;
+    }
+  }
+
   public long getIterations() {
-    return this.iterations;
+    return this.allIterations;
   }
 
   @SuppressWarnings("unchecked")

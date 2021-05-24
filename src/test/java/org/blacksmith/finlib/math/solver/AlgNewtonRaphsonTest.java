@@ -16,37 +16,52 @@ public class AlgNewtonRaphsonTest {
 
   final SolverFunctionDerivative funSqrt = new SolverFunctionDerivative() {
     @Override
-    public double getValue(double x) {
+    public double computeValue(double x) {
       return x * x;
     }
 
     @Override
-    public double getDerivative(double x) {
+    public double computeDerivative(int derivativeNumber, double x) {
       return 2 * x;
+    }
+
+    @Override
+    public int numberOfDerivatives() {
+      return 1;
     }
   };
 
   final SolverFunctionDerivative funCubeRoot = new SolverFunctionDerivative() {
     @Override
-    public double getValue(double x) {
+    public double computeValue(double x) {
       return x * x * x;
     }
 
     @Override
-    public double getDerivative(double x) {
+    public double computeDerivative(int derivativeNumber, double x) {
       return 3 * x * x;
+    }
+
+    @Override
+    public int numberOfDerivatives() {
+      return 1;
     }
   };
 
   final SolverFunctionDerivative funQuadratic = new SolverFunctionDerivative() {
     @Override
-    public double getValue(double x) {
+    public double computeValue(double x) {
       return (x - 4) * (x + 3);
     }
 
     @Override
-    public double getDerivative(double x) {
+    public double computeDerivative(int derivativeNumber, double x) {
       return 2 * x - 1;
+    }
+
+    @Override
+    public int numberOfDerivatives() {
+      return 1;
     }
   };
 
@@ -87,13 +102,18 @@ public class AlgNewtonRaphsonTest {
   public void failToConverge() {
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double x) {
+      public double computeValue(double x) {
         return (x - 4) * (x + 3);
       }
 
       @Override
-      public double getDerivative(double x) {
+      public double computeDerivative(int derivativeNumber, double x) {
         return 2 * x - 1;
+      }
+
+      @Override
+      public int numberOfDerivatives() {
+        return 1;
       }
     };
     Assertions.assertThrows(ZeroValuedDerivativeException.class, () -> {
@@ -111,13 +131,18 @@ public class AlgNewtonRaphsonTest {
     // after one iteration
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double x) {
+      public double computeValue(double x) {
         return 2;
       }
 
       @Override
-      public double getDerivative(double x) {
+      public double computeDerivative(int derivativeNumber, double x) {
         return x > 0 ? .25 : 0;
+      }
+
+      @Override
+      public int numberOfDerivatives() {
+        return 1;
       }
     };
     NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
@@ -127,7 +152,7 @@ public class AlgNewtonRaphsonTest {
       nr.findRoot(function, 3.0);
       fail("Expected non-convergence");
     } catch (ZeroValuedDerivativeException e) {
-      assertEquals(3, nr.getInitialGuess(), TOLERANCE);
+      assertEquals(3, nr.getInitialCandidate(), TOLERANCE);
       assertEquals(2, nr.getIterations());
       assertEquals(-5, nr.getCandidate(), TOLERANCE);
       assertEquals(2, nr.getFunctionValue(), TOLERANCE);
@@ -138,12 +163,17 @@ public class AlgNewtonRaphsonTest {
   public void failToConverge_iterations() {
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double x) {
+      public double computeValue(double x) {
         return 2 * Math.signum(x);
       }
 
       @Override
-      public double getDerivative(double x) {
+      public double computeDerivative(int derivativeNumber, double x) {
+        return 1;
+      }
+
+      @Override
+      public int numberOfDerivatives() {
         return 1;
       }
     };
@@ -160,12 +190,17 @@ public class AlgNewtonRaphsonTest {
   public void failToConverge_iterations_verifyDetails() {
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double x) {
+      public double computeValue(double x) {
         return 2 * Math.signum(x);
       }
 
       @Override
-      public double getDerivative(double x) {
+      public double computeDerivative(int derivativeNumber, double x) {
+        return 1;
+      }
+
+      @Override
+      public int numberOfDerivatives() {
         return 1;
       }
     };
@@ -185,39 +220,17 @@ public class AlgNewtonRaphsonTest {
   public void failToConverge_badCandidate_verifyDetails() {
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double arg) {
+      public double computeValue(double arg) {
         return Double.MAX_VALUE;
       }
 
       @Override
-      public double getDerivative(double arg) {
+      public double computeDerivative(int derivativeNumber, double arg) {
         return Double.MIN_NORMAL;
       }
-    };
-    NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
-        //.withFunction(function)
-        .build();
-    try {
-      nr.findRoot(function, 3.0);
-      fail("Expected non-convergence");
-    } catch (OverflowException ne) {
-      ne.printStackTrace();
-      assertEquals(3, nr.getInitialGuess(), TOLERANCE);
-      assertEquals(1, nr.getIterations());
-      assertEquals(Double.NEGATIVE_INFINITY, nr.getCandidate(), TOLERANCE);
-    }
-  }
-
-  @Test
-  public void failToConverge_nanFunctionValue_verifyDetails() {
-    var function = new SolverFunctionDerivative() {
-      @Override
-      public double getValue(double arg) {
-        return Double.NaN;
-      }
 
       @Override
-      public double getDerivative(double arg) {
+      public int numberOfDerivatives() {
         return 1;
       }
     };
@@ -228,7 +241,34 @@ public class AlgNewtonRaphsonTest {
       nr.findRoot(function, 3.0);
       fail("Expected non-convergence");
     } catch (OverflowException ne) {
-      assertEquals(3, nr.getInitialGuess(), TOLERANCE);
+      ne.printStackTrace();
+      assertEquals(3, nr.getInitialCandidate(), TOLERANCE);
+      assertEquals(1, nr.getIterations());
+      assertEquals(Double.NEGATIVE_INFINITY, nr.getCandidate(), TOLERANCE);
+    }
+  }
+
+  @Test
+  public void failToConverge_nanFunctionValue_verifyDetails() {
+    var function = new SolverFunctionDerivative() {
+      @Override
+      public double computeValue(double arg) {
+        return Double.NaN;
+      }
+
+      @Override
+      public double computeDerivative(int derivativeNumber, double arg) {
+        return 1;
+      }
+    };
+    NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
+        //.withFunction(function)
+        .build();
+    try {
+      nr.findRoot(function, 3.0);
+      fail("Expected non-convergence");
+    } catch (OverflowException ne) {
+      assertEquals(3, nr.getInitialCandidate(), TOLERANCE);
       assertEquals(1, nr.getIterations());
       assertEquals(3, nr.getCandidate(), TOLERANCE);
       assertTrue(Double.isNaN(nr.getFunctionValue()));
@@ -240,13 +280,18 @@ public class AlgNewtonRaphsonTest {
   public void failToConverge_nanDerivative_verifyDetails() {
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double arg) {
+      public double computeValue(double arg) {
         return 2;
       }
 
       @Override
-      public double getDerivative(double arg) {
+      public double computeDerivative(int derivativeNumber, double arg) {
         return Double.NaN;
+      }
+
+      @Override
+      public int numberOfDerivatives() {
+        return 1;
       }
     };
 
@@ -256,7 +301,7 @@ public class AlgNewtonRaphsonTest {
       nr.findRoot(function, 3.0);
       fail("Derivative value overflow");
     } catch (OverflowException ne) {
-      assertEquals(3, nr.getInitialGuess(), TOLERANCE);
+      assertEquals(3, nr.getInitialCandidate(), TOLERANCE);
       assertEquals(1, nr.getIterations());
       assertEquals(3, nr.getCandidate(), TOLERANCE);
       assertEquals(2, nr.getFunctionValue(), TOLERANCE);
@@ -269,19 +314,21 @@ public class AlgNewtonRaphsonTest {
     final double tolerance = TOLERANCE / 1000;
     var function = new SolverFunctionDerivative() {
       @Override
-      public double getValue(double x) {
+      public double computeValue(double x) {
         return x * x;
       }
 
       @Override
-      public double getDerivative(double x) {
+      public double computeDerivative(int derivativeNumber, double x) {
         return 2 * x;
       }
+
+      @Override
+      public int numberOfDerivatives() {
+        return 1;
+      }
     };
-    NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder()
-        //.withFunction(function)
-        //.tolerance(tolerance)
-        .build();
+    NewtonRaphsonSolver nr = NewtonRaphsonSolverBuilder.builder().build();
     assertEquals(4, nr.inverse(function, 16, 16.0), tolerance);
     assertEquals(15, nr.inverse(function, 225, 225.0), tolerance);
     assertEquals(1.414_213_562_3, nr.inverse(function, 2, 2.0), tolerance);

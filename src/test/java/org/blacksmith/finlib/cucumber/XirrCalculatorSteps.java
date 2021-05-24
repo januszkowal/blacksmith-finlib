@@ -52,10 +52,12 @@ public class XirrCalculatorSteps {
             .asBuilder())
         .build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);
+    log.info("Calc BiSection={}", this.xirrBiCalcResult);
     log.info("Calc NewtonRaphson");
     var calculatorNewtonRapshon = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
         .withSolverBuilder(NewtonRaphsonSolverBuilder.builder()).build();
     this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr(cashflows);
+    log.info("Calc NewtonRaphson={}", this.xirrNewtonRaphsonResult);
   }
 
   @Then("Xirr result must be {double}")
