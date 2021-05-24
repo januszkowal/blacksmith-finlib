@@ -40,14 +40,14 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
       final FunctionValue fv = function.computeValueAndDerivatives(this.getCandidate());
       setFunctionValue(fv.getValue() - target);
       log.debug("i={} result {}", getIterations(), fv);
-      if (isResultDiffLessThanAccuracy()) {
+      if (isResultDiffLessThanTolerance()) {
         return this.getCandidate();
       } else {
         setDerivativeValue(fv.getPartialDerivative(1));
         // x1 = x0 - (y0.value / y0.derivative)
         double x1 = this.getCandidate() - this.getFunctionValue() / this.getDerivativeValue();
         // x1 - x0 <= accuracy
-        if (Math.abs(x1 - this.getCandidate()) <= accuracy)
+        if (Math.abs(x1 - this.getCandidate()) <= tolerance)
           return this.getCandidate();
         //x0 = x1
         this.setCandidate(x1);

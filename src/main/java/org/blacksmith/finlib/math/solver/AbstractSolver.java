@@ -5,7 +5,7 @@ import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
 public abstract class AbstractSolver<F extends SolverFunction> implements Solver<F> {
   protected final long maxIterations;
-  protected final double accuracy;
+  protected final double tolerance;
   protected final boolean breakIfTheSameCandidate;
   protected Double initialCandidate;
   protected F function;
@@ -16,9 +16,9 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
   protected double priorCandidate;
   protected int priorCandidateCount;
 
-  public AbstractSolver(long maxIterations, double accuracy, boolean breakIfTheSameCandidate) {
+  public AbstractSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate) {
     this.maxIterations = maxIterations;
-    this.accuracy = accuracy;
+    this.tolerance = tolerance;
     this.breakIfTheSameCandidate = breakIfTheSameCandidate;
   }
 
@@ -80,11 +80,11 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     return this.iterations;
   }
 
-  public double getAccuracy() {
-    return this.accuracy;
+  public double getTolerance() {
+    return this.tolerance;
   }
 
-  protected boolean isResultDiffLessThanAccuracy() {
-    return Math.abs(functionValue) < accuracy;
+  protected boolean isResultDiffLessThanTolerance() {
+    return Math.abs(functionValue) < tolerance;
   }
 }

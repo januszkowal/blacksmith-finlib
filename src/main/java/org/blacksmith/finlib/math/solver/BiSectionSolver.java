@@ -33,7 +33,7 @@ public class BiSectionSolver extends AbstractSolver<SolverFunctionDerivative> {
       setCandidate((a + b) / 2);
       setFunctionValue(function.computeValue(getCandidate()) - target);
       log.debug("i={} arg={} fv={}", getIterations(), getCandidate(), getFunctionValue());
-      if (isResultDiffLessThanAccuracy()) {
+      if (isResultDiffLessThanTolerance()) {
         return this.getCandidate();
       } else {
         if (breakIfTheSameCandidate && priorCandidateCount > 2) {
