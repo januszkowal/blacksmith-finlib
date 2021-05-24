@@ -5,7 +5,7 @@ import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 /**
  * Builder for {@link BiSectionSolver} instances.
  */
-public class BiSectionSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative,Solver<SolverFunctionDerivative>> {
+public class BiSectionSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> {
 
   public static BiSectionSolverBuilder builder() {
     return new BiSectionSolverBuilder();
@@ -13,6 +13,6 @@ public class BiSectionSolverBuilder extends AbstractSolverBuilder<SolverFunction
 
   @Override
   public BiSectionSolver build() {
-    return new BiSectionSolver(this.iterations, this.tolerance, this.breakIfCandidateNotChanging);
+    return new BiSectionSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging, this.minArg, this.maxArg);
   }
 }

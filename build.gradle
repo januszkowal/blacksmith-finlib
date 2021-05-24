@@ -29,21 +29,23 @@ repositories {
 
 dependencies {
     compileOnly libs.lombok
-    testCompile libs.lombok
     annotationProcessor libs.lombok
     testAnnotationProcessor libs.lombok
     implementation libs.blacksmithCommons
     implementation libs.blacksmithFinlibBasic
-    compile libs.slf4jApi
-    compile libs.jackson
+    implementation libs.slf4jApi
+    implementation libs.jackson
+    implementation libs.apacheCommonsCollections
     api libs.groovy
-    testCompile libs.logback
-    testCompile libs.mockito
+    testCompileOnly libs.lombok
+    testImplementation libs.logback
+    testImplementation libs.mockito
     testImplementation libs.cucumber
     testImplementation libs.junit
     testImplementation libs.blacksmithTest
     testImplementation libs.apacheCommonsMath
-    testImplementation 'org.hamcrest:hamcrest-library:2.1'
+    testImplementation libs.assertj
+//    testImplementation 'org.hamcrest:hamcrest-library:2.1'
 }
 
 configurations {

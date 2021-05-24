@@ -14,10 +14,10 @@ public interface YieldCurveService {
 
   default Rate getFra(CurveRateId curveRateId, LocalDate asOfDate, LocalDate d1, LocalDate d2) {
     int yearLength = getYearLength(curveRateId);
-    int l1 = DateUtils.daysBetween(d1,asOfDate);
-    int l2 = DateUtils.daysBetween(d2,asOfDate);
-    Rate dcf1 = getDcfValue(curveRateId,asOfDate,d1);
-    Rate dcf2 = getDcfValue(curveRateId,asOfDate,d2);
-    return Rate.of((dcf1.doubleValue()/dcf2.doubleValue())*((double)yearLength/(l2-l1))*100d);
+    long l1 = DateUtils.daysBetween(d1, asOfDate);
+    long l2 = DateUtils.daysBetween(d2, asOfDate);
+    Rate dcf1 = getDcfValue(curveRateId, asOfDate, d1);
+    Rate dcf2 = getDcfValue(curveRateId, asOfDate, d2);
+    return Rate.of((dcf1.doubleValue() / dcf2.doubleValue()) * ((double) yearLength / (l2 - l1)) * 100d);
   }
 }

@@ -1,26 +1,34 @@
 package org.blacksmith.finlib.rates.fxrates;
 
+import java.util.function.Function;
+
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.MarketData;
-import org.blacksmith.finlib.rates.MarketDataExtractor;
-import org.blacksmith.finlib.rates.fxrates.FxRate3.FxRateValues;
 
 public enum FxRateType {
-  BUY(r3->r3.getValue().getBuyRate()),
-  SELL(r3->r3.getValue().getSellRate()),
-  AVG(r3->r3.getValue().getAvgRate());
+  BUY(r3 -> r3.getValue().getBuy()),
+  SELL(r3 -> r3.getValue().getSell()),
+  AVG(r3 -> r3.getValue().getAvg());
 
-  private final MarketDataExtractor<FxRateValues, Rate> rateExtractor;
+  private final Function<FxRate3, Rate> rateExtractor;
 
-  FxRateType(MarketDataExtractor<FxRateValues,Rate> rateExtractor) {
+  FxRateType(Function<FxRate3, Rate> rateExtractor) {
     this.rateExtractor = rateExtractor;
   }
 
-  public Rate extractRate(MarketData<FxRateValues> rate) {
-    return rateExtractor.extract(rate);
+  public Rate toRate(MarketData<FxRate3> rate) {
+    return rateExtractor.apply(rate.getValue());
   }
 
-  public FxRate1 extractFxRate(MarketData<FxRateValues> rate) {
-    return FxRate1.of(rate.getDate(),rateExtractor.extract(rate));
+  public Rate toRate(FxRate3 rate) {
+    return rateExtractor.apply(rate);
+  }
+
+  public FxRate toFxRate(MarketData<FxRate3> rate) {
+    return FxRate.of(rate.getDate(), rateExtractor.apply(rate.getValue()));
+  }
+
+  public FxRate toFxRate(FxRate3 rate) {
+    return FxRate.of(rate.getDate(), rateExtractor.apply(rate));
   }
 }

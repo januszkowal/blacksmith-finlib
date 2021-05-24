@@ -1,22 +1,23 @@
 package org.blacksmith.finlib.math.xirr;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.math.xirr.dto.XirrStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Calculates the irregular rate of return on a series of transactions.  The irregular rate of return is the constant
@@ -52,12 +53,9 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
   private List<XirrCashflow> xirrCashflows;
   private XirrStats stats;
 
-
   private Double guess;
-  private long iterations = 0L;
-
-  @SuppressWarnings("unchecked")
-  private F getFunction() {return (F)this;}
+  private long allIterations = 0L;
+  private long lastIterations = 0L;
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -86,18 +84,14 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
         .collect(Collectors.toList());
   }
 
-  private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getAmount(),
-        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
-  }
-
   /**
    * Calculates the future value of the investment if it had been subject to the given rate of return.
    *
    * @param rate the rate of return
    * @return the present value of the investment if it had been subject to the given rate of return
    */
-  public double getValue(final double rate) {
+  @Override
+  public double computeValue(final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.futureValue(rate))
         .sum();
@@ -109,7 +103,8 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
    * @param rate the rate of return
    * @return derivative of the present value under the given rate
    */
-  public double derivative(final double rate) {
+  @Override
+  public double computeDerivative(int numberOfDerivative, final double rate) {
     return xirrCashflows.stream()
         .mapToDouble(inv -> inv.derivative(rate))
         .sum();
@@ -117,6 +112,7 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
 
   /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
+   *
    * @param cashflows the cashflows
    * @return the irregular rate of return of the cashflows
    * @throws ZeroValuedDerivativeException if the derivative is 0 while executing the Newton-Raphson method
@@ -145,24 +141,58 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
 
     log.debug("Total={} Incomes={} Outcomes={}", stats.getTotal(), stats.getIncomes(), stats.getOutcomes());
 
-    double xirr;
+    double xirr = 0.0d;
+    log.debug("Start");
     try {
-      log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),guess, -1d, 2d);
-      this.iterations = solver.getIterations();
-      log.debug("Completed after iterations={}", iterations);
+      if (guess == null) {
+        guess = (stats.getTotal() / stats.getOutcomes()) / years;
+      }
+      log.debug("Calculate 1st with Guess={}", guess);
+      xirr = calculateInternal(guess);
+      log.debug("Completed after iterations={}", lastIterations);
+      return xirr;
     } catch (OverflowException oe) {
-      log.warn("Guess sign changed due to overflow,{}", solver.getStats());
-      this.iterations = solver.getIterations();
-      log.debug("Start with Guess={}", guess);
-      xirr = solver.findRoot(getFunction(),-guess, -1d, 2d);
-      this.iterations += solver.getIterations();
-      log.debug("Completed after iterations={}", iterations);
+      log.warn("Overflow exception");
+    }
+
+    try {
+      guess = - (stats.getTotal() / stats.getIncomes()) / years;
+      log.debug("Calculate 2nd with Guess={}", guess);
+      xirr = calculateInternal(guess);
+      log.debug("Completed after iterations={}", lastIterations);
+      return xirr;
+    } catch (OverflowException oe) {
+      log.warn("Overflow exception");
     }
     return xirr;
   }
 
+  @Override
+  public int numberOfDerivatives() {
+    return 1;
+  }
+
+  private double calculateInternal(double guess) {
+    try {
+      return solver.findRoot(getFunction(), guess);
+    }
+    finally {
+      this.lastIterations = solver.getIterations();
+      this.allIterations += this.lastIterations;
+    }
+  }
+
   public long getIterations() {
-    return this.iterations;
+    return this.allIterations;
+  }
+
+  @SuppressWarnings("unchecked")
+  private F getFunction() {
+    return (F) this;
+  }
+
+  private XirrCashflow createXirrCashflow(Cashflow cashflow) {
+    return new XirrCashflow(cashflow.getAmount(),
+        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
   }
 }

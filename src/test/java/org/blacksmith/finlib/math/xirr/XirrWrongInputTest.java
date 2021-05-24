@@ -1,14 +1,15 @@
 package org.blacksmith.finlib.math.xirr;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class XirrWrongInputTest {
 

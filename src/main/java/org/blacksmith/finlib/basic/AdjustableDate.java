@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.basic;
 
 import java.time.LocalDate;
+
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
 
 public class AdjustableDate {
@@ -21,5 +22,7 @@ public class AdjustableDate {
     return this.unadjusted;
   }
 
-  public BusinessDayConvention getConvention() {return this.convention;}
+  public BusinessDayConvention getConvention() {
+    return this.convention;
+  }
 }

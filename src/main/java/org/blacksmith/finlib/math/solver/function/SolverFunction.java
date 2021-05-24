@@ -4,5 +4,6 @@ public interface SolverFunction {
   default double alignCandidate(double candidate) {
     return candidate;
   }
-  double getValue(double arg);
+
+  double computeValue(double arg);
 }

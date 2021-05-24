@@ -7,19 +7,14 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
   protected final long maxIterations;
   protected final double tolerance;
   protected final boolean breakIfTheSameCandidate;
-  protected Double initialGuess;
-
-  //Values actualized during iteration
-  //Current iteration
-  private long iterations;
-  //Current function argument
-  private double candidate;
-  //Current function value
-  private double functionValue;
-
-  protected double priorCandidate = Double.MAX_VALUE;
-  protected int priorCandidateCount=0;
+  protected Double initialCandidate;
   protected F function;
+  //Values actualized during iteration
+  protected long iterations;
+  protected double candidate;
+  protected double functionValue;
+  protected double priorCandidate;
+  protected int priorCandidateCount;
 
   public AbstractSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate) {
     this.maxIterations = maxIterations;
@@ -27,21 +22,22 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     this.breakIfTheSameCandidate = breakIfTheSameCandidate;
   }
 
-  public void setInitialGuess(double initialGuess) {
-    this.initialGuess = initialGuess;
+  public Double getInitialCandidate() {
+    return this.initialCandidate;
   }
-  public Double getInitialGuess() {
-    return this.initialGuess;
+
+  public void setInitialCandidate(double initialCandidate) {
+    this.initialCandidate = initialCandidate;
   }
-  public void resetCounter() {
-    iterations=0;
+
+  public long getMaxIterations() {
+    return this.maxIterations;
   }
-  public void nextIteration() {
-    iterations++;
-  }
+
   public long getIterations() {
     return this.iterations;
   }
+
   public double getCandidate() {
     return candidate;
   }
@@ -49,16 +45,18 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
   protected void setCandidate(double newCandidate) {
     this.priorCandidate = this.candidate;
     this.candidate = function.alignCandidate(newCandidate);
-    if (this.candidate==priorCandidate) {
+    if (this.candidate == priorCandidate) {
       this.priorCandidateCount++;
+    } else {
+      this.priorCandidateCount = 0;
     }
-    else {
-      this.priorCandidateCount=0;
-    }
-
-    if (!Double.isFinite(candidate)) {
+    if (!Double.isFinite(this.candidate)) {
       throw new OverflowException("Candidate overflow", this.getStats());
     }
+  }
+
+  public double getFunctionValue() {
+    return functionValue;
   }
 
   protected void setFunctionValue(double functionValue) {
@@ -68,19 +66,25 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     }
   }
 
-  public long getMaxIterations() {
-    return this.maxIterations;
+  public void reset() {
+    iterations = 0;
+    priorCandidate = Double.MAX_VALUE;
+    priorCandidateCount = 0;
   }
 
-  public long getIteractions() { return this.iterations; }
-
-  public double getTolerance() { return this.tolerance; }
-
-  protected boolean isTargetAchieved() {
-    return Math.abs(functionValue)<tolerance;
+  public void nextIteration() {
+    iterations++;
   }
 
-  public double getFunctionValue() {
-    return functionValue;
+  public long getIteractions() {
+    return this.iterations;
+  }
+
+  public double getTolerance() {
+    return this.tolerance;
+  }
+
+  protected boolean isResultDiffLessThanTolerance() {
+    return Math.abs(functionValue) < tolerance;
   }
 }

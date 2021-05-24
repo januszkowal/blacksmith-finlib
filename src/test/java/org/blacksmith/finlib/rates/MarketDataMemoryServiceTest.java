@@ -1,17 +1,16 @@
 package org.blacksmith.finlib.rates;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDate;
 import java.util.List;
+
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.basic.BasicMarketDataHolder;
-import org.blacksmith.finlib.rates.basic.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.interestrates.InterestRate;
 import org.blacksmith.finlib.rates.interestrates.InterestRateId;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarketDataMemoryServiceTest {
 
@@ -21,13 +20,13 @@ class MarketDataMemoryServiceTest {
   @BeforeAll
   public static void setUp() {
     interestRateService.setMarketData(List.of(
-        BasicMarketDataHolder
+        BasicMarketDataWrapper
             .of(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
                 InterestRate.of(LocalDate.parse("2019-12-01"), Rate.of(3.0d))),
-        BasicMarketDataHolder
+        BasicMarketDataWrapper
             .of(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
                 InterestRate.of(LocalDate.parse("2020-01-01"), Rate.of(3.1d))),
-        BasicMarketDataHolder
+        BasicMarketDataWrapper
             .of(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")),
                 InterestRate.of(LocalDate.parse("2020-01-02"), Rate.of(3.4d)))
     ));

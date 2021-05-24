@@ -3,14 +3,23 @@ package org.blacksmith.finlib.math.xirr.dto;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collector;
+
 import org.blacksmith.finlib.math.xirr.Cashflow;
 import org.blacksmith.finlib.math.xirr.XirrCalculator;
 
 /**
  * Converts a stream of {@link Cashflow} instances into the data needed for
  * the {@link XirrCalculator} algorithm.
- * */
+ */
 public class XirrStats {
+  LocalDate startDate;
+  LocalDate endDate;
+  double minAmount = Double.POSITIVE_INFINITY;
+  double maxAmount = Double.NEGATIVE_INFINITY;
+  double total = 0.0;
+  double incomes = 0.0;
+  double outcomes = 0.0;
+
   public static Collector<Cashflow, XirrStats, XirrStats> collector() {
     return Collector.of(
         XirrStats::new,
@@ -22,14 +31,13 @@ public class XirrStats {
 
   private static void accumulate(XirrStats a, Cashflow cs) {
     a.startDate = a.startDate != null && a.startDate.isBefore(cs.getDate()) ? a.startDate : cs.getDate();
-    a.endDate   = a.endDate != null && a.endDate.isAfter(cs.getDate()) ? a.endDate : cs.getDate();
+    a.endDate = a.endDate != null && a.endDate.isAfter(cs.getDate()) ? a.endDate : cs.getDate();
     a.minAmount = Math.min(a.minAmount, cs.getAmount());
     a.maxAmount = Math.max(a.maxAmount, cs.getAmount());
     a.total += cs.getAmount();
     if (cs.getAmount() < 0) {
       a.outcomes -= cs.getAmount();
-    }
-    else {
+    } else {
       a.incomes += cs.getAmount();
     }
   }
@@ -50,14 +58,6 @@ public class XirrStats {
     result.validate();
     return result;
   }
-
-  LocalDate startDate;
-  LocalDate endDate;
-  double minAmount = Double.POSITIVE_INFINITY;
-  double maxAmount = Double.NEGATIVE_INFINITY;
-  double total = 0.0;
-  double incomes = 0.0;
-  double outcomes = 0.0;
 
   public LocalDate getStartDate() {
     return startDate;
