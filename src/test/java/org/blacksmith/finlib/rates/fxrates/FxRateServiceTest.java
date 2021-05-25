@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataMemoryServiceImpl;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
@@ -37,7 +37,7 @@ class FxRateServiceTest {
 
   @BeforeAll
   public static void setUp() {
-    FxRateMarketDataMemoryServiceImpl fxRateProvider = new FxRateMarketDataMemoryServiceImpl();
+    FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
     fxRateProvider.setMarketData(List.of(
             BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
                 FxRate3RSource.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),

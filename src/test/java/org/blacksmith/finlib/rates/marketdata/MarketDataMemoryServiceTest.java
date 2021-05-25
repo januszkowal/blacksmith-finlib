@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class MarketDataMemoryServiceTest {
 
-  static final MarketDataMemoryService<InterestRateId, Rate> interestRateService =
-      new MarketDataMemoryService<>();
+  static final MarketDataInMemoryProvider<InterestRateId, Rate> interestRateService =
+      new MarketDataInMemoryProvider<>();
 
   @BeforeAll
   public static void setUp() {
