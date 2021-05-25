@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.fxrates;
+package org.blacksmith.finlib.rates.fxrates.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,10 +12,12 @@ import org.blacksmith.finlib.rates.MarketData;
 import org.blacksmith.finlib.rates.MarketDataService;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPairProvider;
-import org.blacksmith.finlib.rates.fxrates.internal.FxCurrencyPairInternal;
-import org.blacksmith.finlib.rates.fxrates.internal.FxRate1Internal;
-import org.blacksmith.finlib.rates.fxrates.internal.FxRate3Internal;
-import org.blacksmith.finlib.rates.fxrates.internal.FxRateOperations;
+import org.blacksmith.finlib.rates.fxrates.FxRate;
+import org.blacksmith.finlib.rates.fxrates.FxRate3;
+import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
+import org.blacksmith.finlib.rates.fxrates.FxRateId;
+import org.blacksmith.finlib.rates.fxrates.FxRateService;
+import org.blacksmith.finlib.rates.fxrates.FxRateType;
 
 import lombok.extern.slf4j.Slf4j;
 

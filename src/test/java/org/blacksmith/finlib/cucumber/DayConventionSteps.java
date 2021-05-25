@@ -83,11 +83,10 @@ public class DayConventionSteps {
 
   private double calculateFraction(String text) {
     Object result = shell.evaluate(text);
-    if (result instanceof BigDecimal) {
-      return ((BigDecimal) result).doubleValue();
-    } else if (result instanceof Double) {
-      return (Double) result;
-    } else
+    if (Number.class.isAssignableFrom(result.getClass())) {
+      return ((Number) result).doubleValue();
+    } else {
       return 0d;
+    }
   }
 }

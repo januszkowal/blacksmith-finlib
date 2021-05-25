@@ -1,6 +1,6 @@
-package org.blacksmith.finlib.rates.fxrates.internal;
+package org.blacksmith.finlib.rates.fxrates.impl;
 
-public interface FxRateOperations<R> {
+interface FxRateOperations<R> {
   R multiply(double multiplicand);
   R multiply(R multiplicand);
   R divide(R divisor);

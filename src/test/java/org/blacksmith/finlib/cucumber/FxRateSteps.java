@@ -16,7 +16,7 @@ import org.blacksmith.finlib.rates.fxrates.FxRate3;
 import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
 import org.blacksmith.finlib.rates.fxrates.FxRateId;
 import org.blacksmith.finlib.rates.fxrates.FxRateService;
-import org.blacksmith.finlib.rates.fxrates.FxRateServiceImpl;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rates.fxrates.FxRateType;
 
 import groovy.lang.GroovyShell;
@@ -121,7 +121,6 @@ public class FxRateSteps {
 
   private double evaluate(String text) {
     Object result = shell.evaluate(text);
-//    log.debug("evaluate text={} result={} class={}", text, result, result.getClass());
     if (Number.class.isAssignableFrom(result.getClass())) {
       return ((Number) result).doubleValue();
     } else {

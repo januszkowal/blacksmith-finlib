@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.fxrates.internal;
+package org.blacksmith.finlib.rates.fxrates.impl;
 
 import org.blacksmith.finlib.rates.fxrates.FxRateId;
 
@@ -7,7 +7,7 @@ import lombok.Value;
 
 @ToString
 @Value
-public class FxCurrencyPairInternal {
+class FxCurrencyPairInternal {
   private final FxRateId fxRateId;
   private final boolean isCross;
   private final boolean isDirect;

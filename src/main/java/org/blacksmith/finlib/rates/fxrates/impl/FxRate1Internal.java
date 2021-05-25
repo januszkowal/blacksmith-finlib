@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.fxrates.internal;
+package org.blacksmith.finlib.rates.fxrates.impl;
 
 import java.time.LocalDate;
 
@@ -6,11 +6,7 @@ import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.fxrates.FxRate;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
-
-public class FxRate1Internal implements FxRateOperations<FxRate1Internal> {
+class FxRate1Internal implements FxRateOperations<FxRate1Internal> {
   private LocalDate date;
   private double value;
   private final int decimalPlaces;

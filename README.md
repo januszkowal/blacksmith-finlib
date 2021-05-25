@@ -2,21 +2,29 @@
 
 Set of financial libraries
 
+[Cucumber tests see here](src/test/resources/features)
+
 ## 1. Market data
 
-### 1.1. Fx Rates
+### 1.1. Foreign Exchange Rates
 
-[See here](src/main/java/org/blacksmith/finlib/rates/fxrates)
+[Source code see here](src/main/java/org/blacksmith/finlib/rates/fxrates)
 
-FxRateService - service that returns FxRates. One of the important parts of FxRate is Currency Pair, which defines the quotation between two
-different currencies. Currency Pair has the following attributes:
+FxRateService - service that helps converts between currencies.
+##### How to Exchange Currency
+Currency can be converted using an online currency exchange, or it can be performed manually.
+To use second method, you must first look up the exchange rate using an online exchange rate calculator or calculate if by yourself.
 
-- base currency - eg. EUR, USD, JPY
-- counter currency - eg. EUR, USD, JPY
+Let's conduct a dollar-to-euro conversion, for example. First, look up the exchange rate online using a website such as xe.com, which will be quoted as the amount $1 can buy in euros or as the amount one euro will buy in dollars.  
+If $1 buys 0.8230 euros, then $10,000 would equal 8,230 euros (because 10,000 x 0.8230 = 8,230). If the quote states that one euro buys $1.215, then $10,000 still would equal 10,215 euros (because 10,000 x 1.2150 = 12,500).
+Quotation in other words defines how amount in one currency can be translated to another.
+One of the concepts describing quotation is the Currency Pair. 
+
+Currency Pair has the following attributes:
+- base currency - is the currency we convert from, eg. EUR, USD, JPY
+- counter currency - is the currency we convert to, eg. EUR, USD, JPY
 - factor - defines additional factor. Some pairs, e.g. USD/JPY HUF/PLN are quoted at 100 to avoid low/high numbers
-- cross flag - if true, then fx rate must be calculated using three currencies: base, counter and domestic
-
-Moreover currency pair defines how FxRates should be stored.
+- cross flag - if true, then exchange rate is be calculated using three currencies: base, counter and domestic
 
 #### Example 1 - the domestic currency is EUR and the following pairs and rates are defined
 
@@ -43,6 +51,15 @@ Moreover currency pair defines how FxRates should be stored.
 |2020/05/15|EUR|PLN|4.55|
 
 #### Effective rates calculated using source rates and pairs
+Let's look at some rate calculations:
+1) Dollar-to-Euro and Euro-to-Dollar conversion -EUR/USD currency pair is defined.
+
+Conversion EUR->USD is made directly using exchange rate (1.215), and USD->EUR indirectly (1 / 1.215 = 0.823045).
+
+2) Dollar-to-Yen and Yen-to-Dollar conversion - USD/JPY "cross" currency pair is defined.
+
+Conversion USD->JPY is made "through" EUR (132.82 / 1.21 = 109.341564), and JPY->USD opposite (1.21 / 132.82 = 0.009146).
+
 |Date|From currency|To currency|Exchange rate|Description|
 |---|:---:|:---:|---:|:---:|
 |2020/05/15|EUR|HUF|348.669000|direct|
@@ -89,6 +106,27 @@ Moreover currency pair defines how FxRates should be stored.
 | 2021-05-15 | HUF  | PLN | 1.2863 |
 | 2021-05-15 | JPY  | PLN | 3.4249 |
 #### Effective rates calculated using source rates and pairs
+Let's look at some rate calculations:
+1) Euro-to-Polish-Zloty and Polish-Zloty-to-euro - EUR/PLN currency pair is defined
+
+Conversion EUR->PLN is made directly using exchange rate (4.55), and PLN->EUR indirectly (1 / 4.55 = 0.219780).
+
+2) Yen-to-Polish-Zloty and Polish-Zloty-to-Yen - YPY/PLN currency pair with factor is defined
+
+Conversion YEN->PLN is made directly using exchange rate (3.4250 / 100 = 0.034250), and PLN->YEN indirectly (100 / 3.4250 = 29.197080).
+
+3) Dollar-to-Euro and Euro-to-Dollar conversion - EUR/USD "cross" currency pair is defined.
+
+Conversion EUR->USD is made "through" PLN ing exchange rate (4.55 / 3.75 = 1.213333), and USD->EUR opposite (3.75 / 4.55 = 0.824176).
+
+4) Dollar-to-Yen and Yen-to-Dollar conversion - USD/JPY "cross" currency pair is defined.
+
+Conversion USD->JPY is made "through" PLN (100 * 3.75 / 3.4250 = 109.489051), and JPY->USD opposite (3.4250 / (100 * 3.75)=0.009133).
+
+5) Yen-to-Forint and Forint-to-Yen conversion - JPY/HUF "cross" currency pair is defined.
+
+Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662469), and HUF->JPY opposite (100 * 1.2864 / (100 * 3.4250) = 0.375591).
+
 |Date|From currency|To currency|Exchange rate|Description|
 |---|:---:|:---:|---:|:---:|
 |2021-05-15|EUR|HUF|353.700249|cross|
@@ -110,12 +148,16 @@ Moreover currency pair defines how FxRates should be stored.
 |2021-05-15|USD|EUR|0.824176|cross|
 |2021-05-15|USD|HUF|291.511194|cross|
 |2021-05-15|USD|PLN|3.750000|direct|
-|2021-05-15|USD|JPY| 109.489051|cross|
-## 2. Calculations
-### 2.1 Business day conventions
-[See here](src/main/java/org/blacksmith/finlib/dayconvention)
-### 2.2 Xirr
-[See here](src/main/java/org/blacksmith/finlib/math/xirr)
+|2021-05-15|USD|JPY|109.489051|cross|
+## 2. Calendars
+
+[Source code see here](src/main/java/org/blacksmith/finlib/calendar)
+
+## 3. Calculations
+### 3.1 Business day conventions
+[Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
+### 3.2 Xirr
+[Source code see here](src/main/java/org/blacksmith/finlib/math/xirr)
 
 Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
 - BiSection method
@@ -128,6 +170,5 @@ How to use? Look at the tests
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
 
-### 2.3 Interest calculation
-[See here](src/main/java/org/blacksmith/finlib/interest)
-
+### 3.3 Interest calculation
+[Source code see here](src/main/java/org/blacksmith/finlib/interest)
