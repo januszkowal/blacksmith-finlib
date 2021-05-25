@@ -149,10 +149,14 @@ Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662
 |2021-05-15|USD|HUF|291.511194|cross|
 |2021-05-15|USD|PLN|3.750000|direct|
 |2021-05-15|USD|JPY|109.489051|cross|
-## 2. Calculations
-### 2.1 Business day conventions
+## 2. Calendars
+
+[Source code see here](src/main/java/org/blacksmith/finlib/calendar)
+
+## 3. Calculations
+### 3.1 Business day conventions
 [Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
-### 2.2 Xirr
+### 3.2 Xirr
 [Source code see here](src/main/java/org/blacksmith/finlib/math/xirr)
 
 Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
@@ -166,5 +170,5 @@ How to use? Look at the tests
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
 
-### 2.3 Interest calculation
+### 3.3 Interest calculation
 [Source code see here](src/main/java/org/blacksmith/finlib/interest)
