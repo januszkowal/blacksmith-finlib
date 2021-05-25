@@ -7,18 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.rates.marketdata.MarketData;
-import org.blacksmith.finlib.rates.marketdata.MarketDataService;
-import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
-
-public class MarketDataMemoryService<K, V> implements MarketDataService<K, V> {
+public class MarketDataInMemoryProvider<K, V> implements MarketDataProvider<K, V> {
 
   private final Map<K, List<MarketDataWrapper<K, V>>> marketData = new HashMap<>();
 
-  public MarketDataMemoryService() {
+  public MarketDataInMemoryProvider() {
   }
 
-  public MarketDataMemoryService(List<MarketDataWrapper<K, V>> marketData) {
+  public MarketDataInMemoryProvider(List<MarketDataWrapper<K, V>> marketData) {
     setMarketData(marketData);
   }
 

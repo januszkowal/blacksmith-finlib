@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataMemoryServiceImpl;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
 import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FxRateSteps {
 
   final GroovyShell shell = new GroovyShell();
-  final FxRateMarketDataMemoryServiceImpl fxRateProvider = new FxRateMarketDataMemoryServiceImpl();
+  final FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
   Map<String, FxCurrencyPair> pairs;
   private FxRateService fxRateService;
   private int precision;

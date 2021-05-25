@@ -6,7 +6,7 @@ import java.util.function.Function;
 
 import org.blacksmith.finlib.rates.marketdata.MarketData;
 
-public interface MarketDataService<K, V> {
+public interface MarketDataProvider<K, V> {
   MarketData<V> getRate(K key, LocalDate date);
 
   default <R> R getRateValue(K key, LocalDate date, Function<MarketData<V>, R> valueExtractor) {
