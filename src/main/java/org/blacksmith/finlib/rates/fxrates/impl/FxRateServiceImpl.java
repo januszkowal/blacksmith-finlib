@@ -8,16 +8,16 @@ import java.util.function.Function;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.MarketData;
-import org.blacksmith.finlib.rates.MarketDataService;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPairProvider;
 import org.blacksmith.finlib.rates.fxrates.FxRate;
 import org.blacksmith.finlib.rates.fxrates.FxRate3;
-import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
+import org.blacksmith.finlib.rates.fxrates.FxRate3RSource;
 import org.blacksmith.finlib.rates.fxrates.FxRateId;
+import org.blacksmith.finlib.rates.fxrates.FxRateProvider;
 import org.blacksmith.finlib.rates.fxrates.FxRateService;
 import org.blacksmith.finlib.rates.fxrates.FxRateType;
+import org.blacksmith.finlib.rates.marketdata.MarketData;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,17 +26,17 @@ public class FxRateServiceImpl implements FxRateService {
 
   private final Currency localCurrency;
   private final FxCurrencyPairProvider ccyPairProvider;
-  private final MarketDataService<FxRateId, FxRate3Raw.FxRateRaw3Data> fxRateSourceService;
+  private final FxRateProvider fxRateProvider;
   private final int decimalPlaces;
 
-  public FxRateServiceImpl(Currency localCurrency, FxCurrencyPairProvider ccyPairProvider,
-      MarketDataService<FxRateId, FxRate3Raw.FxRateRaw3Data> fxRateSourceService, int decimalPlaces) {
+  public FxRateServiceImpl(Currency localCurrency, FxCurrencyPairProvider ccyPairProvider, FxRateProvider fxRateProvider,
+      int decimalPlaces) {
     ArgChecker.notNull(localCurrency, "Local currency must be not null");
-    ArgChecker.notNull(ccyPairProvider, "CcyPairProvider must be not null");
-    ArgChecker.notNull(fxRateSourceService, "FxRatSource must be not null");
+    ArgChecker.notNull(ccyPairProvider, "Currency Pair Provider must be not null");
+    ArgChecker.notNull(fxRateProvider, "Fx Rate Provider must be not null");
     this.localCurrency = localCurrency;
     this.ccyPairProvider = ccyPairProvider;
-    this.fxRateSourceService = fxRateSourceService;
+    this.fxRateProvider = fxRateProvider;
     this.decimalPlaces = decimalPlaces;
   }
 
@@ -80,13 +80,13 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> Optional<R> getSourceFxRate(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3Raw.FxRateRaw3Data>, R> extractor) {
-    return Optional.ofNullable(fxRateSourceService.getRate(key, date))
+      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
+    return Optional.ofNullable(fxRateProvider.getRate(key, date))
         .map(md -> extractor.apply(md));
   }
 
   private <R extends FxRateOperations<R>> R getRateInternal(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3Raw.FxRateRaw3Data>, R> extractor) {
+      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
     R result = null;
     FxCurrencyPairInternal pair = getPairInternal(key);
     if (pair.isCross()) {
@@ -98,7 +98,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> R getSimpleRate(FxCurrencyPairInternal pair, LocalDate date,
-      Function<MarketData<FxRate3Raw.FxRateRaw3Data>, R> extractor) {
+      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
     Optional<R> rateSrc = getSourceFxRate(pair.getFxRateId(), date, extractor);
     if (rateSrc.isEmpty()) {
       throw new IllegalArgumentException(String.format("No available rate %s on %s", pair.getFxRateId().getPairName(),
@@ -114,7 +114,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> R getCrossRate(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3Raw.FxRateRaw3Data>, R> extractor) {
+      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
     FxRateId key1 = FxRateId.of(key.getFromCcy(), localCurrency);
     FxRateId key2 = FxRateId.of(key.getToCcy(), localCurrency);
     FxCurrencyPairInternal pair1 = getPairInternal(key1);
@@ -130,20 +130,15 @@ public class FxRateServiceImpl implements FxRateService {
       R r2v = r2.get();
       if (pair1.isDirect() && pair2.isDirect()) {
         double factor = pair2.getFactor() / pair1.getFactor();
-        //        result = r1v.multiply(factor).divide(r2v);
         result = r1v.multiplyAndDivide(factor, r2v);
       } else if (pair1.isDirect() && !pair2.isDirect()) {
         double factor = pair1.getFactor() * pair2.getFactor();
-        //        result = r1v.multiply(r2v).divide(factor);
         result = r1v.multiplyAndDivide(r2v, factor);
       } else if (!pair1.isDirect() && pair2.isDirect()) {
         double factor = pair1.getFactor() * pair2.getFactor();
-        //        result = r1v.multiply(r2v).inverse().multiply(factor);
-        //        result = r1v.multiply(r2v).inverse2(factor);
         result = r1v.inverse2(factor, r2v);
       } else {
         double factor = pair1.getFactor() / pair2.getFactor();
-        //        result = r2v.multiply(factor).divide(r1v);
         result = r2v.multiplyAndDivide(factor, r1v);
       }
       return result;
@@ -160,7 +155,7 @@ public class FxRateServiceImpl implements FxRateService {
     return null;
   }
 
-  private Function<MarketData<FxRate3Raw.FxRateRaw3Data>, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
+  private Function<MarketData<FxRate3RSource.FxRate3RawValue>, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
     switch (fxRateType) {
       case BUY:
         return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getBuy().doubleValue(), decimalPlaces);

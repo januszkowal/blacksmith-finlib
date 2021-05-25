@@ -2,7 +2,7 @@ package org.blacksmith.finlib.rates.curves.service;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
-import org.blacksmith.finlib.rates.MarketDataId;
+import org.blacksmith.finlib.rates.marketdata.MarketDataId;
 
 import lombok.Value;
 

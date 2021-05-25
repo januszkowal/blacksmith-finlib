@@ -1,8 +1,10 @@
-package org.blacksmith.finlib.rates;
+package org.blacksmith.finlib.rates.marketdata;
 
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.function.Function;
+
+import org.blacksmith.finlib.rates.marketdata.MarketData;
 
 public interface MarketDataService<K, V> {
   MarketData<V> getRate(K key, LocalDate date);

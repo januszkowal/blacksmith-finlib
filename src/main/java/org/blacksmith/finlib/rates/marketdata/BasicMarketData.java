@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates;
+package org.blacksmith.finlib.rates.marketdata;
 
 import java.time.LocalDate;
 

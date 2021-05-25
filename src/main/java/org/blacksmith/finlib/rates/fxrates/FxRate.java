@@ -3,7 +3,7 @@ package org.blacksmith.finlib.rates.fxrates;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.BasicMarketData;
+import org.blacksmith.finlib.rates.marketdata.BasicMarketData;
 
 public class FxRate extends BasicMarketData<Rate> {
 

@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rates.MarketDataMemoryService;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataMemoryServiceImpl;
+import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
@@ -37,21 +37,20 @@ class FxRateServiceTest {
 
   @BeforeAll
   public static void setUp() {
-    MarketDataMemoryService<FxRateId, FxRate3Raw.FxRateRaw3Data> fxRateSourceService =
-        new MarketDataMemoryService<>(List.of(
+    FxRateMarketDataMemoryServiceImpl fxRateProvider = new FxRateMarketDataMemoryServiceImpl();
+    fxRateProvider.setMarketData(List.of(
             BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-                FxRate3Raw.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),
+                FxRate3RSource.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),
             BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-                FxRate3Raw.of(date2, 4.45d, 4.54d, 4.495d, DECIMAL_PLACES)),
+                FxRate3RSource.of(date2, 4.45d, 4.54d, 4.495d, DECIMAL_PLACES)),
             BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-                FxRate3Raw.of(date3, 4.44d, 4.53d, 4.485d, DECIMAL_PLACES)),
+                FxRate3RSource.of(date3, 4.44d, 4.53d, 4.485d, DECIMAL_PLACES)),
             BasicMarketDataWrapper.of(FxRateId.of("USD", "PLN"),
-                FxRate3Raw.of(date1, 3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES)),
+                FxRate3RSource.of(date1, 3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES)),
             BasicMarketDataWrapper.of(FxRateId.of("HUF", "PLN"),
-                FxRate3Raw.of(date1, 1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES))
+                FxRate3RSource.of(date1, 1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES))
             ));
-    rateService = new FxRateServiceImpl(Currency.PLN, (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2),
-        fxRateSourceService, OUTPUT_DECIMAL_PLACES);
+    rateService = new FxRateServiceImpl(Currency.PLN, (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2), fxRateProvider, OUTPUT_DECIMAL_PLACES);
   }
 
   @Test

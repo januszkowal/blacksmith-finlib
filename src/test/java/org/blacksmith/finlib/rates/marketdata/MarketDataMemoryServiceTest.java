@@ -1,13 +1,15 @@
-package org.blacksmith.finlib.rates.interestrates;
+package org.blacksmith.finlib.rates.marketdata;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rates.MarketData;
-import org.blacksmith.finlib.rates.MarketDataMemoryService;
+import org.blacksmith.finlib.rates.interestrates.InterestRate;
+import org.blacksmith.finlib.rates.interestrates.InterestRateId;
+import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rates.marketdata.MarketData;
+import org.blacksmith.finlib.rates.marketdata.MarketDataMemoryService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

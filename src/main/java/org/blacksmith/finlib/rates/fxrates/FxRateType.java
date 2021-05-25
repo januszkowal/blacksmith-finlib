@@ -3,7 +3,7 @@ package org.blacksmith.finlib.rates.fxrates;
 import java.util.function.Function;
 
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.MarketData;
+import org.blacksmith.finlib.rates.marketdata.MarketData;
 
 public enum FxRateType {
   BUY(r3 -> r3.getValue().getBuy()),
