@@ -7,6 +7,9 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.interestrates.InterestRate;
 import org.blacksmith.finlib.rates.interestrates.InterestRateId;
+import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rates.marketdata.MarketData;
+import org.blacksmith.finlib.rates.marketdata.MarketDataMemoryService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
