@@ -1,12 +1,13 @@
 # org.blacksmith.finlib
 
 Set of financial libraries
+[Cucumber tests see here](src/test/resources/features)
 
 ## 1. Market data
 
 ### 1.1. Foreign Exchange Rates
 
-[See here](src/main/java/org/blacksmith/finlib/rates/fxrates)
+[Source code see here](src/main/java/org/blacksmith/finlib/rates/fxrates)
 
 FxRateService - service that helps converts between currencies.
 ##### How to Exchange Currency
@@ -149,9 +150,9 @@ Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662
 |2021-05-15|USD|JPY|109.489051|cross|
 ## 2. Calculations
 ### 2.1 Business day conventions
-[See here](src/main/java/org/blacksmith/finlib/dayconvention)
+[Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
 ### 2.2 Xirr
-[See here](src/main/java/org/blacksmith/finlib/math/xirr)
+[Source code see here](src/main/java/org/blacksmith/finlib/math/xirr)
 
 Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
 - BiSection method
@@ -165,5 +166,4 @@ How to use? Look at the tests
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
 
 ### 2.3 Interest calculation
-[See here](src/main/java/org/blacksmith/finlib/interest)
-
+[Source code see here](src/main/java/org/blacksmith/finlib/interest)
