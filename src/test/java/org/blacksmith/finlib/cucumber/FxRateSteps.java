@@ -121,7 +121,6 @@ public class FxRateSteps {
 
   private double evaluate(String text) {
     Object result = shell.evaluate(text);
-//    log.debug("evaluate text={} result={} class={}", text, result, result.getClass());
     if (Number.class.isAssignableFrom(result.getClass())) {
       return ((Number) result).doubleValue();
     } else {
