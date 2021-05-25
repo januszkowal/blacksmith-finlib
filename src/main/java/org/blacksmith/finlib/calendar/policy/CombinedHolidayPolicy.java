@@ -40,7 +40,6 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   public boolean isHoliday(LocalDate date) {
     return policies.stream()
         .map(hp -> hp.isHoliday(date))
-        .filter(ih -> ih)
         .anyMatch(ih -> ih);
   }
 
