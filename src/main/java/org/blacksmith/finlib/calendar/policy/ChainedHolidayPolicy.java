@@ -32,8 +32,7 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   public boolean isHoliday(LocalDate date) {
     boolean thisPolicyResult = policies.stream()
         .map(hp -> hp.isHoliday(date))
-        .filter(ih -> ih)
-        .findFirst().orElse(false);
+        .anyMatch(ih -> ih);
     return thisPolicyResult || Optional.ofNullable(next).map(p -> p.isHoliday(date)).orElse(false);
   }
 

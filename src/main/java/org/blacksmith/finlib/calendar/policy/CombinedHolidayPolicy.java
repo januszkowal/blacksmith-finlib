@@ -41,7 +41,7 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
     return policies.stream()
         .map(hp -> hp.isHoliday(date))
         .filter(ih -> ih)
-        .findFirst().orElse(false);
+        .anyMatch(ih -> ih);
   }
 
   public static class CombinedHolidayPolicyBuilder {
@@ -62,8 +62,8 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
       return this;
     }
 
-    public org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy build() {
-      return new org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy(policies);
+    public CombinedHolidayPolicy build() {
+      return new CombinedHolidayPolicy(policies);
     }
   }
 }
