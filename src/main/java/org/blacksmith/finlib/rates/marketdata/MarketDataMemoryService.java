@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates;
+package org.blacksmith.finlib.rates.marketdata;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.blacksmith.finlib.rates.marketdata.MarketData;
+import org.blacksmith.finlib.rates.marketdata.MarketDataService;
+import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
 
 public class MarketDataMemoryService<K, V> implements MarketDataService<K, V> {
 

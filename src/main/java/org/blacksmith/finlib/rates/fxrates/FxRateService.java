@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.rates.fxrates;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -25,5 +26,12 @@ public interface FxRateService {
         .map(FxRate::getValue)
         .map(Rate::doubleValue)
         .orElse(0d);
+  }
+
+  default BigDecimal getRateDecimal(FxRateId key, LocalDate date, FxRateType fxRateType) {
+    return Optional.ofNullable(getRate(key, date, fxRateType))
+        .map(FxRate::getValue)
+        .map(Rate::getValue)
+        .orElse(BigDecimal.ZERO);
   }
 }

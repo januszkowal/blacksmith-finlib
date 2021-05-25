@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.fxrates.FxRate3;
-import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
+import org.blacksmith.finlib.rates.fxrates.FxRate3RSource;
 
 class FxRate3Internal implements FxRateOperations<FxRate3Internal> {
   private LocalDate date;
@@ -22,7 +22,7 @@ class FxRate3Internal implements FxRateOperations<FxRate3Internal> {
     this.decimalPlaces = decimalPlaces;
   }
 
-  public static FxRate3Internal of(LocalDate date, FxRate3Raw.FxRateRaw3Data value, int decimalPlaces) {
+  public static FxRate3Internal of(LocalDate date, FxRate3RSource.FxRate3RawValue value, int decimalPlaces) {
     return new FxRate3Internal(date, value.getBuy().doubleValue(), value.getSell().doubleValue(), value.getAvg().doubleValue(), decimalPlaces);
   }
 

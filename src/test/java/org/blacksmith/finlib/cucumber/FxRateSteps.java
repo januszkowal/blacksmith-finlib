@@ -8,12 +8,12 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rates.MarketDataMemoryService;
-import org.blacksmith.finlib.rates.MarketDataWrapper;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataMemoryServiceImpl;
+import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rates.fxrates.FxRate3;
-import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
+import org.blacksmith.finlib.rates.fxrates.FxRate3RSource;
 import org.blacksmith.finlib.rates.fxrates.FxRateId;
 import org.blacksmith.finlib.rates.fxrates.FxRateService;
 import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FxRateSteps {
 
   final GroovyShell shell = new GroovyShell();
-  final MarketDataMemoryService<FxRateId, FxRate3Raw.FxRateRaw3Data> fxRateSourceService = new MarketDataMemoryService<>();
+  final FxRateMarketDataMemoryServiceImpl fxRateProvider = new FxRateMarketDataMemoryServiceImpl();
   Map<String, FxCurrencyPair> pairs;
   private FxRateService fxRateService;
   private int precision;
@@ -52,9 +52,9 @@ public class FxRateSteps {
   @Given("Source rates with precision {int}")
   public void defineSourceRates(int precision, DataTable inputFxRates) {
     var rates = createRates(inputFxRates, precision);
-    fxRateSourceService.setMarketData(rates);
+    fxRateProvider.setMarketData(rates);
     log.info("Source rates");
-    fxRateSourceService.getMarketData().forEach(rate -> {
+    fxRateProvider.getMarketData().forEach(rate -> {
       log.info(rate.toString());
     });
   }
@@ -64,7 +64,7 @@ public class FxRateSteps {
     this.precision = precision;
     this.fxRateService = new FxRateServiceImpl(localCurrency,
         (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2),
-        this.fxRateSourceService, precision);
+        this.fxRateProvider, precision);
   }
 
   @Then("Verify output triple rates")
@@ -111,10 +111,10 @@ public class FxRateSteps {
         Rate.of(evaluate(row.get("rate")), this.precision));
   }
 
-  public List<MarketDataWrapper<FxRateId, FxRate3Raw.FxRateRaw3Data>> createRates(DataTable table, int precision) {
+  public List<MarketDataWrapper<FxRateId, FxRate3RSource.FxRate3RawValue>> createRates(DataTable table, int precision) {
     return table.asMaps().stream()
         .map(row -> BasicMarketDataWrapper.of(FxRateId.of(row.get("from"), row.get("to")),
-            FxRate3Raw.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
+            FxRate3RSource.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
                 evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
         .collect(Collectors.toList());
   }
