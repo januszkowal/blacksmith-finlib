@@ -7,7 +7,7 @@ import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
 
 public class BusinessDayCalendarWithPolicy implements BusinessDayCalendar {
-  private final org.blacksmith.finlib.basic.calendar.HolidayPolicy holidayPolicy;
+  private final HolidayPolicy holidayPolicy;
 
   public BusinessDayCalendarWithPolicy(org.blacksmith.finlib.basic.calendar.HolidayPolicy holidayPolicy) {
     ArgChecker.notNull(holidayPolicy, "Null holiday policy not allowed");

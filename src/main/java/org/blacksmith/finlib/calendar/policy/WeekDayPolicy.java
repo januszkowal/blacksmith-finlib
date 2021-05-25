@@ -19,11 +19,11 @@ public class WeekDayPolicy extends DatePartHolidayPolicy<DayOfWeek> {
         DatePartInMemoryProvider.of(Arrays.stream(weekendDays).boxed().map(DayOfWeek::of).collect(Collectors.toSet())));
   }
 
-  public static org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy of(DayOfWeek... weekendDays) {
-    return new org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy(weekendDays);
+  public static WeekDayPolicy of(DayOfWeek... weekendDays) {
+    return new WeekDayPolicy(weekendDays);
   }
 
-  public static org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy of(int... weekendDays) {
-    return new org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy(weekendDays);
+  public static WeekDayPolicy of(int... weekendDays) {
+    return new WeekDayPolicy(weekendDays);
   }
 }

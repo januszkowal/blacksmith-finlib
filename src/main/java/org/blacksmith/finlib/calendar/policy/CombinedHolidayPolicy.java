@@ -24,12 +24,12 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
     this.policies = List.of(policies);
   }
 
-  public static org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy of(Collection<HolidayPolicy> policies) {
-    return new org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy(policies);
+  public static CombinedHolidayPolicy of(Collection<HolidayPolicy> policies) {
+    return new CombinedHolidayPolicy(policies);
   }
 
-  public static org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy of(HolidayPolicy... policies) {
-    return new org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy(policies);
+  public static CombinedHolidayPolicy of(HolidayPolicy... policies) {
+    return new CombinedHolidayPolicy(policies);
   }
 
   public static CombinedHolidayPolicyBuilder builder() {

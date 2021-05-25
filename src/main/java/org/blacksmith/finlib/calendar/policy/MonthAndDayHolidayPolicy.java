@@ -11,7 +11,7 @@ public class MonthAndDayHolidayPolicy extends DatePartHolidayPolicy<MonthDay> {
     super(StandardDatePartExtractors.MONTH_DAY, monthDaysProvider);
   }
 
-  public static org.blacksmith.finlib.basic.calendar.policy.MonthAndDayHolidayPolicy of(DatePartProvider<MonthDay> monthDaysProvider) {
-    return new org.blacksmith.finlib.basic.calendar.policy.MonthAndDayHolidayPolicy(monthDaysProvider);
+  public static MonthAndDayHolidayPolicy of(DatePartProvider<MonthDay> monthDaysProvider) {
+    return new MonthAndDayHolidayPolicy(monthDaysProvider);
   }
 }

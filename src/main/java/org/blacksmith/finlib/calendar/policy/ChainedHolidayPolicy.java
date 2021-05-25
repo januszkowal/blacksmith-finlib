@@ -57,8 +57,8 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
       return this;
     }
 
-    public org.blacksmith.finlib.basic.calendar.policy.ChainedHolidayPolicy build() {
-      return new org.blacksmith.finlib.basic.calendar.policy.ChainedHolidayPolicy(holidayProviders, next);
+    public ChainedHolidayPolicy build() {
+      return new ChainedHolidayPolicy(holidayProviders, next);
     }
   }
 }
