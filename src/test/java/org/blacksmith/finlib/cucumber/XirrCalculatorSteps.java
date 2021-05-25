@@ -47,8 +47,8 @@ public class XirrCalculatorSteps {
     log.info("Calc BiSection");
     var calculatorBiCalc = XirrCalculatorBuilder.builder()
         .withSolverBuilder(BiSectionSolverBuilder.builder()
-            //            .minArg(-1)
-            //            .maxArg(2)
+            .minArg(-1)
+            .maxArg(2)
             .asBuilder())
         .build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);
