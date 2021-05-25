@@ -10,6 +10,7 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rates.BasicMarketDataWrapper;
 import org.blacksmith.finlib.rates.MarketDataMemoryService;
 import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

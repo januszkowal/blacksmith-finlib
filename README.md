@@ -50,11 +50,11 @@ Currency Pair has the following attributes:
 
 #### Effective rates calculated using source rates and pairs
 Let's look at some rate calculations:
-1) dollar-to-euro and euro-to-dollar conversion. EUR/USD currency pair is defined.
+1) Dollar-to-Euro and Euro-to-Dollar conversion -EUR/USD currency pair is defined.
 
 Conversion EUR->USD is made directly using exchange rate (1.215), and USD->EUR indirectly (1 / 1.215 = 0.823045).
 
-2) dollar-to-yen and yen-to-dollar conversion. USD/JPY "cross" currency pair is defined.
+2) Dollar-to-Yen and Yen-to-Dollar conversion - USD/JPY "cross" currency pair is defined.
 
 Conversion USD->JPY is made "through" EUR (132.82 / 1.21 = 109.341564), and JPY->USD opposite (1.21 / 132.82 = 0.009146).
 
@@ -105,23 +105,23 @@ Conversion USD->JPY is made "through" EUR (132.82 / 1.21 = 109.341564), and JPY-
 | 2021-05-15 | JPY  | PLN | 3.4249 |
 #### Effective rates calculated using source rates and pairs
 Let's look at some rate calculations:
-1) euro-to-polish-zloty and polish-zloty-to-euro. EUR/PLN currency pair is defined
+1) Euro-to-Polish-Zloty and Polish-Zloty-to-euro - EUR/PLN currency pair is defined
 
 Conversion EUR->PLN is made directly using exchange rate (4.55), and PLN->EUR indirectly (1 / 4.55 = 0.219780).
 
-2) yen-to-polish-zloty and polish-zloty-to-yen. YPY/PLN currency pair with factor is defined
+2) Yen-to-Polish-Zloty and Polish-Zloty-to-Yen - YPY/PLN currency pair with factor is defined
 
 Conversion YEN->PLN is made directly using exchange rate (3.4250 / 100 = 0.034250), and PLN->YEN indirectly (100 / 3.4250 = 29.197080).
 
-3) dollar-to-euro and euro-to-dollar conversion. EUR/USD "cross" currency pair is defined.
+3) Dollar-to-Euro and Euro-to-Dollar conversion - EUR/USD "cross" currency pair is defined.
 
 Conversion EUR->USD is made "through" PLN ing exchange rate (4.55 / 3.75 = 1.213333), and USD->EUR opposite (3.75 / 4.55 = 0.824176).
 
-4) dollar-to-yen and yen-to-dollar conversion. USD/JPY "cross" currency pair is defined.
+4) Dollar-to-Yen and Yen-to-Dollar conversion - USD/JPY "cross" currency pair is defined.
 
 Conversion USD->JPY is made "through" PLN (100 * 3.75 / 3.4250 = 109.489051), and JPY->USD opposite (3.4250 / (100 * 3.75)=0.009133).
 
-5) yen-to-forint and forint-to-yen conversion. JPY/HUF "cross" currency pair is defined.
+5) Yen-to-Forint and Forint-to-Yen conversion - JPY/HUF "cross" currency pair is defined.
 
 Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662469), and HUF->JPY opposite (100 * 1.2864 / (100 * 3.4250) = 0.375591).
 

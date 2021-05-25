@@ -16,7 +16,7 @@ import org.blacksmith.finlib.rates.fxrates.FxRate3;
 import org.blacksmith.finlib.rates.fxrates.FxRate3Raw;
 import org.blacksmith.finlib.rates.fxrates.FxRateId;
 import org.blacksmith.finlib.rates.fxrates.FxRateService;
-import org.blacksmith.finlib.rates.fxrates.FxRateServiceImpl;
+import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rates.fxrates.FxRateType;
 
 import groovy.lang.GroovyShell;

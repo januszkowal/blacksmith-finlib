@@ -1,16 +1,17 @@
-package org.blacksmith.finlib.rates;
+package org.blacksmith.finlib.rates.interestrates;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.interestrates.InterestRate;
-import org.blacksmith.finlib.rates.interestrates.InterestRateId;
+import org.blacksmith.finlib.rates.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rates.MarketData;
+import org.blacksmith.finlib.rates.MarketDataMemoryService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MarketDataMemoryServiceTest {
 
@@ -34,11 +35,11 @@ class MarketDataMemoryServiceTest {
 
   @Test
   public void test1() {
-    MarketData<Rate> val1 = interestRateService
-        .getRate(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")), LocalDate.parse("2020-01-15"));
-    MarketData<Rate> val2 = interestRateService
-        .getRate(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")), LocalDate.parse("2020-01-15"));
-    assertEquals(3.1d, val1.getValue().doubleValue());
-    assertEquals(3.4d, val2.getValue().doubleValue());
+    MarketData<Rate> val1 = interestRateService.getRate(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
+        LocalDate.parse("2020-01-15"));
+    MarketData<Rate> val2 = interestRateService.getRate(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")),
+        LocalDate.parse("2020-01-15"));
+    assertThat(val1.getValue().doubleValue()).isEqualTo(3.1d);
+    assertThat(val2.getValue().doubleValue()).isEqualTo(3.4d);
   }
 }
