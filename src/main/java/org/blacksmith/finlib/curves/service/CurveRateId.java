@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.curves.service;
+package org.blacksmith.finlib.curves.service;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
