@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import csv, sys, getopt
 
-#plot.py -k -f data.csv -c AkimaBlackSmith,AkimaApacheCommons -l 0 -h 100 -t "Curves comparison"
+#plot.py -k -f data.csv -c AkimaBlacksmith,AkimaApacheCommons -l 0 -h 100 -t "Curves comparison"
         
 print('ARGV      :', sys.argv[1:])
 opts, arguments = getopt.getopt(sys.argv[1:], 'f:c:t:l:h:k', ["file=","curves=","knots","title","low=","high="])
@@ -32,9 +32,9 @@ for (opt, value) in opts:
 
 #rowIndex = -1
 x = []
-yAkimaBlackSmith = []
+yAkimaBlacksmith = []
 yAkimaApacheCommons = []
-yLinearBlackSmith = []
+yLinearBlacksmith = []
 yLinearApacheCommons = []
 knotsx = []
 knotsy = []
@@ -45,9 +45,9 @@ def readFile(filePath):
         for row in reader:
             xval = int(row['x'])
             x.append(xval)
-            yAkimaBlackSmith.append(float(row['funAkimaBlackSmith']))
+            yAkimaBlacksmith.append(float(row['funAkimaBlacksmith']))
             yAkimaApacheCommons.append(float(row['funAkimaApacheCommons']))
-            yLinearBlackSmith.append(float(row['funLinearBlackSmith']))
+            yLinearBlacksmith.append(float(row['funLinearBlacksmith']))
             yLinearApacheCommons.append(float(row['funLinearApacheCommons']))
             #print(row)
             knot = row['knot']
@@ -72,12 +72,12 @@ plt.xlim([rangeLow, rangeHigh])
 # plotting the functions
 if displayKnots:
     plt.plot(knotsx, knotsy, 'ro', label='Knots') 
-if 'AkimaBlackSmith' in displayCurves:
-    plt.plot(x, yAkimaBlackSmith, color='green', label='Akima - Black Smith')
+if 'AkimaBlacksmith' in displayCurves:
+    plt.plot(x, yAkimaBlacksmith, color='green', label='Akima - Blacksmith')
 if 'AkimaApacheCommons' in displayCurves:
     plt.plot(x, yAkimaApacheCommons, color='blue', label='Akima - Apache Commons')
-if 'LinearBlackSmith' in displayCurves:
-    plt.plot(x, yLinearBlackSmith, color='orange', label='Linear - Black Smith')     
+if 'LinearBlacksmith' in displayCurves:
+    plt.plot(x, yLinearBlacksmith, color='orange', label='Linear - Blacksmith')     
 if 'LinearApacheCommons' in displayCurves:
     plt.plot(x, yLinearApacheCommons, color='orange', label='Linear - Apache Commons')  
     
