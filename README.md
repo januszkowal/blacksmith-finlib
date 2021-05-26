@@ -177,8 +177,10 @@ How to use? Look at the tests
 
 [Source code see here](src/main/java/org/blacksmith/finlib/curves)
 
-Blacksmith implementation of Akima Polynominal algorithm is optimized for financial data, and behaves more predictably than Apache Commons.
-The main difference is visible at inflection points.
+The Akima spline algorithm was published by Hiroshi Akima in 1970. It could be particularly useful for Interpolation and smooth Curve Fitting.
+
+This method avoids overshooting issues common with many other splines (e.g., cubic splines), resulting in a more natural curve.
+Blacksmith implementation of Akima Polynominal algorithm is based on original paper of Hiroshi Akima, and it behaves more predictably than Apache Commons, and the difference is visible around inflection points.
 
 ![Akima algorithsm - with infleciton point](doc/akima_full.png)
 
