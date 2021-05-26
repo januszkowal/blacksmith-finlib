@@ -13,7 +13,6 @@ import org.blacksmith.finlib.curves.types.Point2D;
 public class CurveInterpolatorFactory {
   public YieldCurveFunction getInterpolator(String name, List<Knot> knots) {
     PolynominalFunction curveInterpolator = null;
-    //    List<Point2D> knotsPoints = Stream.of(knots).map(knot -> Point2D.of(knot.getX(), knot.getY()))
     List<Point2D> knotsPoints = knots.stream().map(knot -> Point2D.of(knot.getX(), knot.getY()))
         .sorted(Point2D.comparatorByX())
         .collect(Collectors.toList());
