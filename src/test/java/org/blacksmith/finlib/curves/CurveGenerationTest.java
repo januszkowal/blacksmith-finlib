@@ -15,12 +15,12 @@ public class CurveGenerationTest {
 
   @Test
   public void createCurveWithReflectionPoints() {
-    exportCurve(create365DayKnotsWithInflectionPoints(), Path.of("data2.csv"));
+    exportCurve(create365DayKnotsWithInflectionPoints(), Path.of("doc/data2.csv"));
   }
 
   @Test
   public void createCurveWithoutReflectionPoints() {
-    exportCurve(create365DayKnots(), Path.of("data1.csv"));
+    exportCurve(create365DayKnots(), Path.of("doc/data1.csv"));
   }
 
   private List<Knot> create365DayKnots() {
