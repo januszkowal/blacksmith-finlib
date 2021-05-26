@@ -34,6 +34,7 @@ dependencies {
     implementation libs.slf4jApi
     implementation libs.jackson
     implementation libs.apacheCommonsCollections
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     api libs.groovy
     testCompileOnly libs.lombok
     testImplementation libs.logback

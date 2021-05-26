@@ -172,3 +172,22 @@ How to use? Look at the tests
 
 ### 3.3 Interest calculation
 [Source code see here](src/main/java/org/blacksmith/finlib/interest)
+
+### 3.4 Yield curves
+
+[Source code see here](src/main/java/org/blacksmith/finlib/curves)
+
+Blacksmith implementation of Akima Polynominal algorithm is optimized for financial data, and behaves more predictably than Apache Commons.
+The main difference is visible at inflection points.
+
+![Akima algorithsm - with infleciton point](doc/akima_full.png)
+
+Figure 1. Full Chart - 365 days
+
+![Akima algorithsm - with infleciton point](doc/akima_with_inflection_point.png)
+
+Figure 2. 20 days - case with inflection point
+
+![Akima algorithsm - without infleciton point](doc/akima_without_inflection_point.png)
+
+Figure 3. 20 days - case without inflection point

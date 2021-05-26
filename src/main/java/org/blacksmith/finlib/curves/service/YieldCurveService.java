@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rates.curves.service;
+package org.blacksmith.finlib.curves.service;
 
 import java.time.LocalDate;
 
