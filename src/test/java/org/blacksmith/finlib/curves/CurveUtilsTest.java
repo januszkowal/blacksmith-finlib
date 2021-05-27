@@ -1,7 +1,9 @@
 package org.blacksmith.finlib.curves;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.curves.algoritm.AlgorithmUtils;
 import org.blacksmith.finlib.curves.types.Knot;
@@ -42,5 +44,20 @@ public class CurveUtilsTest {
     assertThat(AlgorithmUtils.getKnotIndex0(knotsX, 8.1d)).isEqualTo(2);
     assertThat(AlgorithmUtils.getKnotIndex0(knotsX, 9d)).isEqualTo(2);
     assertThat(AlgorithmUtils.getKnotIndex0(knotsX, 9.1d)).isEqualTo(2);
+  }
+
+  @Test
+  public void roundingTest() {
+//    assertThat(2d).isEqualTo(Math.floor(2.1d));
+//    assertThat(2d).isEqualTo(Math.floor(2d));
+    // next
+    assertThat(3d).isEqualTo(Math.ceil(2.5d));
+    assertThat(3d).isEqualTo(Math.ceil(2.1d));
+    assertThat(2d).isEqualTo(Math.ceil(2.0d));
+//    assertThat(3d).isEqualTo(Math.round(2.5d));
+//    assertThat(2d).isEqualTo(Math.round(2.2d));
+//    assertThat(2d).isEqualTo(Math.round(1.9d));
+    double[] knots = {0, 1.2, 3.5, 8.2};
+    System.out.println(Arrays.stream(knots).mapToInt(x -> (int)x).boxed().collect(Collectors.toList()));
   }
 }

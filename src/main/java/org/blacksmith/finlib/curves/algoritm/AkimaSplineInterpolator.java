@@ -36,17 +36,17 @@ public class AkimaSplineInterpolator {
         firstDerivatives[i] = 0.5 * (secants[i + 2] + secants[i + 1]);
       }
     }
-    PolynomialSplineFunction.Polynominal[] polynominals = new PolynomialSplineFunction.Polynominal[n];
+    PolynomialSplineFunction.Polynomial[] polynomials = new PolynomialSplineFunction.Polynomial[n-1];
     double coefficients[] = new double[4];
     double xDelta;
-    for (int i = 0; i < xvals.length - 1; i++) {
+    for (int i = 0; i < n - 1; i++) {
       xDelta = xvals[i + 1] - xvals[i];
       coefficients[0] = yvals[i];
       coefficients[1] = firstDerivatives[i];
       coefficients[2] = (3.0d * secants[i + 2] - 2.0d * firstDerivatives[i] - firstDerivatives[i + 1]) / xDelta;
       coefficients[3] = (-2.0d * secants[i + 2] + firstDerivatives[i] + firstDerivatives[i + 1]) / (xDelta * xDelta);
-      polynominals[i] = new PolynomialSplineFunction.Polynominal(coefficients);
+      polynomials[i] = new PolynomialSplineFunction.Polynomial(coefficients);
     }
-    return new PolynomialSplineFunction(xvals, polynominals);
+    return new PolynomialSplineFunction(xvals, polynomials);
   }
 }

@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public class LinearSplineFunction implements SingleArgumentFunction {
+public class LinearSplineFunction {
   private final double[] xvals;
   private final double[] yvals;
   private LinearPolynominal[] polynominals;

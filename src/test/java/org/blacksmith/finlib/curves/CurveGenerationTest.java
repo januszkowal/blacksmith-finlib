@@ -68,11 +68,15 @@ public class CurveGenerationTest {
   private void exportCurve(List<Knot> knots, Path path) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
     CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
-    var akimaInterpolatorBlackSmith = factory.getInterpolator("AkimaSplineBlacksmith", knots);
-    var akimaInterpolatorApacheCommons = factory.getInterpolator("AkimaSplineApacheCommons", knots);
-    var linearInterpolatorBlackSmith = factory.getInterpolator("LinearBlacksmith", knots);
-    var linearInterpolatorApacheCommons = factory.getInterpolator("LinearApacheCommons", knots);
-    var valuesAkimaBlackSmith = IntStream.range(0, maxValue).boxed()
+    var akimaInterpolatorBlackSmith = factory.getFunction("AkimaSplineBlacksmith", knots);
+    var akimaInterpolatorApacheCommons = factory.getFunction("AkimaSplineApacheCommons", knots);
+    var linearInterpolatorBlackSmith = factory.getFunction("LinearBlacksmith", knots);
+    var linearInterpolatorApacheCommons = factory.getFunction("LinearApacheCommons", knots);
+    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.values(0, maxValue);
+    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.values(0, maxValue);
+    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.values(0, maxValue);
+    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.values(0, maxValue);
+    /*var valuesAkimaBlackSmith = IntStream.range(0, maxValue).boxed()
         .map(x -> akimaInterpolatorBlackSmith.value(x))
         .collect(Collectors.toList());
     var valuesAkimaApacheCommons = IntStream.range(0, maxValue).boxed()
@@ -83,10 +87,10 @@ public class CurveGenerationTest {
         .collect(Collectors.toList());
     var valuesLinearApacheCommons = IntStream.range(0, maxValue).boxed()
         .map(x -> linearInterpolatorApacheCommons.value(x))
-        .collect(Collectors.toList());
+        .collect(Collectors.toList());*/
     try (PrintWriter pw = new PrintWriter(path.toFile())) {
       pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
-      IntStream.range(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
+      IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
           String.valueOf(valuesAkimaBlackSmith.get(i).getY()),
           String.valueOf(valuesAkimaApacheCommons.get(i).getY()),
           String.valueOf(valuesLinearBlackSmith.get(i).getY()),
@@ -101,7 +105,7 @@ public class CurveGenerationTest {
   private List<CurvePoint> generateAkimaBlacksmith(List<Knot> knots) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
     CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
-    var akimaInterpolatorBlackSmith = factory.getInterpolator("AkimaSplineBlacksmith", knots);
+    var akimaInterpolatorBlackSmith = factory.getYieldCurveFunction("AkimaSplineBlacksmith", knots);
     return IntStream.range(0, maxValue).boxed()
         .map(x -> akimaInterpolatorBlackSmith.value(x))
         .collect(Collectors.toList());
