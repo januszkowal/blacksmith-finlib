@@ -4,17 +4,21 @@ public class LinearInterpolator {
   public LinearInterpolator() {
   }
 
-  public LinearSplineFunction interpolate(double[] xvals, double[] yvals) {
+  public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
     AlgorithmUtils.checkOrder(xvals);
-    final double[] af = new double[xvals.length];
-    for (int i = 0; i < xvals.length - 1; i++) {
+    int n = xvals.length;
+    final double[] af = new double[n];
+    for (int i = 0; i < n - 1; i++) {
       af[i] = (yvals[i + 1] - yvals[i]) / (xvals[i + 1] - xvals[i]);
     }
-    af[xvals.length - 1] = af[xvals.length - 2];
-    LinearSplineFunction.LinearPolynominal[] polynominals = new LinearSplineFunction.LinearPolynominal[xvals.length];
+    af[n - 1] = af[n - 2];
+    double[] coefficents = new double[2];
+    PolynomialSplineFunction.Polynominal[] polynominals = new PolynomialSplineFunction.Polynominal[xvals.length];
     for (int i = 0; i < xvals.length; i++) {
-      polynominals[i] = new LinearSplineFunction.LinearPolynominal(yvals[i], af[i]);
+      coefficents[0] = yvals[i];
+      coefficents[1] = af[i];
+      polynominals[i] = new PolynomialSplineFunction.Polynominal(coefficents);
     }
-    return new LinearSplineFunction(xvals, yvals, polynominals);
+    return new PolynomialSplineFunction(xvals, polynominals);
   }
 }

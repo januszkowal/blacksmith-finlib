@@ -11,16 +11,19 @@ import java.util.stream.Stream;
 import org.blacksmith.finlib.curves.types.Knot;
 import org.junit.jupiter.api.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CurveGenerationTest {
 
   @Test
   public void createCurveWithReflectionPoints() {
-    exportCurve(create365DayKnotsWithInflectionPoints(), Path.of("doc/data2.csv"));
+    exportCurve(create365DayKnotsWithInflectionPoints(), Path.of("data_rp.csv"));
   }
 
   @Test
   public void createCurveWithoutReflectionPoints() {
-    exportCurve(create365DayKnots(), Path.of("doc/data1.csv"));
+    exportCurve(create365DayKnots(), Path.of("data.csv"));
   }
 
   private List<Knot> create365DayKnots() {
@@ -79,10 +82,10 @@ public class CurveGenerationTest {
           String.valueOf(valuesLinearApacheCommons.get(i).getY()),
           valuesAkimaBlackSmith.get(i).isKnot() ? String.valueOf(valuesAkimaBlackSmith.get(i).getY()) : ""))
           .forEach(pw::println);
+      System.out.println("Saved to: " + path.toAbsolutePath());
     } catch (Exception e) {
     }
   }
-
 
   public String convertToCSV(String... data) {
     return Stream.of(data)

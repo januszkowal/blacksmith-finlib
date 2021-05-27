@@ -1,19 +1,22 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public class LinearSplineFunction implements PolynominalFunction {
+public class LinearSplineFunction implements SingleArgumentFunction {
   private final double[] xvals;
   private final double[] yvals;
   private LinearPolynominal[] polynominals;
 
   public LinearSplineFunction(double[] xvals, double[] yvals, LinearPolynominal[] polynominals) {
-    this.xvals = xvals;
-    this.yvals = yvals;
+    int n = xvals.length;
+    this.xvals = new double[n];
+    this.yvals = new double[n];
+    System.arraycopy(xvals, 0, this.xvals, 0, n);
+    System.arraycopy(yvals, 0, this.yvals, 0, n);
     this.polynominals = polynominals;
   }
 
-  public double value(double x) {
-    int index = AlgorithmUtils.binarySearchA(this.xvals, x);
-    return valueY1(index, x);
+  public double value(double v) {
+    int index = AlgorithmUtils.binarySearchA(this.xvals, v);
+    return valueY1(index, v - xvals[index]);
   }
 
   protected double valueY1(int index, double x) {
@@ -30,8 +33,8 @@ public class LinearSplineFunction implements PolynominalFunction {
       this.coefficient1 = coefficient1;
     }
 
-    public double value(double x) {
-      return coefficient0 + coefficient1 * x;
+    public double value(double v) {
+      return coefficient1 * v + coefficient0;
     }
   }
 }
