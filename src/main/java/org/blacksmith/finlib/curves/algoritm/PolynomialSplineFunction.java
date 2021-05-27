@@ -17,12 +17,9 @@ public class PolynomialSplineFunction implements SingleArgumentFunction {
   }
 
   @Override
-  public double value(double v) {
-    int index = AlgorithmUtils.getKnotIndex(this.knots, v);
-    if (index >= polynomials.length ) {
-      index = polynomials.length - 1;
-    }
-    return valueY1(index, v - knots[index]);
+  public double value(double x) {
+    int index = AlgorithmUtils.getKnotIndex(this.knots, x);
+    return valueYInd(index, x);
   }
 
   @Override
@@ -37,9 +34,9 @@ public class PolynomialSplineFunction implements SingleArgumentFunction {
     List<CurvePoint> points = new ArrayList<>(max - min + 1);
     var ranges = AlgorithmUtils.getCalculationRanges(min, max, getKnots(), polynomials.length);
     for (AlgorithmUtils.CalcRange range : ranges) {
-      points.add(CurvePoint.of(range.start, valueY1(range.knotIndex, range.start - knots[range.knotIndex]), true));
+      points.add(CurvePoint.of(range.start, valueYInd(range.knotIndex, range.start), true));
       for (int j = range.start + 1; j <= range.end; j++) {
-        points.add(CurvePoint.of(j, valueY1(range.knotIndex, j - knots[range.knotIndex]), false));
+        points.add(CurvePoint.of(j, valueYInd(range.knotIndex, j), false));
       }
     }
     return points;
@@ -74,7 +71,11 @@ public class PolynomialSplineFunction implements SingleArgumentFunction {
     }
   }
 
-  protected double valueY1(int index, double x) {
-    return polynomials[index].value(x);
+  protected double valueYInd(int index, double x) {
+    if (index >= polynomials.length ) {
+      index = polynomials.length - 1;
+    }
+    var v = x - knots[index];
+    return polynomials[index].value(v);
   }
 }
