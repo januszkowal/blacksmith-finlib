@@ -1,32 +1,46 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-import java.util.Arrays;
-
-public class PolynomialSplineFunction implements SingleArgumentFunction {
+public class PolynomialSplineFunction implements PolynomialFunction {
   private final double[] knots;
-  private final Polynominal[] polynominals;
+  private final Polynomial[] polynomials;
 
-  public PolynomialSplineFunction(double[] knots, Polynominal[] polynominals) {
-    int n = knots.length;
-    this.knots = new double[n];
-    this.polynominals = new Polynominal[n];
-    System.arraycopy(knots, 0, this.knots, 0, n);
-    System.arraycopy(polynominals, 0, this.polynominals, 0, n);
+  public PolynomialSplineFunction(double[] knots, Polynomial[] polynomials) {
+    this.knots = new double[knots.length];
+    this.polynomials = new Polynomial[polynomials.length];
+    System.arraycopy(knots, 0, this.knots, 0, knots.length);
+    System.arraycopy(polynomials, 0, this.polynomials, 0, polynomials.length);
   }
 
-  public double value(double v) {
-    int index = AlgorithmUtils.getKnotIndex(this.knots, v);
-    return valueY1(index, v - knots[index]);
+  @Override
+  public double value(double x) {
+    int index = AlgorithmUtils.getKnotIndex(this.knots, x);
+    return valueYInd(index, x);
   }
 
-  protected double valueY1(int index, double x) {
-    return polynominals[index].value(x);
+  @Override
+  public double[] getKnots() {
+    double out[] = new double[knots.length];
+    System.arraycopy(knots, 0, out, 0, knots.length);
+    return out;
   }
-  
-  public static class Polynominal {
+
+//  @Override
+//  public List<CurvePoint> curveValuesR(int min, int max) {
+//    List<CurvePoint> points = new ArrayList<>(max - min + 1);
+//    var ranges = AlgorithmUtils.getCalculationRanges(min, max, getKnots(), polynomials.length);
+//    for (AlgorithmUtils.CalcRange range : ranges) {
+//      points.add(CurvePoint.of(range.start, valueYInd(range.knotIndex, range.start), true));
+//      for (int j = range.start + 1; j <= range.end; j++) {
+//        points.add(CurvePoint.of(j, valueYInd(range.knotIndex, j), false));
+//      }
+//    }
+//    return points;
+//  }
+
+  public static class Polynomial {
     double[] coefficients;
 
-    public Polynominal(double[] coefficients) {
+    public Polynomial(double[] coefficients) {
       int n = coefficients.length;
       if (n == 0) {
         throw new IllegalArgumentException("Empty coefficients array");
@@ -50,5 +64,13 @@ public class PolynomialSplineFunction implements SingleArgumentFunction {
       }
       return result;
     }
+  }
+
+  protected double valueYInd(int index, double x) {
+    if (index >= polynomials.length ) {
+      index = polynomials.length - 1;
+    }
+    var v = x - knots[index];
+    return polynomials[index].value(v);
   }
 }

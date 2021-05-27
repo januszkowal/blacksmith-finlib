@@ -16,11 +16,11 @@ public class LinearInterpolator {
     }
     af[n - 1] = af[n - 2];
     double[] coefficients = new double[2];
-    PolynomialSplineFunction.Polynominal[] polynominals = new PolynomialSplineFunction.Polynominal[xvals.length];
+    PolynomialSplineFunction.Polynomial[] polynominals = new PolynomialSplineFunction.Polynomial[xvals.length];
     for (int i = 0; i < xvals.length; i++) {
       coefficients[0] = yvals[i];
       coefficients[1] = af[i];
-      polynominals[i] = new PolynomialSplineFunction.Polynominal(coefficients);
+      polynominals[i] = new PolynomialSplineFunction.Polynomial(coefficients);
     }
     return new PolynomialSplineFunction(xvals, polynominals);
   }

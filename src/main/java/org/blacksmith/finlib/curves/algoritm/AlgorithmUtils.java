@@ -1,8 +1,8 @@
 package org.blacksmith.finlib.curves.algoritm;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.blacksmith.finlib.curves.types.Point2D;
+import java.util.List;
 
 public class AlgorithmUtils {
   public static int getKnotIndex0(double[] a, double key) {
@@ -43,7 +43,7 @@ public class AlgorithmUtils {
 
   public static void checkOrder(double[] val) {
     double prior = val[0];
-    for (int i=1; i < val.length; i++) {
+    for (int i = 1; i < val.length; i++) {
       if (val[i] <= prior) {
         throw new IllegalArgumentException("Invalid data order");
       }
@@ -62,5 +62,42 @@ public class AlgorithmUtils {
   public static void checkMinSize(double[] xvals, int min) {
     if (xvals.length < min)
       throw new IllegalArgumentException("Minimum arrays size is: " + min);
+  }
+
+  public static List<CalcRange> getCalculationRanges(int min, int max, double[] knots, int polynomialLength) {
+    List<CalcRange> ranges = new ArrayList<>();
+    int knotIndex = AlgorithmUtils.getKnotIndex(knots, min);
+    if (knotIndex < 0)
+      throw new IllegalArgumentException("Invalid calculation range: " + min + " - " + max);
+    int rangeStart = min;
+
+    int lastKnot = Math.min(polynomialLength, knots.length) - 1;
+    while (knotIndex <= lastKnot) {
+      if (knotIndex == lastKnot) {
+        ranges.add(new CalcRange(rangeStart, max, knotIndex));
+        break;
+      } else {
+        // Range end is equal next knot ceil - 1
+        int rangeEnd = (int) Math.ceil(knots[knotIndex + 1]) - 1;
+        ranges.add(new CalcRange(rangeStart, Math.min(rangeEnd, max), knotIndex));
+        if (rangeEnd >= max)
+          break;
+        rangeStart = rangeEnd + 1;
+      }
+      knotIndex++;
+    }
+    return ranges;
+  }
+
+  public static class CalcRange {
+    final int start;
+    final int end;
+    final int knotIndex;
+
+    public CalcRange(int start, int end, int knotIndex) {
+      this.start = start;
+      this.end = end;
+      this.knotIndex = knotIndex;
+    }
   }
 }

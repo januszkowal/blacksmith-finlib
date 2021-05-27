@@ -1,5 +1,5 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public interface SingleArgumentFunction {
+public interface UnivariateFunction {
   double value(double x);
 }
