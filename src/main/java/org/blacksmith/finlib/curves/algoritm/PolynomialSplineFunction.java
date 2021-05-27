@@ -1,5 +1,7 @@
 package org.blacksmith.finlib.curves.algoritm;
 
+import java.util.Arrays;
+
 public class PolynomialSplineFunction implements SingleArgumentFunction {
   private final double[] knots;
   private final Polynominal[] polynominals;
@@ -13,7 +15,7 @@ public class PolynomialSplineFunction implements SingleArgumentFunction {
   }
 
   public double value(double v) {
-    int index = AlgorithmUtils.binarySearchA(this.knots, v);
+    int index = AlgorithmUtils.getKnotIndex(this.knots, v);
     return valueY1(index, v - knots[index]);
   }
 
