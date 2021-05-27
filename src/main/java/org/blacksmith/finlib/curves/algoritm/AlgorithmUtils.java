@@ -111,4 +111,18 @@ public class AlgorithmUtils {
       }
     }
   }
+
+  public static void checkArraysSize(double[] xvals, double[] yvals) {
+    if (xvals.length == 0)
+      throw new IllegalArgumentException("Zero length x-values");
+    if (yvals.length == 0)
+      throw new IllegalArgumentException("Zero length y-values");
+    if (xvals.length != yvals.length)
+      throw new IllegalArgumentException("x-values and y-values length must be equal");
+  }
+
+  public static void checkMinSize(double[] xvals, int min) {
+    if (xvals.length < min)
+      throw new IllegalArgumentException("Minimum arrays size is: " + min);
+  }
 }

@@ -18,11 +18,11 @@ public class CurveInterpolatorFactory {
         .collect(Collectors.toList());
     var knotsX = knotsPoints.stream().mapToDouble(Point2D::getX).toArray();
     var knotsY = knotsPoints.stream().mapToDouble(Point2D::getY).toArray();
-    if (name.equals("AkimaSplineBlackSmith")) {
+    if (name.equals("AkimaSplineBlacksmith")) {
       AkimaSplineInterpolator akimaInterpolator = new AkimaSplineInterpolator();
       var akimaSplineFunctionBS = akimaInterpolator.interpolate(knotsX, knotsY);
       curveFunction = x -> akimaSplineFunctionBS.value(x);
-    } else if (name.equals("LinearBlackSmith")) {
+    } else if (name.equals("LinearBlacksmith")) {
       var linearInterpolator = new LinearInterpolator();
       var linearFunction = linearInterpolator.interpolate(knotsX, knotsY);
       curveFunction = x -> linearFunction.value(x);

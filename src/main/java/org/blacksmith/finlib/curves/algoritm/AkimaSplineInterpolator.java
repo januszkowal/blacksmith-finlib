@@ -1,11 +1,14 @@
 package org.blacksmith.finlib.curves.algoritm;
 
 public class AkimaSplineInterpolator {
+  private final int MIN_SIZE = 3;
 
   public AkimaSplineInterpolator() {}
 
   public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
+    AlgorithmUtils.checkArraysSize(xvals, yvals);
     AlgorithmUtils.checkOrder(xvals);
+    AlgorithmUtils.checkMinSize(xvals, MIN_SIZE);
     int n = xvals.length;
     /*
      * Shift data by+2 in the array and compute the secants
