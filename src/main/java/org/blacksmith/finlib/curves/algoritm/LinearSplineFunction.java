@@ -15,7 +15,7 @@ public class LinearSplineFunction implements SingleArgumentFunction {
   }
 
   public double value(double v) {
-    int index = AlgorithmUtils.binarySearchA(this.xvals, v);
+    int index = AlgorithmUtils.getKnotIndex(this.xvals, v);
     return valueY1(index, v - xvals[index]);
   }
 
