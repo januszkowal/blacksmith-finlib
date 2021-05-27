@@ -77,7 +77,7 @@ if 'AkimaBlacksmith' in displayCurves:
 if 'AkimaApacheCommons' in displayCurves:
     plt.plot(x, yAkimaApacheCommons, color='blue', label='Akima - Apache Commons')
 if 'LinearBlacksmith' in displayCurves:
-    plt.plot(x, yLinearBlacksmith, color='orange', label='Linear - Blacksmith')     
+    plt.plot(x, yLinearBlacksmith, color='violet', label='Linear - Blacksmith')
 if 'LinearApacheCommons' in displayCurves:
     plt.plot(x, yLinearApacheCommons, color='orange', label='Linear - Apache Commons')  
     

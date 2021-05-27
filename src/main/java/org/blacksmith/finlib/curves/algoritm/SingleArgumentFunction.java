@@ -1,5 +1,5 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public interface PolynominalFunction {
+public interface SingleArgumentFunction {
   double value(double x);
 }

@@ -4,10 +4,9 @@ public class AkimaSplineInterpolator {
 
   public AkimaSplineInterpolator() {}
 
-  public AkimaSplineFunction interpolate(double[] xvals, double[] yvals) {
+  public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
     AlgorithmUtils.checkOrder(xvals);
     int n = xvals.length;
-    AkimaSplineFunction.AkimaPolynominal[] polynominals = new AkimaSplineFunction.AkimaPolynominal[n];
     /*
      * Shift data by+2 in the array and compute the secants
      * also calcualate extrapolated end point secants
@@ -34,9 +33,17 @@ public class AkimaSplineInterpolator {
         firstDerivatives[i] = 0.5 * (secants[i + 2] + secants[i + 1]);
       }
     }
+    PolynomialSplineFunction.Polynominal[] polynominals = new PolynomialSplineFunction.Polynominal[n];
+    double coefficients[] = new double[4];
+    double xDelta;
     for (int i = 0; i < xvals.length - 1; i++) {
-      polynominals[i] = new AkimaSplineFunction.AkimaPolynominal(xvals[i], yvals[i], xvals[i + 1] - xvals[i], firstDerivatives[i], firstDerivatives[i + 1], secants[i + 2]);
+      xDelta = xvals[i + 1] - xvals[i];
+      coefficients[0] = yvals[i];
+      coefficients[1] = firstDerivatives[i];
+      coefficients[2] = (3.0d * secants[i + 2] - 2.0d * firstDerivatives[i] - firstDerivatives[i + 1]) / xDelta;
+      coefficients[3] = (-2.0d * secants[i + 2] + firstDerivatives[i] + firstDerivatives[i + 1]) / (xDelta * xDelta);
+      polynominals[i] = new PolynomialSplineFunction.Polynominal(coefficients);
     }
-    return new AkimaSplineFunction(xvals, yvals, polynominals);
+    return new PolynomialSplineFunction(xvals, polynominals);
   }
 }
