@@ -1,9 +1,10 @@
-package org.blacksmith.finlib.curves.algoritm;
+package org.blacksmith.finlib.curves;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
 import org.blacksmith.finlib.curves.types.CurvePoint;
 
 public interface CurveFunction extends PolynomialFunction {

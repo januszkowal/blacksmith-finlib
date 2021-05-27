@@ -3,9 +3,7 @@ package org.blacksmith.finlib.curves;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.curves.algoritm.AkimaSplineInterpolator;
-import org.blacksmith.finlib.curves.algoritm.CurveFunction;
 import org.blacksmith.finlib.curves.algoritm.LinearInterpolator;
 import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
 import org.blacksmith.finlib.curves.types.Knot;

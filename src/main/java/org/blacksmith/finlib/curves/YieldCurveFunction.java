@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curves.algoritm.CurveFunction;
 import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
 
 public class YieldCurveFunction implements CurveFunction {
