@@ -93,8 +93,7 @@ class FxRateServiceTest {
   public void shouldRetrieveCrossRates() {
     //EUR->USD
     assertRate3(4.4439d / 3.6471d, 4.5337d / 3.7207d, 4.4888d / 3.6839d, "EUR/USD", date1, "EUR/USD-3");
-    assertThat(Rate.of(4.4439d / 3.6471d, OUTPUT_DECIMAL_PLACES).doubleValue()).describedAs("EUR/USD-buy")
-        .isEqualTo(rateService.getRateDouble(FxRateId.of("EUR/USD"), date1, FxRateType.BUY));
+    assertRate1(4.4439d / 3.6471d, "EUR/USD", date1, FxRateType.BUY, "EUR/USD-buy");
     assertThat(Rate.of(4.5337d / 3.7207d, OUTPUT_DECIMAL_PLACES).doubleValue()).describedAs("EUR/USD-sell")
         .isEqualTo(rateService.getRateDouble(FxRateId.of("EUR/USD"), date1, FxRateType.SELL));
     assertThat(Rate.of(4.4888d / 3.6839d, OUTPUT_DECIMAL_PLACES).doubleValue()).describedAs("EUR/USD-avg")
@@ -144,6 +143,13 @@ class FxRateServiceTest {
         .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
         .containsExactly(Rate.of(buyRate, OUTPUT_DECIMAL_PLACES), Rate.of(sellRate, OUTPUT_DECIMAL_PLACES),
             Rate.of(avgRate, OUTPUT_DECIMAL_PLACES));
+  }
+
+  private void assertRate1(double rate, String pair, LocalDate date, FxRateType type, String description) {
+    var rate1 = rateService.getRate(FxRateId.of(pair), date, type);
+    assertNotNull(rate1, description);
+    assertThat(rate1.getValue()).describedAs(description)
+        .isEqualTo(Rate.of(rate, OUTPUT_DECIMAL_PLACES));
   }
 
   private void assertRate3(LocalDate date, LocalDate expectedDate, double buyRate, double sellRate, double avgRate, String pair, String description) {

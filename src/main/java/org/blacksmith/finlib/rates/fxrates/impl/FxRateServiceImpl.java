@@ -48,7 +48,7 @@ public class FxRateServiceImpl implements FxRateService {
     if (key.getFromCcy().equals(key.getToCcy())) {
       return FxRate.of(date, Rate.ONE);
     }
-    return getRateInternal(key, date, fx3toFx1b(fxRateType)).toFxRate();
+    return getRateInternal(key, date, fx3toFx1b(fxRateType)).toFxRate(decimalPlaces);
   }
 
   @Override
@@ -58,7 +58,7 @@ public class FxRateServiceImpl implements FxRateService {
     if (key.getFromCcy().equals(key.getToCcy())) {
       return FxRate3.of(date, Rate.ONE, Rate.ONE, Rate.ONE);
     }
-    return getRateInternal(key, date, md -> FxRate3Internal.of(md.getDate(), md.getValue(), decimalPlaces)).toFxRate3();
+    return getRateInternal(key, date, md -> FxRate3Internal.of(md.getDate(), md.getValue())).toFxRate3(decimalPlaces);
   }
 
   private FxCurrencyPairInternal getPairInternal(FxRateId key) {
@@ -158,11 +158,11 @@ public class FxRateServiceImpl implements FxRateService {
   private Function<MarketData<FxRate3RSource.FxRate3RawValue>, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
     switch (fxRateType) {
       case BUY:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getBuy().doubleValue(), decimalPlaces);
+        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getBuy().doubleValue());
       case SELL:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getSell().doubleValue(), decimalPlaces);
+        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getSell().doubleValue());
       case AVG:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getAvg().doubleValue(), decimalPlaces);
+        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getAvg().doubleValue());
     }
     return null;
   }
