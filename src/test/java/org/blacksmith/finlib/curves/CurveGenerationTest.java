@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CurveGenerationTest {
 
+  CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
+
   @Test
   public void createCurveWithReflectionPoints() {
     exportCurve(create365DayKnotsWithInflectionPoints(), Path.of("data_rp.csv"));
@@ -28,17 +30,14 @@ public class CurveGenerationTest {
   }
 
   @Test
-  public void createCurveWithoutReflectionPoints2() {
-    exportCurve2(create365DayKnots2(), Path.of("data.csv"));
-  }
-
-  @Test
   public void shouldGenerateMinSizeCurve() {
     List<Knot> knots = new ArrayList();
     knots.add(Knot.of(0, 2.43d));//1D
     knots.add(Knot.of(1, 2.50d));//1D
     knots.add(Knot.of(7, 3.07d));//1D
-    var valuesAkimaBlackSmith = generateAkimaBlacksmith(knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction("AkimaSplineBlacksmith", knots);
+    var akimaInterpolatorApacheCommons = factory.getFunction("AkimaSplineApacheCommons", knots);
+    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, 7);
     System.out.println(valuesAkimaBlackSmith);
   }
 
@@ -71,7 +70,9 @@ public class CurveGenerationTest {
     knots.add(Knot.of(365*3, 4.72d));//1Y
     knots.add(Knot.of(365*5, 4.62d));//1Y
     knots.add(Knot.of(365*10, 4.32d));//1Y
-    knots.add(Knot.of(365*25, 4.22d));//1Y
+    knots.add(Knot.of(365*20, 4.36d));//1Y
+    knots.add(Knot.of(365*30, 4.67d));//1Y
+    knots.add(Knot.of(365*40, 4.77d));//1Y
     return knots;
   }
 
@@ -96,22 +97,10 @@ public class CurveGenerationTest {
     var akimaInterpolatorApacheCommons = factory.getFunction("AkimaSplineApacheCommons", knots);
     var linearInterpolatorBlackSmith = factory.getFunction("LinearBlacksmith", knots);
     var linearInterpolatorApacheCommons = factory.getFunction("LinearApacheCommons", knots);
-    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.values(0, maxValue);
-    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.values(0, maxValue);
-    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.values(0, maxValue);
-    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.values(0, maxValue);
-    /*var valuesAkimaBlackSmith = IntStream.range(0, maxValue).boxed()
-        .map(x -> akimaInterpolatorBlackSmith.value(x))
-        .collect(Collectors.toList());
-    var valuesAkimaApacheCommons = IntStream.range(0, maxValue).boxed()
-        .map(x -> akimaInterpolatorApacheCommons.value(x))
-        .collect(Collectors.toList());
-    var valuesLinearBlackSmith = IntStream.range(0, maxValue).boxed()
-        .map(x -> linearInterpolatorBlackSmith.value(x))
-        .collect(Collectors.toList());
-    var valuesLinearApacheCommons = IntStream.range(0, maxValue).boxed()
-        .map(x -> linearInterpolatorApacheCommons.value(x))
-        .collect(Collectors.toList());*/
+    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
+    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.curveValues(0, maxValue);
+    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.curveValues(0, maxValue);
+    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.curveValues(0, maxValue);
     try (PrintWriter pw = new PrintWriter(path.toFile())) {
       pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
       IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
@@ -124,35 +113,6 @@ public class CurveGenerationTest {
       System.out.println("Saved to: " + path.toAbsolutePath());
     } catch (Exception e) {
     }
-  }
-
-  private void exportCurve2(List<Knot> knots, Path path) {
-    int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
-    var akimaInterpolatorBlackSmith = factory.getFunction("AkimaSplineBlacksmith", knots);
-//    var akimaInterpolatorBlackSmith = factory.getYieldCurveFunction("AkimaSplineBlacksmith", knots);
-    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.values(0, maxValue);
-//    var valuesAkimaBlackSmith = IntStream.rangeClosed(0, maxValue).boxed()
-//        .map(x -> akimaInterpolatorBlackSmith.value(x))
-//        .collect(Collectors.toList());
-    try (PrintWriter pw = new PrintWriter(path.toFile())) {
-      pw.println("x,funAkimaBlacksmith,knot");
-      IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
-          String.valueOf(valuesAkimaBlackSmith.get(i).getY()),
-          valuesAkimaBlackSmith.get(i).isKnot() ? String.valueOf(valuesAkimaBlackSmith.get(i).getY()) : ""))
-          .forEach(pw::println);
-      System.out.println("Saved to: " + path.toAbsolutePath());
-    } catch (Exception e) {
-    }
-  }
-
-  private List<CurvePoint> generateAkimaBlacksmith(List<Knot> knots) {
-    int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
-    var akimaInterpolatorBlackSmith = factory.getYieldCurveFunction("AkimaSplineBlacksmith", knots);
-    return IntStream.range(0, maxValue).boxed()
-        .map(x -> akimaInterpolatorBlackSmith.value(x))
-        .collect(Collectors.toList());
   }
 
   public String convertToCSV(String... data) {

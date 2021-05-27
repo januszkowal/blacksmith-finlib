@@ -1,37 +1,39 @@
 package org.blacksmith.finlib.curves;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curves.algoritm.SingleArgumentFunction;
-import org.blacksmith.finlib.curves.types.CurvePoint;
-import org.blacksmith.finlib.curves.types.Knot;
+import org.blacksmith.finlib.curves.algoritm.CurveFunction;
+import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
 
-public class YieldCurveFunction {
+public class YieldCurveFunction implements CurveFunction {
   private final Set<Integer> knotSet;
-  private SingleArgumentFunction interpolator;
+  private final PolynomialFunction function;
 
-  public YieldCurveFunction(double[] knots, SingleArgumentFunction interpolator) {
-    this.knotSet = Arrays.stream(knots)
+  public YieldCurveFunction(PolynomialFunction function) {
+    this.function = function;
+    this.knotSet = Arrays.stream(getKnots())
         .mapToInt(x -> (int)Math.ceil(x))
         .boxed()
         .collect(Collectors.toSet());
-    this.interpolator = interpolator;
+  }
+  public double value(int x) {
+    return function.value(x);
   }
 
-  public YieldCurveFunction(List<Integer> knots, SingleArgumentFunction interpolator) {
-    this.knotSet = knots.stream().collect(Collectors.toSet());
-    this.interpolator = interpolator;
+  @Override
+  public double[] getKnots() {
+    return function.getKnots();
   }
 
-  public CurvePoint value(int x) {
-    double y = interpolator.value(x);
-    return CurvePoint.of(x, y, isKnot(x));
+  @Override
+  public double value(double x) {
+    return function.value(x);
   }
 
-  private boolean isKnot(int x) {
-    return knotSet.contains(x);
+  @Override
+  public boolean isKnot(int x) {
+    return this.knotSet.contains(x);
   }
 }
