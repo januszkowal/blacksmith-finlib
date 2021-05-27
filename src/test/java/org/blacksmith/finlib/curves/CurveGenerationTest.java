@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.blacksmith.finlib.curves.types.CurvePoint;
 import org.blacksmith.finlib.curves.types.Knot;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,16 @@ public class CurveGenerationTest {
   @Test
   public void createCurveWithoutReflectionPoints() {
     exportCurve(create365DayKnots(), Path.of("data.csv"));
+  }
+
+  @Test
+  public void shouldGenerateMinSizeCurve() {
+    List<Knot> knots = new ArrayList();
+    knots.add(Knot.of(0, 2.43d));//1D
+    knots.add(Knot.of(1, 2.50d));//1D
+    knots.add(Knot.of(7, 3.07d));//1D
+    var valuesAkimaBlackSmith = generateAkimaBlacksmith(knots);
+    System.out.println(valuesAkimaBlackSmith);
   }
 
   private List<Knot> create365DayKnots() {
@@ -57,9 +68,9 @@ public class CurveGenerationTest {
   private void exportCurve(List<Knot> knots, Path path) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
     CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
-    var akimaInterpolatorBlackSmith = factory.getInterpolator("AkimaSplineBlackSmith", knots);
+    var akimaInterpolatorBlackSmith = factory.getInterpolator("AkimaSplineBlacksmith", knots);
     var akimaInterpolatorApacheCommons = factory.getInterpolator("AkimaSplineApacheCommons", knots);
-    var linearInterpolatorBlackSmith = factory.getInterpolator("LinearBlackSmith", knots);
+    var linearInterpolatorBlackSmith = factory.getInterpolator("LinearBlacksmith", knots);
     var linearInterpolatorApacheCommons = factory.getInterpolator("LinearApacheCommons", knots);
     var valuesAkimaBlackSmith = IntStream.range(0, maxValue).boxed()
         .map(x -> akimaInterpolatorBlackSmith.value(x))
@@ -85,6 +96,15 @@ public class CurveGenerationTest {
       System.out.println("Saved to: " + path.toAbsolutePath());
     } catch (Exception e) {
     }
+  }
+
+  private List<CurvePoint> generateAkimaBlacksmith(List<Knot> knots) {
+    int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
+    CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
+    var akimaInterpolatorBlackSmith = factory.getInterpolator("AkimaSplineBlacksmith", knots);
+    return IntStream.range(0, maxValue).boxed()
+        .map(x -> akimaInterpolatorBlackSmith.value(x))
+        .collect(Collectors.toList());
   }
 
   public String convertToCSV(String... data) {
