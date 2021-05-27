@@ -9,7 +9,7 @@ import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
 import org.blacksmith.finlib.curves.types.Knot;
 import org.blacksmith.finlib.curves.types.Point2D;
 
-public class CurveInterpolatorFactory {
+public class CurveFunctionFactory {
   public PolynomialFunction getFunction(String name, double[] xvals, double[] yvals) {
     PolynomialFunction curveFunction = null;
     if (name.equals("AkimaSplineBlacksmith")) {

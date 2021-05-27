@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curves.types.CurvePoint;
 import org.blacksmith.finlib.curves.types.Knot;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CurveGenerationTest {
 
-  CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
+  CurveFunctionFactory factory = new CurveFunctionFactory();
 
   @Test
   public void createCurveWithReflectionPoints() {
@@ -36,7 +35,6 @@ public class CurveGenerationTest {
     knots.add(Knot.of(1, 2.50d));//1D
     knots.add(Knot.of(7, 3.07d));//1D
     var akimaInterpolatorBlackSmith = factory.getFunction("AkimaSplineBlacksmith", knots);
-    var akimaInterpolatorApacheCommons = factory.getFunction("AkimaSplineApacheCommons", knots);
     var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, 7);
     System.out.println(valuesAkimaBlackSmith);
   }
@@ -92,7 +90,7 @@ public class CurveGenerationTest {
 
   private void exportCurve(List<Knot> knots, Path path) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    CurveInterpolatorFactory factory = new CurveInterpolatorFactory();
+    CurveFunctionFactory factory = new CurveFunctionFactory();
     var akimaInterpolatorBlackSmith = factory.getFunction("AkimaSplineBlacksmith", knots);
     var akimaInterpolatorApacheCommons = factory.getFunction("AkimaSplineApacheCommons", knots);
     var linearInterpolatorBlackSmith = factory.getFunction("LinearBlacksmith", knots);
