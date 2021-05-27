@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.curves;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -12,8 +13,16 @@ public class YieldCurveFunction {
   private final Set<Integer> knotSet;
   private SingleArgumentFunction interpolator;
 
-  public YieldCurveFunction(List<Knot> knots, SingleArgumentFunction interpolator) {
-    this.knotSet = knots.stream().map(Knot::getX).collect(Collectors.toSet());
+  public YieldCurveFunction(double[] knots, SingleArgumentFunction interpolator) {
+    this.knotSet = Arrays.stream(knots)
+        .mapToInt(x -> (int)Math.ceil(x))
+        .boxed()
+        .collect(Collectors.toSet());
+    this.interpolator = interpolator;
+  }
+
+  public YieldCurveFunction(List<Integer> knots, SingleArgumentFunction interpolator) {
+    this.knotSet = knots.stream().collect(Collectors.toSet());
     this.interpolator = interpolator;
   }
 

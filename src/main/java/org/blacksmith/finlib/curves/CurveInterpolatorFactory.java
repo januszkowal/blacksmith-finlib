@@ -64,6 +64,6 @@ public class CurveInterpolatorFactory {
   public YieldCurveFunction getYieldCurveFunction(String name, List<Knot> knots) {
     SingleArgumentFunction curveFunction = getFunction(name, knots);
     ArgChecker.notNull(curveFunction, "Curve function must be not null");
-    return new YieldCurveFunction(knots, curveFunction);
+    return new YieldCurveFunction(knots.stream().map(Knot::getX).collect(Collectors.toList()), curveFunction);
   }
 }
