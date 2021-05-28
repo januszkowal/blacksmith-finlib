@@ -6,12 +6,12 @@ import org.blacksmith.commons.datetime.DateUtils;
 
 public class RateUtils {
   public static double interestRate100ToDcf(LocalDate asOfDate, LocalDate dcfDate, double rate100, int yearLength) {
-    return interestRateToDcf(asOfDate, dcfDate, rate100 / 100, yearLength);
+    return interestRateToDcf(asOfDate, dcfDate, rate100 / 100d, yearLength);
   }
 
   public static double interestRateToDcf(LocalDate asOfDate, LocalDate dcfDate, double rate, int yearLength) {
-    long l = DateUtils.daysBetween(dcfDate, asOfDate);
-    return Math.exp((-rate*l)/yearLength);
+    long len = DateUtils.daysBetween(asOfDate, dcfDate);
+    return Math.exp((-rate*len)/yearLength);
   }
 
   public static double getFra(LocalDate asOfDate, LocalDate d1, LocalDate d2, double dcf1, double dcf2, int yearLength) {
