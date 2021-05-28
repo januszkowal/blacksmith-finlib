@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curves;
+package org.blacksmith.finlib.curve;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curves.types.Knot;
+import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
+import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
@@ -58,10 +59,10 @@ public class CurveGenerateTest {
 
   private void exportCurve(List<Knot> knots, Path path) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.AKIMA_SPLINE_BLACKSMITH, knots);
-    var akimaInterpolatorApacheCommons = factory.getFunction(CurveType.AKIMA_SPLINE_APACHE_COMMONS, knots);
-    var linearInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
-    var linearInterpolatorApacheCommons = factory.getFunction(CurveType.LINEAR_APACHE_COMMONS, knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, knots);
+    var akimaInterpolatorApacheCommons = factory.getFunction(AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS, knots);
+    var linearInterpolatorBlackSmith = factory.getFunction(AlgorithmType.LINEAR_BLACKSMITH, knots);
+    var linearInterpolatorApacheCommons = factory.getFunction(AlgorithmType.LINEAR_APACHE_COMMONS, knots);
     var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
     var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.curveValues(0, maxValue);
     var valuesLinearBlackSmith = linearInterpolatorBlackSmith.curveValues(0, maxValue);

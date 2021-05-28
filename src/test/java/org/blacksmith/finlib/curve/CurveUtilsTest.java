@@ -1,12 +1,10 @@
-package org.blacksmith.finlib.curves;
+package org.blacksmith.finlib.curve;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curves.algoritm.AlgorithmUtils;
-import org.blacksmith.finlib.curves.types.Knot;
+import org.blacksmith.finlib.curve.algoritm.AlgorithmUtils;
+import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
