@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curves.algoritm;
+package org.blacksmith.finlib.curve.algoritm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
