@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve.algoritm;
+package org.blacksmith.finlib.curve.algorithm;
 
 public class LinearInterpolator implements PolynomialInterpolator {
   private final int MIN_SIZE = 2;

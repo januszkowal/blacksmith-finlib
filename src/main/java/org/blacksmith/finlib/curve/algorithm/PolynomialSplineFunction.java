@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve.algoritm;
+package org.blacksmith.finlib.curve.algorithm;
 
 public class PolynomialSplineFunction implements PolynomialFunction {
   private final double[] knots;

@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve.algoritm;
+package org.blacksmith.finlib.curve.algorithm;
 
 public enum AlgorithmType {
   AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons"),

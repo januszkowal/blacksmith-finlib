@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curve.algoritm.PolynomialFunction;
+import org.blacksmith.finlib.curve.algorithm.PolynomialFunction;
 
 public class CurveFunctionImpl implements CurveFunction {
   private final Set<Integer> knotSet;

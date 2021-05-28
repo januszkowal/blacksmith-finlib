@@ -2,7 +2,7 @@ package org.blacksmith.finlib.curve.dbstruct;
 
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
+import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 
 import lombok.Value;
 

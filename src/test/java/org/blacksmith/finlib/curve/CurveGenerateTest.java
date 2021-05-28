@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
+import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 

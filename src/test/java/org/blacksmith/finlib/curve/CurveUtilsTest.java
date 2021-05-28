@@ -3,7 +3,7 @@ package org.blacksmith.finlib.curve;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algoritm.AlgorithmUtils;
+import org.blacksmith.finlib.curve.algorithm.AlgorithmUtils;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 

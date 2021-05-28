@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.curve;
 
-import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
+import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 
 import lombok.Value;
 

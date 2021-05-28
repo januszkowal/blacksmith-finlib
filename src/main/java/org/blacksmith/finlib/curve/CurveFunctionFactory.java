@@ -3,10 +3,10 @@ package org.blacksmith.finlib.curve;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curve.algoritm.AkimaSplineInterpolator;
-import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
-import org.blacksmith.finlib.curve.algoritm.LinearInterpolator;
-import org.blacksmith.finlib.curve.algoritm.PolynomialFunction;
+import org.blacksmith.finlib.curve.algorithm.AkimaSplineInterpolator;
+import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
+import org.blacksmith.finlib.curve.algorithm.LinearInterpolator;
+import org.blacksmith.finlib.curve.algorithm.PolynomialFunction;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.curve.types.Point2D;
 
