@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curves.algoritm;
+package org.blacksmith.finlib.curve.algoritm;
 
 public interface UnivariateFunction {
   double value(double x);

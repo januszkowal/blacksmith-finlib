@@ -1,6 +1,6 @@
-package org.blacksmith.finlib.curves;
+package org.blacksmith.finlib.curve.algoritm;
 
-public enum CurveType {
+public enum AlgorithmType {
   AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons"),
   AKIMA_SPLINE_BLACKSMITH("Akima Spline - Blacksmith"),
   LINEAR_APACHE_COMMONS("Linear - Apache Commons"),
@@ -8,7 +8,7 @@ public enum CurveType {
 
   private final String description;
 
-  CurveType(String description) {
+  AlgorithmType(String description) {
     this.description = description;
   }
 

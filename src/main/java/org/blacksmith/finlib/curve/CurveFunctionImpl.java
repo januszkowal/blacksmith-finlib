@@ -1,16 +1,16 @@
-package org.blacksmith.finlib.curves;
+package org.blacksmith.finlib.curve;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.curves.algoritm.PolynomialFunction;
+import org.blacksmith.finlib.curve.algoritm.PolynomialFunction;
 
-public class YieldCurveFunction implements CurveFunction {
+public class CurveFunctionImpl implements CurveFunction {
   private final Set<Integer> knotSet;
   private final PolynomialFunction function;
 
-  public YieldCurveFunction(PolynomialFunction function) {
+  public CurveFunctionImpl(PolynomialFunction function) {
     this.function = function;
     this.knotSet = Arrays.stream(getKnots())
         .mapToInt(x -> (int)Math.ceil(x))

@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curves.types;
+package org.blacksmith.finlib.curve.types;
 
 import lombok.Value;
 

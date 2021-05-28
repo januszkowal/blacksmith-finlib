@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curves.algoritm;
+package org.blacksmith.finlib.curve.algoritm;
 
 public interface PolynomialFunction extends UnivariateFunction {
   double[] getKnots();

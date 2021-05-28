@@ -1,15 +1,11 @@
-package org.blacksmith.finlib.curves;
+package org.blacksmith.finlib.curve;
 
-import java.io.PrintWriter;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curves.types.CurvePoint;
-import org.blacksmith.finlib.curves.types.Knot;
+import org.blacksmith.finlib.curve.algoritm.AlgorithmType;
+import org.blacksmith.finlib.curve.types.CurvePoint;
+import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +21,7 @@ public class CurveValidationTest {
   public void shouldAkimaConsecutivePointsYIncrease() {
     var knots = create365DayKnots();
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.AKIMA_SPLINE_BLACKSMITH, knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, knots);
     var points = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
     assertThat(maxValue).isEqualTo(365);
     assertThat(points.size()).isEqualTo(maxValue+1);
@@ -43,7 +39,7 @@ public class CurveValidationTest {
   public void shouldLinearConsecutivePointsYIncrease() {
     var knots = create365DayKnots();
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.LINEAR_BLACKSMITH, knots);
     var points = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
     assertThat(maxValue).isEqualTo(365);
     assertThat(points.size()).isEqualTo(maxValue+1);
@@ -63,7 +59,7 @@ public class CurveValidationTest {
     knots.add(Knot.of(0, 2.43d));
     knots.add(Knot.of(1, 2.50d));
     knots.add(Knot.of(7, 3.07d));
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.AKIMA_SPLINE_BLACKSMITH, knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, knots);
     var points = akimaInterpolatorBlackSmith.curveValues(0, 7);
     assertThat(points.size()).isEqualTo(8);
   }
@@ -73,7 +69,7 @@ public class CurveValidationTest {
     List<Knot> knots = new ArrayList();
     knots.add(Knot.of(0, 2.43d));
     knots.add(Knot.of(7, 3.07d));
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
+    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.LINEAR_BLACKSMITH, knots);
     var points = akimaInterpolatorBlackSmith.curveValues(0, 7);
     assertThat(points.size()).isEqualTo(8);
   }
