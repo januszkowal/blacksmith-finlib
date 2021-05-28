@@ -22,7 +22,7 @@ public class CurveValidationTest {
   CurveFunctionFactory factory = new CurveFunctionFactory();
 
   @Test
-  public void shouldConsecutivePointsYIncrease() {
+  public void shouldAkimaConsecutivePointsYIncrease() {
     var knots = create365DayKnots();
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
     var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.AKIMA_SPLINE_BLACKSMITH, knots);
@@ -40,7 +40,25 @@ public class CurveValidationTest {
   }
 
   @Test
-  public void shouldGenerateMinSizeCurve() {
+  public void shouldLinearConsecutivePointsYIncrease() {
+    var knots = create365DayKnots();
+    int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
+    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
+    var points = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
+    assertThat(maxValue).isEqualTo(365);
+    assertThat(points.size()).isEqualTo(maxValue+1);
+    int priorX =-1;
+    double priorY = 0d;
+    for (CurvePoint point: points) {
+      assertThat(point.getY()).isGreaterThanOrEqualTo(priorY);
+      assertThat(point.getX()).isEqualTo(priorX + 1);
+      priorY = point.getY();
+      priorX = point.getX();
+    }
+  }
+
+  @Test
+  public void shouldAkimaGenerateMinSizeCurve() {
     List<Knot> knots = new ArrayList();
     knots.add(Knot.of(0, 2.43d));
     knots.add(Knot.of(1, 2.50d));
@@ -49,6 +67,17 @@ public class CurveValidationTest {
     var points = akimaInterpolatorBlackSmith.curveValues(0, 7);
     assertThat(points.size()).isEqualTo(8);
   }
+
+  @Test
+  public void shouldLinearGenerateMinSizeCurve() {
+    List<Knot> knots = new ArrayList();
+    knots.add(Knot.of(0, 2.43d));
+    knots.add(Knot.of(7, 3.07d));
+    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
+    var points = akimaInterpolatorBlackSmith.curveValues(0, 7);
+    assertThat(points.size()).isEqualTo(8);
+  }
+
 
   private List<Knot> create365DayKnots() {
     List<Knot> knots = new ArrayList();
@@ -63,34 +92,4 @@ public class CurveValidationTest {
     knots.add(Knot.of(365, 4.52d));//1Y
     return knots;
   }
-
-  private void exportCurve(List<Knot> knots, Path path) {
-    int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.getFunction(CurveType.AKIMA_SPLINE_BLACKSMITH, knots);
-    var akimaInterpolatorApacheCommons = factory.getFunction(CurveType.AKIMA_SPLINE_APACHE_COMMONS, knots);
-    var linearInterpolatorBlackSmith = factory.getFunction(CurveType.LINEAR_BLACKSMITH, knots);
-    var linearInterpolatorApacheCommons = factory.getFunction(CurveType.LINEAR_APACHE_COMMONS, knots);
-    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
-    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.curveValues(0, maxValue);
-    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.curveValues(0, maxValue);
-    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.curveValues(0, maxValue);
-    try (PrintWriter pw = new PrintWriter(path.toFile())) {
-      pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
-      IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
-          String.valueOf(valuesAkimaBlackSmith.get(i).getY()),
-          String.valueOf(valuesAkimaApacheCommons.get(i).getY()),
-          String.valueOf(valuesLinearBlackSmith.get(i).getY()),
-          String.valueOf(valuesLinearApacheCommons.get(i).getY()),
-          valuesAkimaBlackSmith.get(i).isKnot() ? String.valueOf(valuesAkimaBlackSmith.get(i).getY()) : ""))
-          .forEach(pw::println);
-      System.out.println("Saved to: " + path.toAbsolutePath());
-    } catch (Exception e) {
-    }
-  }
-
-  public String convertToCSV(String... data) {
-    return Stream.of(data)
-        .collect(Collectors.joining(","));
-  }
-
 }
