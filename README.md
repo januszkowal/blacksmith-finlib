@@ -175,7 +175,7 @@ How to use? Look at the tests
 
 ### 3.4 Yield curves
 
-[Source code see here](src/main/java/org/blacksmith/finlib/curves)
+[Source code see here](src/main/java/org/blacksmith/finlib/curve)
 
 The Akima spline algorithm was published by Hiroshi Akima in 1970. It could be particularly useful for Interpolation and smooth Curve Fitting.
 
