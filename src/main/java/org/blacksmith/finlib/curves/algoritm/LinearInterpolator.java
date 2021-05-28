@@ -7,9 +7,10 @@ public class LinearInterpolator implements PolynomialInterpolator {
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
-    AlgorithmUtils.checkArraysSize(xvals, yvals);
-    AlgorithmUtils.checkOrder(xvals);
     AlgorithmUtils.checkMinSize(xvals, MIN_SIZE);
+    AlgorithmUtils.checkArraysSize(yvals, xvals.length,
+        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xvals.length, yvals.length));
+    AlgorithmUtils.checkOrder(xvals, "X-values array must be in order");
     int n = xvals.length;
     final double[] af = new double[n];
     for (int i = 0; i < n - 1; i++) {

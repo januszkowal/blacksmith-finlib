@@ -41,22 +41,18 @@ public class AlgorithmUtils {
     return index;
   }
 
-  public static void checkOrder(double[] val) {
+  public static void checkOrder(double[] val, String message) {
     double prior = val[0];
     for (int i = 1; i < val.length; i++) {
       if (val[i] <= prior) {
-        throw new IllegalArgumentException("Invalid data order");
+        throw new IllegalArgumentException(message);
       }
     }
   }
 
-  public static void checkArraysSize(double[] xvals, double[] yvals) {
-    if (xvals.length == 0)
-      throw new IllegalArgumentException("Zero length x-values");
-    if (yvals.length == 0)
-      throw new IllegalArgumentException("Zero length y-values");
-    if (xvals.length != yvals.length)
-      throw new IllegalArgumentException("x-values and y-values length must be equal");
+  public static void checkArraysSize(double[] a, int size, String message) {
+    if (a.length != size)
+      throw new IllegalArgumentException(message);
   }
 
   public static void checkMinSize(double[] xvals, int min) {

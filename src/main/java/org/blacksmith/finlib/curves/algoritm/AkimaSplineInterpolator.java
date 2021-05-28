@@ -3,13 +3,15 @@ package org.blacksmith.finlib.curves.algoritm;
 public class AkimaSplineInterpolator implements PolynomialInterpolator {
   private final int MIN_SIZE = 3;
 
-  public AkimaSplineInterpolator() {}
+  public AkimaSplineInterpolator() {
+  }
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
-    AlgorithmUtils.checkArraysSize(xvals, yvals);
-    AlgorithmUtils.checkOrder(xvals);
     AlgorithmUtils.checkMinSize(xvals, MIN_SIZE);
+    AlgorithmUtils.checkArraysSize(yvals, xvals.length,
+        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xvals.length, yvals.length));
+    AlgorithmUtils.checkOrder(xvals, "X-values array must be in order");
     int n = xvals.length;
     /*
      * Shift data by+2 in the array and compute the secants
@@ -37,7 +39,7 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
         firstDerivatives[i] = 0.5 * (secants[i + 2] + secants[i + 1]);
       }
     }
-    PolynomialSplineFunction.Polynomial[] polynomials = new PolynomialSplineFunction.Polynomial[n-1];
+    PolynomialSplineFunction.Polynomial[] polynomials = new PolynomialSplineFunction.Polynomial[n - 1];
     double coefficients[] = new double[4];
     double xDelta;
     for (int i = 0; i < n - 1; i++) {
