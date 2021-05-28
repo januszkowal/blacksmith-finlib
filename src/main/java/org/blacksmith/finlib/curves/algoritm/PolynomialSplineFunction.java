@@ -14,7 +14,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
   @Override
   public double value(double x) {
     int index = AlgorithmUtils.getKnotIndex(this.knots, x);
-    return valueYInd(index, x);
+    return valueForPolynomial(index, x);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     }
   }
 
-  protected double valueYInd(int index, double x) {
+  protected double valueForPolynomial(int index, double x) {
     if (index >= polynomials.length ) {
       index = polynomials.length - 1;
     }

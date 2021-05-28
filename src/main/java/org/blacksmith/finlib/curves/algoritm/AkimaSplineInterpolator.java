@@ -1,10 +1,11 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public class AkimaSplineInterpolator {
+public class AkimaSplineInterpolator implements PolynomialInterpolator {
   private final int MIN_SIZE = 3;
 
   public AkimaSplineInterpolator() {}
 
+  @Override
   public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
     AlgorithmUtils.checkArraysSize(xvals, yvals);
     AlgorithmUtils.checkOrder(xvals);

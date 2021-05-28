@@ -1,10 +1,11 @@
 package org.blacksmith.finlib.curves.algoritm;
 
-public class LinearInterpolator {
+public class LinearInterpolator implements PolynomialInterpolator {
   private final int MIN_SIZE = 2;
   public LinearInterpolator() {
   }
 
+  @Override
   public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
     AlgorithmUtils.checkArraysSize(xvals, yvals);
     AlgorithmUtils.checkOrder(xvals);
