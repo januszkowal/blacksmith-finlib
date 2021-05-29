@@ -39,5 +39,11 @@ ext.libs = [
                 'org.junit.jupiter:junit-jupiter:' + junitVersion],
         mockito: [
                 'org.mockito:mockito-core:' + mockitoVersion
+        ],
+        benchmarkCore: [
+                'org.openjdk.jmh:jmh-core:' + jmhBenchmarVersion
+        ],
+        benchmarkAnnotationProcessors: [
+                'org.openjdk.jmh:jmh-generator-annprocess:' + jmhBenchmarVersion
         ]
 ]

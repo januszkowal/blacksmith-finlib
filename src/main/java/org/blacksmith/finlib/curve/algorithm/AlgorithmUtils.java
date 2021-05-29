@@ -9,7 +9,7 @@ public class AlgorithmUtils {
     int low = 0;
     int high = a.length - 1;
 
-    while ((high - low) > 1) {
+    while (high - low > 1) {
       int mid = (low + high) >>> 1;
       double midVal = a[mid];
       if (midVal < key)
