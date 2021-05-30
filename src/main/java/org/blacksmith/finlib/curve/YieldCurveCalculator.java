@@ -9,11 +9,11 @@ import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.curve.utils.RateUtils;
 
 public class YieldCurveCalculator {
-  public List<YieldCurveRate> calculate(LocalDate asOfDate, CurveDefinition curveDefinition, List<Knot> knots) {
-    var curveFunction = new CurveFunctionFactory().getFunction(curveDefinition.getAlgorithm(), knots);
+  public List<YieldCurveRate> values(LocalDate asOfDate, CurveDefinition curveDefinition, List<Knot> knots) {
+    var curveFunction = new CurveFunctionFactory().getCurveFunction(curveDefinition.getAlgorithm(), knots);
 
     int maxx = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var curvePoints = curveFunction.curveValues(0, maxx);
+    var curvePoints = curveFunction.values(0, maxx);
     return curvePoints.stream()
         .map(curvePoint -> pointToRate(asOfDate, curveDefinition.getYearLength(), curvePoint))
         .collect(Collectors.toList());

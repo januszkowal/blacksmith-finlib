@@ -9,6 +9,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id "me.champeau.jmh" version "0.6.5"
 }
 
 apply from: 'dependencies.gradle'
@@ -26,16 +27,23 @@ repositories {
 }
 
 dependencies {
+    //main
     compileOnly libs.lombok
     annotationProcessor libs.lombok
-    testAnnotationProcessor libs.lombok
-    implementation libs.blacksmithCommons
-    implementation libs.blacksmithFinlibBasic
-    implementation libs.slf4jApi
-    implementation libs.jackson
-    implementation libs.apacheCommonsCollections
-    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    annotationProcessor libs.benchmarkAnnotationProcessors
+    api libs.blacksmithCommons
+    api libs.blacksmithFinlibBasic
+    api libs.slf4jApi
+    api libs.jackson
+    api libs.apacheCommonsCollections
+    api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    //jmh
+    jmhAnnotationProcessor libs.benchmarkAnnotationProcessors
+    jmhAnnotationProcessor libs.lombok
+    //test
     api libs.groovy
+    testAnnotationProcessor libs.lombok
+    testAnnotationProcessor libs.benchmarkAnnotationProcessors
     testCompileOnly libs.lombok
     testImplementation libs.logback
     testImplementation libs.mockito
@@ -44,7 +52,16 @@ dependencies {
     testImplementation libs.blacksmithTest
     testImplementation libs.apacheCommonsMath
     testImplementation libs.assertj
-//    testImplementation 'org.hamcrest:hamcrest-library:2.1'
+    testImplementation libs.benchmarkCore
+}
+
+sourceSets {
+    jmh
+//            {
+        //tests placed in test.java...
+//        compileClasspath += sourceSets.test.runtimeClasspath
+//        runtimeClasspath += sourceSets.test.runtimeClasspath
+//    }
 }
 
 configurations {

@@ -11,7 +11,7 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
     AlgorithmUtils.checkMinSize(xvals, MIN_SIZE);
     AlgorithmUtils.checkArraysSize(yvals, xvals.length,
         String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xvals.length, yvals.length));
-    AlgorithmUtils.checkOrder(xvals, "X-values array must be in order");
+    AlgorithmUtils.checkIncreasing(xvals, "X-values must increase");
     int n = xvals.length;
     /*
      * Shift data by+2 in the array and compute the secants
