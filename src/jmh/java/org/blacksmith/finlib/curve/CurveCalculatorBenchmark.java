@@ -87,6 +87,6 @@ public class CurveCalculatorBenchmark {
         Knot.of(365 * 2, 4.55d),
         Knot.of(365 * 3, 4.59d),
         Knot.of(365 * 5, 4.7d),
-        Knot.of(365 * 10, 4.8d));//1Y
+        Knot.of(365 * 10, 4.8d));
   }
 }
