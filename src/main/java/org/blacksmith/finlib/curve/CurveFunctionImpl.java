@@ -35,10 +35,12 @@ public class CurveFunctionImpl implements CurveFunction {
     return function.value(x);
   }
 
+  @Override
   public boolean isKnot(int x) {
     return this.knotSet.contains(x);
   }
 
+  @Override
   public List<CurvePoint> values(int min, int max) {
     return IntStream.rangeClosed(min, max).boxed()
         .map(x -> CurvePoint.of(x, value(x), isKnot(x)))

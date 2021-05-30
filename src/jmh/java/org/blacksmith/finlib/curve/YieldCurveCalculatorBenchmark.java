@@ -39,25 +39,21 @@ public class YieldCurveCalculatorBenchmark {
   @State(Scope.Benchmark)
   public static class BenchmarkData {
     @Param({ "1", "10" })
-    int curveYears;
+    int years;
 
     @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE_BLACKSMITH", "LINEAR_APACHE_COMMONS", "LINEAR_BLACKSMITH" })
     AlgorithmType algorithm;
     public List<Knot> knots;
-    public int min;
-    public int max;
     private CurveDefinition curveDefinition;
 
     @Setup(Level.Trial)
     public void setUp() {
-      if (curveYears == 1) {
+      if (years == 1) {
         this.knots = createKnots1Y();
       }
-      else if (curveYears == 10) {
+      else if (years == 10) {
         this.knots = createKnots10Y();
       }
-      this.min = knots.stream().mapToInt(Knot::getX).min().getAsInt();
-      this.max = knots.stream().mapToInt(Knot::getX).max().getAsInt();
       this.curveDefinition = CurveDefinition.of("BONDS", algorithm, 365);
     }
   }
