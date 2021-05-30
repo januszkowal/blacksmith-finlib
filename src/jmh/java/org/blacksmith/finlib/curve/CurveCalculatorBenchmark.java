@@ -33,25 +33,25 @@ public class CurveCalculatorBenchmark {
   @State(Scope.Benchmark)
   public static class BenchmarkData {
     @Param({ "1", "10" })
-    int curveYears;
+    int years;
 
     @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE_BLACKSMITH", "LINEAR_APACHE_COMMONS", "LINEAR_BLACKSMITH" })
     AlgorithmType algorithm;
     public List<Knot> knots;
-    public int min;
-    public int max;
+    public int xMin;
+    public int xMax;
     public CurveFunction curveFunction;
 
     @Setup(Level.Trial)
     public void setUp() {
-      if (curveYears == 1) {
+      if (years == 1) {
         this.knots = createKnots1Y();
       }
-      else if (curveYears == 10) {
+      else if (years == 10) {
         this.knots = createKnots10Y();
       }
-      this.min = this.knots.stream().mapToInt(Knot::getX).min().getAsInt();
-      this.max = this.knots.stream().mapToInt(Knot::getX).max().getAsInt();
+      this.xMin = this.knots.stream().mapToInt(Knot::getX).min().getAsInt();
+      this.xMax = this.knots.stream().mapToInt(Knot::getX).max().getAsInt();
       CurveDefinition definition = CurveDefinition.of("BONDS", algorithm, 365);
       this.curveFunction = new CurveFunctionFactory().getCurveFunction(definition.getAlgorithm(), knots);
     }
@@ -59,7 +59,7 @@ public class CurveCalculatorBenchmark {
 
   @Benchmark
   public List<CurvePoint> generateCurve(BenchmarkData data) {
-    return data.curveFunction.values(data.min, data.max);
+    return data.curveFunction.values(data.xMin, data.xMax);
   }
 
   private static List<Knot> createKnots1Y() {
