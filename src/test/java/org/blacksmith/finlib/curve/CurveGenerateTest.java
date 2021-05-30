@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
+import org.openjdk.jmh.annotations.Benchmark;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,14 +60,14 @@ public class CurveGenerateTest {
 
   private void exportCurve(List<Knot> knots, Path path) {
     int maxValue = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.getFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, knots);
-    var akimaInterpolatorApacheCommons = factory.getFunction(AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS, knots);
-    var linearInterpolatorBlackSmith = factory.getFunction(AlgorithmType.LINEAR_BLACKSMITH, knots);
-    var linearInterpolatorApacheCommons = factory.getFunction(AlgorithmType.LINEAR_APACHE_COMMONS, knots);
-    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.curveValues(0, maxValue);
-    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.curveValues(0, maxValue);
-    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.curveValues(0, maxValue);
-    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.curveValues(0, maxValue);
+    var akimaInterpolatorBlackSmith = factory.getCurveFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, knots);
+    var akimaInterpolatorApacheCommons = factory.getCurveFunction(AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS, knots);
+    var linearInterpolatorBlackSmith = factory.getCurveFunction(AlgorithmType.LINEAR_BLACKSMITH, knots);
+    var linearInterpolatorApacheCommons = factory.getCurveFunction(AlgorithmType.LINEAR_APACHE_COMMONS, knots);
+    var valuesAkimaBlackSmith = akimaInterpolatorBlackSmith.values(0, maxValue);
+    var valuesAkimaApacheCommons = akimaInterpolatorApacheCommons.values(0, maxValue);
+    var valuesLinearBlackSmith = linearInterpolatorBlackSmith.values(0, maxValue);
+    var valuesLinearApacheCommons = linearInterpolatorApacheCommons.values(0, maxValue);
     try (PrintWriter pw = new PrintWriter(path.toFile())) {
       pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
       IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),

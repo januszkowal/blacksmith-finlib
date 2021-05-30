@@ -42,9 +42,16 @@ public class AlgorithmUtils {
   }
 
   public static void checkOrder(double[] val, String message) {
-    double prior = val[0];
     for (int i = 1; i < val.length; i++) {
-      if (val[i] <= prior) {
+      if (val[i] < val[i - 1]) {
+        throw new IllegalArgumentException(message);
+      }
+    }
+  }
+
+  public static void checkIncreasing(double[] val, String message) {
+    for (int i = 1; i < val.length; i++) {
+      if (val[i] <= val[i - 1]) {
         throw new IllegalArgumentException(message);
       }
     }

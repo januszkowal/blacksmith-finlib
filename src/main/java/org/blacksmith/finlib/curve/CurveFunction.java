@@ -11,13 +11,14 @@ public interface CurveFunction extends PolynomialFunction {
 
   boolean isKnot(int x);
 
-  default CurvePoint valueForIntX(int x) {
-    return CurvePoint.of(x, value(x), isKnot(x));
-  }
+//  default CurvePoint valueForIntX(int x) {
+//    return CurvePoint.of(x, value(x), isKnot(x));
+//  }
 
-  default List<CurvePoint> curveValues(int min, int max) {
-    return IntStream.rangeClosed(min, max).boxed()
-        .map(x -> valueForIntX(x))
-        .collect(Collectors.toList());
-  }
+  List<CurvePoint> values(int min, int max);
+//  default List<CurvePoint> values(int min, int max) {
+//    return IntStream.rangeClosed(min, max).boxed()
+//        .map(x -> valueForIntX(x))
+//        .collect(Collectors.toList());
+//  }
 }

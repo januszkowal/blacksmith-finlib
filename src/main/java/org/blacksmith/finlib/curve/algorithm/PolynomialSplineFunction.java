@@ -1,20 +1,28 @@
 package org.blacksmith.finlib.curve.algorithm;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.blacksmith.finlib.curve.types.CurvePoint;
+
 public class PolynomialSplineFunction implements PolynomialFunction {
   private final double[] knots;
   private final Polynomial[] polynomials;
+  private final int lastPolynomialIndex;
 
   public PolynomialSplineFunction(double[] knots, Polynomial[] polynomials) {
     this.knots = new double[knots.length];
     this.polynomials = new Polynomial[polynomials.length];
     System.arraycopy(knots, 0, this.knots, 0, knots.length);
     System.arraycopy(polynomials, 0, this.polynomials, 0, polynomials.length);
+    this.lastPolynomialIndex = Math.min(polynomials.length - 1, knots.length - 1);
   }
 
   @Override
   public double value(double x) {
-    int index = AlgorithmUtils.getKnotIndex(this.knots, x);
-    return valueForPolynomial(index, x);
+    int index = getKnotIndex(x);
+    return polynomialValue(index, x);
   }
 
   @Override
@@ -24,18 +32,29 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     return out;
   }
 
-//  @Override
-//  public List<CurvePoint> curveValuesR(int min, int max) {
-//    List<CurvePoint> points = new ArrayList<>(max - min + 1);
-//    var ranges = AlgorithmUtils.getCalculationRanges(min, max, getKnots(), polynomials.length);
-//    for (AlgorithmUtils.CalcRange range : ranges) {
-//      points.add(CurvePoint.of(range.start, valueYInd(range.knotIndex, range.start), true));
-//      for (int j = range.start + 1; j <= range.end; j++) {
-//        points.add(CurvePoint.of(j, valueYInd(range.knotIndex, j), false));
-//      }
-//    }
-//    return points;
-//  }
+  //@Override
+  public List<CurvePoint> valuesForRange(int min, int max) {
+    List<CurvePoint> points = new ArrayList<>(max - min + 1);
+    var ranges = AlgorithmUtils.getCalculationRanges(min, max, getKnots(), polynomials.length);
+    for (AlgorithmUtils.CalcRange range : ranges) {
+      points.add(CurvePoint.of(range.start, polynomialValue(range.knotIndex, range.start), true));
+      for (int j = range.start + 1; j <= range.end; j++) {
+        points.add(CurvePoint.of(j, polynomialValue(range.knotIndex, j), false));
+      }
+    }
+    return points;
+  }
+
+  public int getKnotIndex(double key) {
+    int index = Arrays.binarySearch(this.knots, key);
+    if (index < 0) {
+      index = -index - 2;
+    }
+    if (index > lastPolynomialIndex) {
+      index = lastPolynomialIndex;
+    }
+    return index;
+  }
 
   public static class Polynomial {
     double[] coefficients;
@@ -66,11 +85,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     }
   }
 
-  protected double valueForPolynomial(int index, double x) {
-    if (index >= polynomials.length ) {
-      index = polynomials.length - 1;
-    }
-    var v = x - knots[index];
-    return polynomials[index].value(v);
+  protected double polynomialValue(int index, double x) {
+    return polynomials[index].value(x - knots[index]);
   }
 }

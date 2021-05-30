@@ -11,7 +11,7 @@ import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.curve.types.Point2D;
 
 public class CurveFunctionFactory {
-  public PolynomialFunction getFunction(AlgorithmType curveType, double[] xvals, double[] yvals) {
+  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xvals, double[] yvals) {
     PolynomialFunction curveFunction = null;
     if (curveType == AlgorithmType.AKIMA_SPLINE_BLACKSMITH) {
       curveFunction = new AkimaSplineInterpolator().interpolate(xvals, yvals);
@@ -49,13 +49,13 @@ public class CurveFunctionFactory {
     return curveFunction;
   }
 
-  public CurveFunction getFunction(AlgorithmType type, List<Knot> knots) {
+  public CurveFunction getCurveFunction(AlgorithmType type, List<Knot> knots) {
     List<Point2D> knotsPoints = knots.stream()
         .sorted()
         .map(knot -> Point2D.of(knot.getX(), knot.getY()))
         .collect(Collectors.toList());
     var xvals = knotsPoints.stream().mapToDouble(Point2D::getX).toArray();
     var yvals = knotsPoints.stream().mapToDouble(Point2D::getY).toArray();
-    return new CurveFunctionImpl(getFunction(type, xvals, yvals));
+    return new CurveFunctionImpl(getPolynomialFunction(type, xvals, yvals));
   }
 }

@@ -15,4 +15,8 @@ public enum AlgorithmType {
   public String getDescription() {
     return this.description;
   }
+
+  public AlgorithmType fromName(String name) {
+    return Enum.valueOf(AlgorithmType.class, name);
+  }
 }

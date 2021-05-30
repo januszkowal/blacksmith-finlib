@@ -27,16 +27,20 @@ repositories {
 }
 
 dependencies {
+    //main
     compileOnly libs.lombok
     annotationProcessor libs.lombok
     annotationProcessor libs.benchmarkAnnotationProcessors
+    api libs.blacksmithCommons
+    api libs.blacksmithFinlibBasic
+    api libs.slf4jApi
+    api libs.jackson
+    api libs.apacheCommonsCollections
+    api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    //jmh
     jmhAnnotationProcessor libs.benchmarkAnnotationProcessors
-    implementation libs.blacksmithCommons
-    implementation libs.blacksmithFinlibBasic
-    implementation libs.slf4jApi
-    implementation libs.jackson
-    implementation libs.apacheCommonsCollections
-    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    jmhAnnotationProcessor libs.lombok
+    //test
     api libs.groovy
     testAnnotationProcessor libs.lombok
     testAnnotationProcessor libs.benchmarkAnnotationProcessors

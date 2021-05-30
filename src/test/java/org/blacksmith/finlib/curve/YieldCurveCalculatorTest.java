@@ -19,7 +19,7 @@ public class YieldCurveCalculatorTest {
   public void testGenerate() {
     CurveDefinition definition = CurveDefinition.of("BONDS", AlgorithmType.AKIMA_SPLINE_BLACKSMITH, 365);
     List<Knot> knots = create365DayKnots();
-    var curveRates = calculator.calculate(asOfDate, definition, knots);
+    var curveRates = calculator.values(asOfDate, definition, knots);
     curveRates.forEach(rate -> log.info("{}", rate));
   }
 
@@ -37,3 +37,4 @@ public class YieldCurveCalculatorTest {
     return knots;
   }
 }
+
