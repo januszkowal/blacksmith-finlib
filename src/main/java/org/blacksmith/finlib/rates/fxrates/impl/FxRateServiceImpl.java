@@ -18,6 +18,7 @@ import org.blacksmith.finlib.rates.fxrates.FxRateProvider;
 import org.blacksmith.finlib.rates.fxrates.FxRateService;
 import org.blacksmith.finlib.rates.fxrates.FxRateType;
 import org.blacksmith.finlib.rates.marketdata.MarketData;
+import org.blacksmith.finlib.rates.marketdata.MarketDataExtractor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +53,13 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   @Override
-  public FxRate3 getRate3(FxRateId key, LocalDate date) {
+  public <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3.FxRate3Data, R> extractor) {
+    ArgChecker.notNull(extractor, "Extractor must be not null");
+    return extractor.extract(getRate(key, date));
+  }
+
+  @Override
+  public FxRate3 getRate(FxRateId key, LocalDate date) {
     ArgChecker.notNull(key, "Key must be not null");
     ArgChecker.notNull(date, "Date must be not null");
     if (key.getFromCcy().equals(key.getToCcy())) {
@@ -76,7 +83,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private FxCurrencyPair getPair(FxRateId key) {
-    return this.ccyPairProvider.getPair(key.getFromCcy().getCurrencyCode(), key.getToCcy().getCurrencyCode());
+    return this.ccyPairProvider.getPair(key.getFromCcy(), key.getToCcy());
   }
 
   private <R extends FxRateOperations<R>> Optional<R> getSourceFxRate(FxRateId key, LocalDate date,

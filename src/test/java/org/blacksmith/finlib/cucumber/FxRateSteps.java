@@ -70,12 +70,15 @@ public class FxRateSteps {
   @Then("Verify output triple rates")
   public void verifyOutputTripleRates(List<FxRate3Input> inputRates) {
     for (FxRate3Input input : inputRates) {
-      var rate3 = fxRateService.getRate3(input.getKey(), input.getDate());
+      var rate3 = fxRateService.getRate(input.getKey(), input.getDate());
       log.info("Rate {} value {}", input.getKey(), rate3);
       assertNotNull(rate3, input.toString());
       assertThat(rate3.getValue()).describedAs(input.toString())
           .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
           .containsExactly(input.getBuy(), input.getSell(), input.getAvg());
+      assertRate1(input.getBuy().doubleValue(), input.getKey(), input.getDate(), FxRateType.BUY, input.toString()+ "-buy");
+      assertRate1(input.getSell().doubleValue(), input.getKey(), input.getDate(), FxRateType.SELL, input.toString() + "-sell");
+      assertRate1(input.getAvg().doubleValue(), input.getKey(), input.getDate(), FxRateType.AVG, input.toString() + "-avg");
     }
   }
 
@@ -117,6 +120,13 @@ public class FxRateSteps {
             FxRate3RSource.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
                 evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
         .collect(Collectors.toList());
+  }
+
+  private void assertRate1(double rate, FxRateId key, LocalDate date, FxRateType type, String description) {
+    var rate1 = fxRateService.getRate(key, date, type);
+    assertNotNull(rate1, description);
+    assertThat(rate1.getValue()).describedAs(description)
+        .isEqualTo(Rate.of(rate, precision));
   }
 
   private double evaluate(String text) {
