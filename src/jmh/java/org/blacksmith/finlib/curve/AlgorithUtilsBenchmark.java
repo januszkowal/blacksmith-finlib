@@ -44,15 +44,6 @@ public class AlgorithUtilsBenchmark {
     return results;
   }
 
-  @Benchmark
-  public int[] getKnotIndexBlacksmith(Data data) {
-    int[] results = new int[data.max - data.min +1];
-    for (int i = data.min; i <= data.max; i++) {
-      results[i] = AlgorithmUtils.getKnotIndex0(data.knotx, i);
-    }
-    return results;
-  }
-
   private static List<Knot> create365DayKnots() {
     List<Knot> knots = new ArrayList();
     knots.add(Knot.of(0, 2.43d));//1D

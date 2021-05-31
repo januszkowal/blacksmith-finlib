@@ -5,31 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AlgorithmUtils {
-  public static int getKnotIndex0(double[] a, double key) {
-    int low = 0;
-    int high = a.length - 1;
-
-    while (high - low > 1) {
-      int mid = (low + high) >>> 1;
-      double midVal = a[mid];
-      if (midVal < key)
-        low = mid;  // Neither val is NaN, thisVal is smaller
-      else if (midVal > key)
-        high = mid; // Neither val is NaN, thisVal is larger
-      else {
-        long midBits = Double.doubleToLongBits(midVal);
-        long keyBits = Double.doubleToLongBits(key);
-        if (midBits == keyBits)     // Values are equal
-          return mid;             // Key found
-        else if (midBits < keyBits) // (-0.0, 0.0) or (!NaN, NaN)
-          low = mid;
-        else                        // (0.0, -0.0) or (NaN, !NaN)
-          high = mid;
-      }
-    }
-    return low;
-  }
-
   public static int getKnotIndex(double[] a, double key) {
     int index = Arrays.binarySearch(a, key);
     if (index < 0) {
