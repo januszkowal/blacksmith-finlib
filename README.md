@@ -8,7 +8,7 @@ Set of financial libraries
 
 ### 1.1. Foreign Exchange Rates
 
-[Source code see here](src/main/java/org/blacksmith/finlib/rates/fxrates)
+[Source code see here](src/main/java/org/blacksmith/finlib/rates/fxrate)
 
 FxRateService - service that helps converts between currencies.
 ##### How to Exchange Currency

@@ -5,12 +5,30 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AlgorithmUtils {
-  public static int getKnotIndex(double[] a, double key) {
-    int index = Arrays.binarySearch(a, key);
+  public static int getKnotIndex0(double[] a, double key) {
+    int low = 0;
+    int high = a.length - 1;
+
+    while (high >= low) {
+      int mid = (low + high) >>> 1;
+      double midVal = a[mid];
+      if (midVal < key)
+        low = mid + 1;
+      else if (midVal > key)
+        high = mid - 1;
+      else {
+        return mid;
+      }
+    }
+    return low - 1;
+  }
+
+  public static int getKnotIndex(double[] knots, double key) {
+    int index = Arrays.binarySearch(knots, key);
     if (index < 0) {
       index = -index - 2;
     }
-    if (index >= a.length) {
+    if (index >= knots.length) {
       --index;
     }
     return index;
@@ -44,7 +62,7 @@ public class AlgorithmUtils {
 
   public static List<CalcRange> getCalculationRanges(int min, int max, double[] knots, int polynomialLength) {
     List<CalcRange> ranges = new ArrayList<>();
-    int knotIndex = AlgorithmUtils.getKnotIndex(knots, min);
+    int knotIndex = AlgorithmUtils.getKnotIndex0(knots, min);
     if (knotIndex < 0)
       throw new IllegalArgumentException("Invalid calculation range: " + min + " - " + max);
     int rangeStart = min;

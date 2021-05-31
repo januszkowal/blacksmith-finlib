@@ -1,17 +1,18 @@
 Benchmark                                                    (algorithm)  (years)  Mode  Cnt    Score    Error  Units
-CurveCalculatorBenchmark.generateCurve       AKIMA_SPLINE_APACHE_COMMONS        1  avgt   10   10,842 ±  0,244  us/op
-CurveCalculatorBenchmark.generateCurve       AKIMA_SPLINE_APACHE_COMMONS       10  avgt   10  120,546 ± 15,781  us/op
-CurveCalculatorBenchmark.generateCurve           AKIMA_SPLINE_BLACKSMITH        1  avgt   10    9,661 ±  0,335  us/op
-CurveCalculatorBenchmark.generateCurve           AKIMA_SPLINE_BLACKSMITH       10  avgt   10  111,973 ±  2,492  us/op
-CurveCalculatorBenchmark.generateCurve             LINEAR_APACHE_COMMONS        1  avgt   10   11,207 ±  0,306  us/op
-CurveCalculatorBenchmark.generateCurve             LINEAR_APACHE_COMMONS       10  avgt   10  107,822 ±  2,603  us/op
-CurveCalculatorBenchmark.generateCurve                 LINEAR_BLACKSMITH        1  avgt   10    9,892 ±  0,700  us/op
-CurveCalculatorBenchmark.generateCurve                 LINEAR_BLACKSMITH       10  avgt   10  115,487 ±  2,415  us/op
-YieldCurveCalculatorBenchmark.generateCurve  AKIMA_SPLINE_APACHE_COMMONS        1  avgt   10   32,869 ±  0,793  us/op
-YieldCurveCalculatorBenchmark.generateCurve  AKIMA_SPLINE_APACHE_COMMONS       10  avgt   10  321,246 ±  6,619  us/op
-YieldCurveCalculatorBenchmark.generateCurve      AKIMA_SPLINE_BLACKSMITH        1  avgt   10   33,287 ±  1,070  us/op
-YieldCurveCalculatorBenchmark.generateCurve      AKIMA_SPLINE_BLACKSMITH       10  avgt   10  306,771 ±  4,443  us/op
-YieldCurveCalculatorBenchmark.generateCurve        LINEAR_APACHE_COMMONS        1  avgt   10   31,815 ±  0,688  us/op
-YieldCurveCalculatorBenchmark.generateCurve        LINEAR_APACHE_COMMONS       10  avgt   10  311,959 ± 10,283  us/op
-YieldCurveCalculatorBenchmark.generateCurve            LINEAR_BLACKSMITH        1  avgt   10   32,807 ±  0,560  us/op
-YieldCurveCalculatorBenchmark.generateCurve            LINEAR_BLACKSMITH       10  avgt   10  312,782 ±  6,939  us/op
+CurveCalculatorBenchmark.generateCurve       AKIMA_SPLINE_APACHE_COMMONS        1  avgt   10   10,820 ± 1,489  us/op
+CurveCalculatorBenchmark.generateCurve       AKIMA_SPLINE_APACHE_COMMONS       10  avgt   10  116,323 ± 8,330  us/op
+CurveCalculatorBenchmark.generateCurve           AKIMA_SPLINE_BLACKSMITH        1  avgt   10    9,818 ± 0,138  us/op
+CurveCalculatorBenchmark.generateCurve           AKIMA_SPLINE_BLACKSMITH       10  avgt   10  114,567 ± 3,864  us/op
+CurveCalculatorBenchmark.generateCurve             LINEAR_APACHE_COMMONS        1  avgt   10   10,797 ± 0,159  us/op
+CurveCalculatorBenchmark.generateCurve             LINEAR_APACHE_COMMONS       10  avgt   10  109,923 ± 6,253  us/op
+CurveCalculatorBenchmark.generateCurve                 LINEAR_BLACKSMITH        1  avgt   10   10,128 ± 1,145  us/op
+CurveCalculatorBenchmark.generateCurve                 LINEAR_BLACKSMITH       10  avgt   10  102,904 ± 1,156  us/op
+YieldCurveCalculatorBenchmark.generateCurve  AKIMA_SPLINE_APACHE_COMMONS        1  avgt   10   36,845 ±  6,987  us/op
+YieldCurveCalculatorBenchmark.generateCurve  AKIMA_SPLINE_APACHE_COMMONS       10  avgt   10  363,810 ± 33,039  us/op
+YieldCurveCalculatorBenchmark.generateCurve      AKIMA_SPLINE_BLACKSMITH        1  avgt   10   34,170 ±  0,921  us/op
+YieldCurveCalculatorBenchmark.generateCurve      AKIMA_SPLINE_BLACKSMITH       10  avgt   10  340,453 ± 54,151  us/op
+YieldCurveCalculatorBenchmark.generateCurve        LINEAR_APACHE_COMMONS        1  avgt   10   37,027 ±  2,081  us/op
+YieldCurveCalculatorBenchmark.generateCurve        LINEAR_APACHE_COMMONS       10  avgt   10  406,004 ± 83,942  us/op
+YieldCurveCalculatorBenchmark.generateCurve            LINEAR_BLACKSMITH        1  avgt   10   34,499 ±  1,292  us/op
+YieldCurveCalculatorBenchmark.generateCurve            LINEAR_BLACKSMITH       10  avgt   10  312,405 ±  5,506  us/op
+
