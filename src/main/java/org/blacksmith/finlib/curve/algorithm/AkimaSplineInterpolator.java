@@ -7,19 +7,19 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
   }
 
   @Override
-  public PolynomialSplineFunction interpolate(double[] xvals, double[] yvals) {
-    AlgorithmUtils.checkMinSize(xvals, MIN_SIZE);
-    AlgorithmUtils.checkArraysSize(yvals, xvals.length,
-        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xvals.length, yvals.length));
-    AlgorithmUtils.checkIncreasing(xvals, "X-values must increase");
-    int n = xvals.length;
+  public PolynomialSplineFunction interpolate(double[] xVals, double[] yVals) {
+    AlgorithmUtils.checkMinSize(xVals, MIN_SIZE);
+    AlgorithmUtils.checkArraysSize(yVals, xVals.length,
+        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xVals.length, yVals.length));
+    AlgorithmUtils.checkIncreasing(xVals, "X-values must increase");
+    int n = xVals.length;
     /*
      * Shift data by+2 in the array and compute the secants
      * also calcualate extrapolated end point secants
      * */
     double[] secants = new double[n + 3];
     for (int i = 0; i < n - 1; i++) {
-      secants[i + 2] = (yvals[i + 1] - yvals[i]) / (xvals[i + 1] - xvals[i]);
+      secants[i + 2] = (yVals[i + 1] - yVals[i]) / (xVals[i + 1] - xVals[i]);
     }
     secants[1] = 2 * secants[2] - secants[3];
     secants[0] = 2 * secants[1] - secants[2];
@@ -29,8 +29,8 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
      * Compute slopes
      * */
     double a, b;
-    double[] firstDerivatives = new double[xvals.length];
-    for (int i = 0; i < xvals.length; i++) {
+    double[] firstDerivatives = new double[xVals.length];
+    for (int i = 0; i < xVals.length; i++) {
       a = Math.abs(secants[i + 3] - secants[i + 2]);
       b = Math.abs(secants[i + 1] - secants[i]);
       if ((a + b) != 0) {
@@ -43,13 +43,13 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
     double coefficients[] = new double[4];
     double xDelta;
     for (int i = 0; i < n - 1; i++) {
-      xDelta = xvals[i + 1] - xvals[i];
-      coefficients[0] = yvals[i];
+      xDelta = xVals[i + 1] - xVals[i];
+      coefficients[0] = yVals[i];
       coefficients[1] = firstDerivatives[i];
       coefficients[2] = (3.0d * secants[i + 2] - 2.0d * firstDerivatives[i] - firstDerivatives[i + 1]) / xDelta;
       coefficients[3] = (-2.0d * secants[i + 2] + firstDerivatives[i] + firstDerivatives[i + 1]) / (xDelta * xDelta);
       polynomials[i] = new PolynomialSplineFunction.Polynomial(coefficients);
     }
-    return new PolynomialSplineFunction(xvals, polynomials);
+    return new PolynomialSplineFunction(xVals, polynomials);
   }
 }

@@ -45,7 +45,7 @@ public class AlgorithUtilsBenchmark {
   }
 
   @Benchmark
-  public int[] getKnotIndexBlacksmith(Data data) {
+  public int[] getKnotIndexBlacksmithMethod(Data data) {
     int[] results = new int[data.max - data.min +1];
     for (int i = data.min; i <= data.max; i++) {
       results[i] = AlgorithmUtils.getKnotIndex0(data.knotx, i);

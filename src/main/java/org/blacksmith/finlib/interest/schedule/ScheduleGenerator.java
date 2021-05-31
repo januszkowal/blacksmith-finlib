@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
 import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
-import org.blacksmith.finlib.rates.interestrates.InterestRateService;
+import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.policy.AnnuityScheduleAlgorithm;
 import org.blacksmith.finlib.interest.schedule.policy.ScheduleAlgorithm;

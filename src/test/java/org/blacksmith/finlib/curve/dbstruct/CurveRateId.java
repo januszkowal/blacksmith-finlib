@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
-import org.blacksmith.finlib.rates.marketdata.MarketDataId;
+import org.blacksmith.finlib.rate.marketdata.MarketDataId;
 
 import lombok.Value;
 

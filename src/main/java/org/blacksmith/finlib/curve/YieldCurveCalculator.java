@@ -12,8 +12,8 @@ public class YieldCurveCalculator {
   public List<YieldCurveRate> values(LocalDate asOfDate, CurveDefinition curveDefinition, List<Knot> knots) {
     var curveFunction = new CurveFunctionFactory().getCurveFunction(curveDefinition.getAlgorithm(), knots);
 
-    int maxx = knots.stream().mapToInt(Knot::getX).max().getAsInt();
-    var curvePoints = curveFunction.values(0, maxx);
+    int maxX = knots.stream().mapToInt(Knot::getX).max().getAsInt();
+    var curvePoints = curveFunction.values(0, maxX);
     return curvePoints.stream()
         .map(curvePoint -> pointToRate(asOfDate, curveDefinition.getYearLength(), curvePoint))
         .collect(Collectors.toList());

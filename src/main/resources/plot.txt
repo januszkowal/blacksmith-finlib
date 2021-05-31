@@ -1,0 +1,2 @@
+#Plot Akima's from data.csv
+src\main\resources\plot.py -k -f data.csv -c AkimaBlacksmith,AkimaApacheCommons -l 0 -h 100 -t "Curves comparison"

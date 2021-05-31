@@ -11,15 +11,15 @@ import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.curve.types.Point2D;
 
 public class CurveFunctionFactory {
-  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xvals, double[] yvals) {
+  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xVals, double[] yVals) {
     PolynomialFunction curveFunction = null;
     if (curveType == AlgorithmType.AKIMA_SPLINE_BLACKSMITH) {
-      curveFunction = new AkimaSplineInterpolator().interpolate(xvals, yvals);
+      curveFunction = new AkimaSplineInterpolator().interpolate(xVals, yVals);
     } else if (curveType == AlgorithmType.LINEAR_BLACKSMITH) {
-      curveFunction = new LinearInterpolator().interpolate(xvals, yvals);
+      curveFunction = new LinearInterpolator().interpolate(xVals, yVals);
     } else if (curveType == AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
-          new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xvals, yvals);
+          new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xVals, yVals);
       curveFunction = new PolynomialFunction() {
         @Override
         public double value(double x) {
@@ -33,7 +33,7 @@ public class CurveFunctionFactory {
       };
     } else if (curveType == AlgorithmType.LINEAR_APACHE_COMMONS) {
       var linearApacheCommonsInterpolatorFunction =
-          new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xvals, yvals);
+          new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xVals, yVals);
       curveFunction = new PolynomialFunction() {
         @Override
         public double value(double x) {

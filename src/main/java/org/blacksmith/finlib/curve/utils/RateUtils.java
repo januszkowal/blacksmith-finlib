@@ -14,7 +14,7 @@ public class RateUtils {
     return Math.exp((-rate*len)/yearLength);
   }
 
-  public static double getFra(LocalDate asOfDate, LocalDate d1, LocalDate d2, double dcf1, double dcf2, int yearLength) {
+  public static double calculateFra(LocalDate asOfDate, LocalDate d1, LocalDate d2, double dcf1, double dcf2, int yearLength) {
     long l1 = DateUtils.daysBetween(d1, asOfDate);
     long l2 = DateUtils.daysBetween(d2, asOfDate);
     if(dcf2 == 0)

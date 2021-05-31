@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.cucumber;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.List;
@@ -8,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.datetime.Frequency;
+import org.blacksmith.finlib.cucumber.dto.ConventionInput;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
 
@@ -49,12 +49,12 @@ public class DayConventionSteps {
 
   @Then("Day Convention verification")
   public void verifySchedule1(List<ConventionInput> input) {
-    input.forEach(i -> {
+    input.forEach(in -> {
       log.info("calculate row");
-      assertEquals(i.getDays(), convention.days(i.getStartDate(), i.getEndDate(), i.scheduleInfo),
-          () -> MessageFormat.format("days for startDate={0} endDate={1}", i.getStartDate(), i.getEndDate()));
-      assertEquals(i.getFraction(), convention.yearFraction(i.getStartDate(), i.getEndDate(), i.scheduleInfo),
-          () -> MessageFormat.format("fraction for startDate={0} endDate={1}", i.getStartDate(), i.getEndDate()));
+      assertEquals(in.getDays(), convention.days(in.getStartDate(), in.getEndDate(), in.getScheduleInfo()),
+          () -> MessageFormat.format("days for startDate={0} endDate={1}", in.getStartDate(), in.getEndDate()));
+      assertEquals(in.getFraction(), convention.yearFraction(in.getStartDate(), in.getEndDate(), in.getScheduleInfo()),
+          () -> MessageFormat.format("fraction for startDate={0} endDate={1}", in.getStartDate(), in.getEndDate()));
     });
   }
 

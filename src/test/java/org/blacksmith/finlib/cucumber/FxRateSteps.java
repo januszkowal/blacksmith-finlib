@@ -8,16 +8,18 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataInMemoryProviderImpl;
-import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
-import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
-import org.blacksmith.finlib.rates.fxrates.FxRate3;
-import org.blacksmith.finlib.rates.fxrates.FxRate3RSource;
-import org.blacksmith.finlib.rates.fxrates.FxRateId;
-import org.blacksmith.finlib.rates.fxrates.FxRateService;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
-import org.blacksmith.finlib.rates.fxrates.FxRateType;
+import org.blacksmith.finlib.cucumber.dto.FxRate1Input;
+import org.blacksmith.finlib.cucumber.dto.FxRate3Input;
+import org.blacksmith.finlib.rate.fxrate.impl.FxRateMarketDataInMemoryProviderImpl;
+import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
+import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
+import org.blacksmith.finlib.rate.fxrate.FxRate3;
+import org.blacksmith.finlib.rate.fxrate.FxRate3RSource;
+import org.blacksmith.finlib.rate.fxrate.FxRateId;
+import org.blacksmith.finlib.rate.fxrate.FxRateService;
+import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
+import org.blacksmith.finlib.rate.fxrate.FxRateType;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
@@ -70,12 +72,15 @@ public class FxRateSteps {
   @Then("Verify output triple rates")
   public void verifyOutputTripleRates(List<FxRate3Input> inputRates) {
     for (FxRate3Input input : inputRates) {
-      var rate3 = fxRateService.getRate3(input.getKey(), input.getDate());
+      var rate3 = fxRateService.getRate(input.getKey(), input.getDate());
       log.info("Rate {} value {}", input.getKey(), rate3);
       assertNotNull(rate3, input.toString());
       assertThat(rate3.getValue()).describedAs(input.toString())
           .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
           .containsExactly(input.getBuy(), input.getSell(), input.getAvg());
+      assertRate1(input.getBuy().doubleValue(), input.getKey(), input.getDate(), FxRateType.BUY, input.toString()+ "-buy");
+      assertRate1(input.getSell().doubleValue(), input.getKey(), input.getDate(), FxRateType.SELL, input.toString() + "-sell");
+      assertRate1(input.getAvg().doubleValue(), input.getKey(), input.getDate(), FxRateType.AVG, input.toString() + "-avg");
     }
   }
 
@@ -117,6 +122,13 @@ public class FxRateSteps {
             FxRate3RSource.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
                 evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
         .collect(Collectors.toList());
+  }
+
+  private void assertRate1(double rate, FxRateId key, LocalDate date, FxRateType type, String description) {
+    var rate1 = fxRateService.getRate(key, date, type);
+    assertNotNull(rate1, description);
+    assertThat(rate1.getValue()).describedAs(description)
+        .isEqualTo(Rate.of(rate, precision));
   }
 
   private double evaluate(String text) {

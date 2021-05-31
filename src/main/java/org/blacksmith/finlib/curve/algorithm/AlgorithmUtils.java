@@ -9,33 +9,26 @@ public class AlgorithmUtils {
     int low = 0;
     int high = a.length - 1;
 
-    while (high - low > 1) {
+    while (high >= low) {
       int mid = (low + high) >>> 1;
       double midVal = a[mid];
       if (midVal < key)
-        low = mid;  // Neither val is NaN, thisVal is smaller
+        low = mid + 1;
       else if (midVal > key)
-        high = mid; // Neither val is NaN, thisVal is larger
+        high = mid - 1;
       else {
-        long midBits = Double.doubleToLongBits(midVal);
-        long keyBits = Double.doubleToLongBits(key);
-        if (midBits == keyBits)     // Values are equal
-          return mid;             // Key found
-        else if (midBits < keyBits) // (-0.0, 0.0) or (!NaN, NaN)
-          low = mid;
-        else                        // (0.0, -0.0) or (NaN, !NaN)
-          high = mid;
+        return mid;
       }
     }
-    return low;
+    return low - 1;
   }
 
-  public static int getKnotIndex(double[] a, double key) {
-    int index = Arrays.binarySearch(a, key);
+  public static int getKnotIndex(double[] knots, double key) {
+    int index = Arrays.binarySearch(knots, key);
     if (index < 0) {
       index = -index - 2;
     }
-    if (index >= a.length) {
+    if (index >= knots.length) {
       --index;
     }
     return index;
@@ -69,7 +62,7 @@ public class AlgorithmUtils {
 
   public static List<CalcRange> getCalculationRanges(int min, int max, double[] knots, int polynomialLength) {
     List<CalcRange> ranges = new ArrayList<>();
-    int knotIndex = AlgorithmUtils.getKnotIndex(knots, min);
+    int knotIndex = AlgorithmUtils.getKnotIndex0(knots, min);
     if (knotIndex < 0)
       throw new IllegalArgumentException("Invalid calculation range: " + min + " - " + max);
     int rangeStart = min;
