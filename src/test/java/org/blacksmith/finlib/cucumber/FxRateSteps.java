@@ -8,16 +8,16 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateMarketDataInMemoryProviderImpl;
-import org.blacksmith.finlib.rates.marketdata.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rates.marketdata.MarketDataWrapper;
-import org.blacksmith.finlib.rates.fxccypair.FxCurrencyPair;
-import org.blacksmith.finlib.rates.fxrates.FxRate3;
-import org.blacksmith.finlib.rates.fxrates.FxRate3RSource;
-import org.blacksmith.finlib.rates.fxrates.FxRateId;
-import org.blacksmith.finlib.rates.fxrates.FxRateService;
-import org.blacksmith.finlib.rates.fxrates.impl.FxRateServiceImpl;
-import org.blacksmith.finlib.rates.fxrates.FxRateType;
+import org.blacksmith.finlib.rate.fxrate.impl.FxRateMarketDataInMemoryProviderImpl;
+import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
+import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
+import org.blacksmith.finlib.rate.fxrate.FxRate3;
+import org.blacksmith.finlib.rate.fxrate.FxRate3RSource;
+import org.blacksmith.finlib.rate.fxrate.FxRateId;
+import org.blacksmith.finlib.rate.fxrate.FxRateService;
+import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
+import org.blacksmith.finlib.rate.fxrate.FxRateType;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;

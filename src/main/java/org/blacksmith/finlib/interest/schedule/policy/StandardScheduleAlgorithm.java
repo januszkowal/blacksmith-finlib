@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.blacksmith.commons.counter.BooleanStateCounter;
-import org.blacksmith.finlib.rates.interestrates.InterestRateService;
+import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.ScheduleParameters;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.events.RateResetEvent;

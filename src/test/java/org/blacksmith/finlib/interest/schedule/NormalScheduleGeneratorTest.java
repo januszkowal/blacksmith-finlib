@@ -18,7 +18,7 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
 import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
-import org.blacksmith.finlib.rates.interestrates.InterestRateService;
+import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.interest.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableGeneratorFactory;
