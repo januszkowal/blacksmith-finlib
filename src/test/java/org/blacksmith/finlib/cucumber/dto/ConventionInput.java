@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.cucumber;
+package org.blacksmith.finlib.cucumber.dto;
 
 import java.time.LocalDate;
 
