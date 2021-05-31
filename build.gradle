@@ -38,8 +38,8 @@ dependencies {
     api libs.apacheCommonsCollections
     api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     //jmh
-    jmhAnnotationProcessor libs.benchmarkAnnotationProcessors
     jmhAnnotationProcessor libs.lombok
+    jmhAnnotationProcessor libs.benchmarkAnnotationProcessors
     //test
     api libs.groovy
     testAnnotationProcessor libs.lombok

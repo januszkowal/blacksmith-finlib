@@ -21,7 +21,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
 
   @Override
   public double value(double x) {
-    int index = getKnotIndex(x);
+    int index = getKnotIndex0(x);
     return polynomialValue(index, x);
   }
 
@@ -56,11 +56,8 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     return index;
   }
 
-  public int getKnotIndex(double key) {
+  public int getKnotIndex0(double key) {
     int index = AlgorithmUtils.getKnotIndex0(this.knots, key);
-    if (index < 0) {
-      index = -index - 2;
-    }
     if (index > lastKPIndex) {
       index = lastKPIndex;
     }
@@ -82,11 +79,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
       System.arraycopy(coefficients, 0, this.coefficients, 0, n);
     }
 
-    public double value(double x) {
-      return evaluate(coefficients, x);
-    }
-
-    private double evaluate(double[] coefficients, double x) {
+    public double evaluate(double x) {
       int n = coefficients.length;
       double result = coefficients[n - 1];
       for (int i = n - 2; i >= 0; i--) {
@@ -97,6 +90,6 @@ public class PolynomialSplineFunction implements PolynomialFunction {
   }
 
   protected double polynomialValue(int index, double x) {
-    return polynomials[index].value(x - knots[index]);
+    return polynomials[index].evaluate(x - knots[index]);
   }
 }
