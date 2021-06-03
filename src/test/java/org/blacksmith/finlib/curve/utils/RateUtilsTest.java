@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RateUtilsTest {
-  LocalDate date = LocalDate.of(2021, 5, 31);
   final LocalDate date = LocalDate.of(2021, 5, 31);
   @Test
   public void zeroDayDcf() {

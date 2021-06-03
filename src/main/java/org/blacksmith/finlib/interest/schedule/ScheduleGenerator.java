@@ -2,10 +2,8 @@ package org.blacksmith.finlib.interest.schedule;
 
 import java.util.List;
 
-import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
-import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
-import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
+import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.policy.AnnuityScheduleAlgorithm;
 import org.blacksmith.finlib.interest.schedule.policy.ScheduleAlgorithm;
@@ -13,7 +11,6 @@ import org.blacksmith.finlib.interest.schedule.policy.StandardScheduleAlgorithm;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableInterestEntry;
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
-import org.blacksmith.finlib.rate.intrate.InterestRateService;
 
 import lombok.extern.slf4j.Slf4j;
 
