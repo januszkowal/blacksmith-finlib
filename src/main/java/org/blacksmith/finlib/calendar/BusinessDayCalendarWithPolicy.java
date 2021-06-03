@@ -3,13 +3,11 @@ package org.blacksmith.finlib.calendar;
 import java.time.LocalDate;
 
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
 
 public class BusinessDayCalendarWithPolicy implements BusinessDayCalendar {
   private final HolidayPolicy holidayPolicy;
 
-  public BusinessDayCalendarWithPolicy(org.blacksmith.finlib.basic.calendar.HolidayPolicy holidayPolicy) {
+  public BusinessDayCalendarWithPolicy(HolidayPolicy holidayPolicy) {
     ArgChecker.notNull(holidayPolicy, "Null holiday policy not allowed");
     this.holidayPolicy = holidayPolicy;
   }

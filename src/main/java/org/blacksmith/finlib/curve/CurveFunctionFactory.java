@@ -11,15 +11,15 @@ import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.curve.types.Point2D;
 
 public class CurveFunctionFactory {
-  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xVals, double[] yVals) {
+  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xValues, double[] yValues) {
     PolynomialFunction curveFunction = null;
     if (curveType == AlgorithmType.AKIMA_SPLINE_BLACKSMITH) {
-      curveFunction = new AkimaSplineInterpolator().interpolate(xVals, yVals);
+      curveFunction = new AkimaSplineInterpolator().interpolate(xValues, yValues);
     } else if (curveType == AlgorithmType.LINEAR_BLACKSMITH) {
-      curveFunction = new LinearInterpolator().interpolate(xVals, yVals);
+      curveFunction = new LinearInterpolator().interpolate(xValues, yValues);
     } else if (curveType == AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
-          new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xVals, yVals);
+          new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xValues, yValues);
       curveFunction = new PolynomialFunction() {
         @Override
         public double value(double x) {
@@ -33,7 +33,7 @@ public class CurveFunctionFactory {
       };
     } else if (curveType == AlgorithmType.LINEAR_APACHE_COMMONS) {
       var linearApacheCommonsInterpolatorFunction =
-          new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xVals, yVals);
+          new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xValues, yValues);
       curveFunction = new PolynomialFunction() {
         @Override
         public double value(double x) {
@@ -54,8 +54,8 @@ public class CurveFunctionFactory {
         .sorted()
         .map(knot -> Point2D.of(knot.getX(), knot.getY()))
         .collect(Collectors.toList());
-    var xvals = knotsPoints.stream().mapToDouble(Point2D::getX).toArray();
-    var yvals = knotsPoints.stream().mapToDouble(Point2D::getY).toArray();
-    return new CurveFunctionImpl(getPolynomialFunction(type, xvals, yvals));
+    var xValues = knotsPoints.stream().mapToDouble(Point2D::getX).toArray();
+    var yValues = knotsPoints.stream().mapToDouble(Point2D::getY).toArray();
+    return new CurveFunctionImpl(getPolynomialFunction(type, xValues, yValues));
   }
 }

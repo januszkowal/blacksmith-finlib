@@ -23,7 +23,7 @@ public class FunctionValue {
 
   public double getPartialDerivative(int derivative) {
     ArgChecker.isTrue(derivative > 0 && derivative <= derivatives.length,
-        () -> MessageFormat.format("Derivative number must be in range 1-{0}", derivatives.length));
+        () -> MessageFormat.format("Derivative number must be in range 1-{0} but is {1}", derivative, derivatives.length));
     return derivatives[derivative - 1];
   }
 

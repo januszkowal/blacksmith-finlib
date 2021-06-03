@@ -63,7 +63,7 @@ public class CurveCalculatorBenchmark {
   }
 
   private static List<Knot> createKnots1Y() {
-    return List.of(Knot.of(0, 2.43d),
+    return List.of(Knot.of(0, 2.40d),
         Knot.of(1, 2.50d),
         Knot.of(7, 3.07d),
         Knot.of(14, 3.36d),

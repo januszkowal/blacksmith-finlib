@@ -8,10 +8,10 @@ import lombok.Value;
 @ToString
 @Value
 class FxCurrencyPairInternal {
-  private final FxRateId fxRateId;
-  private final boolean isCross;
-  private final boolean isDirect;
-  private final double factor;
+  FxRateId fxRateId;
+  boolean isCross;
+  boolean isDirect;
+  double factor;
 
   public FxCurrencyPairInternal(FxRateId fxRateId, boolean isCross, boolean isDirect, double factor) {
     this.fxRateId = fxRateId;

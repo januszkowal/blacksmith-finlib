@@ -3,7 +3,7 @@ package org.blacksmith.finlib.interest.schedule;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
+import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
 import org.blacksmith.finlib.interest.schedule.timetable.TermTimetableGenerator;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableGeneratorFactory;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class TermTimetableGeneratorTest {
   @Test
   public void termSchedule1() {
     var scheduleParameters = ScheduleParameters.builder()
-        .algorithm(InterestAlgoritm.SIMPLE)
+        .algorithm(InterestAlgorithm.SIMPLE)
         .firstCouponDate(LocalDate.of(2019, 1, 1))
         .startDate(LocalDate.of(2019, 1, 3))
         .maturityDate(LocalDate.of(2019, 2, 1))
@@ -32,7 +32,7 @@ public class TermTimetableGeneratorTest {
   @Test
   public void termSchedule2() {
     var scheduleParameters = ScheduleParameters.builder()
-        .algorithm(InterestAlgoritm.SIMPLE)
+        .algorithm(InterestAlgorithm.SIMPLE)
         .firstCouponDate(LocalDate.of(2019, 2, 1))
         .startDate(LocalDate.of(2019, 2, 1))
         .maturityDate(LocalDate.of(2019, 2, 1))
@@ -50,7 +50,7 @@ public class TermTimetableGeneratorTest {
   @Test
   public void termSchedule3() {
     var scheduleParameters = ScheduleParameters.builder()
-        .algorithm(InterestAlgoritm.SIMPLE)
+        .algorithm(InterestAlgorithm.SIMPLE)
         .firstCouponDate(LocalDate.of(2019, 1, 1))
         .startDate(LocalDate.of(2019, 1, 3))
         .maturityDate(LocalDate.of(2019, 2, 1))

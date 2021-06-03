@@ -1,6 +1,5 @@
 package org.blacksmith.finlib.curve;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -25,45 +24,42 @@ import lombok.extern.slf4j.Slf4j;
 @Fork(2)
 @Warmup(iterations = 3)
 @Measurement(iterations = 5)
-public class AlgorithUtilsBenchmark {
-  @State(Scope.Benchmark)
-  public static class Data
-  {
-    List<Knot> knots = create365DayKnots();
-    double[] knotx = knots.stream().mapToDouble(Knot::getX).toArray();
-    int min = knots.stream().mapToInt(Knot::getX).min().getAsInt();
-    int max = knots.stream().mapToInt(Knot::getX).max().getAsInt();
+public class AlgorithmUtilsBenchmark {
+  private static List<Knot> create365DayKnots() {
+    return List.of(Knot.of(0, 2.43d),
+        Knot.of(1, 2.50d),
+        Knot.of(7, 3.07d),
+        Knot.of(14, 3.36d),
+        Knot.of(30, 3.71d),
+        Knot.of(90, 4.27d),
+        Knot.of(182, 4.38d),
+        Knot.of(273, 4.47d),
+        Knot.of(365, 4.52d));
   }
 
   @Benchmark
   public int[] getKnotIndexArraysMethod(Data data) {
-    int[] results = new int[data.max - data.min +1];
+    int[] results = new int[data.max - data.min + 1];
     for (int i = data.min; i <= data.max; i++) {
-      results[i] = AlgorithmUtils.getKnotIndex(data.knotx, i);
+      results[i] = AlgorithmUtils.getKnotIndex(data.knotArray, i);
     }
     return results;
   }
 
   @Benchmark
   public int[] getKnotIndexBlacksmithMethod(Data data) {
-    int[] results = new int[data.max - data.min +1];
+    int[] results = new int[data.max - data.min + 1];
     for (int i = data.min; i <= data.max; i++) {
-      results[i] = AlgorithmUtils.getKnotIndex0(data.knotx, i);
+      results[i] = AlgorithmUtils.getKnotIndex0(data.knotArray, i);
     }
     return results;
   }
 
-  private static List<Knot> create365DayKnots() {
-    List<Knot> knots = new ArrayList();
-    knots.add(Knot.of(0, 2.43d));//1D
-    knots.add(Knot.of(1, 2.50d));//1D
-    knots.add(Knot.of(7, 3.07d));//1D
-    knots.add(Knot.of(14, 3.36d));//1W
-    knots.add(Knot.of(30, 3.71d));//2W
-    knots.add(Knot.of(90, 4.27d));//1M
-    knots.add(Knot.of(182, 4.38d));//6M
-    knots.add(Knot.of(273, 4.47d));//6M
-    knots.add(Knot.of(365, 4.52d));//1Y
-    return knots;
+  @State(Scope.Benchmark)
+  public static class Data {
+    final List<Knot> knotList = create365DayKnots();
+    final double[] knotArray = knotList.stream().mapToDouble(Knot::getX).toArray();
+    final int min = knotList.stream().mapToInt(Knot::getX).min().getAsInt();
+    final int max = knotList.stream().mapToInt(Knot::getX).max().getAsInt();
   }
 }

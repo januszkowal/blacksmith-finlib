@@ -8,9 +8,9 @@ import lombok.Value;
 
 @Value
 public class FxRateId implements MarketDataId {
-  private final String table;
-  private final Currency fromCcy;
-  private final Currency toCcy;
+  String table;
+  Currency fromCcy;
+  Currency toCcy;
 
   public FxRateId(String table, Currency fromCcy, Currency toCcy) {
     ArgChecker.notEmpty(table);

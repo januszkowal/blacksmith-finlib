@@ -39,8 +39,8 @@ public class FxRate3RSource implements MarketData<FxRate3RSource.FxRate3RawValue
 
   @Value(staticConstructor = "of")
   public static class FxRate3RawValue {
-    private final Rate buy;
-    private final Rate sell;
-    private final Rate avg;
+    Rate buy;
+    Rate sell;
+    Rate avg;
   }
 }

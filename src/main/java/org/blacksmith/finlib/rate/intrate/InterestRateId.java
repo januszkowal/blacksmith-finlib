@@ -9,11 +9,11 @@ import lombok.Value;
 @Value(staticConstructor = "of")
 public class InterestRateId implements MarketDataId {
   //table
-  public final String table;
+  String table;
   //period
-  public final String period;
+  String period;
   //currency
-  public final Currency currency;
+  Currency currency;
 
   public InterestRateId(String table, String period, Currency currency) {
     ArgChecker.notEmpty(table, "Interest table cant be empty");

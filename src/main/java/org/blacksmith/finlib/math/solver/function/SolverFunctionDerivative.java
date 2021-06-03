@@ -2,6 +2,7 @@ package org.blacksmith.finlib.math.solver.function;
 
 public interface SolverFunctionDerivative extends SolverFunction {
   default FunctionValue computeValueAndDerivatives(double arg) {
+    String ccc = this.getClass().toString();
     double[] derivatives = new double[numberOfDerivatives()];
     for (int i = 0; i < numberOfDerivatives(); i++) {
       derivatives[i] = computeDerivative(i + 1, arg);

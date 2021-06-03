@@ -8,7 +8,7 @@ Set of financial libraries
 
 ### 1.1. Foreign Exchange Rates
 
-[Source code see here](src/main/java/org/blacksmith/finlib/rates/fxrate)
+[Source code see here](src/main/java/org/blacksmith/finlib/rate/fxrate)
 
 FxRateService - service that helps converts between currencies.
 ##### How to Exchange Currency
@@ -21,8 +21,8 @@ Quotation in other words defines how amount in one currency can be translated to
 One of the concepts describing quotation is the Currency Pair. 
 
 Currency Pair has the following attributes:
-- base currency - is the currency we convert from, eg. EUR, USD, JPY
-- counter currency - is the currency we convert to, eg. EUR, USD, JPY
+- base currency - is the currency we convert from, e.g. EUR, USD, JPY
+- counter currency - is the currency we convert to, e.g. EUR, USD, JPY
 - factor - defines additional factor. Some pairs, e.g. USD/JPY HUF/PLN are quoted at 100 to avoid low/high numbers
 - cross flag - if true, then exchange rate is be calculated using three currencies: base, counter and domestic
 
@@ -184,16 +184,16 @@ How to use? Look at the tests
 The Akima spline algorithm was published by Hiroshi Akima in 1970. It could be particularly useful for Interpolation and smooth Curve Fitting.
 
 This method avoids overshooting issues common with many other splines (e.g., cubic splines), resulting in a more natural curve.
-Blacksmith implementation of Akima Polynominal algorithm is based on original paper of Hiroshi Akima, and it behaves more predictably than Apache Commons, and the difference is visible around inflection points.
+Blacksmith implementation of Akima Polynomial algorithm is based on original paper of Hiroshi Akima, and it behaves more predictably than Apache Commons, and the difference is visible around inflection points.
 
-![Akima algorithsm - with infleciton point](doc/akima_full.png)
+![Akima algorithm - with inflection point](doc/akima_full.png)
 
 Figure 1. Full Chart - 365 days
 
-![Akima algorithsm - with infleciton point](doc/akima_with_inflection_point.png)
+![Akima algorithm - with inflection point](doc/akima_with_inflection_point.png)
 
 Figure 2. 20 days - case with inflection point
 
-![Akima algorithsm - without infleciton point](doc/akima_without_inflection_point.png)
+![Akima algorithm - without inflection point](doc/akima_without_inflection_point.png)
 
 Figure 3. 20 days - case without inflection point

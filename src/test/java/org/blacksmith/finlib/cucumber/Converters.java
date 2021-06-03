@@ -34,7 +34,7 @@ public class Converters {
     final Matcher matcher = compile.matcher(strings);
     List<String> result = new ArrayList<>();
     while (matcher.find()) {
-      String item = "";
+      String item;
       if (matcher.group(1) == null) {
         item = matcher.group(0).replace("\"", "");
       } else {

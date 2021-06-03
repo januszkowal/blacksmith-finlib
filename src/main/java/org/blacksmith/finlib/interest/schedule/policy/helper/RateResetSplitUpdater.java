@@ -34,13 +34,13 @@ public class RateResetSplitUpdater implements ScheduleUpdater {
     //remove splits
     for (InterestEvent cashflow : cashflows) {
       if (cashflow.getSubEvents().size() > 1) {
-        List<LocalDate> redudantResets = IntStream.range(1, cashflow.getSubEvents().size())
-            .mapToObj(rridx -> cashflow.getSubEvents().get(rridx))
+        List<LocalDate> redundantResets = IntStream.range(1, cashflow.getSubEvents().size())
+            .mapToObj(rateResetId -> cashflow.getSubEvents().get(rateResetId))
             .filter(rr -> !rr.isRateReset())
             .filter(rr -> !principalsHolder.contains(rr.getStartDate()))
             .map(RateResetEvent::getStartDate)
             .collect(Collectors.toList());
-        redudantResets.forEach(resetDate -> stateCounter.update(cashflow.consolidateSubEvent(resetDate)));
+        redundantResets.forEach(resetDate -> stateCounter.update(cashflow.consolidateSubEvent(resetDate)));
       }
 
     }

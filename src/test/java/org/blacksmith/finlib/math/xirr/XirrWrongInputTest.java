@@ -17,7 +17,7 @@ public class XirrWrongInputTest {
   public void xirr_no_transactions() {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       // throws exception when no transactions are passed
-      new XirrCalculator<>(null).xirr(Collections.emptyList());
+      new XirrCalculator(null).xirr(Collections.emptyList());
       fail("Expected exception for empty transaction list");
     });
   }
@@ -26,7 +26,7 @@ public class XirrWrongInputTest {
   public void xirr_one_transaction() {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       // throws exception when only one transaction is passed
-      new XirrCalculator<>(null).xirr(List.of(Cashflow.of(LocalDate.of(2010, 1, 1), -1000)));
+      new XirrCalculator(null).xirr(List.of(Cashflow.of(LocalDate.of(2010, 1, 1), -1000)));
       fail("Expected exception for only one transaction");
     });
   }
@@ -36,7 +36,7 @@ public class XirrWrongInputTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       // throws an exception when all transactions are on the same day
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new XirrCalculator<>(null, null).xirr(List.of(
+      new XirrCalculator(null, null).xirr(List.of(
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-01-01"), 2100)
@@ -50,7 +50,7 @@ public class XirrWrongInputTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       // throws an exception when all transactions are negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new XirrCalculator<>(BiSectionSolverBuilder.builder().build(), null).xirr(List.of(
+      new XirrCalculator(BiSectionSolverBuilder.builder().build(), null).xirr(List.of(
           Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), -1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), -2000)
@@ -64,7 +64,7 @@ public class XirrWrongInputTest {
     Assertions.assertThrows(IllegalArgumentException.class, () -> {
       // throws an exception when all transactions are non-negative
       final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-      new XirrCalculator<>(BiSectionSolverBuilder.builder().build(), null).xirr(List.of(
+      new XirrCalculator(BiSectionSolverBuilder.builder().build(), null).xirr(List.of(
           Cashflow.of(LocalDate.parse("2010-01-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-05-01"), 1000),
           Cashflow.of(LocalDate.parse("2010-09-01"), 0)

@@ -3,12 +3,12 @@ package org.blacksmith.finlib.math.solver;
 import java.util.Map;
 
 import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BiSectionSolver extends AbstractSolver<SolverFunctionDerivative> {
+public class BiSectionSolver extends AbstractSolver<SolverFunction> implements Solver<SolverFunction> {
 
   private final double minArg;
   private final double maxArg;
@@ -20,7 +20,7 @@ public class BiSectionSolver extends AbstractSolver<SolverFunctionDerivative> {
   }
 
   @Override
-  public double solve(SolverFunctionDerivative function, double target, double guess) {
+  public double solve(SolverFunction function, double target, double guess) {
     this.function = function;
     reset();
     double a = minArg;
@@ -57,6 +57,7 @@ public class BiSectionSolver extends AbstractSolver<SolverFunctionDerivative> {
         "maxArg", maxArg,
         "initialCandidate", getInitialCandidate(),
         "iterations", getIterations(),
+        "tolerance", getTolerance(),
         "candidate", getCandidate(),
         "functionValue", getFunctionValue());
   }
@@ -65,7 +66,8 @@ public class BiSectionSolver extends AbstractSolver<SolverFunctionDerivative> {
   public String toString() {
     return '{'
         + "initialCandidate=" + initialCandidate
-        + ", iterations=" + this.getIteractions()
+        + ", iterations=" + this.getIterations()
+        + ", tolerance=" + getTolerance()
         + ", candidate=" + this.getCandidate()
         + ", functionValue=" + this.getFunctionValue() + '}';
   }

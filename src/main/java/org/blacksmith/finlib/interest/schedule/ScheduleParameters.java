@@ -2,13 +2,13 @@ package org.blacksmith.finlib.interest.schedule;
 
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
+import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
-import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
+import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
 import org.blacksmith.finlib.interest.basis.InterestBasis;
 
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class ScheduleParameters {
   private BusinessDayConvention businessDayConvention;
   private BusinessDayCalendar businessDayCalendar;
   @Builder.Default
-  private InterestAlgoritm algorithm = InterestAlgoritm.SIMPLE;
+  private InterestAlgorithm algorithm = InterestAlgorithm.SIMPLE;
   @Builder.Default
   private boolean linkCouponLengthWitPayment = true;
   private LocalDate startDate;

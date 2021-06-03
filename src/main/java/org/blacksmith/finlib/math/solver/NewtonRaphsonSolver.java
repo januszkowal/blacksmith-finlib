@@ -10,21 +10,14 @@ import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative> {
+public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative>
+    implements Solver<SolverFunctionDerivative> {
 
   private static final Logger log = LoggerFactory.getLogger(NewtonRaphsonSolver.class);
   private double derivativeValue;
 
   public NewtonRaphsonSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate) {
     super(maxIterations, tolerance, breakIfTheSameCandidate);
-  }
-
-  public double inverse(final SolverFunctionDerivative function, double target, double guess) {
-    return solve(function, target, guess);
-  }
-
-  public double findRoot(final SolverFunctionDerivative function, final double guess) {
-    return solve(function, 0, guess);
   }
 
   @Override
@@ -56,14 +49,34 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
     throw new NonconvergenceException(guess, maxIterations);
   }
 
+  public double inverse(final SolverFunctionDerivative function, double target, double guess) {
+    return solve(function, target, guess);
+  }
+
+  public double findRoot(final SolverFunctionDerivative function, final double guess) {
+    return solve(function, 0, guess);
+  }
+
   @Override
   public Map<String, ?> getStats() {
     return Map.of(
         "initialCandidate", getInitialCandidate(),
         "iterations", getIterations(),
+        "tolerance", getTolerance(),
         "candidate", getCandidate(),
         "functionValue", getFunctionValue(),
         "derivativeValue", getDerivativeValue());
+  }
+
+  @Override
+  public String toString() {
+    return '{'
+        + "initialCandidate=" + initialCandidate
+        + ", iterations=" + this.getIterations()
+        + ", tolerance=" + getTolerance()
+        + ", candidate=" + this.getCandidate()
+        + ", functionValue=" + this.getFunctionValue()
+        + ", derivativeValue=" + getDerivativeValue() + '}';
   }
 
   public double getDerivativeValue() {

@@ -6,24 +6,25 @@ import java.util.stream.Collectors;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.DecimalRounded;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.math.solver.AlgSolverBuilder;
-import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.interest.schedule.ScheduleParameters;
 import org.blacksmith.finlib.interest.schedule.events.Event;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.policy.helper.InterestUpdater;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableInterestEntry;
+import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
+import org.blacksmith.finlib.math.solver.Solver;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implements ScheduleAlgorithm {
 
-  private final AlgSolverBuilder solverBuilder;
+  private final BiSectionSolverBuilder solverBuilder;
   private final InterestUpdater interestCalculator;
 
-  public AnnuityScheduleAlgorithm(AlgSolverBuilder solverBuilder, ScheduleParameters scheduleParameters) {
+  public AnnuityScheduleAlgorithm(BiSectionSolverBuilder solverBuilder, ScheduleParameters scheduleParameters) {
     super(scheduleParameters);
     this.solverBuilder = solverBuilder;
     this.interestCalculator = new InterestUpdater(scheduleParameters);
@@ -46,14 +47,14 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   public List<InterestEvent> update(List<InterestEvent> cashflows) {
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
-    Solver<SolverFunctionDerivative> solver = createSolver(cashflows, minPmt, maxPmt);
+    Solver<SolverFunction> solver = createSolver(cashflows, minPmt, maxPmt);
     var sf = solverFunction(cashflows);
     solver.findRoot(sf, getEstimatedPayment(cashflows));
     log.info("final :{}", Event.eventsToString(cashflows));
     return cashflows;
   }
 
-  public Solver<SolverFunctionDerivative> createSolver(List<InterestEvent> cashflows, double minArg, double maxArg) {
+  public Solver<SolverFunction> createSolver(List<InterestEvent> cashflows, double minArg, double maxArg) {
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
     return solverBuilder.tolerance(0.01d).minArg(minArg).maxArg(maxArg).maxIterations(1000).breakIfCandidateNotChanging(true)

@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,8 +24,8 @@ public class XirrBuilderTest {
         Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
         Cashflow.of(LocalDate.parse("2011-01-01"), 1100));
     // computes the xirr on 1 year growth of 10%
-    final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
-        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
+    final double xirr = XirrCalculatorBuilder.builder()
+        .withSolverFunctionDerivative(NewtonRaphsonSolverBuilder.builder().build())
         .build().xirr(cashflows);
     assertEquals(0.10, xirr, TOLERANCE);
   }
@@ -37,9 +36,8 @@ public class XirrBuilderTest {
         Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
         Cashflow.of(LocalDate.parse("2011-01-01"), 900));
     // computes the negative xirr on 1 year decline of 10%
-    final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
-        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder())
-        //        .withSolverBuilder(BiSectionSolverBuilder.builder())
+    final double xirr = XirrCalculatorBuilder.builder()
+        .withSolverFunctionDerivative(NewtonRaphsonSolverBuilder.builder().build())
         .build().xirr(cashflows);
     assertEquals(-0.10, xirr, TOLERANCE);
   }
@@ -51,12 +49,11 @@ public class XirrBuilderTest {
         Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
         Cashflow.of(LocalDate.parse("2011-01-01"), 1000));
 
-    final SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> builder = setUpNewtonRaphsonBuilder();
-    System.out.println("builder build:" + builder.build());
-    Mockito.when(builder.build().findRoot(any(SolverFunctionDerivative.class), anyDouble())).thenReturn(expected);
+    Solver<SolverFunctionDerivative> solver = Mockito.mock(Solver.class);
+    Mockito.when(solver.findRoot(any(SolverFunctionDerivative.class), anyDouble())).thenReturn(expected);
 
-    final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
-        .withSolverBuilder(builder)
+    final double xirr = XirrCalculatorBuilder.builder()
+        .withSolverFunctionDerivative(solver)
         .build().xirr(cashflows);
 
     // Correct answer is 0, but we are ensuring that Xirr is using the
@@ -72,24 +69,15 @@ public class XirrBuilderTest {
         Cashflow.of(LocalDate.parse("2010-01-01"), -1000),
         Cashflow.of(LocalDate.parse("2011-01-01"), 1000));
 
-    final SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> builder = setUpNewtonRaphsonBuilder();
-    Mockito.when(builder.build()
-        .findRoot(any(SolverFunctionDerivative.class), eq(guess))).thenReturn(expected);
+    Solver<SolverFunctionDerivative> solver = Mockito.mock(Solver.class);
+    Mockito.when(solver.findRoot(any(SolverFunctionDerivative.class), eq(guess))).thenReturn(expected);
 
-    final double xirr = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
+    final double xirr = XirrCalculatorBuilder.builder()
         .withGuess(guess)
-        .withSolverBuilder(builder)
+        .withSolverFunctionDerivative(solver)
         .build().xirr(cashflows);
     // Correct answer is 0, but we are ensuring that Xirr is using the
     // builder we supplied
     assertEquals(expected, xirr, 0);
   }
-
-  private SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> setUpNewtonRaphsonBuilder() {
-    final SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> builder = Mockito.mock(SolverBuilder.class);
-    final Solver<SolverFunctionDerivative> solver = Mockito.mock(Solver.class);
-    Mockito.when(builder.build()).thenReturn(solver);
-    return builder;
-  }
-
 }

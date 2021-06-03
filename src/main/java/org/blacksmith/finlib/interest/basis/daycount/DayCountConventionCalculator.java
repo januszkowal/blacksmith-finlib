@@ -13,8 +13,8 @@ public interface DayCountConventionCalculator {
       ArgChecker
           .inOrderOrEqual(scheduleInfo.getStartDate(), startDate, () -> "PeriodStartDate and CouponStartDate must be in time-line order");
       ArgChecker.inOrderOrEqual(endDate, scheduleInfo.getEndDate(), () -> "PeriodEndDate and CouponEndDate must be in time-line order");
-      ArgChecker.inOrderOrEqual(scheduleInfo.getCouponStartDate(), startDate, () -> "StartDate musn't be before CouponStartDate");
-      ArgChecker.inOrderOrEqual(endDate, scheduleInfo.getCouponEndDate(), () -> "EndDate musn't be after CouponEndDate");
+      ArgChecker.inOrderOrEqual(scheduleInfo.getCouponStartDate(), startDate, () -> "StartDate mustn't be before CouponStartDate");
+      ArgChecker.inOrderOrEqual(endDate, scheduleInfo.getCouponEndDate(), () -> "EndDate mustn't be after CouponEndDate");
     }
   }
 

@@ -4,22 +4,20 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.MonthDay;
 
-import org.blacksmith.finlib.basic.calendar.policy.helper.DatePartExtractor;
-
-public enum StandardDatePartExtractors implements DatePartExtractor {
-  WEEK_DAY() {
+public enum StandardDatePartExtractor implements DatePartExtractor {
+  WEEK_DAY1() {
     @Override
     public DayOfWeek extract(LocalDate value) {
       return value.getDayOfWeek();
     }
   },
-  MONTH_DAY() {
+  MONTH_DAY1() {
     @Override
     public MonthDay extract(LocalDate value) {
       return MonthDay.from(value);
     }
   },
-  DATE() {
+  DATE1() {
     @Override
     public LocalDate extract(LocalDate value) {
       return value;

@@ -10,6 +10,6 @@ public class XirrCashflowTest {
   public void cashflowTest() {
     final XirrCashflow cs = XirrCashflow.of(10000, 1.0);
     assertEquals(11000.00, cs.futureValue(0.1));
-    assertEquals(10000.00, cs.derivative(0.1));
+    assertEquals(10000.00, cs.derivativeValue(0.1));
   }
 }
