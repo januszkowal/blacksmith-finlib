@@ -8,7 +8,6 @@ import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 public class XirrCalculatorBuilder {
   private Double guess = null;
   private Solver<SolverFunction> solver;
-//  private Solver<SolverFunctionDerivative> solver;
 
   public XirrCalculatorBuilder() {
   }
@@ -16,16 +15,6 @@ public class XirrCalculatorBuilder {
   public static XirrCalculatorBuilder builder() {
     return new XirrCalculatorBuilder();
   }
-
-  public XirrCalculatorBuilder withSolverBuilder(SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> solverBuilder) {
-//    this.solverBuilder = solverBuilder;
-    return this;
-  }
-
-//  public XirrCalculatorBuilder withSolver(Solver<SolverFunctionDerivative> solver) {
-//    this.solver = solver;
-//    return this;
-//  }
 
   public XirrCalculatorBuilder withSolverFunction(Solver<SolverFunction> solver) {
     this.solver = solver;

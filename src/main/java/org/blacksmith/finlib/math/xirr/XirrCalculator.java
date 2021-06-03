@@ -41,7 +41,6 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-//public class XirrCalculator<F extends SolverFunction> implements SolverFunctionDerivative {
 public class XirrCalculator {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
