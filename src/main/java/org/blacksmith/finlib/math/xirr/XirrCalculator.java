@@ -11,7 +11,6 @@ import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
 import org.blacksmith.finlib.math.solver.function.SolverFunction;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.math.xirr.dto.XirrStats;
 import org.slf4j.Logger;
@@ -42,15 +41,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
  * <p>
  * This class is not thread-safe and is designed for each instance to be used once.
  */
-public class XirrCalculator<F extends SolverFunction> implements SolverFunctionDerivative {
+//public class XirrCalculator<F extends SolverFunction> implements SolverFunctionDerivative {
+public class XirrCalculator {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
   private static final double DAYS_IN_YEAR = 365;
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
-  private final Solver<F> solver;
-
-  private List<XirrCashflow> xirrCashflows;
+  private final Solver<SolverFunction> solver;
   private XirrStats stats;
 
   private Double guess;
@@ -65,11 +63,11 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(Solver<F> solver) {
+  public XirrCalculator(Solver<SolverFunction> solver) {
     this(solver, null);
   }
 
-  public XirrCalculator(Solver<F> solver, Double guess) {
+  public XirrCalculator(Solver<SolverFunction> solver, Double guess) {
     ArgChecker.notNull(solver, "Solver builder must be not null");
     this.solver = solver;
     this.guess = guess;
@@ -85,32 +83,6 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
   }
 
   /**
-   * Calculates the future value of the investment if it had been subject to the given rate of return.
-   *
-   * @param rate the rate of return
-   * @return the present value of the investment if it had been subject to the given rate of return
-   */
-  @Override
-  public double computeValue(final double rate) {
-    return xirrCashflows.stream()
-        .mapToDouble(inv -> inv.futureValue(rate))
-        .sum();
-  }
-
-  /**
-   * The derivative of the present value under the given rate.
-   *
-   * @param rate the rate of return
-   * @return derivative of the present value under the given rate
-   */
-  @Override
-  public double computeDerivative(int numberOfDerivative, final double rate) {
-    return xirrCashflows.stream()
-        .mapToDouble(inv -> inv.derivative(rate))
-        .sum();
-  }
-
-  /**
    * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
    *
    * @param cashflows the cashflows
@@ -123,12 +95,13 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
     List<Cashflow> groupedCashflows = groupCashflows(cashflows);
     List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
     stats = XirrStats.fromCashflows(statsCashflows);
-    this.xirrCashflows = groupedCashflows.stream()
+    var xirrCashflows = groupedCashflows.stream()
         .map(this::createXirrCashflow)
         .collect(Collectors.toList());
     if (xirrCashflows.size() < 2) {
       throw new IllegalArgumentException("Must have at least two dates");
     }
+    var derivativeFunction = new XirrSolverFunctionDerivative(xirrCashflows);
     stats.validate();
 
     final double years = DAYS.between(stats.getStartDate(), stats.getEndDate()) / DAYS_IN_YEAR;
@@ -148,7 +121,7 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
         guess = (stats.getTotal() / stats.getOutcomes()) / years;
       }
       log.debug("Calculate 1st with Guess={}", guess);
-      xirr = calculateInternal(guess);
+      xirr = calculateInternal(derivativeFunction, guess);
       log.debug("Completed after iterations={}", lastIterations);
       return xirr;
     } catch (OverflowException oe) {
@@ -156,9 +129,9 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
     }
 
     try {
-      guess = - (stats.getTotal() / stats.getIncomes()) / years;
+      guess = -(stats.getTotal() / stats.getIncomes()) / years;
       log.debug("Calculate 2nd with Guess={}", guess);
-      xirr = calculateInternal(guess);
+      xirr = calculateInternal(derivativeFunction, guess);
       log.debug("Completed after iterations={}", lastIterations);
       return xirr;
     } catch (OverflowException oe) {
@@ -167,32 +140,22 @@ public class XirrCalculator<F extends SolverFunction> implements SolverFunctionD
     return xirr;
   }
 
-  @Override
-  public int numberOfDerivatives() {
-    return 1;
-  }
-
-  private double calculateInternal(double guess) {
-    try {
-      return solver.findRoot(getFunction(), guess);
-    }
-    finally {
-      this.lastIterations = solver.getIterations();
-      this.allIterations += this.lastIterations;
-    }
-  }
-
   public long getIterations() {
     return this.allIterations;
   }
 
-  @SuppressWarnings("unchecked")
-  private F getFunction() {
-    return (F) this;
+  private double calculateInternal(XirrSolverFunctionDerivative derivativeFunction, double guess) {
+    try {
+      return solver.findRoot(derivativeFunction, guess);
+    } finally {
+      this.lastIterations = solver.getIterations();
+      this.allIterations += this.lastIterations;
+    }
   }
 
   private XirrCashflow createXirrCashflow(Cashflow cashflow) {
     return new XirrCashflow(cashflow.getAmount(),
         DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
   }
+
 }

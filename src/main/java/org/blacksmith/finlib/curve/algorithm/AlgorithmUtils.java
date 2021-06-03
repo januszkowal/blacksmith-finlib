@@ -55,8 +55,8 @@ public class AlgorithmUtils {
       throw new IllegalArgumentException(message);
   }
 
-  public static void checkMinSize(double[] xvals, int min) {
-    if (xvals.length < min)
+  public static void checkMinSize(double[] xValues, int min) {
+    if (xValues.length < min)
       throw new IllegalArgumentException("Minimum arrays size is: " + min);
   }
 

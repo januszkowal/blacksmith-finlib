@@ -1,9 +1,9 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
-public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>>
-    implements SolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> {
+public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunction, Solver<SolverFunction>>
+{
 
   private SolverAlgorithm algorithm = SolverAlgorithm.BI_SECTION;
 
@@ -24,16 +24,15 @@ public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunctionDeriva
   }
 
   @Override
-  public Solver<SolverFunctionDerivative> build() {
+  public Solver<SolverFunction> build() {
     if (this.algorithm == SolverAlgorithm.BI_SECTION) {
       return new BiSectionSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging, minArg, maxArg);
     } else {
-      return new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging);
+      return castSolver(new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging), SolverFunction.class);
     }
   }
 
-  public enum SolverAlgorithm {
-    BI_SECTION,
-    NEWTON_RAPHSON
+  public static <T extends SolverFunction> Solver<T> castSolver(Solver<?> solver, Class<T> cls) {
+    return (Solver<T>)solver;
   }
 }

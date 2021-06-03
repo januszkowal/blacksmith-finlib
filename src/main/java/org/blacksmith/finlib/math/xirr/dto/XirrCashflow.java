@@ -75,7 +75,7 @@ public final class XirrCashflow {
    * @param rate the rate of return
    * @return derivative of the present value at the given rate
    */
-  public double derivative(final double rate) {
+  public double derivativeValue(final double rate) {
     if (years == 0) {
       return 0;
     } else if (rate > -1.0) {

@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public interface Event extends Comparable<Event> {
   static <E extends Event> List<LocalDate> getDates(List<E> events, Function<E, LocalDate> dateExtractor) {
     return events.stream()
-        .map(dateExtractor::apply)
+        .map(dateExtractor)
         .collect(Collectors.toList());
   }
 

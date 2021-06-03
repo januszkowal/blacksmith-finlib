@@ -19,10 +19,6 @@ public class CascadeFunction<E> implements Function<E, E> {
 
   @Override
   public E apply(E value) {
-    //    for (Function<E,E> updater: updaters) {
-    //      value = updater.apply(value);
-    //    }
-    //    return value;
     return function.apply(value);
   }
 }

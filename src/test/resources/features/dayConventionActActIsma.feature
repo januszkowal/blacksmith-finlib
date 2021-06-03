@@ -4,7 +4,7 @@ Feature: Act/Act Isma Day Count Conventions
     Given Interest coupon - frequency 1Y settlement date 2019-03-01 maturity date 2023-03-01
     And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
-      | start      | end        | cend       | days | fraction |
+      | start      | end        | couponEnd  | days | fraction |
       | 2019-03-01 | 2020-03-01 | 2020-03-01 | 366  | 1.0      |
       | 2020-03-01 | 2021-03-01 | 2021-03-01 | 365  | 1.0      |
       | 2021-03-01 | 2022-03-01 | 2022-03-01 | 365  | 1.0      |
@@ -14,7 +14,7 @@ Feature: Act/Act Isma Day Count Conventions
     Given Interest coupon - frequency 6M settlement date 2019-03-01 maturity date 2023-03-01
     And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
-      | start      | end        | cend       | days | fraction          |
+      | start      | end        | couponEnd  | days | fraction          |
       #start 0d/1Y
       | 2019-03-01 | 2019-03-01 | 2020-03-01 | 0    | 0d                |
       #start 1d/1Y

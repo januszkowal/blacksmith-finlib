@@ -4,8 +4,8 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class Knot implements Comparable<Knot>{
-  private final int x;
-  private final double y;
+  int x;
+  double y;
 
   @Override
   public int compareTo(Knot o) {

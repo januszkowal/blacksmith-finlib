@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
+import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public class ChainedHolidayPolicy implements HolidayPolicy {
 
@@ -31,8 +31,7 @@ public class ChainedHolidayPolicy implements HolidayPolicy {
   @Override
   public boolean isHoliday(LocalDate date) {
     boolean thisPolicyResult = policies.stream()
-        .map(hp -> hp.isHoliday(date))
-        .anyMatch(ih -> ih);
+        .anyMatch(hp -> hp.isHoliday(date));
     return thisPolicyResult || Optional.ofNullable(next).map(p -> p.isHoliday(date)).orElse(false);
   }
 

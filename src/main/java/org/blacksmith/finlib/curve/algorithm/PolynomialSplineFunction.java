@@ -27,7 +27,7 @@ public class PolynomialSplineFunction implements PolynomialFunction {
 
   @Override
   public double[] getKnots() {
-    double out[] = new double[knots.length];
+    double[] out = new double[knots.length];
     System.arraycopy(knots, 0, out, 0, knots.length);
     return out;
   }

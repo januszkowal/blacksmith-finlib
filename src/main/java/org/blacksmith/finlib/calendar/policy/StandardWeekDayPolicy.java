@@ -3,8 +3,7 @@ package org.blacksmith.finlib.calendar.policy;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy;
+import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public enum StandardWeekDayPolicy implements HolidayPolicy {
   SAT_SUN(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY),

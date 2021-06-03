@@ -67,7 +67,7 @@ public class RateUpdater implements ScheduleUpdater {
           .map(r -> r.multiply(scheduleParameters.getInterestRateMulMargin()))
           .orElse(Rate.ZERO)
           .add(scheduleParameters.getInterestRateAddMargin());
-      //      xrate := Yield_Pkg.get_fra_DD(IntParam.yieldCurveId,
+      //      projectedRate := Yield_Pkg.get_fra_DD(IntParam.yieldCurveId,
       //          IntParam.ccyId, Accpkg.procdate, resetDate, endDate + 1);
     }
   }

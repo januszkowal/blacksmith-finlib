@@ -1,9 +1,11 @@
 package org.blacksmith.finlib.math.solver;
 
+import java.util.Map;
+
 import org.blacksmith.finlib.math.solver.exception.OverflowException;
 import org.blacksmith.finlib.math.solver.function.SolverFunction;
 
-public abstract class AbstractSolver<F extends SolverFunction> implements Solver<F> {
+public abstract class AbstractSolver<F extends SolverFunction>  {
   protected final long maxIterations;
   protected final double tolerance;
   protected final boolean breakIfTheSameCandidate;
@@ -76,13 +78,11 @@ public abstract class AbstractSolver<F extends SolverFunction> implements Solver
     iterations++;
   }
 
-  public long getIteractions() {
-    return this.iterations;
-  }
-
   public double getTolerance() {
     return this.tolerance;
   }
+
+  public abstract Map<String, ?> getStats();
 
   protected boolean isResultDiffLessThanTolerance() {
     return Math.abs(functionValue) < tolerance;

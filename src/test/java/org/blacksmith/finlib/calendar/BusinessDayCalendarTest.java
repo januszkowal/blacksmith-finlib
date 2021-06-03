@@ -3,13 +3,11 @@ package org.blacksmith.finlib.calendar;
 import java.time.LocalDate;
 
 import org.blacksmith.commons.datetime.DateRange;
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendarWithPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.DatePartHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.StandardWeekDayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.helper.DatePartInMemoryProvider;
-import org.blacksmith.finlib.basic.calendar.policy.helper.StandardDatePartExtractors;
+import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.StandardWeekDayPolicy;
+import org.blacksmith.finlib.calendar.policy.helper.DateExtractor;
+import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +26,7 @@ public class BusinessDayCalendarTest {
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,5,16),
         LocalDate.of(2019,6,15));
-    DatePartHolidayPolicy<LocalDate> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.DATE,hyc);
+    DatePartHolidayPolicy<LocalDate> ymdProvider = new DatePartHolidayPolicy<>(DateExtractor.getInstance(), hyc);
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(CombinedHolidayPolicy.of(ymdProvider));
     assertEquals(LocalDate.of(2019, 5,14),cal.nextOrSame(LocalDate.of(2019,5,14)));
     assertEquals(LocalDate.of(2019, 5,17),cal.nextOrSame(LocalDate.of(2019,5,15)));

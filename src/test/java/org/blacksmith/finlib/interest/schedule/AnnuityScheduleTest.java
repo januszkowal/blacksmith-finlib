@@ -5,19 +5,19 @@ import java.time.MonthDay;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendarWithPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.DatePartHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.StandardWeekDayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.helper.DatePartInMemoryProvider;
-import org.blacksmith.finlib.basic.calendar.policy.helper.DatePartProvider;
-import org.blacksmith.finlib.basic.calendar.policy.helper.StandardDatePartExtractors;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
+import org.blacksmith.finlib.calendar.BusinessDayCalendar;
+import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
+import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.StandardWeekDayPolicy;
+import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
+import org.blacksmith.finlib.calendar.policy.helper.DatePartProvider;
+import org.blacksmith.finlib.calendar.policy.helper.MonthDayExtractor;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
-import org.blacksmith.finlib.interest.basis.InterestAlgoritm;
+import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
 import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
 import org.blacksmith.finlib.interest.schedule.events.Event;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalUpdatePolicyByAmount;
@@ -38,7 +38,7 @@ public class AnnuityScheduleTest {
     var scheduleInterestEvents = new StandardTimetableGenerator().generate(scheduleParameters);
     //
     PrincipalsHolder ph;
-    if (scheduleParameters.getAlgorithm() == InterestAlgoritm.DECREASING_PRINCIPAL) {
+    if (scheduleParameters.getAlgorithm() == InterestAlgorithm.DECREASING_PRINCIPAL) {
       var pg = new PrincipalsGenerator(false, false);
       var startDates = Event.getDates(scheduleInterestEvents, TimetableInterestEntry::getStartDate);
       var principalResetDates = pg.generate(scheduleParameters.getPrincipal(),
@@ -59,12 +59,12 @@ public class AnnuityScheduleTest {
         MonthDay.of(5, 3),
         MonthDay.of(12, 25),
         MonthDay.of(12, 26));
-    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY, hyc);
+    DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(), hyc);
 
     BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(
         CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
-        .algorithm(InterestAlgoritm.ANNUITY)
+        .algorithm(InterestAlgorithm.ANNUITY)
         .firstCouponDate(LocalDate.of(2019, 1, 1))
         .startDate(LocalDate.of(2019, 1, 3))
         .maturityDate(LocalDate.of(2021, 1, 1))

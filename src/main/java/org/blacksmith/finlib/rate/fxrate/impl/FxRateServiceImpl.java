@@ -89,12 +89,12 @@ public class FxRateServiceImpl implements FxRateService {
   private <R extends FxRateOperations<R>> Optional<R> getSourceFxRate(FxRateId key, LocalDate date,
       Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
     return Optional.ofNullable(fxRateProvider.getRate(key, date))
-        .map(md -> extractor.apply(md));
+        .map(extractor);
   }
 
   private <R extends FxRateOperations<R>> R getRateInternal(FxRateId key, LocalDate date,
       Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
-    R result = null;
+    R result;
     FxCurrencyPairInternal pair = getPairInternal(key);
     if (pair.isCross()) {
       result = getCrossRate(key, date, extractor);

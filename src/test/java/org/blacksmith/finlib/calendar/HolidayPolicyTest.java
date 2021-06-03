@@ -4,12 +4,12 @@ import java.time.LocalDate;
 import java.time.MonthDay;
 import java.util.Set;
 
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.ChainedHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.CombinedHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.DatePartHolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.helper.DatePartInMemoryProvider;
-import org.blacksmith.finlib.basic.calendar.policy.helper.StandardDatePartExtractors;
+import org.blacksmith.finlib.calendar.policy.ChainedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.helper.DateExtractor;
+import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
+import org.blacksmith.finlib.calendar.policy.helper.MonthDayExtractor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
@@ -25,14 +25,14 @@ public class HolidayPolicyTest {
 
   @Test
   public void holidayByMonthDay() {
-    Set<MonthDay> mdays = Set.of(
+    Set<MonthDay> monthDays = Set.of(
         MonthDay.of(5,15),
         MonthDay.of(6,10),
         MonthDay.of(12,25),
         MonthDay.of(12,26)
     );
-    HolidayPolicy policy = DatePartHolidayPolicy.of(StandardDatePartExtractors.MONTH_DAY,
-        DatePartInMemoryProvider.of(mdays));
+    HolidayPolicy policy = DatePartHolidayPolicy.of(MonthDayExtractor.getInstance(),
+        DatePartInMemoryProvider.of(monthDays));
     assertFalse(policy.isHoliday(LocalDate.of(2019, 1, 15)));
     assertTrue(policy.isHoliday(LocalDate.of(2019, 5, 15)));
     assertFalse(policy.isHoliday(LocalDate.of(2019, 5, 20)));
@@ -48,7 +48,7 @@ public class HolidayPolicyTest {
     Set<LocalDate> days = Set.of(
         LocalDate.of(2019,5,15),
         LocalDate.of(2019,6,10));
-    HolidayPolicy policy = DatePartHolidayPolicy.of(StandardDatePartExtractors.DATE,
+    HolidayPolicy policy = DatePartHolidayPolicy.of(DateExtractor.getInstance(),
         DatePartInMemoryProvider.of(days));
     assertFalse(policy.isHoliday(LocalDate.of(2019, 1, 15)));
     assertTrue(policy.isHoliday(LocalDate.of(2019, 5, 15)));
@@ -94,19 +94,21 @@ public class HolidayPolicyTest {
   }
   @Test
   public void holidayPolicyGroup() {
-    Set<MonthDay> hset1 = Set.of(
+    Set<MonthDay> monthDays1 = Set.of(
         MonthDay.of(5,15),
         MonthDay.of(6,10),
         MonthDay.of(12,25),
         MonthDay.of(12,26));
-    Set<LocalDate> hset2 = Set.of(
+    Set<LocalDate> monthDays2 = Set.of(
         LocalDate.of(2019,7,15),
         LocalDate.of(2019,9,10)
     );
-    HolidayPolicy policy1 = new DatePartHolidayPolicy<>(StandardDatePartExtractors.MONTH_DAY,
-        DatePartInMemoryProvider.of(hset1));
-    HolidayPolicy policy2 = new DatePartHolidayPolicy<>(StandardDatePartExtractors.DATE,
-        DatePartInMemoryProvider.of(hset2));
+    HolidayPolicy policy1 = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(),
+        DatePartInMemoryProvider.of(monthDays1));
+    HolidayPolicy policy2 = new DatePartHolidayPolicy<>(DateExtractor.getInstance(),
+        DatePartInMemoryProvider.of(monthDays2));
+    HolidayPolicy policy3 = new DatePartHolidayPolicy<>(new MonthDayExtractor(),
+        DatePartInMemoryProvider.of(monthDays1));
 
     HolidayPolicy[] hpa = {policy1,policy2};
     checkPolicyGroup1("chk1.1", CombinedHolidayPolicy.of(policy1));

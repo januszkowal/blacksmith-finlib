@@ -44,9 +44,7 @@ public class FxRateSteps {
   @Given("Define currency pairs")
   public void definePairs(List<FxCurrencyPair> inputPairs) {
     log.info("Currency pairs");
-    inputPairs.forEach(pair -> {
-      log.info(pair.toString());
-    });
+    inputPairs.forEach(pair -> log.info(pair.toString()));
     this.pairs = inputPairs.stream()
         .collect(Collectors.toMap(pair -> pair.getBase().getCurrencyCode() + "/" + pair.getCounter().getCurrencyCode(), pair -> pair));
   }
@@ -56,9 +54,7 @@ public class FxRateSteps {
     var rates = createRates(inputFxRates, precision);
     fxRateProvider.setMarketData(rates);
     log.info("Source rates");
-    fxRateProvider.getMarketData().forEach(rate -> {
-      log.info(rate.toString());
-    });
+    fxRateProvider.getMarketData().forEach(rate -> log.info(rate.toString()));
   }
 
   @When("Create service with local currency {currency} and precision {int}")
@@ -78,9 +74,9 @@ public class FxRateSteps {
       assertThat(rate3.getValue()).describedAs(input.toString())
           .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
           .containsExactly(input.getBuy(), input.getSell(), input.getAvg());
-      assertRate1(input.getBuy().doubleValue(), input.getKey(), input.getDate(), FxRateType.BUY, input.toString()+ "-buy");
-      assertRate1(input.getSell().doubleValue(), input.getKey(), input.getDate(), FxRateType.SELL, input.toString() + "-sell");
-      assertRate1(input.getAvg().doubleValue(), input.getKey(), input.getDate(), FxRateType.AVG, input.toString() + "-avg");
+      assertRate1(input.getBuy().doubleValue(), input.getKey(), input.getDate(), FxRateType.BUY, input + "-buy");
+      assertRate1(input.getSell().doubleValue(), input.getKey(), input.getDate(), FxRateType.SELL, input + "-sell");
+      assertRate1(input.getAvg().doubleValue(), input.getKey(), input.getDate(), FxRateType.AVG, input + "-avg");
     }
   }
 
@@ -95,8 +91,10 @@ public class FxRateSteps {
 
   @DataTableType
   public FxCurrencyPair createFxCurrencyPair(Map<String, String> row) {
-    return FxCurrencyPair.of(Currency.of(row.get("base")), Currency.of(row.get("counter")), Boolean.valueOf(row.get("cross")),
-        Double.valueOf(row.get("factor")));
+    return FxCurrencyPair.of(Currency.of(row.get("base")),
+        Currency.of(row.get("counter")),
+        Boolean.parseBoolean(row.get("cross")),
+        Double.parseDouble(row.get("factor")));
   }
 
   @DataTableType

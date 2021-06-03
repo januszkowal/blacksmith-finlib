@@ -16,8 +16,8 @@ public interface CurveFunction extends PolynomialFunction {
   }
 
   default List<CurvePoint> values(int min, int max) {
-    return IntStream.rangeClosed(min, max).boxed()
-        .map(x -> curvePoint(x))
+    return IntStream.rangeClosed(min, max)
+        .mapToObj(this::curvePoint)
         .collect(Collectors.toList());
   }
 }

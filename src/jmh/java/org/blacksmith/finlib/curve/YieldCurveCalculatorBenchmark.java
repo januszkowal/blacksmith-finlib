@@ -1,13 +1,9 @@
 package org.blacksmith.finlib.curve;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.blacksmith.finlib.curve.CurveDefinition;
-import org.blacksmith.finlib.curve.YieldCurveCalculator;
-import org.blacksmith.finlib.curve.YieldCurveRate;
 import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.openjdk.jmh.annotations.Benchmark;

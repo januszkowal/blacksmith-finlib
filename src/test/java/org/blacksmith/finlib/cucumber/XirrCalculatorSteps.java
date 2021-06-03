@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 import org.blacksmith.finlib.math.xirr.Cashflow;
 import org.blacksmith.finlib.math.xirr.XirrCalculatorBuilder;
 
@@ -46,16 +45,17 @@ public class XirrCalculatorSteps {
   public void calculateXirr() {
     log.info("Calc BiSection");
     var calculatorBiCalc = XirrCalculatorBuilder.builder()
-        .withSolverBuilder(BiSectionSolverBuilder.builder()
+        .withSolverFunction(BiSectionSolverBuilder.builder()
             .minArg(-1)
             .maxArg(2)
-            .asBuilder())
+            .build())
         .build();
     this.xirrBiCalcResult = calculatorBiCalc.xirr(cashflows);
     log.info("Calc BiSection={}", this.xirrBiCalcResult);
     log.info("Calc NewtonRaphson");
-    var calculatorNewtonRapshon = XirrCalculatorBuilder.<SolverFunctionDerivative>builder()
-        .withSolverBuilder(NewtonRaphsonSolverBuilder.builder()).build();
+    var calculatorNewtonRapshon = XirrCalculatorBuilder.builder()
+        .withSolverFunctionDerivative(NewtonRaphsonSolverBuilder.builder().build())
+        .build();
     this.xirrNewtonRaphsonResult = calculatorNewtonRapshon.xirr(cashflows);
     log.info("Calc NewtonRaphson={}", this.xirrNewtonRaphsonResult);
   }

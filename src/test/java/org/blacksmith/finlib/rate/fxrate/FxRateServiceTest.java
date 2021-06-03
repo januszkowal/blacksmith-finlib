@@ -29,10 +29,10 @@ class FxRateServiceTest {
       FxCurrencyPair.of(Currency.EUR, Currency.of("HUF"), true, 1.0d))
       .stream()
       .collect(Collectors.toMap(pair -> pair.getBase().getCurrencyCode() + "/" + pair.getCounter().getCurrencyCode(), pair -> pair));
-  static LocalDate dateFail = LocalDate.parse("2019-12-31");
-  static LocalDate date1 = LocalDate.parse("2020-01-01");
-  static LocalDate date2 = LocalDate.parse("2020-01-02");
-  static LocalDate date3 = LocalDate.parse("2020-01-03");
+  static final LocalDate dateFail = LocalDate.parse("2019-12-31");
+  static final LocalDate date1 = LocalDate.parse("2020-01-01");
+  static final LocalDate date2 = LocalDate.parse("2020-01-02");
+  static final LocalDate date3 = LocalDate.parse("2020-01-03");
   private static FxRateService rateService;
 
   @BeforeAll
@@ -94,20 +94,20 @@ class FxRateServiceTest {
   }
 
   private void assertRate3(double buyRate, double sellRate, double avgRate, String pair, LocalDate date, String description) {
-    var key = FxRateId.of(pair);
-    var rate3 = rateService.getRate(key, date);
+    var fxRateId = FxRateId.of(pair);
+    var rate3 = rateService.getRate(fxRateId, date);
     assertNotNull(rate3, description);
     assertThat(rate3.getValue()).describedAs(description)
         .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
         .containsExactly(Rate.of(buyRate, OUTPUT_DECIMAL_PLACES), Rate.of(sellRate, OUTPUT_DECIMAL_PLACES),
             Rate.of(avgRate, OUTPUT_DECIMAL_PLACES));
-    assertRate1(buyRate, pair, date, FxRateType.BUY, description + "-buy");
-    assertRate1(sellRate, pair, date, FxRateType.SELL, description + "-sell");
-    assertRate1(avgRate, pair, date, FxRateType.AVG, description + "-avg");
+    assertRate1(buyRate, fxRateId, date, FxRateType.BUY, description + "-buy");
+    assertRate1(sellRate, fxRateId, date, FxRateType.SELL, description + "-sell");
+    assertRate1(avgRate, fxRateId, date, FxRateType.AVG, description + "-avg");
   }
 
-  private void assertRate1(double rate, String pair, LocalDate date, FxRateType type, String description) {
-    var rate1 = rateService.getRate(FxRateId.of(pair), date, type);
+  private void assertRate1(double rate, FxRateId fxRateId, LocalDate date, FxRateType type, String description) {
+    var rate1 = rateService.getRate(fxRateId, date, type);
     assertNotNull(rate1, description);
     assertThat(rate1.getValue()).describedAs(description)
         .isEqualTo(Rate.of(rate, OUTPUT_DECIMAL_PLACES));

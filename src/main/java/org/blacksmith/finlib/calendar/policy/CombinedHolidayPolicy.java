@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
+import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 /**
  * Holiday policy containing list of policies
@@ -39,8 +39,7 @@ public class CombinedHolidayPolicy implements HolidayPolicy {
   @Override
   public boolean isHoliday(LocalDate date) {
     return policies.stream()
-        .map(hp -> hp.isHoliday(date))
-        .anyMatch(ih -> ih);
+        .anyMatch(hp -> hp.isHoliday(date));
   }
 
   public static class CombinedHolidayPolicyBuilder {

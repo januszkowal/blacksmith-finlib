@@ -67,7 +67,7 @@ public class DayConventionSteps {
             ArgChecker.notNull(scheduleInfoBuilder, "Schedule builder is null");
             schInfo = scheduleInfoBuilder
                 .couponStartDate(LocalDate.parse(fields.get("start")))
-                .couponEndDate(LocalDate.parse(fields.get("cend") == null ? fields.get("end") : fields.get("cend")))
+                .couponEndDate(LocalDate.parse(fields.get("couponEnd") == null ? fields.get("end") : fields.get("couponEnd")))
                 .build();
           }
           var builder = ConventionInput.builder()

@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.rate.marketdata;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,6 @@ public class MarketDataInMemoryProvider<K, V> implements MarketDataProvider<K, V
   }
 
   public List<MarketDataWrapper<K, V>> getMarketData() {
-    return this.marketData.values().stream().flatMap(x -> x.stream()).collect(Collectors.toList());
+    return this.marketData.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
   }
 }

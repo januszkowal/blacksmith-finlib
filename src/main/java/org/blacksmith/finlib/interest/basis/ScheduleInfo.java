@@ -14,10 +14,10 @@ public class ScheduleInfo {
       .isEndOfMonthConvention(true)
       .build();
 
-  private LocalDate startDate;
-  private LocalDate endDate;
-  private LocalDate couponStartDate;
-  private LocalDate couponEndDate;
-  private boolean isEndOfMonthConvention;
-  private Frequency couponFrequency;
+  LocalDate startDate;
+  LocalDate endDate;
+  LocalDate couponStartDate;
+  LocalDate couponEndDate;
+  boolean isEndOfMonthConvention;
+  Frequency couponFrequency;
 }

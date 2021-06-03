@@ -10,9 +10,9 @@ import lombok.Value;
 
 @Value
 public class CurveRateId implements MarketDataId {
-  private final String curve;
-  private final Currency currency;
-  private final LocalDate asOfDate;
+  String curve;
+  Currency currency;
+  LocalDate asOfDate;
 
   public CurveRateId(String curve, Currency currency, LocalDate asOfDate) {
     ArgChecker.notEmpty(curve);

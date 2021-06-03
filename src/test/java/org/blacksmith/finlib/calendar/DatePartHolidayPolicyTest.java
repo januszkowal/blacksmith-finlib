@@ -2,9 +2,8 @@ package org.blacksmith.finlib.calendar;
 
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.basic.calendar.HolidayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.StandardWeekDayPolicy;
-import org.blacksmith.finlib.basic.calendar.policy.WeekDayPolicy;
+import org.blacksmith.finlib.calendar.policy.StandardWeekDayPolicy;
+import org.blacksmith.finlib.calendar.policy.WeekDayPolicy;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

@@ -11,11 +11,10 @@ import org.blacksmith.finlib.curve.types.CurvePoint;
 public interface PolynomialFunctionExt extends PolynomialFunction {
   default List<CurvePoint> values(int min, int max) {
     Set<Integer> knots = Arrays.stream(getKnots())
-        .mapToInt(x -> (int) Math.ceil(x))
-        .boxed()
+        .mapToObj(x -> (int) Math.ceil(x))
         .collect(Collectors.toSet());
-    return IntStream.rangeClosed(min, max).boxed()
-        .map(x -> CurvePoint.of(x, value(x), knots.contains(x)))
+    return IntStream.rangeClosed(min, max)
+        .mapToObj(x -> CurvePoint.of(x, value(x), knots.contains(x)))
         .collect(Collectors.toList());
   }
 }

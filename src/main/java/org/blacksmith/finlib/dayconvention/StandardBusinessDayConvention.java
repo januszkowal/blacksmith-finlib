@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.blacksmith.commons.enums.EnumUtils;
 import org.blacksmith.commons.enums.SingleEnumCache;
-import org.blacksmith.finlib.basic.calendar.BusinessDayCalendar;
+import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 
 public enum StandardBusinessDayConvention implements BusinessDayConvention {
   /**
