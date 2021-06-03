@@ -16,7 +16,7 @@ public class WeekDayPolicy extends DatePartHolidayPolicy<DayOfWeek> {
 
   public WeekDayPolicy(int... weekendDays) {
     super(StandardDatePartExtractors.WEEK_DAY,
-        DatePartInMemoryProvider.of(Arrays.stream(weekendDays).boxed().map(DayOfWeek::of).collect(Collectors.toSet())));
+        DatePartInMemoryProvider.of(Arrays.stream(weekendDays).mapToObj(DayOfWeek::of).collect(Collectors.toSet())));
   }
 
   public static WeekDayPolicy of(DayOfWeek... weekendDays) {

@@ -70,7 +70,7 @@ public class CurveGenerateTest {
     var valuesLinearApacheCommons = linearInterpolatorApacheCommons.values(0, maxValue);
     try (PrintWriter pw = new PrintWriter(path.toFile())) {
       pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
-      IntStream.rangeClosed(0, maxValue).boxed().map(i -> convertToCSV(String.valueOf(i),
+      IntStream.rangeClosed(0, maxValue).mapToObj(i -> convertToCSV(String.valueOf(i),
           String.valueOf(valuesAkimaBlackSmith.get(i).getY()),
           String.valueOf(valuesAkimaApacheCommons.get(i).getY()),
           String.valueOf(valuesLinearBlackSmith.get(i).getY()),

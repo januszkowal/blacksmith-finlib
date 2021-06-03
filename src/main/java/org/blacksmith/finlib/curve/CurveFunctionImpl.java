@@ -16,8 +16,7 @@ public class CurveFunctionImpl implements CurveFunction {
   public CurveFunctionImpl(PolynomialFunction function) {
     this.function = function;
     this.knotSet = Arrays.stream(getKnots())
-        .mapToInt(x -> (int) Math.ceil(x))
-        .boxed()
+        .mapToObj(x -> (int) Math.ceil(x))
         .collect(Collectors.toSet());
   }
 
@@ -42,8 +41,8 @@ public class CurveFunctionImpl implements CurveFunction {
 
   @Override
   public List<CurvePoint> values(int min, int max) {
-    return IntStream.rangeClosed(min, max).boxed()
-        .map(x -> CurvePoint.of(x, value(x), isKnot(x)))
+    return IntStream.rangeClosed(min, max)
+        .mapToObj(x -> CurvePoint.of(x, value(x), isKnot(x)))
         .collect(Collectors.toList());
   }
 }
