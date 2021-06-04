@@ -12,13 +12,13 @@ import org.blacksmith.finlib.calendar.HolidayPolicy;
 
 public class HolidayPolicyComposite implements HolidayPolicy {
 
-  private static final String EMPTY_PROVIDERS_MESSAGE = "Empty providers list not allowed";
+  private static final String EMPTY_POLICIES_MESSAGE = "Empty policies list not allowed";
   private static final String NULL_POLICY_MESSAGE = "Null policy is not allowed";
 
   private final List<HolidayPolicy> policies;
 
   public HolidayPolicyComposite(Collection<HolidayPolicy> policies) {
-    ArgChecker.notEmpty(policies, EMPTY_PROVIDERS_MESSAGE);
+    ArgChecker.notEmpty(policies, EMPTY_POLICIES_MESSAGE);
     this.policies = List.copyOf(policies);
   }
 
