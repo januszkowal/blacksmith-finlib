@@ -18,7 +18,6 @@ import org.blacksmith.finlib.calendar.policy.helper.MonthDayExtractor;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
 import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
-import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.interest.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableGeneratorFactory;

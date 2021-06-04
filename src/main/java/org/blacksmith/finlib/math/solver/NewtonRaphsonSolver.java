@@ -60,6 +60,7 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
   @Override
   public Map<String, ?> getStats() {
     return Map.of(
+        "maxIterations", getMaxIterations(),
         "initialCandidate", getInitialCandidate(),
         "iterations", getIterations(),
         "tolerance", getTolerance(),
@@ -71,7 +72,8 @@ public class NewtonRaphsonSolver extends AbstractSolver<SolverFunctionDerivative
   @Override
   public String toString() {
     return '{'
-        + "initialCandidate=" + initialCandidate
+        + "maxIterations=" + getMaxIterations()
+        + ", initialCandidate=" + initialCandidate
         + ", iterations=" + this.getIterations()
         + ", tolerance=" + getTolerance()
         + ", candidate=" + this.getCandidate()

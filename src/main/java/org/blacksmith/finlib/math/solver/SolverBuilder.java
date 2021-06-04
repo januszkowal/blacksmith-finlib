@@ -13,7 +13,5 @@ public interface SolverBuilder<F extends SolverFunction, S extends Solver<F>> {
 
   SolverBuilder<F, S> breakIfCandidateNotChanging(boolean breakTheSameCandidate);
 
-  SolverBuilder<F, S> asBuilder();
-
   Solver<F> build();
 }

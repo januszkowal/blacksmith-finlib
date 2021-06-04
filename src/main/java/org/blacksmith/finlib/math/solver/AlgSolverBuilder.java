@@ -7,16 +7,13 @@ public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunction, Solv
 
   private SolverAlgorithm algorithm = SolverAlgorithm.BI_SECTION;
 
-  public AlgSolverBuilder() {
+  private AlgSolverBuilder() {
   }
 
   public static AlgSolverBuilder builder() {
     return new AlgSolverBuilder();
   }
 
-  public static AlgSolverBuilder builder(SolverAlgorithm algorithm) {
-    return new AlgSolverBuilder().algorithm(algorithm);
-  }
 
   public AlgSolverBuilder algorithm(SolverAlgorithm algorithm) {
     this.algorithm = algorithm;

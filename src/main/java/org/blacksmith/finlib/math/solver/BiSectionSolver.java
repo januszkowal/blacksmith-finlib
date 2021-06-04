@@ -53,6 +53,7 @@ public class BiSectionSolver extends AbstractSolver<SolverFunction> implements S
   @Override
   public Map<String, ?> getStats() {
     return Map.of(
+        "maxIterations", getMaxIterations(),
         "minArg", minArg,
         "maxArg", maxArg,
         "initialCandidate", getInitialCandidate(),
@@ -65,7 +66,8 @@ public class BiSectionSolver extends AbstractSolver<SolverFunction> implements S
   @Override
   public String toString() {
     return '{'
-        + "initialCandidate=" + initialCandidate
+        + "maxIterations=" + getMaxIterations()
+        + ", initialCandidate=" + initialCandidate
         + ", iterations=" + this.getIterations()
         + ", tolerance=" + getTolerance()
         + ", candidate=" + this.getCandidate()

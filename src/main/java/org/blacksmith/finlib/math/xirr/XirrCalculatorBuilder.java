@@ -1,7 +1,6 @@
 package org.blacksmith.finlib.math.xirr;
 
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.solver.SolverBuilder;
 import org.blacksmith.finlib.math.solver.function.SolverFunction;
 import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 

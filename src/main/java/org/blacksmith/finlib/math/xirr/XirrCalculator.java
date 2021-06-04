@@ -45,7 +45,7 @@ public class XirrCalculator {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
-  private static final double DAYS_IN_YEAR = 365;
+  private static final double DAYS_IN_YEAR = 365d;
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
   private final Solver<SolverFunction> solver;
   private XirrStats stats;
