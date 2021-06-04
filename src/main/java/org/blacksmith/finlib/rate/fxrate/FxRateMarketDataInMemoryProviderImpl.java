@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.rate.fxrate.impl;
+package org.blacksmith.finlib.rate.fxrate;
 
 import java.util.List;
 
