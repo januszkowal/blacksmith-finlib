@@ -43,9 +43,4 @@ public abstract class AbstractSolverBuilder<F extends SolverFunction, S extends 
     this.breakIfCandidateNotChanging = breakIfCandidateNotChanging;
     return this;
   }
-
-  @Override
-  public SolverBuilder<F, S> asBuilder() {
-    return this;
-  }
 }

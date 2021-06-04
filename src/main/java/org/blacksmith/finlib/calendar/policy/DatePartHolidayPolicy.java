@@ -3,8 +3,8 @@ package org.blacksmith.finlib.calendar.policy;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.calendar.HolidayPolicy;
-import org.blacksmith.finlib.calendar.policy.helper.DatePartExtractor;
-import org.blacksmith.finlib.calendar.policy.helper.DatePartProvider;
+import org.blacksmith.finlib.calendar.extractor.DatePartExtractor;
+import org.blacksmith.finlib.calendar.provider.DatePartProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

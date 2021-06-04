@@ -8,12 +8,12 @@ import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.calendar.BusinessDayCalendarWithPolicy;
-import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.calendar.policy.DatePartHolidayPolicy;
 import org.blacksmith.finlib.calendar.policy.StandardWeekDayPolicy;
-import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
-import org.blacksmith.finlib.calendar.policy.helper.DatePartProvider;
-import org.blacksmith.finlib.calendar.policy.helper.MonthDayExtractor;
+import org.blacksmith.finlib.calendar.provider.DatePartInMemoryProvider;
+import org.blacksmith.finlib.calendar.provider.DatePartProvider;
+import org.blacksmith.finlib.calendar.extractor.MonthDayExtractor;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
 import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
@@ -41,7 +41,7 @@ public class StandardTimetableGeneratorTest {
         MonthDay.of(12, 26));
     DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(), hyc);
 
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(CombinedHolidayPolicy.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
+    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgorithm.SIMPLE)
         .firstCouponDate(LocalDate.of(2019, 1, 1))
