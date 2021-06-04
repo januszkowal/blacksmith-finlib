@@ -9,17 +9,41 @@ import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 @Slf4j
 public class YieldCurveCalculatorTest {
   final LocalDate asOfDate = LocalDate.now();
   final YieldCurveCalculator calculator = new YieldCurveCalculator();
 
   @Test
-  public void testGenerate() {
+  public void shouldGenerateWholeCurve() {
     CurveDefinition definition = CurveDefinition.of("BONDS", AlgorithmType.AKIMA_SPLINE_BLACKSMITH, 365);
     List<Knot> knots = create365DayKnots();
+    int knotsMin = knots.stream().mapToInt(Knot::getX).min().getAsInt();
+    int knotsMax = knots.stream().mapToInt(Knot::getX).max().getAsInt();
     var curveRates = calculator.values(asOfDate, definition, knots);
-    curveRates.forEach(rate -> log.info("{}", rate));
+    assertThat(curveRates.size()).isEqualTo(knotsMax - knotsMin + 1);
+  }
+
+  @Test
+  public void shouldGeneratePart() {
+    CurveDefinition definition = CurveDefinition.of("BONDS", AlgorithmType.AKIMA_SPLINE_BLACKSMITH, 365);
+    List<Knot> knots = create365DayKnots();
+    var curveRates = calculator.values(asOfDate, definition, knots, 5, 104);
+    assertThat(curveRates.size()).isEqualTo(100);
+  }
+
+  @Test
+  public void shouldGenerateFail() {
+    CurveDefinition definition = CurveDefinition.of("BONDS", AlgorithmType.AKIMA_SPLINE_BLACKSMITH, 365);
+    List<Knot> knots = create365DayKnots();
+    int knotsMin = knots.stream().mapToInt(Knot::getX).min().getAsInt();
+    int knotsMax = knots.stream().mapToInt(Knot::getX).max().getAsInt();
+    var curveRates = calculator.values(asOfDate, definition, knots, knotsMin, knotsMax);
+    assertThrows(IllegalArgumentException.class, () -> calculator.values(asOfDate, definition, knots, knotsMin - 1, 10));
+    assertThrows(IllegalArgumentException.class, () -> calculator.values(asOfDate, definition, knots, 0, knotsMax + 1));
   }
 
   private List<Knot> create365DayKnots() {

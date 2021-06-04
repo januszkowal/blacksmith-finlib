@@ -45,6 +45,8 @@ public class CurveFunctionFactory {
           return linearApacheCommonsInterpolatorFunction.getKnots();
         }
       };
+    } else {
+      throw new IllegalArgumentException("Unknown algorithm type: " + curveType);
     }
     return curveFunction;
   }
