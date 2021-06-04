@@ -4,8 +4,8 @@ import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
-import org.blacksmith.finlib.calendar.policy.helper.WeekDayExtractor;
+import org.blacksmith.finlib.calendar.extractor.WeekDayExtractor;
+import org.blacksmith.finlib.calendar.provider.DatePartInMemoryProvider;
 
 public class WeekDayPolicy extends DatePartHolidayPolicy<DayOfWeek> {
 

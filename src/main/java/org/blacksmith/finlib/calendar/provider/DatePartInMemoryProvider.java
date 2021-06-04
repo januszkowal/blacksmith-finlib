@@ -1,9 +1,8 @@
-package org.blacksmith.finlib.calendar.policy.helper;
+package org.blacksmith.finlib.calendar.provider;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 
 public class DatePartInMemoryProvider<U> implements DatePartProvider<U> {
 

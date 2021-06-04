@@ -3,11 +3,11 @@ package org.blacksmith.finlib.calendar;
 import java.time.LocalDate;
 
 import org.blacksmith.commons.datetime.DateRange;
-import org.blacksmith.finlib.calendar.policy.CombinedHolidayPolicy;
+import org.blacksmith.finlib.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.calendar.policy.DatePartHolidayPolicy;
 import org.blacksmith.finlib.calendar.policy.StandardWeekDayPolicy;
-import org.blacksmith.finlib.calendar.policy.helper.DateExtractor;
-import org.blacksmith.finlib.calendar.policy.helper.DatePartInMemoryProvider;
+import org.blacksmith.finlib.calendar.extractor.DateExtractor;
+import org.blacksmith.finlib.calendar.provider.DatePartInMemoryProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,7 @@ public class BusinessDayCalendarTest {
         LocalDate.of(2019,5,16),
         LocalDate.of(2019,6,15));
     DatePartHolidayPolicy<LocalDate> ymdProvider = new DatePartHolidayPolicy<>(DateExtractor.getInstance(), hyc);
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(CombinedHolidayPolicy.of(ymdProvider));
+    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.ofSingle(ymdProvider));
     assertEquals(LocalDate.of(2019, 5,14),cal.nextOrSame(LocalDate.of(2019,5,14)));
     assertEquals(LocalDate.of(2019, 5,17),cal.nextOrSame(LocalDate.of(2019,5,15)));
     assertEquals(LocalDate.of(2019, 5,17),cal.nextOrSame(LocalDate.of(2019,5,16)));
@@ -84,8 +84,7 @@ public class BusinessDayCalendarTest {
   @Test
   public void dayCountTest1() {
     BusinessDayCalendar noHolidaysCalendar = BusinessDayCalendarWithPolicy.of((d)->false);
-    BusinessDayCalendar weekendCalendar = BusinessDayCalendarWithPolicy.of(CombinedHolidayPolicy.of(
-        StandardWeekDayPolicy.SAT_SUN));
+    BusinessDayCalendar weekendCalendar = BusinessDayCalendarWithPolicy.of(StandardWeekDayPolicy.SAT_SUN);
     assertEquals(30,noHolidaysCalendar.businessDaysCount(DateRange.closedOpen(LocalDate.of(2019, 1, 1),LocalDate.of(2019,
         1,31))));
     assertEquals(31,noHolidaysCalendar.businessDaysCount(DateRange.closed(LocalDate.of(2019, 1, 1),LocalDate.of(2019, 1,31))));
