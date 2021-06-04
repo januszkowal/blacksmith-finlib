@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
-import org.blacksmith.finlib.rate.fxrate.impl.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
 import org.junit.jupiter.api.BeforeAll;
