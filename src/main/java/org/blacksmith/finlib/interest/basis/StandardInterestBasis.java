@@ -286,7 +286,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30EPLUS_360("30E+/360", new D30EPlusConvention(360d));
 
-  private final static EnumValueConverter<String, StandardInterestBasis> enumValueMap =
+  private final static EnumValueConverter<String, StandardInterestBasis> enumConverter =
       EnumValueConverter.of(StandardInterestBasis.class, StandardInterestBasis::getShortName);
   private final String shortName;
   private final DayCountConventionCalculator calculator;
@@ -297,7 +297,7 @@ public enum StandardInterestBasis implements InterestBasis {
   }
 
   public static StandardInterestBasis fromShortName(String shortName) {
-    return enumValueMap.fromValue(shortName);
+    return enumConverter.convert(shortName);
   }
 
   @Override
