@@ -4,7 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 import org.blacksmith.commons.enums.EnumUtils;
-import org.blacksmith.commons.enums.SingleEnumCache;
+import org.blacksmith.commons.enums.EnumValueConverter;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 
 public enum StandardBusinessDayConvention implements BusinessDayConvention {
@@ -78,8 +78,8 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
       }
     }
   };
-  private static final SingleEnumCache<String, StandardBusinessDayConvention> cache =
-      new SingleEnumCache<>(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName, true);
+  private static final EnumValueConverter<String, StandardBusinessDayConvention> converter =
+      EnumValueConverter.of(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName);
   final private String shortName;
 
   StandardBusinessDayConvention(String shortName) {
@@ -87,7 +87,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   }
 
   public static StandardBusinessDayConvention fromShortName(String shortName) {
-    return cache.get(shortName);
+    return converter.fromValue(shortName);
   }
 
   public static StandardBusinessDayConvention fromName(String name) {

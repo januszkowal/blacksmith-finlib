@@ -1,10 +1,8 @@
 package org.blacksmith.finlib.interest.basis;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
 
+import org.blacksmith.commons.enums.EnumValueConverter;
 import org.blacksmith.finlib.interest.basis.daycount.Act365ActConvention;
 import org.blacksmith.finlib.interest.basis.daycount.ActAct365LConvention;
 import org.blacksmith.finlib.interest.basis.daycount.ActActAfbConvention;
@@ -288,13 +286,18 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30EPLUS_360("30E+/360", new D30EPlusConvention(360d));
 
+  private final static EnumValueConverter<String, StandardInterestBasis> enumValueMap =
+      EnumValueConverter.of(StandardInterestBasis.class, StandardInterestBasis::getShortName);
   private final String shortName;
   private final DayCountConventionCalculator calculator;
-  private final static Map<String, StandardInterestBasis> shortNameMap = Arrays.stream(StandardInterestBasis.values())
-      .collect(Collectors.toMap(e -> e.shortName, e->e));
+
   StandardInterestBasis(String shortName, DayCountConventionCalculator calculator) {
     this.shortName = shortName;
     this.calculator = calculator;
+  }
+
+  public static StandardInterestBasis fromShortName(String shortName) {
+    return enumValueMap.fromValue(shortName);
   }
 
   @Override
@@ -309,9 +312,5 @@ public enum StandardInterestBasis implements InterestBasis {
 
   public String getShortName() {
     return this.shortName;
-  }
-
-  public static StandardInterestBasis fromShortName(String shortName) {
-    return shortNameMap.get(shortName);
   }
 }
