@@ -39,7 +39,7 @@ public class YieldCurveCalculator {
 
   private YieldCurveRate pointToRate(LocalDate asOfDate, int yearLength, CurvePoint point) {
     LocalDate pointDate = asOfDate.plusDays(point.getX());
-    var dcf = RateUtils.interestRate100ToDcf(asOfDate, pointDate, point.getY(), yearLength);
+    var dcf = RateUtils.interestRate100ToDcfContDisc(asOfDate, pointDate, point.getY(), yearLength);
     return YieldCurveRate.of(pointDate, point.isKnot(), point.getY(), dcf);
   }
 }
