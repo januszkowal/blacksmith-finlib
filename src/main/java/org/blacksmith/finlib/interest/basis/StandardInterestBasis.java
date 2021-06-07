@@ -206,7 +206,7 @@ public enum StandardInterestBasis implements InterestBasis {
   D30_E_360_ISDA("30E/360 ISDA", new D30EIsdaConvention(360d)),
 
   // US thirty day months / 360 with dynamic EOM rule
-  D30U_360("30U/360", new D30UConvention(360d)),
+  D30_U_360("30U/360", new D30UConvention(360d)),
 
   /**
    * Name: 30U/360 EOM
@@ -227,7 +227,7 @@ public enum StandardInterestBasis implements InterestBasis {
    */
 
   // US thirty day months / 360 with fixed EOM rule
-  D30U_360_EOM("30U/360 EOM", new D30USEomConvention(360d)),
+  D30_U_360_EOM("30U/360 EOM", new D30USEomConvention(360d)),
 
   /**
    * Name: 30/360 PSA
@@ -257,7 +257,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * Strata: THIRTY_E_360
    * TR: A=30/360
    */
-  D30E_360("30E/360", new D30EConvention(360d)),
+  D30_E_360("30E/360", new D30EConvention(360d)),
 
   /**
    * Name: 30E/365
@@ -271,7 +271,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * Definition:
    * TR: B=30/365
    */
-  D30E_365("30E/365", new D30EConvention(365d)),
+  D30_E_365("30E/365", new D30EConvention(365d)),
 
   /**
    * Name: 30E+/360
@@ -284,7 +284,7 @@ public enum StandardInterestBasis implements InterestBasis {
    * Strata: THIRTY_EPLUS_360
    * TR: K=30E+/360
    */
-  D30EPLUS_360("30E+/360", new D30EPlusConvention(360d));
+  D30_EPLUS_360("30E+/360", new D30EPlusConvention(360d));
 
   private final static EnumValueConverter<String, StandardInterestBasis> enumConverter =
       EnumValueConverter.of(StandardInterestBasis.class, StandardInterestBasis::getShortName);

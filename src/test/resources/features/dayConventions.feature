@@ -76,11 +76,11 @@ Feature: Day Count Conventions
 
   Scenario: 30U/360
     Given Interest coupon simple
-    And For Day Convention D30U_360
+    And For Day Convention D30_U_360
 
   Scenario: 30U/360 EOM
     Given Interest coupon simple
-    And For Day Convention D30U_360_EOM
+    And For Day Convention D30_U_360_EOM
 
   Scenario: 30/360 PSA
     Given Interest coupon simple
@@ -88,15 +88,15 @@ Feature: Day Count Conventions
 
   Scenario: 30E/360
     Given Interest coupon simple
-    And For Day Convention D30E_360
+    And For Day Convention D30_E_360
 
   Scenario: 30E/365
     Given Interest coupon simple
-    And For Day Convention D30E_365
+    And For Day Convention D30_E_365
 
   Scenario: 30E+/360
     Given Interest coupon simple
-    And For Day Convention D30EPLUS_360
+    And For Day Convention D30_EPLUS_360
     Then Day Convention verification
       | start      | end        | days | fraction |
       | 2018-12-30 | 2019-01-01 | 1    | 1/360d   |
