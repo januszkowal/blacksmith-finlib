@@ -10,6 +10,7 @@ import org.blacksmith.finlib.interest.basis.daycount.ActActIcmaConvention;
 import org.blacksmith.finlib.interest.basis.daycount.ActActIsdaConvention;
 import org.blacksmith.finlib.interest.basis.daycount.ActActYearConvention;
 import org.blacksmith.finlib.interest.basis.daycount.ActConvention;
+import org.blacksmith.finlib.interest.basis.daycount.ConstantConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30EConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30EIsdaConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30EPlusConvention;
@@ -17,25 +18,15 @@ import org.blacksmith.finlib.interest.basis.daycount.D30EPsaConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30IsdaConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30UConvention;
 import org.blacksmith.finlib.interest.basis.daycount.D30USEomConvention;
-import org.blacksmith.finlib.interest.basis.daycount.DayCountConventionCalculator;
+import org.blacksmith.finlib.interest.basis.daycount.DayCountConvention;
 import org.blacksmith.finlib.interest.basis.daycount.NLConvention;
 
-public enum StandardInterestBasis implements InterestBasis {
+public enum StandardDayCounts implements DayCount {
 
   /**
    * Always one
    */
-  ONE_ONE("1/1", new DayCountConventionCalculator() {
-    @Override
-    public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return 1;
-    }
-
-    @Override
-    public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-      return 1d;
-    }
-  }),
+  ONE_ONE("1/1", new ConstantConvention(1, 1d)),
 
   /**
    * Name:  ACT/360
@@ -286,17 +277,18 @@ public enum StandardInterestBasis implements InterestBasis {
    */
   D30_EPLUS_360("30E+/360", new D30EPlusConvention(360d));
 
-  private final static EnumValueConverter<String, StandardInterestBasis> enumConverter =
-      EnumValueConverter.of(StandardInterestBasis.class, StandardInterestBasis::getShortName);
-  private final String shortName;
-  private final DayCountConventionCalculator calculator;
+  private final static EnumValueConverter<String, StandardDayCounts> enumConverter =
+      EnumValueConverter.of(StandardDayCounts.class, StandardDayCounts::getShortName);
 
-  StandardInterestBasis(String shortName, DayCountConventionCalculator calculator) {
+  private final String shortName;
+  private final DayCountConvention calculator;
+
+  StandardDayCounts(String shortName, DayCountConvention calculator) {
     this.shortName = shortName;
     this.calculator = calculator;
   }
 
-  public static StandardInterestBasis fromShortName(String shortName) {
+  public static StandardDayCounts fromShortName(String shortName) {
     return enumConverter.convert(shortName);
   }
 

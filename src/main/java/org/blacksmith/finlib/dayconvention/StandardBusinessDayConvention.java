@@ -78,7 +78,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
       }
     }
   };
-  private static final EnumValueConverter<String, StandardBusinessDayConvention> enumConverter =
+  private static final EnumValueConverter<String, StandardBusinessDayConvention> shortNameEnumConverter =
       EnumValueConverter.of(StandardBusinessDayConvention.class, StandardBusinessDayConvention::shortName);
   final private String shortName;
 
@@ -87,7 +87,7 @@ public enum StandardBusinessDayConvention implements BusinessDayConvention {
   }
 
   public static StandardBusinessDayConvention fromShortName(String shortName) {
-    return enumConverter.convert(shortName);
+    return shortNameEnumConverter.convert(shortName);
   }
 
   public static StandardBusinessDayConvention fromName(String name) {

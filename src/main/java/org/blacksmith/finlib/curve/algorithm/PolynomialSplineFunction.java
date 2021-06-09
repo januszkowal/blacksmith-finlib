@@ -1,19 +1,15 @@
 package org.blacksmith.finlib.curve.algorithm;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.blacksmith.finlib.curve.types.CurvePoint;
-
-public class PolynomialSplineFunction implements PolynomialFunction {
+public class PolynomialSplineFunction implements InterpolatedFunction {
   private final double[] knots;
-  private final Polynomial[] polynomials;
+  private final PolynomialFunction[] polynomials;
   private final int lastKPIndex;
 
-  public PolynomialSplineFunction(double[] knots, Polynomial[] polynomials) {
+  public PolynomialSplineFunction(double[] knots, PolynomialFunction[] polynomials) {
     this.knots = new double[knots.length];
-    this.polynomials = new Polynomial[polynomials.length];
+    this.polynomials = new PolynomialFunction[polynomials.length];
     System.arraycopy(knots, 0, this.knots, 0, knots.length);
     System.arraycopy(polynomials, 0, this.polynomials, 0, polynomials.length);
     this.lastKPIndex = Math.min(polynomials.length - 1, knots.length - 1);
@@ -30,19 +26,6 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     double[] out = new double[knots.length];
     System.arraycopy(knots, 0, out, 0, knots.length);
     return out;
-  }
-
-  //@Override
-  public List<CurvePoint> valuesForRange(int min, int max) {
-    List<CurvePoint> points = new ArrayList<>(max - min + 1);
-    var ranges = AlgorithmUtils.getCalculationRanges(min, max, getKnots(), polynomials.length);
-    for (AlgorithmUtils.CalcRange range : ranges) {
-      points.add(CurvePoint.of(range.start, polynomialValue(range.knotIndex, range.start), true));
-      for (int j = range.start + 1; j <= range.end; j++) {
-        points.add(CurvePoint.of(j, polynomialValue(range.knotIndex, j), false));
-      }
-    }
-    return points;
   }
 
   public int getKnotIndex1(double key) {
@@ -64,29 +47,16 @@ public class PolynomialSplineFunction implements PolynomialFunction {
     return index;
   }
 
-  public static class Polynomial {
-    double[] coefficients;
+  public UnivariateFunction derivative() {
+    return polynomialSplineDerivative();
+  }
 
-    public Polynomial(double[] coefficients) {
-      int n = coefficients.length;
-      if (n == 0) {
-        throw new IllegalArgumentException("Empty coefficients array");
-      }
-      while ((n > 1) && (coefficients[n - 1] == 0)) {
-        --n;
-      }
-      this.coefficients = new double[n];
-      System.arraycopy(coefficients, 0, this.coefficients, 0, n);
+  public PolynomialSplineFunction polynomialSplineDerivative() {
+    PolynomialFunction[] derivativePolynomials = new PolynomialFunction[polynomials.length];
+    for (int i = 0; i < polynomials.length; i++) {
+      derivativePolynomials[i] = polynomials[i].polynomialDerivative();
     }
-
-    public double evaluate(double x) {
-      int n = coefficients.length;
-      double result = coefficients[n - 1];
-      for (int i = n - 2; i >= 0; i--) {
-        result = x * result + coefficients[i];
-      }
-      return result;
-    }
+    return new PolynomialSplineFunction(knots, derivativePolynomials);
   }
 
   protected double polynomialValue(int index, double x) {

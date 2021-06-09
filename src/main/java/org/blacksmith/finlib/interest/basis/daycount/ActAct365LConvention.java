@@ -5,32 +5,28 @@ import java.time.LocalDate;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 
-public class ActAct365LConvention implements DayCountConventionCalculator {
-
-  @Override
-  public boolean requireScheduleInfo() {
-    return true;
+public class ActAct365LConvention extends AbstractConvention implements DayCountConvention {
+  public ActAct365LConvention() {
+    super(true);
   }
 
   @Override
-  public long calculateDays(LocalDate startDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, calcDate);
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(firstDate, secondDate);
   }
 
   @Override
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    long actualDays = DateUtils.daysBetween(startDate, endDate);
-    if (startDate.equals(endDate)) {
+  public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    long actualDays = DateUtils.daysBetween(firstDate, secondDate);
+    if (firstDate.equals(secondDate)) {
       return 0d;
     }
     // calculation is based on the end of the schedule period (next coupon date) and annual/non-annual frequency
-    LocalDate couponEndDate = scheduleInfo.getCouponEndDate();
+    LocalDate periodEndDate = scheduleInfo.getPeriodEndDate();
     if (scheduleInfo.getCouponFrequency().isAnnual()) {
-      LocalDate nextLeap = DateUtils.nextLeapDay(startDate);
-      return actualDays / (nextLeap.isAfter(couponEndDate) ? 365d : 366d);
+      return actualDays / (DateUtils.isLeapDayInPeriod(firstDate, periodEndDate) ? 366d : 365d);
     } else {
-      return actualDays / (couponEndDate.isLeapYear() ? 366d : 365d);
+      return actualDays / (periodEndDate.isLeapYear() ? 366d : 365d);
     }
   }
-
 }

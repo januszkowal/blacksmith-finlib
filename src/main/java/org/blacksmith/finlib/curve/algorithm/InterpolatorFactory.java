@@ -1,18 +1,13 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.curve.algorithm;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curve.algorithm.AkimaSplineInterpolator;
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
-import org.blacksmith.finlib.curve.algorithm.LinearInterpolator;
-import org.blacksmith.finlib.curve.algorithm.PolynomialFunction;
 import org.blacksmith.finlib.curve.types.Knot;
-import org.blacksmith.finlib.curve.types.Point2D;
 
-public class CurveFunctionFactory {
-  public PolynomialFunction getPolynomialFunction(AlgorithmType curveType, double[] xValues, double[] yValues) {
-    PolynomialFunction curveFunction = null;
+public class InterpolatorFactory {
+  public InterpolatedFunction createFunction(AlgorithmType curveType, double[] xValues, double[] yValues) {
+    InterpolatedFunction curveFunction = null;
     if (curveType == AlgorithmType.AKIMA_SPLINE_BLACKSMITH) {
       curveFunction = new AkimaSplineInterpolator().interpolate(xValues, yValues);
     } else if (curveType == AlgorithmType.LINEAR_BLACKSMITH) {
@@ -20,7 +15,7 @@ public class CurveFunctionFactory {
     } else if (curveType == AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
           new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xValues, yValues);
-      curveFunction = new PolynomialFunction() {
+      curveFunction = new InterpolatedFunction() {
         @Override
         public double value(double x) {
           return akimaSplineApacheCommonsFunction.value(x);
@@ -34,7 +29,7 @@ public class CurveFunctionFactory {
     } else if (curveType == AlgorithmType.LINEAR_APACHE_COMMONS) {
       var linearApacheCommonsInterpolatorFunction =
           new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xValues, yValues);
-      curveFunction = new PolynomialFunction() {
+      curveFunction = new InterpolatedFunction() {
         @Override
         public double value(double x) {
           return linearApacheCommonsInterpolatorFunction.value(x);
@@ -51,13 +46,15 @@ public class CurveFunctionFactory {
     return curveFunction;
   }
 
-  public CurveFunction getCurveFunction(AlgorithmType type, List<Knot> knots) {
-    List<Point2D> knotsPoints = knots.stream()
-        .sorted()
-        .map(knot -> Point2D.of(knot.getX(), knot.getY()))
-        .collect(Collectors.toList());
-    var xValues = knotsPoints.stream().mapToDouble(Point2D::getX).toArray();
-    var yValues = knotsPoints.stream().mapToDouble(Point2D::getY).toArray();
-    return new CurveFunctionImpl(getPolynomialFunction(type, xValues, yValues));
+  public InterpolatedFunction createFunction(AlgorithmType curveType, Collection<Knot> knots) {
+    var xValues = knots.stream().mapToDouble(Knot::getX).toArray();
+    var yValues = knots.stream().mapToDouble(Knot::getY).toArray();
+    return createFunction(curveType, xValues, yValues);
+  }
+
+  public InterpolatedFunction createFunction(AlgorithmType curveType, Knot[] knots) {
+    var xValues = Stream.of(knots).mapToDouble(Knot::getX).toArray();
+    var yValues = Stream.of(knots).mapToDouble(Knot::getY).toArray();
+    return createFunction(curveType, xValues, yValues);
   }
 }

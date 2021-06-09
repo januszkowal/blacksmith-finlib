@@ -39,6 +39,10 @@ public class RateUtils {
     return Math.pow(1 + (r / m), -m * n);
   }
 
+  public static double discountFactor(double interestRate, double years) {
+    return Math.exp(-interestRate * years);
+  }
+
   public static double calculateFra(LocalDate asOfDate, LocalDate d1, LocalDate d2, double dcf1, double dcf2, double yearLength) {
     long l1 = DateUtils.daysBetween(d1, asOfDate);
     long l2 = DateUtils.daysBetween(d2, asOfDate);

@@ -2,6 +2,7 @@ package org.blacksmith.finlib.curve;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.DoubleStream;
 
 import org.blacksmith.finlib.curve.algorithm.AlgorithmUtils;
 import org.blacksmith.finlib.curve.types.Knot;
@@ -41,7 +42,7 @@ public class AlgorithmUtilsBenchmark {
   public int[] getKnotIndexArraysMethod(Data data) {
     int[] results = new int[data.max - data.min + 1];
     for (int i = data.min; i <= data.max; i++) {
-      results[i] = AlgorithmUtils.getKnotIndex(data.knotArray, i);
+      results[i] = AlgorithmUtils.getKnotIndex1(data.knotArray, i);
     }
     return results;
   }
@@ -59,7 +60,7 @@ public class AlgorithmUtilsBenchmark {
   public static class Data {
     final List<Knot> knotList = create365DayKnots();
     final double[] knotArray = knotList.stream().mapToDouble(Knot::getX).toArray();
-    final int min = knotList.stream().mapToInt(Knot::getX).min().getAsInt();
-    final int max = knotList.stream().mapToInt(Knot::getX).max().getAsInt();
+    final int min = (int)DoubleStream.of(knotArray).min().orElse(0d);
+    final int max = (int)DoubleStream.of(knotArray).max().orElse(0d);
   }
 }

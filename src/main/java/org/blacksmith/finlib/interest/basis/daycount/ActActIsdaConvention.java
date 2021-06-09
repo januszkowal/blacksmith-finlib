@@ -5,25 +5,29 @@ import java.time.LocalDate;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 
-public class ActActIsdaConvention implements DayCountConventionCalculator {
+public class ActActIsdaConvention extends AbstractConvention {
 
-  @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, endDate);
+  public ActActIsdaConvention() {
+    super(false);
   }
 
   @Override
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    int y1 = startDate.getYear();
-    int y2 = endDate.getYear();
-    int firstYearLength = startDate.lengthOfYear();
+  public long calculateDays(LocalDate firstDate, LocalDate calcDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(firstDate, calcDate);
+  }
+
+  @Override
+  public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    int y1 = firstDate.getYear();
+    int y2 = secondDate.getYear();
+    int firstYearLength = firstDate.lengthOfYear();
     if (y1 == y2) {
-      int actualDays = endDate.getDayOfYear() - startDate.getDayOfYear();
+      int actualDays = secondDate.getDayOfYear() - firstDate.getDayOfYear();
       return (double) actualDays / firstYearLength;
     } else {
-      int firstRemainderOfYear = firstYearLength - startDate.getDayOfYear() + 1;
-      int secondRemainderOfYear = endDate.getDayOfYear() - 1;
-      int secondYearLength = endDate.lengthOfYear();
+      int firstRemainderOfYear = firstYearLength - firstDate.getDayOfYear() + 1;
+      int secondRemainderOfYear = secondDate.getDayOfYear() - 1;
+      int secondYearLength = secondDate.lengthOfYear();
       return (double) firstRemainderOfYear / firstYearLength +
           (double) secondRemainderOfYear / secondYearLength +
           (y2 - y1 - 1);

@@ -4,32 +4,28 @@ import java.time.LocalDate;
 
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 
-public class D30UConvention implements DayCountConventionCalculator {
+public class D30UConvention extends AbstractConvention {
 
-  private final DayCountConventionCalculator thirtyIsda;
-  private final DayCountConventionCalculator thirtyUsEom;
+  private final D30IsdaConvention thirtyIsda;
+  private final D30USEomConvention thirtyUsEom;
 
   public D30UConvention(double denominator) {
+    super(true);
     this.thirtyIsda = new D30IsdaConvention(denominator);
     this.thirtyUsEom = new D30USEomConvention(denominator);
   }
 
   @Override
-  public boolean requireScheduleInfo() {
-    return true;
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    return thirtyIsda.calculateDays(firstDate, secondDate, scheduleInfo);
   }
 
   @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return thirtyIsda.calculateDays(startDate, endDate, scheduleInfo);
-  }
-
-  @Override
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
     if (scheduleInfo.isEndOfMonthConvention()) {
-      return thirtyUsEom.calculateYearFraction(startDate, endDate, scheduleInfo);
+      return thirtyUsEom.calculateYearFraction(firstDate, secondDate, scheduleInfo);
     } else {
-      return thirtyIsda.calculateYearFraction(startDate, endDate, scheduleInfo);
+      return thirtyIsda.calculateYearFraction(firstDate, secondDate, scheduleInfo);
     }
   }
 }

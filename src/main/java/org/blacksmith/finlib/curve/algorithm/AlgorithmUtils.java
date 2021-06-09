@@ -23,7 +23,7 @@ public class AlgorithmUtils {
     return low - 1;
   }
 
-  public static int getKnotIndex(double[] knots, double key) {
+  public static int getKnotIndex1(double[] knots, double key) {
     int index = Arrays.binarySearch(knots, key);
     if (index < 0) {
       index = -index - 2;

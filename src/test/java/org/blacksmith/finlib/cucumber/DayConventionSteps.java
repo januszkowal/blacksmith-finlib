@@ -9,7 +9,7 @@ import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.cucumber.dto.ConventionInput;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
-import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
+import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DayConventionSteps {
 
   final GroovyShell shell = new GroovyShell();
-  private StandardInterestBasis convention;
+  private StandardDayCounts convention;
   private ScheduleInfo.ScheduleInfoBuilder scheduleInfoBuilder;
 
   @Given("Interest coupon - frequency {frequency} settlement date {date} maturity date {date}")
@@ -43,7 +43,7 @@ public class DayConventionSteps {
   }
 
   @And("^For Day Convention (.*)$")
-  public void setDayConvention(StandardInterestBasis convention) {
+  public void setDayConvention(StandardDayCounts convention) {
     this.convention = convention;
   }
 
@@ -63,11 +63,11 @@ public class DayConventionSteps {
     return table.asMaps().stream()
         .map(fields -> {
           ScheduleInfo schInfo = null;
-          if (convention == StandardInterestBasis.ACT_ACT_ICMA) {
+          if (convention == StandardDayCounts.ACT_ACT_ICMA) {
             ArgChecker.notNull(scheduleInfoBuilder, "Schedule builder is null");
             schInfo = scheduleInfoBuilder
-                .couponStartDate(LocalDate.parse(fields.get("start")))
-                .couponEndDate(LocalDate.parse(fields.get("couponEnd") == null ? fields.get("end") : fields.get("couponEnd")))
+                .periodStartDate(LocalDate.parse(fields.get("start")))
+                .periodEndDate(LocalDate.parse(fields.get("periodEnd") == null ? fields.get("end") : fields.get("periodEnd")))
                 .build();
           }
           var builder = ConventionInput.builder()

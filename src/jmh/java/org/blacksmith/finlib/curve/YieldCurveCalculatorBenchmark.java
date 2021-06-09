@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 import org.blacksmith.finlib.curve.types.Knot;
+import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -50,7 +51,7 @@ public class YieldCurveCalculatorBenchmark {
       else if (years == 10) {
         this.knots = createKnots10Y();
       }
-      this.curveDefinition = CurveDefinition.of("BONDS", algorithm, 365);
+     // this.curveDefinition = CurveDefinition.of("BONDS", algorithm, StandardDayCounts.ACT_365);
     }
   }
 

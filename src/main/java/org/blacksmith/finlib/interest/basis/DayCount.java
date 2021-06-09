@@ -2,21 +2,36 @@ package org.blacksmith.finlib.interest.basis;
 
 import java.time.LocalDate;
 
-public interface InterestBasis {
+public interface DayCount {
   /**
    * Gets the year fraction between the specified dates.
    * <p>
    * Given two dates, this method returns the fraction of a year between these
    * dates according to the convention. The dates must be in order.
    *
-   * @param startDate    the period start date
-   * @param endDate      the period end date (exclusive)
+   * @param firstDate    the period start date
+   * @param secondDate   the period end date (exclusive)
    * @param scheduleInfo the schedule information
    * @return the year fraction, zero or greater
    * @throws IllegalArgumentException      if the dates are not in order
    * @throws UnsupportedOperationException if the year fraction cannot be obtained
    */
-  double yearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
+  double yearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo);
+  /**
+   * Gets the year fraction between the specified dates.
+   * <p>
+   * Given two dates, this method returns the fraction of a year between these
+   * dates according to the convention. The dates must be in order.
+   *
+   * @param firstDate    the period start date
+   * @param secondDate   the period end date (exclusive)
+   * @return the year fraction, zero or greater
+   * @throws IllegalArgumentException      if the dates are not in order
+   * @throws UnsupportedOperationException if the year fraction cannot be obtained
+   */
+  default double yearFraction(LocalDate firstDate, LocalDate secondDate) {
+    return yearFraction(firstDate, secondDate, ScheduleInfo.fromDateRange(firstDate, secondDate));
+  }
 
   /**
    * Gets the relative year fraction between the specified dates.
@@ -31,18 +46,22 @@ public interface InterestBasis {
    * Certain implementations of {@code DayCount} need the missing information,
    * and thus will throw an exception.
    *
-   * @param startDate    the period start date
-   * @param endDate      the period end date (exclusive)
+   * @param firstDate    the period start date
+   * @param secondDate      the period end date (exclusive)
    * @param scheduleInfo the schedule information
    * @return the year fraction, may be negative
    * @throws UnsupportedOperationException if the year fraction cannot be obtained
    */
 
-  default double relativeYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    if (endDate.isBefore(startDate)) {
-      return -yearFraction(endDate, startDate, scheduleInfo);
+  default double relativeYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    if (secondDate.isBefore(firstDate)) {
+      return -yearFraction(secondDate, firstDate, scheduleInfo);
     }
-    return yearFraction(startDate, endDate, scheduleInfo);
+    return yearFraction(firstDate, secondDate, scheduleInfo);
+  }
+
+  default double relativeYearFraction(LocalDate firstDate, LocalDate secondDate) {
+    return relativeYearFraction(firstDate, secondDate, ScheduleInfo.fromDateRange(firstDate, secondDate));
   }
 
   /**
@@ -53,10 +72,14 @@ public interface InterestBasis {
    * For example, the 'Act/Act' day count will return the actual number of days between
    * the two dates, but the '30/360 ISDA' will return a value based on 30 day months.
    *
-   * @param startDate    the start date
-   * @param endDate      the end date (exclusive), which may not be before the start date
+   * @param firstDate    the start date
+   * @param secondDate   the end date (exclusive), which may not be before the start date
    * @param scheduleInfo schedule information
    * @return the number of days, as determined by the day count
    */
-  long days(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo);
+  long days(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo);
+
+  default long days(LocalDate firstDate, LocalDate secondDate) {
+    return days(firstDate, secondDate, ScheduleInfo.fromDateRange(firstDate, secondDate));
+  }
 }

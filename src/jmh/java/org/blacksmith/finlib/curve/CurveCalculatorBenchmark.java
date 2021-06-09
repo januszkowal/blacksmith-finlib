@@ -1,11 +1,18 @@
 package org.blacksmith.finlib.curve;
 
+import java.time.LocalDate;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
+import org.blacksmith.finlib.curve.algorithm.InterpolatedFunction;
+import org.blacksmith.finlib.curve.algorithm.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.curve.types.Knot;
+import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -40,7 +47,7 @@ public class CurveCalculatorBenchmark {
     public List<Knot> knots;
     public int xMin;
     public int xMax;
-    public CurveFunction curveFunction;
+    public InterpolatedFunction curveFunction;
 
     @Setup(Level.Trial)
     public void setUp() {
@@ -50,16 +57,19 @@ public class CurveCalculatorBenchmark {
       else if (years == 10) {
         this.knots = createKnots10Y();
       }
-      this.xMin = this.knots.stream().mapToInt(Knot::getX).min().getAsInt();
-      this.xMax = this.knots.stream().mapToInt(Knot::getX).max().getAsInt();
-      CurveDefinition definition = CurveDefinition.of("BONDS", algorithm, 365);
-      this.curveFunction = new CurveFunctionFactory().getCurveFunction(definition.getAlgorithm(), knots);
+      DoubleSummaryStatistics knotStats = knots.stream().mapToDouble(knot -> knot.getX()).summaryStatistics();
+      this.xMin = (int)knotStats.getMin();
+      this.xMax = (int)knotStats.getMax();
+      this.curveFunction = new InterpolatorFactory().createFunction(algorithm, knots);
     }
   }
 
   @Benchmark
   public List<CurvePoint> generateCurve(BenchmarkData data) {
-    return data.curveFunction.values(data.xMin, data.xMax);
+    LocalDate valuationDate = LocalDate.now();
+    return IntStream.rangeClosed(data.xMin, data.xMax)
+        .mapToObj(x -> CurvePoint.of(valuationDate.plusDays(x), (double)x, data.curveFunction.value(x)))
+        .collect(Collectors.toList());
   }
 
   private static List<Knot> createKnots1Y() {

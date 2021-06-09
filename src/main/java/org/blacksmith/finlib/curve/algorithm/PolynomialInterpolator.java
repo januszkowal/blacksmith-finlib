@@ -1,5 +1,5 @@
 package org.blacksmith.finlib.curve.algorithm;
 
 public interface PolynomialInterpolator {
-  PolynomialFunction interpolate(double[] xValues, double[] yValues);
+  PolynomialSplineFunction interpolate(double[] xValues, double[] yValues);
 }

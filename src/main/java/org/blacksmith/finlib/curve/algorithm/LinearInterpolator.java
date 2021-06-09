@@ -18,11 +18,11 @@ public class LinearInterpolator implements PolynomialInterpolator {
     }
     af[n - 1] = af[n - 2];
     double[] coefficients = new double[2];
-    PolynomialSplineFunction.Polynomial[] polynomials = new PolynomialSplineFunction.Polynomial[xValues.length];
+    PolynomialFunction[] polynomials = new PolynomialFunction[xValues.length];
     for (int i = 0; i < xValues.length; i++) {
       coefficients[0] = yValues[i];
       coefficients[1] = af[i];
-      polynomials[i] = new PolynomialSplineFunction.Polynomial(coefficients);
+      polynomials[i] = new PolynomialFunction(coefficients);
     }
     return new PolynomialSplineFunction(xValues, polynomials);
   }

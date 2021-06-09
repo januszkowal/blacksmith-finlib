@@ -2,24 +2,25 @@ package org.blacksmith.finlib.interest.basis.daycount;
 
 import java.time.LocalDate;
 
-import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 
-public class Act365ActConvention extends AbstractConvention {
+public class ConstantConvention extends AbstractConvention {
+  private final long days;
+  private final double yearFraction;
 
-  public Act365ActConvention() {
+  public ConstantConvention(long days, double yearFraction) {
     super(false);
+    this.days = days;
+    this.yearFraction = yearFraction;
   }
 
   @Override
   public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(firstDate, secondDate);
+    return this.days;
   }
 
   @Override
   public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
-    long actualDays = DateUtils.daysBetween(firstDate, secondDate);
-    double denominator = DateUtils.isLeapDayInPeriod(firstDate, secondDate) ? 366d : 365d;
-    return actualDays / denominator;
+    return this.yearFraction;
   }
 }

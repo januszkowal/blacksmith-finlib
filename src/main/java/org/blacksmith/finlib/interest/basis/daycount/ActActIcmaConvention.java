@@ -13,109 +13,105 @@ import lombok.extern.slf4j.Slf4j;
 import static org.blacksmith.commons.datetime.DateUtils.daysBetween;
 
 @Slf4j
-public class ActActIcmaConvention implements DayCountConventionCalculator {
+public class ActActIcmaConvention extends AbstractConvention {
+
+  public ActActIcmaConvention() {
+    super(true);
+  }
 
   public static boolean isRegularPeriod(LocalDate calcDate, ScheduleInfo scheduleInfo) {
     if (scheduleInfo.getCouponFrequency().getEventsPerYear() == 0) {
       return false;
     }
-    if (DayCountUtils.months360(scheduleInfo.getCouponStartDate(), scheduleInfo.getCouponEndDate()) != scheduleInfo
+    if (DayCountUtils.months360(scheduleInfo.getPeriodStartDate(), scheduleInfo.getPeriodEndDate()) != scheduleInfo
         .getCouponFrequency().getMonths()) {
       return false;
     }
 
     if (scheduleInfo.isEndOfMonthConvention()) {
       //ACT/ACT Ultimo
-      YmdDate start = YmdDate.of(scheduleInfo.getCouponStartDate());
-      YmdDate end = YmdDate.of(scheduleInfo.getCouponEndDate());
+      YmdDate start = YmdDate.of(scheduleInfo.getPeriodStartDate());
+      YmdDate end = YmdDate.of(scheduleInfo.getPeriodEndDate());
       return (start.getDay() == end.getDay()) ||
-          (!DateUtils.isValidDate(start.getYear(), start.getMonth(), end.getDay()) && DateUtils
-              .isLastDayOfMonth(scheduleInfo.getCouponEndDate())) ||
-          (!DateUtils.isValidDate(end.getYear(), end.getMonth(), start.getDay()) && DateUtils
-              .isLastDayOfMonth(scheduleInfo.getCouponStartDate()));
+          (!DateUtils.isValidDate(start.getYear(), start.getMonth(), end.getDay()) && DateUtils.isLastDayOfMonth(scheduleInfo.getPeriodEndDate())) ||
+          (!DateUtils.isValidDate(end.getYear(), end.getMonth(), start.getDay()) && DateUtils.isLastDayOfMonth(scheduleInfo.getPeriodStartDate()));
     } else {
       //ACT/ACT Normal
-      return DateUtils.isLastDayOfMonth(scheduleInfo.getCouponStartDate()) &&
-          DateUtils.isLastDayOfMonth(scheduleInfo.getCouponEndDate());
+      return DateUtils.isLastDayOfMonth(scheduleInfo.getPeriodStartDate()) &&
+          DateUtils.isLastDayOfMonth(scheduleInfo.getPeriodEndDate());
     }
   }
 
   @Override
-  public boolean requireScheduleInfo() {
-    return true;
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(firstDate, secondDate);
   }
 
   @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, endDate);
-  }
-
-  @Override
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
+  public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
     // calculation is based on the schedule period, firstDate assumed to be the start of the period
     LocalDate scheduleStartDate = scheduleInfo.getStartDate();
     LocalDate scheduleEndDate = scheduleInfo.getEndDate();
-    LocalDate couponStartDate = startDate;
-    LocalDate couponEndDate = scheduleInfo.getCouponEndDate();
+    LocalDate periodEndDate = scheduleInfo.getPeriodEndDate();
     Frequency freq = scheduleInfo.getCouponFrequency();
     boolean eom = scheduleInfo.isEndOfMonthConvention();
-    if (couponEndDate.equals(scheduleEndDate)) {
-      //final period calculated forward from last coupon start date
-      return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
-    } else if (scheduleStartDate.equals(startDate)) {
+    if (periodEndDate.equals(scheduleEndDate)) {
+      //final period calculated forward from last coupon start date, also handling single period schecules
+      return forwardPeriod(secondDate, firstDate, periodEndDate, freq, eom);
+    } else if (scheduleStartDate.equals(firstDate)) {
       // initial period calculated backward from first coupon end date
-      return backwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+      return backwardPeriod(secondDate, firstDate, periodEndDate, freq, eom);
     } else {
-      if (isRegularPeriod(endDate, scheduleInfo)) {
-        return regularPeriod(endDate, couponStartDate, couponEndDate, freq);
+      if (isRegularPeriod(secondDate, scheduleInfo)) {
+        return regularPeriod(secondDate, firstDate, periodEndDate, freq);
       } else {
-        return forwardPeriod(endDate, couponStartDate, couponEndDate, freq, eom);
+        return forwardPeriod(secondDate, firstDate, periodEndDate, freq, eom);
       }
     }
   }
 
   // calculate sub-periods backwards from "Coupon end date"
-  private double backwardPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq,
+  private double backwardPeriod(LocalDate calcDate, LocalDate periodStartDate, LocalDate periodEndDate, Frequency freq,
       boolean eom) {
-    log.debug("backward period: on={} cpn={}#{}", calcDate, couponStartDate, couponEndDate);
-    LocalDate periodEnd = couponEndDate;
-    LocalDate periodStart = eom(couponEndDate, freq.minusFrom(periodEnd), eom);
+    log.debug("backward period: on={} period={}#{}", calcDate, periodStartDate, periodEndDate);
+    LocalDate currEnd = periodEndDate;
+    LocalDate currStart = eom(periodEndDate, freq.minusFrom(currEnd), eom);
     double result = 0;
-    while (periodStart.isAfter(couponStartDate)) {
-      if (calcDate.isAfter(periodStart)) {
-        result += calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+    while (currStart.isAfter(periodStartDate)) {
+      if (calcDate.isAfter(currStart)) {
+        result += calcPeriod(currStart, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);
       }
-      periodEnd = periodStart;
-      periodStart = eom(couponEndDate, freq.minusFrom(periodEnd), eom);
+      currEnd = currStart;
+      currStart = eom(periodEndDate, freq.minusFrom(currEnd), eom);
     }
-    log.info("last: {} {} {}", calcDate, periodEnd, DateUtils.min(calcDate, periodEnd));
-    return result + calcPeriod(couponStartDate, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+    log.info("last: {} {} {}", calcDate, currEnd, DateUtils.min(calcDate, currEnd));
+    return result + calcPeriod(periodStartDate, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);
   }
 
   // calculate sub-periods forwards from "Coupon start date"
-  private double forwardPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq,
+  private double forwardPeriod(LocalDate calcDate, LocalDate periodStartDate, LocalDate periodEndDate, Frequency freq,
       boolean eom) {
-    log.debug("forward period: on={} cpn={}#{}", calcDate, couponStartDate, couponEndDate);
-    LocalDate periodStart = couponStartDate;
-    LocalDate periodEnd = eom(couponStartDate, freq.addTo(periodStart), eom);
+    log.debug("forward period: on={} period={}#{}", calcDate, periodStartDate, periodEndDate);
+    LocalDate currStart = periodStartDate;
+    LocalDate currEnd = eom(periodStartDate, freq.addTo(currStart), eom);
     double result = 0;
-    while (periodEnd.isBefore(couponEndDate)) {
-      if (calcDate.isAfter(periodStart)) {
-        result += calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+    while (currEnd.isBefore(periodEndDate)) {
+      if (calcDate.isAfter(currStart)) {
+        result += calcPeriod(currStart, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);
       }
-      periodStart = periodEnd;
-      periodEnd = eom(couponStartDate, freq.addTo(periodEnd), eom);
+      currStart = currEnd;
+      currEnd = eom(periodStartDate, freq.addTo(currEnd), eom);
     }
-    return result + calcPeriod(periodStart, DateUtils.min(calcDate, periodEnd), periodStart, periodEnd, freq);
+    return result + calcPeriod(currStart, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);
   }
 
-  private double regularPeriod(LocalDate calcDate, LocalDate couponStartDate, LocalDate couponEndDate, Frequency freq) {
-    long actualDays = daysBetween(couponStartDate, calcDate);
-    long periodDays = daysBetween(couponStartDate, couponEndDate);
+  private double regularPeriod(LocalDate calcDate, LocalDate periodStartDate, LocalDate periodEndDate, Frequency freq) {
+    long actualDays = daysBetween(periodStartDate, calcDate);
+    long periodDays = daysBetween(periodStartDate, periodEndDate);
     double denominator = getDenominator(freq, periodDays);
     log.debug("regular period: on={} cpn={}#{} factor={}/{}",
         calcDate,
-        couponStartDate, couponEndDate,
+        periodStartDate, periodEndDate,
         actualDays,
         denominator);
     return denominator == 0d ? 0d : actualDays / denominator;

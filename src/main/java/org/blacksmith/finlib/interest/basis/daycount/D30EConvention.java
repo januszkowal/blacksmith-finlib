@@ -13,9 +13,9 @@ public class D30EConvention extends AbstractConstantDenominatorConvention {
   }
 
   @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    YmdDate date1 = YmdDate.of(startDate);
-    YmdDate date2 = YmdDate.of(endDate);
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    YmdDate date1 = YmdDate.of(firstDate);
+    YmdDate date2 = YmdDate.of(secondDate);
     if (date1.getDay() == 31)
       date1.setDay(30);
     if (date2.getDay() == 31) {

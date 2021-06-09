@@ -11,21 +11,16 @@ import static org.blacksmith.commons.datetime.DateUtils.isLastDayOfFebruary;
 public class D30EIsdaConvention extends AbstractConstantDenominatorConvention {
 
   public D30EIsdaConvention(double denominator) {
-    super(denominator);
+    super(true, denominator);
   }
 
   @Override
-  public boolean requireScheduleInfo() {
-    return true;
-  }
-
-  @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    YmdDate date1 = YmdDate.of(startDate);
-    YmdDate date2 = YmdDate.of(endDate);
-    if (date1.getDay() == 31 || isLastDayOfFebruary(startDate))
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    YmdDate date1 = YmdDate.of(firstDate);
+    YmdDate date2 = YmdDate.of(secondDate);
+    if (date1.getDay() == 31 || isLastDayOfFebruary(firstDate))
       date1.setDay(30);
-    if (date2.getDay() == 31 || (isLastDayOfFebruary(endDate) && !endDate.equals(scheduleInfo.getEndDate()))) {
+    if (date2.getDay() == 31 || (isLastDayOfFebruary(secondDate) && !secondDate.equals(scheduleInfo.getEndDate()))) {
       date2.setDay(30);
     }
     return DayCountUtils.days360(date1, date2);
