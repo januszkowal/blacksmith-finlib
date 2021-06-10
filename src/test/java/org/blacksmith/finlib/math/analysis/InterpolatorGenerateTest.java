@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.math.analysis;
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class CurveGenerateTest {
+public class InterpolatorGenerateTest {
 
   final LocalDate valuationDate = LocalDate.now();
   final InterpolatorFactory factory = new InterpolatorFactory();

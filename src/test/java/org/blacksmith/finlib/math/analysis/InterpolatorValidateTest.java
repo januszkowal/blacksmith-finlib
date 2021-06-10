@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.math.analysis;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Slf4j
-public class CurveValidationTest {
+public class InterpolatorValidateTest {
 
   final InterpolatorFactory factory = new InterpolatorFactory();
 /*

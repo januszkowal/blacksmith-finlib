@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.math.analysis;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CurveUtilsTest {
+public class InterpolationUtilsTest {
   @Test
   public void indexSearch1() {
     List<Knot> knots = List.of(Knot.of(0, 0),
