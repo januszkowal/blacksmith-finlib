@@ -1,7 +1,7 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.junit.jupiter.api.Test;
 
 import static org.blacksmith.finlib.math.solver.AbstractSolverBuilder.TOLERANCE;
@@ -11,8 +11,8 @@ public class AlgBiSectionTest {
 
   @Test
   public void sqrt2a() {
-    SolverFunctionDerivative f = x -> x * x;
-    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+    UnivariateDifferentiableFunction f = x -> x * x;
+    Solver<UnivariateFunction> nr = BiSectionSolverBuilder.builder()
         .minArg(0)
         .maxArg(30)
         .build();
@@ -23,10 +23,11 @@ public class AlgBiSectionTest {
 
   @Test
   public void sqrt2ab() {
-    SolverFunctionDerivative f = x -> x * x;
-    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+    UnivariateDifferentiableFunction f = x -> x * x;
+    Solver<UnivariateFunction> nr = BiSectionSolverBuilder.builder()
         .minArg(-30)
         .maxArg(30)
+        .maxIterations(100)
         .build();
     assertEquals(-2, nr.inverse(f, 4, 0.0), TOLERANCE);
     assertEquals(-3, nr.inverse(f, 9, 0.0), TOLERANCE);
@@ -35,8 +36,8 @@ public class AlgBiSectionTest {
 
   @Test
   public void cubeRoot() {
-    SolverFunctionDerivative f = x -> x * x * x;
-    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+    UnivariateDifferentiableFunction f = x -> x * x * x;
+    Solver<UnivariateFunction> nr = BiSectionSolverBuilder.builder()
         .minArg(-30)
         .maxArg(30)
         .build();
@@ -47,8 +48,8 @@ public class AlgBiSectionTest {
 
   @Test
   public void quadratic_a() {
-    SolverFunctionDerivative f = x -> (x - 4) * (x + 3);
-    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+    UnivariateDifferentiableFunction f = x -> (x - 4) * (x + 3);
+    Solver<UnivariateFunction> nr = BiSectionSolverBuilder.builder()
         .minArg(-30)
         .maxArg(30)
         .build();
@@ -61,8 +62,8 @@ public class AlgBiSectionTest {
 
   @Test
   public void quadratic_b() {
-    SolverFunctionDerivative f = x -> (x - 4) * (x + 3);
-    Solver<SolverFunction> nr = BiSectionSolverBuilder.builder()
+    UnivariateDifferentiableFunction f = x -> (x - 4) * (x + 3);
+    Solver<UnivariateFunction> nr = BiSectionSolverBuilder.builder()
         .minArg(0)
         .maxArg(30)
         .build();

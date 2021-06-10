@@ -5,8 +5,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 
-import org.blacksmith.finlib.curve.algorithm.InterpolatedFunction;
-import org.blacksmith.finlib.curve.algorithm.UnivariateFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.interest.basis.DayCount;
 
 public class CurveImpl implements Curve {

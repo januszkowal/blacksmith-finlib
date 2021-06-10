@@ -2,9 +2,9 @@ package org.blacksmith.finlib.curve;
 
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
-import org.blacksmith.finlib.curve.algorithm.InterpolatedFunction;
-import org.blacksmith.finlib.curve.algorithm.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 
 public class CurveFactory {
   public Curve createCurve(CurveDefinition definition) {

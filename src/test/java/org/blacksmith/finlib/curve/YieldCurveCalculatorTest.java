@@ -3,10 +3,7 @@ package org.blacksmith.finlib.curve;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
 import org.blacksmith.finlib.curve.types.Knot;
-import org.blacksmith.finlib.interest.basis.StandardDayCounts;
-import org.junit.jupiter.api.Test;
 
 import lombok.extern.slf4j.Slf4j;
 

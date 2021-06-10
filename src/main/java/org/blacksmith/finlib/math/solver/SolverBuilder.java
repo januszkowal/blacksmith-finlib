@@ -1,17 +1,17 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-public interface SolverBuilder<F extends SolverFunction, S extends Solver<F>> {
-  SolverBuilder<F, S> tolerance(double tolerance);
+public interface SolverBuilder<F extends UnivariateFunction> {
+  SolverBuilder<F> tolerance(double tolerance);
 
-  SolverBuilder<F, S> maxIterations(long iterations);
+  SolverBuilder<F> maxIterations(int iterations);
 
-  SolverBuilder<F, S> minArg(double minArg);
+  SolverBuilder<F> minArg(double minArg);
 
-  SolverBuilder<F, S> maxArg(double maxArg);
+  SolverBuilder<F> maxArg(double maxArg);
 
-  SolverBuilder<F, S> breakIfCandidateNotChanging(boolean breakTheSameCandidate);
+  SolverBuilder<F> breakIfCandidateNotChanging(boolean breakTheSameCandidate);
 
   Solver<F> build();
 }

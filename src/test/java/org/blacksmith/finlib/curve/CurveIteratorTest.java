@@ -3,8 +3,8 @@ package org.blacksmith.finlib.curve;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
-import org.blacksmith.finlib.curve.algorithm.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.interest.basis.DayCount;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;

@@ -2,7 +2,7 @@ package org.blacksmith.finlib.curve;
 
 import java.util.List;
 
-import org.blacksmith.finlib.curve.algorithm.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 
 import lombok.extern.slf4j.Slf4j;

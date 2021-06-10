@@ -8,11 +8,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
-import org.blacksmith.finlib.curve.algorithm.InterpolatedFunction;
-import org.blacksmith.finlib.curve.algorithm.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;

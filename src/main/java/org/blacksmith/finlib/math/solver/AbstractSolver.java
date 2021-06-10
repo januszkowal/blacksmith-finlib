@@ -1,90 +1,93 @@
 package org.blacksmith.finlib.math.solver;
 
-import java.util.Map;
+import org.blacksmith.finlib.exception.OverflowException;
+import org.blacksmith.finlib.exception.TooManyEvaluationsException;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-import org.blacksmith.finlib.math.solver.exception.OverflowException;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
-
-public abstract class AbstractSolver<F extends SolverFunction>  {
-  protected final long maxIterations;
+public abstract class AbstractSolver<FUNC extends UnivariateFunction> {
+  protected final int maxIterations;
+  protected final double min;
+  protected final double max;
   protected final double tolerance;
-  protected final boolean breakIfTheSameCandidate;
-  protected Double initialCandidate;
-  protected F function;
-  //Values actualized during iteration
-  protected long iterations;
-  protected double candidate;
-  protected double functionValue;
-  protected double priorCandidate;
-  protected int priorCandidateCount;
+  protected FUNC function;
+  protected double target;
+  protected double initialCandidate;
+  protected int iterations;
+  private double candidate;
+  private double priorCandidate;
+  private double functionValue;
+  private int priorCandidateCount;
 
-  public AbstractSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate) {
+  public AbstractSolver(int maxIterations, double min, double max, double tolerance) {
     this.maxIterations = maxIterations;
+    this.min = min;
+    this.max = max;
     this.tolerance = tolerance;
-    this.breakIfTheSameCandidate = breakIfTheSameCandidate;
   }
 
-  public Double getInitialCandidate() {
-    return this.initialCandidate;
+  public double solve(FUNC function, double target, double candidate)
+      throws TooManyEvaluationsException {
+    // Initialization.
+    setup(function, target, candidate);
+    // Perform computation.
+    return doSolve();
   }
 
-  public void setInitialCandidate(double initialCandidate) {
-    this.initialCandidate = initialCandidate;
-  }
-
-  public long getMaxIterations() {
+  public int getMaxIterations() {
     return this.maxIterations;
   }
 
-  public long getIterations() {
+  public int getIterations() {
     return this.iterations;
-  }
-
-  public double getCandidate() {
-    return candidate;
-  }
-
-  protected void setCandidate(double newCandidate) {
-    this.priorCandidate = this.candidate;
-    this.candidate = function.alignCandidate(newCandidate);
-    if (this.candidate == priorCandidate) {
-      this.priorCandidateCount++;
-    } else {
-      this.priorCandidateCount = 0;
-    }
-    if (!Double.isFinite(this.candidate)) {
-      throw new OverflowException("Candidate overflow", this.getStats());
-    }
-  }
-
-  public double getFunctionValue() {
-    return functionValue;
-  }
-
-  protected void setFunctionValue(double functionValue) {
-    this.functionValue = functionValue;
-    if (!Double.isFinite(functionValue)) {
-      throw new OverflowException("Function value overflow", this.getStats());
-    }
-  }
-
-  public void reset() {
-    iterations = 0;
-    priorCandidate = Double.MAX_VALUE;
-    priorCandidateCount = 0;
-  }
-
-  public void nextIteration() {
-    iterations++;
   }
 
   public double getTolerance() {
     return this.tolerance;
   }
 
-  public abstract Map<String, ?> getStats();
+  public double getCandidate() {
+    return this.candidate;
+  }
 
-  protected boolean isResultDiffLessThanTolerance() {
-    return Math.abs(functionValue) < tolerance;
+  public void setCandidate(double newCandidate) {
+
+    //    this.candidate = function.alignCandidate(newCandidate);
+
+    if (!Double.isFinite(newCandidate)) {
+      throw new OverflowException("Candidate overflow");
+      //      throw new OverflowException("Candidate overflow", this.getStats());
+    }
+    this.priorCandidate = this.candidate;
+    this.candidate = newCandidate;
+    if (this.candidate == priorCandidate) {
+      this.priorCandidateCount++;
+    } else {
+      this.priorCandidateCount = 0;
+    }
+  }
+
+  public double getFunctionValue() {
+    return this.functionValue;
+  }
+
+  protected void setFunctionValue(double functionValue) {
+    this.functionValue = functionValue;
+    if (!Double.isFinite(functionValue)) {
+      throw new OverflowException("Function value overflow");
+    }
+  }
+
+  public double getInitialCandidate() {
+    return this.initialCandidate;
+  }
+
+  protected abstract double doSolve() throws TooManyEvaluationsException;
+
+  protected void setup(FUNC function, double target, double initialCandidate) {
+    this.function = function;
+    this.target = target;
+    this.initialCandidate = initialCandidate;
+    //
+    this.iterations = 0;
   }
 }

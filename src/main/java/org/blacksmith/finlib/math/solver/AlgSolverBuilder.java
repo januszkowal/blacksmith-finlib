@@ -1,8 +1,8 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunction, Solver<SolverFunction>>
+public class AlgSolverBuilder extends AbstractSolverBuilder<UnivariateFunction>
 {
 
   private SolverAlgorithm algorithm = SolverAlgorithm.BI_SECTION;
@@ -21,15 +21,15 @@ public class AlgSolverBuilder extends AbstractSolverBuilder<SolverFunction, Solv
   }
 
   @Override
-  public Solver<SolverFunction> build() {
+  public Solver<UnivariateFunction> build() {
     if (this.algorithm == SolverAlgorithm.BI_SECTION) {
-      return new BiSectionSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging, minArg, maxArg);
+      return new BiSectionSolver(this.maxIterations, this.tolerance, minArg, maxArg, this.breakIfCandidateNotChanging);
     } else {
-      return castSolver(new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging), SolverFunction.class);
+      return castSolver(new NewtonRaphsonSolver(this.maxIterations, this.tolerance, this.breakIfCandidateNotChanging), UnivariateFunction.class);
     }
   }
 
-  public static <T extends SolverFunction> Solver<T> castSolver(Solver<?> solver, Class<T> cls) {
+  public static <T extends UnivariateFunction> Solver<T> castSolver(Solver<?> solver, Class<T> cls) {
     return (Solver<T>)solver;
   }
 }

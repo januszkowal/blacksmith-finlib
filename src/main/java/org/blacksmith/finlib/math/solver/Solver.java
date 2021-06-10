@@ -2,13 +2,10 @@ package org.blacksmith.finlib.math.solver;
 
 import java.util.Map;
 
-import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
-import org.blacksmith.finlib.math.solver.exception.OverflowException;
-import org.blacksmith.finlib.math.solver.exception.ZeroValuedDerivativeException;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-public interface Solver<F extends SolverFunction> {
-  double solve(final F function, double target, double guess);
+public interface Solver<FUNC extends UnivariateFunction> {
+  double solve(final FUNC function, double target, double guess);
 
   /**
    * Find the input value to the function which yields the given
@@ -26,7 +23,7 @@ public interface Solver<F extends SolverFunction> {
    * @throws NonconvergenceException       if the method fails to converge in the
    *                                       given number of iterations
    */
-  default double inverse(final F function, double target, double guess) {
+  default double inverse(final FUNC function, double target, double guess) {
     return solve(function, target, guess);
   }
 
@@ -40,21 +37,15 @@ public interface Solver<F extends SolverFunction> {
    * @param guess the value to start at
    * @return an input to the function which yields zero within the given
    * tolerance
-   * @see #inverse(F, double, double)
+   * @see #inverse(FUNC, double, double)
    */
-  default double findRoot(final F function, final double guess) {
+  default double findRoot(final FUNC function, final double guess) {
     return solve(function, 0, guess);
   }
-
-  Double getInitialCandidate();
-
-  long getMaxIterations();
-
-  long getIterations();
-
-  double getCandidate();
-
+  double getTolerance();
   double getFunctionValue();
-
+  double getInitialCandidate();
+  int getMaxIterations();
+  int getIterations();
   Map<String, ?> getStats();
 }
