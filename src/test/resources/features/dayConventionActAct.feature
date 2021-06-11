@@ -1,6 +1,6 @@
 Feature: Act/Act Conventions - ISDA International Swaps and Derivatives Associations, Inc.
 
-  Scenario: ACT/ACT - 3a - semi-annual
+  Scenario: ACT/ACT - 3a1 - semi-annual
     Given Interest coupon - frequency 6M settlement date 2003-11-01 maturity date 2008-05-01
     And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
@@ -14,17 +14,16 @@ Feature: Act/Act Conventions - ISDA International Swaps and Derivatives Associat
     Then Day Convention verification
       | start      | end        | days | fraction |
       | 2003-11-01 | 2004-05-01 | 182  | 182/366d |
-
   Scenario: ACT/ACT - 3a2 - semi-annual
-    Given Interest coupon - frequency 6M settlement date 1998-11-01 maturity date 2008-05-01
+    Given Interest coupon - frequency 6M settlement date 2003-09-01 maturity date 2008-05-01
     And For Day Convention ACT_ACT_ICMA
     Then Day Convention verification
       | start      | end        | days | fraction |
-      | 2003-11-01 | 2004-05-01 | 182  | 182/364d |
+      | 2003-09-01 | 2004-03-01 | 182  | 182/364d |
     And For Day Convention ACT_ACT_ISDA
     Then Day Convention verification
       | start      | end        | days | fraction         |
-      | 2003-11-01 | 2004-05-01 | 182  | 61/365d+121/366d |
+      | 2003-09-01 | 2004-03-01 | 182  | 122/365d+60/366d |
     And For Day Convention ACT_ACT_AFB
     Then Day Convention verification
       | start      | end        | days | fraction |

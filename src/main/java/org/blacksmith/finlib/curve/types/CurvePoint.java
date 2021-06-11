@@ -1,10 +1,12 @@
 package org.blacksmith.finlib.curve.types;
 
+import java.time.LocalDate;
+
 import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class CurvePoint {
-  int x;
+  LocalDate date;
+  double x;
   double y;
-  boolean knot;
 }

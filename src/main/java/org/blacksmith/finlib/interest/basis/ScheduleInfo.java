@@ -10,14 +10,20 @@ import lombok.Value;
 @Value
 @Builder
 public class ScheduleInfo {
-  public static ScheduleInfo SIMPLE_SCHEDULE_INFO = builder()
-      .isEndOfMonthConvention(true)
-      .build();
-
   LocalDate startDate;
   LocalDate endDate;
-  LocalDate couponStartDate;
-  LocalDate couponEndDate;
+  LocalDate periodStartDate;
+  LocalDate periodEndDate;
   boolean isEndOfMonthConvention;
   Frequency couponFrequency;
+
+  public static ScheduleInfo fromDateRange(LocalDate firstDate, LocalDate secondDate) {
+    return ScheduleInfo.builder()
+        .startDate(firstDate)
+        .endDate(secondDate)
+        .periodStartDate(firstDate)
+        .periodEndDate(secondDate)
+        .isEndOfMonthConvention(true)
+        .build();
+  }
 }

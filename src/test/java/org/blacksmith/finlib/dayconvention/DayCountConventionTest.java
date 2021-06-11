@@ -3,9 +3,9 @@ package org.blacksmith.finlib.dayconvention;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.interest.basis.InterestBasis;
+import org.blacksmith.finlib.interest.basis.DayCount;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
-import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
+import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.blacksmith.finlib.interest.basis.daycount.ActActIcmaConvention;
 import org.junit.jupiter.api.Test;
 
@@ -15,12 +15,12 @@ class DayCountConventionTest {
 
   @Test
   public void testDayCountConvention() {
-    InterestBasis dayCountConvention = StandardInterestBasis.D30_360_ISDA;
+    DayCount dayCountConvention = StandardDayCounts.D30_360_ISDA;
     assertEquals(30, dayCountConvention.days(LocalDate.parse("2020-03-01"), LocalDate.parse("2020-04-01"), null));
     assertEquals(0.08333333333333333,
         dayCountConvention.relativeYearFraction(LocalDate.parse("2020-03-01"), LocalDate.parse("2020-04-01"), null));
 
-    dayCountConvention = StandardInterestBasis.ACT_365_25;
+    dayCountConvention = StandardDayCounts.ACT_365_25;
     assertEquals(31, dayCountConvention.days(LocalDate.parse("2020-03-01"), LocalDate.parse("2020-04-01"), null));
     assertEquals(0.08487337440109514,
         dayCountConvention.relativeYearFraction(LocalDate.parse("2020-03-01"), LocalDate.parse("2020-04-01"), null));
@@ -35,8 +35,8 @@ class DayCountConventionTest {
         .startDate(startDate)
         .endDate(endDate)
         .isEndOfMonthConvention(false)
-        .couponStartDate(startDate)
-        .couponEndDate(endDate)
+        .periodStartDate(startDate)
+        .periodEndDate(endDate)
         .couponFrequency(Frequency.P6M)
         .build();
     double result = convention.calculateYearFraction(startDate, endDate, scheduleInfo);
@@ -52,8 +52,8 @@ class DayCountConventionTest {
         .startDate(startDate)
         .endDate(endDate)
         .isEndOfMonthConvention(true)
-        .couponStartDate(startDate)
-        .couponEndDate(endDate)
+        .periodStartDate(startDate)
+        .periodEndDate(endDate)
         .couponFrequency(Frequency.P6M)
         .build();
     double result = convention.calculateYearFraction(startDate, endDate, scheduleInfo);
@@ -69,8 +69,8 @@ class DayCountConventionTest {
         .startDate(startDate)
         .endDate(endDate)
         .isEndOfMonthConvention(false)
-        .couponStartDate(startDate)
-        .couponEndDate(endDate)
+        .periodStartDate(startDate)
+        .periodEndDate(endDate)
         .couponFrequency(Frequency.P6M)
         .build();
     double result = convention.calculateYearFraction(startDate, endDate, scheduleInfo);

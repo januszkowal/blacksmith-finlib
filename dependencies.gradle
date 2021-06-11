@@ -45,5 +45,8 @@ ext.libs = [
         ],
         benchmarkAnnotationProcessors: [
                 'org.openjdk.jmh:jmh-generator-annprocess:' + jmhBenchmarVersion
+        ],
+        validation: [
+                'javax.validation:validation-api:' + validationVersion
         ]
 ]

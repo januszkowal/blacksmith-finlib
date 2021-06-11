@@ -37,6 +37,7 @@ dependencies {
     api libs.jackson
     api libs.apacheCommonsCollections
     api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    api libs.validation
     //jmh
     jmhAnnotationProcessor libs.lombok
     jmhAnnotationProcessor libs.benchmarkAnnotationProcessors

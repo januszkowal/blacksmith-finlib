@@ -5,16 +5,15 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.DecimalRounded;
-import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.interest.schedule.ScheduleParameters;
 import org.blacksmith.finlib.interest.schedule.events.Event;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.policy.helper.InterestUpdater;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableInterestEntry;
+import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,22 +46,22 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
   public List<InterestEvent> update(List<InterestEvent> cashflows) {
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
-    Solver<SolverFunction> solver = createSolver(cashflows, minPmt, maxPmt);
+    Solver<UnivariateFunction> solver = createSolver(cashflows, minPmt, maxPmt);
     var sf = solverFunction(cashflows);
     solver.findRoot(sf, getEstimatedPayment(cashflows));
     log.info("final :{}", Event.eventsToString(cashflows));
     return cashflows;
   }
 
-  public Solver<SolverFunction> createSolver(List<InterestEvent> cashflows, double minArg, double maxArg) {
+  public Solver<UnivariateFunction> createSolver(List<InterestEvent> cashflows, double minArg, double maxArg) {
     var minPmt = scheduleParameters.getPrincipal().subtract(scheduleParameters.getEndPrincipal()).doubleValue() / cashflows.size();
     var maxPmt = scheduleParameters.getPrincipal().doubleValue() / 2d;
-    return solverBuilder.tolerance(0.01d).minArg(minArg).maxArg(maxArg).maxIterations(1000).breakIfCandidateNotChanging(true)
-        .build();
+    return solverBuilder.tolerance(0.01d).minArg(minArg).maxArg(maxArg).maxIterations(1000).breakIfCandidateNotChanging(true).build();
   }
 
-  public SolverFunctionDerivative solverFunction(List<InterestEvent> cashflows) {
-    return new SolverFunctionDerivative() {
+  public UnivariateDifferentiableFunction solverFunction(List<InterestEvent> cashflows) {
+    return new UnivariateDifferentiableFunction() {
+
       @Override
       public int numberOfDerivatives() {
         return 1;
@@ -73,13 +72,13 @@ public class AnnuityScheduleAlgorithm extends AbstractScheduleAlgorithm implemen
         return scheduleDerivativeValue(cashflows, arg);
       }
 
-      @Override
-      public double alignCandidate(double arg) {
-        return Rate.of(arg, 2).doubleValue();
-      }
+//      @Override
+//      public double alignCandidate(double arg) {
+//        return Rate.of(arg, 2).doubleValue();
+//      }
 
       @Override
-      public double computeValue(double arg) {
+      public double value(double arg) {
         return recalculateAnnuity(cashflows, arg);
       }
     };

@@ -2,66 +2,37 @@ package org.blacksmith.finlib.math.solver;
 
 import java.util.Map;
 
-import org.blacksmith.finlib.math.solver.exception.NonconvergenceException;
-import org.blacksmith.finlib.math.solver.function.SolverFunction;
+import org.blacksmith.finlib.exception.NonconvergenceException;
+import org.blacksmith.finlib.exception.TooManyEvaluationsException;
+import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BiSectionSolver extends AbstractSolver<SolverFunction> implements Solver<SolverFunction> {
+public class BiSectionSolver extends AbstractUnivariateSolver {
 
-  private final double minArg;
-  private final double maxArg;
+  private final boolean breakIfTheSameCandidate;
 
-  public BiSectionSolver(long maxIterations, double tolerance, boolean breakIfTheSameCandidate, double minArg, double maxArg) {
-    super(maxIterations, tolerance, breakIfTheSameCandidate);
-    this.minArg = minArg;
-    this.maxArg = maxArg;
+  public BiSectionSolver(int maxIterations, double tolerance, double minArg, double maxArg, boolean breakIfTheSameCandidate) {
+    super(maxIterations, minArg, maxArg, tolerance);
+    this.breakIfTheSameCandidate = breakIfTheSameCandidate;
   }
 
-  @Override
-  public double solve(SolverFunction function, double target, double guess) {
-    this.function = function;
-    reset();
-    double a = minArg;
-    double b = maxArg;
-    setInitialCandidate(a);
-    setCandidate(a);
-    double fvd = function.computeValue(minArg) - target;
-    for (int i = 0; i < this.maxIterations; i++) {
-      nextIteration();
-      setCandidate((a + b) / 2);
-      setFunctionValue(function.computeValue(getCandidate()) - target);
-      log.debug("i={} arg={} fv={}", getIterations(), getCandidate(), getFunctionValue());
-      if (isResultDiffLessThanTolerance()) {
-        return this.getCandidate();
-      } else {
-        if (breakIfTheSameCandidate && priorCandidateCount > 2) {
-          return this.getCandidate();
-        }
-        if (getFunctionValue() * fvd < 0) {
-          b = this.getCandidate();
-        } else {
-          a = this.getCandidate();
-          fvd = getFunctionValue();
-        }
-      }
-    }
-    throw new NonconvergenceException(guess, maxIterations);
-  }
-
-  @Override
   public Map<String, ?> getStats() {
     return Map.of(
         "maxIterations", getMaxIterations(),
-        "minArg", minArg,
-        "maxArg", maxArg,
-        "initialCandidate", getInitialCandidate(),
+        "minArg", min,
+        "maxArg", max,
+        "initialCandidate", this.initialCandidate,
         "iterations", getIterations(),
         "tolerance", getTolerance(),
-        "candidate", getCandidate(),
+        "candidate", this.getCandidate(),
         "functionValue", getFunctionValue());
   }
+
+  //  protected boolean isResultDiffLessThanTolerance() {
+  //    return Math.abs(this.functionValue - target) < tolerance;
+  //  }
 
   @Override
   public String toString() {
@@ -74,4 +45,32 @@ public class BiSectionSolver extends AbstractSolver<SolverFunction> implements S
         + ", functionValue=" + this.getFunctionValue() + '}';
   }
 
+  @Override
+  protected double doSolve() throws TooManyEvaluationsException {
+    double a = min;
+    double b = max;
+
+    double fa = function.value(min) - target;
+    while (iterations < this.maxIterations) {
+      iterations++;
+      setCandidate((a + b) * 0.5);
+      setFunctionValue(function.value(getCandidate()) - target);
+      log.debug("i={} a={} b={} arg={} fa={} fv={} target={}", iterations, a, b, getCandidate(), fa, getFunctionValue(), target);
+      if (getFunctionValue() * fa > 0) {
+        a = this.getCandidate();
+        fa = getFunctionValue();
+      } else {
+        b = this.getCandidate();
+      }
+      if (Math.abs(this.getFunctionValue()) < tolerance) {
+        return (a + b) * 0.5;
+      }
+    }
+    throw new NonconvergenceException(this.getInitialCandidate(), maxIterations);
+  }
+
+  @Override
+  protected void setup(UnivariateFunction function, double target, double startValue) {
+    super.setup(function, target, startValue);
+  }
 }

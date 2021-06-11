@@ -9,7 +9,7 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.calendar.BusinessDayCalendar;
 import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
 import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
-import org.blacksmith.finlib.interest.basis.InterestBasis;
+import org.blacksmith.finlib.interest.basis.DayCount;
 
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class ScheduleParameters {
   private boolean isEndOfMonthConvention;
   private Frequency couponFrequency;
   private Frequency rateResetFrequency;
-  private InterestBasis basis;
+  private DayCount basis;
   private BusinessDayConvention businessDayConvention;
   private BusinessDayCalendar businessDayCalendar;
   @Builder.Default

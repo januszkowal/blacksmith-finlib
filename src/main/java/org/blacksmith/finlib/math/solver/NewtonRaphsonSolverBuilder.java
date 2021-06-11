@@ -1,11 +1,11 @@
 package org.blacksmith.finlib.math.solver;
 
-import org.blacksmith.finlib.math.solver.function.SolverFunctionDerivative;
+import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
 
 /**
  * Builder for {@link NewtonRaphsonSolver} instances.
  */
-public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<SolverFunctionDerivative, Solver<SolverFunctionDerivative>> {
+public class NewtonRaphsonSolverBuilder extends AbstractSolverBuilder<UnivariateDifferentiableFunction> {
 
   public static NewtonRaphsonSolverBuilder builder() {
     return new NewtonRaphsonSolverBuilder();

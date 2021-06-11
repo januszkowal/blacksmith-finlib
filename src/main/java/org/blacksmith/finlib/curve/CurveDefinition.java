@@ -1,12 +1,24 @@
 package org.blacksmith.finlib.curve;
 
-import org.blacksmith.finlib.curve.algorithm.AlgorithmType;
+import java.util.List;
 
+import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
+import org.blacksmith.finlib.interest.basis.DayCount;
+
+import lombok.Builder;
+import lombok.NonNull;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
+@Builder
 public class CurveDefinition {
+  @NonNull
   String curveName;
-  AlgorithmType algorithm;
-  int yearLength;
+  @NonNull
+  DayCount dayCount;
+  @NonNull
+  InterpolationAlgorithm interpolator;
+  @NonNull
+  List<CurveNodeDefinition> curveNodes;
 }

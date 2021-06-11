@@ -18,7 +18,7 @@ import org.blacksmith.finlib.calendar.provider.DatePartProvider;
 import org.blacksmith.finlib.calendar.extractor.MonthDayExtractor;
 import org.blacksmith.finlib.dayconvention.StandardBusinessDayConvention;
 import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
-import org.blacksmith.finlib.interest.basis.StandardInterestBasis;
+import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.blacksmith.finlib.interest.schedule.events.Event;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalUpdatePolicyByAmount;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalsGenerator;
@@ -69,7 +69,7 @@ public class AnnuityScheduleTest {
         .maturityDate(LocalDate.of(2021, 1, 1))
         .couponFrequency(Frequency.P3M)
         .rateResetFrequency(Frequency.P1M)
-        .basis(StandardInterestBasis.ACT_365)
+        .basis(StandardDayCounts.ACT_365)
         .businessDayConvention(StandardBusinessDayConvention.FOLLOWING)
         .fixedRate(Rate.of(5.0d))
         .businessDayCalendar(cal)

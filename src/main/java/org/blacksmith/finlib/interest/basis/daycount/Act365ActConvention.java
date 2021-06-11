@@ -5,17 +5,21 @@ import java.time.LocalDate;
 import org.blacksmith.commons.datetime.DateUtils;
 import org.blacksmith.finlib.interest.basis.ScheduleInfo;
 
-public class Act365ActConvention implements DayCountConventionCalculator {
+public class Act365ActConvention extends AbstractConvention {
 
-  @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, endDate);
+  public Act365ActConvention() {
+    super(false);
   }
 
   @Override
-  public double calculateYearFraction(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    long actualDays = calculateDays(startDate, endDate, scheduleInfo);
-    double denominator = DateUtils.isLeapDayInPeriod(startDate, endDate) ? 366d : 365d;
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(firstDate, secondDate);
+  }
+
+  @Override
+  public double calculateYearFraction(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    long actualDays = DateUtils.daysBetween(firstDate, secondDate);
+    double denominator = DateUtils.isLeapDayInPeriod(firstDate, secondDate) ? 366d : 365d;
     return actualDays / denominator;
   }
 }

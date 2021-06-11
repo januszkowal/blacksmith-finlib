@@ -12,7 +12,7 @@ public class ActConvention extends AbstractConstantDenominatorConvention {
   }
 
   @Override
-  public long calculateDays(LocalDate startDate, LocalDate endDate, ScheduleInfo scheduleInfo) {
-    return DateUtils.daysBetween(startDate, endDate);
+  public long calculateDays(LocalDate firstDate, LocalDate secondDate, ScheduleInfo scheduleInfo) {
+    return DateUtils.daysBetween(firstDate, secondDate);
   }
 }
