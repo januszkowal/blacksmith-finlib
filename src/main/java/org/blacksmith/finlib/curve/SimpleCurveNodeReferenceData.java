@@ -1,6 +1,7 @@
 package org.blacksmith.finlib.curve;
 
 import org.blacksmith.finlib.basic.datetime.Tenor;
+import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
 
 import lombok.Value;
 

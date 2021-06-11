@@ -12,7 +12,7 @@ import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 
 public class CurveImpl implements Curve {
   private final LocalDate valuationDate;
-  private final Set<Integer> knotSet;
+  private final Set<Double> knotSet;
   private final UnivariateFunction function;
   private final UnivariateFunction leftExtrapolator;
   private final UnivariateFunction rightExtrapolator;
@@ -21,18 +21,17 @@ public class CurveImpl implements Curve {
   private final String name;
   private final DayCount dayCount;
 
-  public CurveImpl(LocalDate valuationDate, String name, DayCount dayCount, InterpolatedFunction function, Knot minKnot, Knot maxKnot) {
+  public CurveImpl(String name, LocalDate valuationDate, DayCount dayCount, InterpolatedFunction function, Knot minKnot, Knot maxKnot) {
     this.valuationDate = valuationDate;
     this.name = name;
     this.dayCount = dayCount;
     this.function = function;
     this.minKnot = minKnot;
     this.maxKnot = maxKnot;
-    this.knotSet = Arrays.stream(function.getKnots())
-        .mapToObj(x -> (int) Math.ceil(x))
+    this.knotSet = Arrays.stream(function.getKnots()).boxed()
         .collect(Collectors.toSet());
-    this.leftExtrapolator = x -> minKnot.getY();
-    this.rightExtrapolator = x -> maxKnot.getY();
+    this.leftExtrapolator = flatExtrapolator(minKnot.getY());
+    this.rightExtrapolator = flatExtrapolator(maxKnot.getY());
   }
 
   @Override
@@ -65,7 +64,16 @@ public class CurveImpl implements Curve {
   }
 
   @Override
-  public boolean isKnot(int x) {
+  public boolean isKnot(double x) {
     return this.knotSet.contains(x);
+  }
+
+  @Override
+  public LocalDate getValuationDate() {
+    return this.valuationDate;
+  }
+
+  private UnivariateFunction flatExtrapolator(double y) {
+    return x -> y;
   }
 }

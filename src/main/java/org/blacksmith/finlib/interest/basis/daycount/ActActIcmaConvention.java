@@ -75,14 +75,14 @@ public class ActActIcmaConvention extends AbstractConvention {
       boolean eom) {
     log.debug("backward period: on={} period={}#{}", calcDate, periodStartDate, periodEndDate);
     LocalDate currEnd = periodEndDate;
-    LocalDate currStart = eom(periodEndDate, freq.minusFrom(currEnd), eom);
+    LocalDate currStart = eom(periodEndDate, freq.subtractFrom(currEnd), eom);
     double result = 0;
     while (currStart.isAfter(periodStartDate)) {
       if (calcDate.isAfter(currStart)) {
         result += calcPeriod(currStart, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);
       }
       currEnd = currStart;
-      currStart = eom(periodEndDate, freq.minusFrom(currEnd), eom);
+      currStart = eom(periodEndDate, freq.subtractFrom(currEnd), eom);
     }
     log.info("last: {} {} {}", calcDate, currEnd, DateUtils.min(calcDate, currEnd));
     return result + calcPeriod(periodStartDate, DateUtils.min(calcDate, currEnd), currStart, currEnd, freq);

@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.curve.node;
 
 import org.blacksmith.finlib.basic.datetime.Tenor;
 
