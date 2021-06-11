@@ -1,9 +1,10 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.curve.iterator;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.blacksmith.finlib.curve.Curve;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 
 import lombok.Value;

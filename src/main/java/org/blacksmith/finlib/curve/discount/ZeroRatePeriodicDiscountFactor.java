@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.pricer;
+package org.blacksmith.finlib.curve.discount;
 
 import java.time.LocalDate;
 

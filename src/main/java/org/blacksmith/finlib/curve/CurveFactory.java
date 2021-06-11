@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.curve.node.CurveNode;
+import org.blacksmith.finlib.curve.node.CurveNodeMetadata;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;

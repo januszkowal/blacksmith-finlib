@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.blacksmith.finlib.basic.datetime.Tenor;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
+import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.junit.jupiter.api.Test;

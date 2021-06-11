@@ -3,7 +3,6 @@ package org.blacksmith.finlib.curve.node;
 import java.time.LocalDate;
 
 import org.blacksmith.commons.arg.ArgChecker;
-import org.blacksmith.finlib.curve.CurveNodeMetadata;
 
 import lombok.Value;
 

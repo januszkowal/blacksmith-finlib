@@ -1,9 +1,12 @@
-package org.blacksmith.finlib.curve;
+package org.blacksmith.finlib.curve.iterator;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.blacksmith.finlib.curve.Curve;
+import org.blacksmith.finlib.curve.iterator.CurveIterator;
 
 public class CurveIntegerIterator extends CurveIterator<Integer> {
   public CurveIntegerIterator(LocalDate valuationDate, Integer min, Integer max, Curve curve) {

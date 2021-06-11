@@ -2,6 +2,7 @@ package org.blacksmith.finlib.curve;
 
 import java.util.List;
 
+import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.interest.basis.DayCount;
 
