@@ -64,11 +64,6 @@ public class CurveImpl implements Curve {
   }
 
   @Override
-  public boolean isKnot(double x) {
-    return this.knotSet.contains(x);
-  }
-
-  @Override
   public LocalDate getValuationDate() {
     return this.valuationDate;
   }

@@ -1,26 +1,17 @@
 package org.blacksmith.finlib.curve.discount;
 
-import java.time.LocalDate;
-
-import org.blacksmith.finlib.interest.basis.DayCount;
-
 /**
  * Zero-coupon continuously-compounded rates.
  */
 public class ZeroRatePeriodicDiscountFactor implements DiscountFactor {
   private final int frequency;
-  private final DayCount dayCount;
-  private final LocalDate valuationDate;
 
-  public ZeroRatePeriodicDiscountFactor(LocalDate valuationDate, DayCount dayCount, int frequency) {
-    this.valuationDate = valuationDate;
-    this.dayCount = dayCount;
+  public ZeroRatePeriodicDiscountFactor(int frequency) {
     this.frequency = frequency;
   }
 
-  @Override
-  public double relativeYearFraction(LocalDate date) {
-    return dayCount.relativeYearFraction(valuationDate, date);
+  public static ZeroRatePeriodicDiscountFactor of(int frequency) {
+    return new ZeroRatePeriodicDiscountFactor(frequency);
   }
 
   /** convert zero rate periodically compounded to discount factor */
