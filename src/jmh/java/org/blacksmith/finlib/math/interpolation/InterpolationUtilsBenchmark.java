@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.math.analysis;
+package org.blacksmith.finlib.math.interpolation;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Fork(2)
 @Warmup(iterations = 3)
 @Measurement(iterations = 5)
-public class AlgorithmUtilsBenchmark {
+public class InterpolationUtilsBenchmark {
   private static List<Knot> create365DayKnots() {
     return List.of(Knot.of(0, 2.43d),
         Knot.of(1, 2.50d),

@@ -157,7 +157,7 @@ Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662
 ### 3.1 Business day conventions
 [Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
 ### 3.2 Xirr
-[Source code see here](src/main/java/org/blacksmith/finlib/math/xirr)
+[Source code see here](src/main/java/org/blacksmith/finlib/valuation/xirr)
 
 Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
 - BiSection method
