@@ -3,7 +3,7 @@ package org.blacksmith.finlib.curve;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.interest.basis.DayCount;
@@ -19,7 +19,7 @@ class CurveIteratorTest {
     LocalDate d1 = LocalDate.of(2021, 7, 20);
     LocalDate d2 = LocalDate.of(2021, 9, 1);
     DayCount dayCount = StandardDayCounts.D30_E_360;
-    var akimaInterpolatorBlackSmith = factory.createFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
+    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
   }
 
   @Test
@@ -27,7 +27,7 @@ class CurveIteratorTest {
     LocalDate d1 = LocalDate.of(2021, 7, 20);
     LocalDate d2 = LocalDate.of(2021, 9, 1);
     DayCount dayCount = StandardDayCounts.D30_E_360;
-    var akimaInterpolatorBlackSmith = factory.createFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
+    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
   }
 
   private List<Knot> create365DayKnots() {

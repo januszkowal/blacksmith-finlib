@@ -16,8 +16,8 @@ public class YieldCurveCalculatorService {
   YieldCurveSourceRatesService yieldCurveSourceRatesService;
 
   public void calculate(String curveName, Currency currency, LocalDate asOfDate) {
-    CurveDefinitionExt definitionExt = definitionService.getDefinition(curveName, currency, asOfDate);
-    List<Knot> knots = yieldCurveSourceRatesService.getKnots(asOfDate, definitionExt.getKnots());
+    CurveDefinition definitionExt = definitionService.getDefinition(curveName, currency, asOfDate);
+//    List<Knot> knots = yieldCurveSourceRatesService.getKnots(asOfDate, definitionExt.getKnots());
 //    CurveDefinition definition = CurveDefinition.of(curveName, definitionExt.getCurveType(), StandardDayCounts.ACT_365);
 //    var curveRates = curveCalculator.values(asOfDate, definition, knots);
 //    store(curveName, currency, asOfDate, curveRates);

@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
-import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.CurvePoint;
@@ -73,10 +73,10 @@ public class InterpolatorGenerateTest {
     double[] yValues = knots.stream().mapToDouble(Knot::getY).toArray();
     Set<Double> knotsX = DoubleStream.of(xValues).boxed().collect(Collectors.toSet());
     int maxValue = knots.stream().mapToInt(x -> (int)x.getX()).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.createFunction(AlgorithmType.AKIMA_SPLINE_BLACKSMITH, xValues, yValues);
-    var akimaInterpolatorApacheCommons = factory.createFunction(AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS, xValues, yValues);
-    var linearInterpolatorBlackSmith = factory.createFunction(AlgorithmType.LINEAR_BLACKSMITH, xValues, yValues);
-    var linearInterpolatorApacheCommons = factory.createFunction(AlgorithmType.LINEAR_APACHE_COMMONS, xValues, yValues);
+    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, xValues, yValues);
+    var akimaInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS, xValues, yValues);
+    var linearInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.LINEAR_BLACKSMITH, xValues, yValues);
+    var linearInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.LINEAR_APACHE_COMMONS, xValues, yValues);
     var valuesAkimaBlackSmith = getValues(akimaInterpolatorBlackSmith, valuationDate, 0, 365);
     var valuesAkimaApacheCommons = getValues(akimaInterpolatorApacheCommons, valuationDate, 0, 365);
     var valuesLinearBlackSmith = getValues(linearInterpolatorBlackSmith, valuationDate, 0, 365);

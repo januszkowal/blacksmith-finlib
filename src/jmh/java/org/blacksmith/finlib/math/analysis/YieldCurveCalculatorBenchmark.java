@@ -8,7 +8,7 @@ import org.blacksmith.finlib.curve.CurveDefinition;
 import org.blacksmith.finlib.curve.YieldCurveCalculator;
 import org.blacksmith.finlib.curve.YieldCurveRate;
 import org.blacksmith.finlib.curve.types.Knot;
-import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -41,7 +41,7 @@ public class YieldCurveCalculatorBenchmark {
     int years;
 
     @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE_BLACKSMITH", "LINEAR_APACHE_COMMONS", "LINEAR_BLACKSMITH" })
-    AlgorithmType algorithm;
+    InterpolationAlgorithm interpolator;
     public List<Knot> knots;
     private CurveDefinition curveDefinition;
 
@@ -53,7 +53,6 @@ public class YieldCurveCalculatorBenchmark {
       else if (years == 10) {
         this.knots = createKnots10Y();
       }
-     // this.curveDefinition = CurveDefinition.of("BONDS", algorithm, StandardDayCounts.ACT_365);
     }
   }
 

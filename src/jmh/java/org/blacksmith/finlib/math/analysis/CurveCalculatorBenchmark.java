@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.blacksmith.finlib.math.analysis.interpolation.AlgorithmType;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.curve.types.Knot;
@@ -42,7 +42,7 @@ public class CurveCalculatorBenchmark {
     int years;
 
     @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE_BLACKSMITH", "LINEAR_APACHE_COMMONS", "LINEAR_BLACKSMITH" })
-    AlgorithmType algorithm;
+    InterpolationAlgorithm interpolator;
     public List<Knot> knots;
     public int xMin;
     public int xMax;
@@ -59,7 +59,7 @@ public class CurveCalculatorBenchmark {
       DoubleSummaryStatistics knotStats = knots.stream().mapToDouble(knot -> knot.getX()).summaryStatistics();
       this.xMin = (int)knotStats.getMin();
       this.xMax = (int)knotStats.getMax();
-      this.curveFunction = new InterpolatorFactory().createFunction(algorithm, knots);
+      this.curveFunction = new InterpolatorFactory().createFunction(interpolator, knots);
     }
   }
 

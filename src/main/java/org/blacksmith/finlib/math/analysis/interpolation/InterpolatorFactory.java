@@ -6,13 +6,13 @@ import java.util.stream.Stream;
 import org.blacksmith.finlib.curve.types.Knot;
 
 public class InterpolatorFactory {
-  public InterpolatedFunction createFunction(AlgorithmType curveType, double[] xValues, double[] yValues) {
+  public InterpolatedFunction createFunction(InterpolationAlgorithm interpolator, double[] xValues, double[] yValues) {
     InterpolatedFunction curveFunction = null;
-    if (curveType == AlgorithmType.AKIMA_SPLINE_BLACKSMITH) {
+    if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH) {
       curveFunction = new AkimaSplineInterpolator().interpolate(xValues, yValues);
-    } else if (curveType == AlgorithmType.LINEAR_BLACKSMITH) {
+    } else if (interpolator == InterpolationAlgorithm.LINEAR_BLACKSMITH) {
       curveFunction = new LinearInterpolator().interpolate(xValues, yValues);
-    } else if (curveType == AlgorithmType.AKIMA_SPLINE_APACHE_COMMONS) {
+    } else if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
           new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xValues, yValues);
       curveFunction = new InterpolatedFunction() {
@@ -26,7 +26,7 @@ public class InterpolatorFactory {
           return akimaSplineApacheCommonsFunction.getKnots();
         }
       };
-    } else if (curveType == AlgorithmType.LINEAR_APACHE_COMMONS) {
+    } else if (interpolator == InterpolationAlgorithm.LINEAR_APACHE_COMMONS) {
       var linearApacheCommonsInterpolatorFunction =
           new org.apache.commons.math3.analysis.interpolation.LinearInterpolator().interpolate(xValues, yValues);
       curveFunction = new InterpolatedFunction() {
@@ -41,20 +41,20 @@ public class InterpolatorFactory {
         }
       };
     } else {
-      throw new IllegalArgumentException("Unknown algorithm type: " + curveType);
+      throw new IllegalArgumentException("Unknown algorithm: " + interpolator);
     }
     return curveFunction;
   }
 
-  public InterpolatedFunction createFunction(AlgorithmType curveType, Collection<Knot> knots) {
+  public InterpolatedFunction createFunction(InterpolationAlgorithm interpolator, Collection<Knot> knots) {
     var xValues = knots.stream().mapToDouble(Knot::getX).toArray();
     var yValues = knots.stream().mapToDouble(Knot::getY).toArray();
-    return createFunction(curveType, xValues, yValues);
+    return createFunction(interpolator, xValues, yValues);
   }
 
-  public InterpolatedFunction createFunction(AlgorithmType curveType, Knot[] knots) {
+  public InterpolatedFunction createFunction(InterpolationAlgorithm interpolator, Knot[] knots) {
     var xValues = Stream.of(knots).mapToDouble(Knot::getX).toArray();
     var yValues = Stream.of(knots).mapToDouble(Knot::getY).toArray();
-    return createFunction(curveType, xValues, yValues);
+    return createFunction(interpolator, xValues, yValues);
   }
 }
