@@ -12,13 +12,11 @@ import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPairProvider;
 import org.blacksmith.finlib.rate.fxrate.FxRate;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
-import org.blacksmith.finlib.rate.fxrate.FxRate3RSource;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
 import org.blacksmith.finlib.rate.fxrate.FxRateProvider;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
 import org.blacksmith.finlib.rate.fxrate.FxRateType;
-import org.blacksmith.finlib.rate.marketdata.MarketData;
-import org.blacksmith.finlib.rate.marketdata.MarketDataExtractor;
+import org.blacksmith.finlib.marketdata.MarketDataExtractor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -53,7 +51,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   @Override
-  public <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3.FxRate3Data, R> extractor) {
+  public <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3, R> extractor) {
     ArgChecker.notNull(extractor, "Extractor must be not null");
     return extractor.extract(getRate(key, date));
   }
@@ -87,13 +85,13 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> Optional<R> getSourceFxRate(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
-    return Optional.ofNullable(fxRateProvider.getRate(key, date))
+      Function<FxRate3, R> extractor) {
+    return Optional.ofNullable(fxRateProvider.getValue(key, date))
         .map(extractor);
   }
 
   private <R extends FxRateOperations<R>> R getRateInternal(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
+      Function<FxRate3, R> extractor) {
     R result;
     FxCurrencyPairInternal pair = getPairInternal(key);
     if (pair.isCross()) {
@@ -105,7 +103,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> R getSimpleRate(FxCurrencyPairInternal pair, LocalDate date,
-      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
+      Function<FxRate3, R> extractor) {
     Optional<R> rateSrc = getSourceFxRate(pair.getFxRateId(), date, extractor);
     if (rateSrc.isEmpty()) {
       throw new IllegalArgumentException(String.format("No available rate %s on %s", pair.getFxRateId().getPairName(),
@@ -121,7 +119,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private <R extends FxRateOperations<R>> R getCrossRate(FxRateId key, LocalDate date,
-      Function<MarketData<FxRate3RSource.FxRate3RawValue>, R> extractor) {
+      Function<FxRate3, R> extractor) {
     FxRateId key1 = FxRateId.of(key.getFromCcy(), localCurrency);
     FxRateId key2 = FxRateId.of(key.getToCcy(), localCurrency);
     FxCurrencyPairInternal pair1 = getPairInternal(key1);
@@ -162,7 +160,7 @@ public class FxRateServiceImpl implements FxRateService {
     return null;
   }
 
-  private Function<MarketData<FxRate3RSource.FxRate3RawValue>, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
+  private Function<FxRate3, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
     switch (fxRateType) {
       case BUY:
         return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getBuy().doubleValue());

@@ -9,6 +9,5 @@ import org.blacksmith.finlib.interest.basis.DayCount;
 public interface Curve extends UnivariateFunction, NamedItem {
   double value(LocalDate date);
   DayCount getDayCount();
-  boolean isKnot(double x);
   LocalDate getValuationDate();
 }

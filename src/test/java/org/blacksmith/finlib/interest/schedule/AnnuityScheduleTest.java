@@ -49,7 +49,7 @@ public class AnnuityScheduleTest {
     }
     LOGGER.info("events={}", scheduleText1(scheduleInterestEvents));
     ScheduleGenerator generator = new ScheduleGenerator(scheduleParameters, null, ph);
-    var schedule = generator.create(scheduleInterestEvents);
+//    var schedule = generator.create(scheduleInterestEvents);
     //LOGGER.info("schedule:{}",scheduleText2(schedule));
   }
 
@@ -61,7 +61,7 @@ public class AnnuityScheduleTest {
         MonthDay.of(12, 26));
     DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(), hyc);
 
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
+    BusinessDayCalendar cal = BusinessDayCalendarWithPolicy.of(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgorithm.ANNUITY)
         .firstCouponDate(LocalDate.of(2019, 1, 1))

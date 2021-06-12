@@ -2,12 +2,12 @@ package org.blacksmith.finlib.rate.intrate;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
-import org.blacksmith.finlib.rate.marketdata.MarketDataId;
+import org.blacksmith.finlib.marketdata.MarketDataId;
 
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class InterestRateId implements MarketDataId {
+public class InterestRateId implements MarketDataId<InterestRate> {
   //table
   String table;
   //period
@@ -22,5 +22,10 @@ public class InterestRateId implements MarketDataId {
     this.table = table;
     this.period = period;
     this.currency = currency;
+  }
+
+  @Override
+  public Class<InterestRate> getMarketDataType() {
+    return InterestRate.class;
   }
 }

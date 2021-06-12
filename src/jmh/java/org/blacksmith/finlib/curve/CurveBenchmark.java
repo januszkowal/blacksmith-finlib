@@ -4,12 +4,16 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
+import org.blacksmith.finlib.curve.definition.CurveDefinition;
 import org.blacksmith.finlib.curve.iterator.CurveDateIterator;
+import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.marketdata.QuoteId;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -35,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 @Measurement(iterations = 5)
 public class CurveBenchmark {
   private static final LocalDate valuationDate = LocalDate.now();
-  private static final YieldCurveCalculator calculator = new YieldCurveCalculator();
   private static final CurveFactory curveFactory = new CurveFactory();
 
   @State(Scope.Benchmark)
@@ -59,9 +62,10 @@ public class CurveBenchmark {
       }
       this.curveDefinition = CurveDefinition.builder()
           .curveName("aaa")
+          .currency(Currency.EUR)
           .dayCount(StandardDayCounts.ACT_360)
           .interpolator(interpolator)
-          .curveNodes(List.of())
+          .nodes(List.of(EMPTY_CURVE_NODE()))
           .build();
       var curve = curveFactory.createCurve(LocalDate.now(), curveDefinition, nodes);
       this.curveIterator = new CurveDateIterator(valuationDate, valuationDate, valuationDate.plusYears(years), curve);
@@ -97,5 +101,29 @@ public class CurveBenchmark {
         SimpleCurveNodeReferenceData.of("3Y", Tenor.TENOR_3Y, 4.59d),
         SimpleCurveNodeReferenceData.of("5Y", Tenor.TENOR_5Y, 4.7d),
         SimpleCurveNodeReferenceData.of("10Y", Tenor.TENOR_10Y, 4.8d));
+  }
+
+  private static CurveNodeDefinition EMPTY_CURVE_NODE() {
+    return new CurveNodeDefinition() {
+      @Override
+      public String getLabel() {
+        return null;
+      }
+
+      @Override
+      public Tenor getTenor() {
+        return null;
+      }
+
+      @Override
+      public QuoteId getQuoteId() {
+        return null;
+      }
+
+      @Override
+      public double getSpread() {
+        return 0;
+      }
+    };
   }
 }

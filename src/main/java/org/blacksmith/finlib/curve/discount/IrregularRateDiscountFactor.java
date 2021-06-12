@@ -1,9 +1,5 @@
 package org.blacksmith.finlib.curve.discount;
 
-import java.time.LocalDate;
-
-import org.blacksmith.finlib.interest.basis.DayCount;
-
 /**
  * XNPV - Irregular rates
  * PV = FV / ((1 + r)^((di - d0) / 365)) = FV * DCF
@@ -11,18 +7,13 @@ import org.blacksmith.finlib.interest.basis.DayCount;
  */
 public class IrregularRateDiscountFactor implements DiscountFactor {
   private final int frequency;
-  private final DayCount dayCount;
-  private final LocalDate valuationDate;
 
-  public IrregularRateDiscountFactor(LocalDate valuationDate, DayCount dayCount, int frequency) {
-    this.valuationDate = valuationDate;
-    this.dayCount = dayCount;
+  public IrregularRateDiscountFactor(int frequency) {
     this.frequency = frequency;
   }
 
-  @Override
-  public double relativeYearFraction(LocalDate date) {
-    return dayCount.relativeYearFraction(valuationDate, date);
+  public static IrregularRateDiscountFactor of(int frequency) {
+    return new IrregularRateDiscountFactor(frequency);
   }
 
   @Override

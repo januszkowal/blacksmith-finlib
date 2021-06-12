@@ -1,9 +1,5 @@
 package org.blacksmith.finlib.curve.discount;
 
-import java.time.LocalDate;
-
-import org.blacksmith.finlib.interest.basis.DayCount;
-
 /**
  * Zero-coupon continuously-compounded rates.
  * PV = FV / (e^(r*t)) = FV * DCF
@@ -11,19 +7,9 @@ import org.blacksmith.finlib.interest.basis.DayCount;
  * DCF = 1 / (e^(r*t)) = e^(-rate*t)
  */
 public class ZeroRateDiscountFactor implements DiscountFactor {
-  private final LocalDate valuationDate;
-  private final DayCount dayCount;
-
-  public ZeroRateDiscountFactor(LocalDate valuationDate, DayCount dayCount) {
-    this.valuationDate = valuationDate;
-    this.dayCount = dayCount;
+  public static ZeroRateDiscountFactor of() {
+    return new ZeroRateDiscountFactor();
   }
-
-  @Override
-  public double relativeYearFraction(LocalDate date) {
-    return dayCount.relativeYearFraction(valuationDate, date);
-  }
-
   @Override
   public double discountFactor(double yearFraction, double interestRate) {
     return Math.exp(-interestRate * yearFraction);

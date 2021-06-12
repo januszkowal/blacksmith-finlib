@@ -5,12 +5,12 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.rate.marketdata.MarketDataExtractor;
+import org.blacksmith.finlib.marketdata.MarketDataExtractor;
 
 public interface FxRateService {
   FxRate getRate(FxRateId key, LocalDate date, FxRateType fxRateType);
 
-  <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3.FxRate3Data, R> extractor);
+  <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3, R> extractor);
 
   FxRate3 getRate(FxRateId key, LocalDate date);
 

@@ -77,6 +77,18 @@ public enum StandardDayCounts implements DayCount {
   ACT_365_25("ACT/365.25", new ActConvention(365.25d)),
 
   /**
+   * Name:  ACT/365.2425
+   * Summary: Divides the actual number of days by 36524.25
+   * Description:
+   * The result is a simple division.
+   * The numerator is the actual number of days in the requested period.
+   * The denominator is always 365.25.
+   * Also known:
+   * Definition:
+   */
+  ACT_365_2425("ACT/365.2425", new ActConvention(365.2425d)),
+
+  /**
    * Name: ACT/365 ACT
    * Summary: Divides the actual number of days by 366 if a leap day is contained, or by 365 if not
    * Description:

@@ -11,7 +11,7 @@ import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.curve.types.Knot;
-import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.InterpolatorFactory;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;

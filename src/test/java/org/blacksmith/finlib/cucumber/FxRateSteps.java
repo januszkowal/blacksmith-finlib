@@ -10,16 +10,15 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.cucumber.dto.FxRate1Input;
 import org.blacksmith.finlib.cucumber.dto.FxRate3Input;
-import org.blacksmith.finlib.rate.fxrate.FxRateMarketDataInMemoryProviderImpl;
-import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
-import org.blacksmith.finlib.rate.fxrate.FxRate3RSource;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
+import org.blacksmith.finlib.rate.fxrate.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
-import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rate.fxrate.FxRateType;
+import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
+import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
+import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
@@ -54,7 +53,6 @@ public class FxRateSteps {
     var rates = createRates(inputFxRates, precision);
     fxRateProvider.setMarketData(rates);
     log.info("Source rates");
-    fxRateProvider.getMarketData().forEach(rate -> log.info(rate.toString()));
   }
 
   @When("Create service with local currency {currency} and precision {int}")
@@ -72,7 +70,7 @@ public class FxRateSteps {
       log.info("Rate {} value {}", input.getKey(), rate3);
       assertNotNull(rate3, input.toString());
       assertThat(rate3.getValue()).describedAs(input.toString())
-          .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
+          .extracting(FxRate3.Data::getBuy, FxRate3.Data::getSell, FxRate3.Data::getAvg)
           .containsExactly(input.getBuy(), input.getSell(), input.getAvg());
       assertRate1(input.getBuy().doubleValue(), input.getKey(), input.getDate(), FxRateType.BUY, input + "-buy");
       assertRate1(input.getSell().doubleValue(), input.getKey(), input.getDate(), FxRateType.SELL, input + "-sell");
@@ -114,10 +112,10 @@ public class FxRateSteps {
         Rate.of(evaluate(row.get("rate")), this.precision));
   }
 
-  public List<MarketDataWrapper<FxRateId, FxRate3RSource.FxRate3RawValue>> createRates(DataTable table, int precision) {
+  public List<MarketDataWrapper<FxRateId, FxRate3>> createRates(DataTable table, int precision) {
     return table.asMaps().stream()
         .map(row -> BasicMarketDataWrapper.of(FxRateId.of(row.get("from"), row.get("to")),
-            FxRate3RSource.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
+            FxRate3.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
                 evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
         .collect(Collectors.toList());
   }
