@@ -2,10 +2,12 @@ package org.blacksmith.finlib.rate.marketdata;
 
 import java.time.LocalDate;
 
+import org.blacksmith.finlib.marketdata.MarketData;
+
 import lombok.ToString;
 
 @ToString
-public class BasicMarketData<V> implements MarketData<V> {
+public class BasicMarketData<V> implements MarketData {
 
   @ToString.Include
   protected final LocalDate date;
@@ -25,8 +27,7 @@ public class BasicMarketData<V> implements MarketData<V> {
   public LocalDate getDate() {
     return this.date;
   }
-
-  @Override
+  
   public V getValue() {
     return this.value;
   }

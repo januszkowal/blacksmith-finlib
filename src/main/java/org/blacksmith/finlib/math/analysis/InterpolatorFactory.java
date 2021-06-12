@@ -1,9 +1,13 @@
-package org.blacksmith.finlib.math.analysis.interpolation;
+package org.blacksmith.finlib.math.analysis;
 
 import java.util.Collection;
 import java.util.stream.Stream;
 
 import org.blacksmith.finlib.curve.types.Knot;
+import org.blacksmith.finlib.math.analysis.interpolation.AkimaSplineInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
+import org.blacksmith.finlib.math.analysis.interpolation.LinearInterpolator;
 
 public class InterpolatorFactory {
   public InterpolatedFunction createFunction(InterpolationAlgorithm interpolator, double[] xValues, double[] yValues) {

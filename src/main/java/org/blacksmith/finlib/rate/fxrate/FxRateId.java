@@ -2,12 +2,12 @@ package org.blacksmith.finlib.rate.fxrate;
 
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
-import org.blacksmith.finlib.rate.marketdata.MarketDataId;
+import org.blacksmith.finlib.marketdata.MarketDataId;
 
 import lombok.Value;
 
 @Value
-public class FxRateId implements MarketDataId {
+public final class FxRateId implements MarketDataId<FxRate3> {
   String table;
   Currency fromCcy;
   Currency toCcy;
@@ -51,5 +51,10 @@ public class FxRateId implements MarketDataId {
 
   public FxRateId inverse() {
     return new FxRateId(this.table, this.toCcy, this.fromCcy);
+  }
+
+  @Override
+  public Class<FxRate3> getMarketDataType() {
+    return FxRate3.class;
   }
 }

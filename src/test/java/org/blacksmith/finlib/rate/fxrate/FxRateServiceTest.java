@@ -39,15 +39,15 @@ class FxRateServiceTest {
     FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
     fxRateProvider.setMarketData(List.of(
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3RSource.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),
+            FxRate3.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3RSource.of(date2, 4.45d, 4.54d, 4.495d, DECIMAL_PLACES)),
+            FxRate3.of(date2, 4.45d, 4.54d, 4.495d, DECIMAL_PLACES)),
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3RSource.of(date3, 4.44d, 4.53d, 4.485d, DECIMAL_PLACES)),
+            FxRate3.of(date3, 4.44d, 4.53d, 4.485d, DECIMAL_PLACES)),
         BasicMarketDataWrapper.of(FxRateId.of("USD", "PLN"),
-            FxRate3RSource.of(date1, 3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES)),
+            FxRate3.of(date1, 3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES)),
         BasicMarketDataWrapper.of(FxRateId.of("HUF", "PLN"),
-            FxRate3RSource.of(date1, 1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES))
+            FxRate3.of(date1, 1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES))
     ));
     rateService = new FxRateServiceImpl(Currency.PLN, (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2), fxRateProvider, OUTPUT_DECIMAL_PLACES);
   }
@@ -97,7 +97,7 @@ class FxRateServiceTest {
     var rate3 = rateService.getRate(fxRateId, date);
     assertNotNull(rate3, description);
     assertThat(rate3.getValue()).describedAs(description)
-        .extracting(FxRate3.FxRate3Data::getBuy, FxRate3.FxRate3Data::getSell, FxRate3.FxRate3Data::getAvg)
+        .extracting(FxRate3.Data::getBuy, FxRate3.Data::getSell, FxRate3.Data::getAvg)
         .containsExactly(Rate.of(buyRate, OUTPUT_DECIMAL_PLACES), Rate.of(sellRate, OUTPUT_DECIMAL_PLACES),
             Rate.of(avgRate, OUTPUT_DECIMAL_PLACES));
     assertRate1(buyRate, fxRateId, date, FxRateType.BUY, description + "-buy");

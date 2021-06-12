@@ -3,7 +3,6 @@ package org.blacksmith.finlib.math.analysis;
 import java.util.List;
 
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
-import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.junit.jupiter.api.Test;
 

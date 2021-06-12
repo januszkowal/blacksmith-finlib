@@ -21,6 +21,8 @@ import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.blacksmith.finlib.interest.schedule.principal.PrincipalsHolder;
 import org.blacksmith.finlib.interest.schedule.timetable.StandardTimetableGenerator;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableGeneratorFactory;
+import org.blacksmith.finlib.rate.intrate.InterestRate;
+import org.blacksmith.finlib.rate.intrate.InterestRateId;
 import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,8 +36,9 @@ import static org.mockito.ArgumentMatchers.any;
 public class NormalScheduleGeneratorTest {
   public InterestRateService createInterestRateService1() {
     var interestRateService = Mockito.mock(InterestRateService.class);
-    //Mockito.when(interestRateService.getRate(any(),any())).thenReturn(BasicMarketData.of(LocalDate.now(),Rate.of(3d)));
-    Mockito.when(interestRateService.getRateValue(any(), any())).thenReturn(Rate.of(3d));
+    Mockito.when(interestRateService.getValue(any(InterestRateId.class), any(LocalDate.class)))
+        .thenReturn(irate(3d));
+//        .thenReturn(Rate.of(3d));
     return interestRateService;
   }
 
@@ -55,8 +58,8 @@ public class NormalScheduleGeneratorTest {
     assertEquals(8, schedule.size());
     //    assertEquals(3,schedule.get(0).getInterestRate());
     log.info("schedule1: {}", schedule);
-    Mockito.when(interestRateService.getRateValue(any(), any()))
-        .thenReturn(Rate.of(2d));
+    Mockito.when(interestRateService.getValue(any(), any()))
+        .thenReturn(irate(2d));
     var schedule2 = scheduleGenerator.update(schedule);
     log.info("schedule2: {}", schedule);
   }
@@ -69,7 +72,7 @@ public class NormalScheduleGeneratorTest {
         MonthDay.of(12, 26));
     DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(), hyc);
 
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
+    BusinessDayCalendar cal = BusinessDayCalendarWithPolicy.of(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgorithm.SIMPLE)
         .currency(Currency.PLN)
@@ -89,6 +92,10 @@ public class NormalScheduleGeneratorTest {
         .indexation(org.blacksmith.finlib.interest.schedule.InterestRateIndexation.FLOATING)
         .interestTable("LIBOR")
         .build();
+  }
+
+  public InterestRate irate(double rate) {
+    return InterestRate.ofRate(LocalDate.now(), Rate.of(rate));
   }
 
 }

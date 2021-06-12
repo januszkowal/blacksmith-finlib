@@ -41,7 +41,7 @@ public class StandardTimetableGeneratorTest {
         MonthDay.of(12, 26));
     DatePartHolidayPolicy<MonthDay> ymdProvider = new DatePartHolidayPolicy<>(MonthDayExtractor.getInstance(), hyc);
 
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
+    BusinessDayCalendar cal = BusinessDayCalendarWithPolicy.of(HolidayPolicyComposite.of(StandardWeekDayPolicy.SAT_SUN, ymdProvider));
     return ScheduleParameters.builder()
         .algorithm(InterestAlgorithm.SIMPLE)
         .firstCouponDate(LocalDate.of(2019, 1, 1))

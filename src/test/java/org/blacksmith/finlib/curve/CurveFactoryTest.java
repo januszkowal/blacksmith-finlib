@@ -2,58 +2,93 @@ package org.blacksmith.finlib.curve;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
+import org.blacksmith.finlib.curve.definition.CurveDefinition;
 import org.blacksmith.finlib.curve.discount.CurveDiscountFactor;
 import org.blacksmith.finlib.curve.discount.ZeroRateDiscountFactor;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
+import org.blacksmith.finlib.curve.node.SimpleCurveNodeDefinition;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.marketdata.QuoteId;
+import org.blacksmith.finlib.marketdata.StandardId;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CurveFactoryTest {
-  CurveFactory curveFactory = new CurveFactory();
+  private static final double QUOTE_1D_VALUE = 0.02d;
+  private static final double QUOTE_1W_VALUE = 0.022d;
+  private static final double QUOTE_2W_VALUE = 0.023d;
+  private static final double QUOTE_1M_VALUE = 0.025d;
+  private static final double QUOTE_3M_VALUE = 0.027d;
+  private static final double QUOTE_6M_VALUE = 0.029d;
+  private static final double QUOTE_1Y_VALUE = 0.033d;
+  private static final double QUOTE_3Y_VALUE = 0.036d;
+  private static final double QUOTE_5Y_VALUE = 0.038d;
+  private CurveFactory curveFactory = new CurveFactory();
+  Function<QuoteId, Double> quoteProvider = Mockito.mock(Function.class);
+
 
   @Test
   public void shouldReturnKnots() {
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-1D"))).thenReturn(QUOTE_1D_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-1W"))).thenReturn(QUOTE_1W_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-2W"))).thenReturn(QUOTE_2W_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-1M"))).thenReturn(QUOTE_1M_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-3M"))).thenReturn(QUOTE_3M_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-6M"))).thenReturn(QUOTE_6M_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-1Y"))).thenReturn(QUOTE_1Y_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-3Y"))).thenReturn(QUOTE_3Y_VALUE);
+    Mockito.when(quoteProvider.apply(quote("WIBOR-EUR-5Y"))).thenReturn(QUOTE_5Y_VALUE);
+
     LocalDate valuationDate = LocalDate.of(2021, 5, 15);
     CurveDefinition definition = CurveDefinition.builder()
         .interpolator(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH)
         .dayCount(StandardDayCounts.ACT_360)
-        .curveNodes(List.of())
-        .curveName("ZERO")
+        .currency(Currency.EUR)
+        .nodes(List.of(
+            SimpleCurveNodeDefinition.of("WIBOR-1D", Tenor.TENOR_1D, quote("WIBOR-EUR-1D"),0),
+            SimpleCurveNodeDefinition.of("WIBOR-1W", Tenor.TENOR_1W, quote("WIBOR-EUR-1W"),0),
+            SimpleCurveNodeDefinition.of("WIBOR-2W", Tenor.TENOR_2W, quote("WIBOR-EUR-2W"),0),
+            SimpleCurveNodeDefinition.of("WIBOR-1M", Tenor.TENOR_1M, quote("WIBOR-EUR-1M"),0),
+            SimpleCurveNodeDefinition.of("WIBOR-3M", Tenor.TENOR_3M, quote("WIBOR-EUR-3M"),0),
+            SimpleCurveNodeDefinition.of("WIBOR-6M", Tenor.TENOR_6M, quote("WIBOR-EUR-6M"), 0),
+            SimpleCurveNodeDefinition.of("WIBOR-1Y", Tenor.TENOR_1Y, quote("WIBOR-EUR-1Y"), 0),
+            SimpleCurveNodeDefinition.of("WIBOR-3Y", Tenor.TENOR_3Y, quote("WIBOR-EUR-3Y"), 0),
+            SimpleCurveNodeDefinition.of("WIBOR-5Y", Tenor.TENOR_5Y, quote("WIBOR-EUR-5Y"), 0)))
+        .curveName("EUR-ZERO")
         .build();
-    List<CurveNodeReferenceData> referenceNodes = List.of(
-        SimpleCurveNodeReferenceData.of("1D", Tenor.TENOR_1D, 0.02d ),
-        SimpleCurveNodeReferenceData.of("1W", Tenor.TENOR_1W, 0.022d),
-        SimpleCurveNodeReferenceData.of("2W", Tenor.TENOR_2W, 0.023d),
-        SimpleCurveNodeReferenceData.of("1M", Tenor.TENOR_1M, 0.025d),
-        SimpleCurveNodeReferenceData.of("3M", Tenor.TENOR_3M, 0.027d),
-        SimpleCurveNodeReferenceData.of("6M", Tenor.TENOR_6M, 0.029d),
-        SimpleCurveNodeReferenceData.of("1Y", Tenor.TENOR_1Y, 0.033d),
-        SimpleCurveNodeReferenceData.of("3Y", Tenor.TENOR_3Y, 0.036d),
-        SimpleCurveNodeReferenceData.of("5Y", Tenor.TENOR_5Y, 0.038d));
+
+    List<CurveNodeReferenceData> referenceNodes = definition.getNodes().stream()
+        .map(node -> SimpleCurveNodeReferenceData.of(node.getLabel(), node.getTenor(), quoteProvider.apply(node.getQuoteId()) + node.getSpread()))
+        .collect(Collectors.toList());
     var curve = curveFactory.createCurve(valuationDate, definition, referenceNodes);
     CurveDiscountFactor df = CurveDiscountFactor.of(curve, ZeroRateDiscountFactor.of());
 
-    assertThat(curve.value(valuationDate.minusDays(10))).isEqualTo(0.02d);
-    assertThat(curve.value(valuationDate)).isEqualTo(0.02d);
-    assertThat(curve.value(valuationDate.plusDays(7))).isEqualTo(0.022d);
-    assertThat(curve.value(valuationDate.plusDays(14))).isEqualTo(0.023d);
-    assertThat(curve.value(valuationDate.plusMonths(1))).isEqualTo(0.025d);
-    assertThat(curve.value(valuationDate.plusMonths(3))).isEqualTo(0.027d);
-    assertThat(curve.value(valuationDate.plusMonths(6))).isEqualTo(0.029d);
-    assertThat(curve.value(valuationDate.plusYears(1))).isEqualTo(0.033d);
-    assertThat(curve.value(valuationDate.plusYears(3))).isEqualTo(0.036d);
-    assertThat(curve.value(valuationDate.plusYears(5))).isEqualTo(0.038d);
-    assertThat(curve.value(valuationDate.plusYears(6))).isEqualTo(0.038d);
+    assertThat(curve.value(valuationDate.minusDays(10))).isEqualTo(QUOTE_1D_VALUE);
+    assertThat(curve.value(valuationDate)).isEqualTo(QUOTE_1D_VALUE);
+    assertThat(curve.value(valuationDate.plusDays(7))).isEqualTo(QUOTE_1W_VALUE);
+    assertThat(curve.value(valuationDate.plusDays(14))).isEqualTo(QUOTE_2W_VALUE);
+    assertThat(curve.value(valuationDate.plusMonths(1))).isEqualTo(QUOTE_1M_VALUE);
+    assertThat(curve.value(valuationDate.plusMonths(3))).isEqualTo(QUOTE_3M_VALUE);
+    assertThat(curve.value(valuationDate.plusMonths(6))).isEqualTo(QUOTE_6M_VALUE);
+    assertThat(curve.value(valuationDate.plusYears(1))).isEqualTo(QUOTE_1Y_VALUE);
+    assertThat(curve.value(valuationDate.plusYears(3))).isEqualTo(QUOTE_3Y_VALUE);
+    assertThat(curve.value(valuationDate.plusYears(5))).isEqualTo(QUOTE_5Y_VALUE);
+    assertThat(curve.value(valuationDate.plusYears(6))).isEqualTo(QUOTE_5Y_VALUE);
 
     assertThat(df.discountFactor(valuationDate)).isEqualTo(1d);
     assertThat(df.discountFactor(valuationDate.plusYears(1))).isEqualTo(0.9670952060255066d);
   }
 
-
+  private QuoteId quote(String value) {
+    return QuoteId.of(StandardId.of("OG-TICKER", value), "Value");
+  }
 }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
-import org.blacksmith.finlib.math.analysis.interpolation.InterpolatorFactory;
+import org.blacksmith.finlib.math.analysis.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.interest.basis.DayCount;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.blacksmith.commons.arg.ArgChecker;
+import org.blacksmith.finlib.curve.definition.CurveDefinition;
 import org.blacksmith.finlib.curve.types.CurvePoint;
 import org.blacksmith.finlib.curve.types.Knot;
 

@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.rate.fxrate;
 
-import org.blacksmith.finlib.rate.marketdata.MarketDataProvider;
+import org.blacksmith.finlib.marketdata.MarketDataProvider;
 
-public interface FxRateProvider extends MarketDataProvider<FxRateId, FxRate3RSource.FxRate3RawValue> {
+public interface FxRateProvider extends MarketDataProvider<FxRateId, FxRate3> {
 }

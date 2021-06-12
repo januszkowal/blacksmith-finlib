@@ -63,8 +63,8 @@ public class RateUpdater implements ScheduleUpdater {
           scheduleParameters.getCouponFrequency().toString(),
           scheduleParameters.getCurrency());
       //fixingDate
-      return Optional.ofNullable(interestRateService.getRateValue(rateKey, startDate))
-          .map(r -> r.multiply(scheduleParameters.getInterestRateMulMargin()))
+      return Optional.ofNullable(interestRateService.getValue(rateKey, startDate))
+          .map(r -> r.getValue().multiply(scheduleParameters.getInterestRateMulMargin()))
           .orElse(Rate.ZERO)
           .add(scheduleParameters.getInterestRateAddMargin());
       //      projectedRate := Yield_Pkg.get_fra_DD(IntParam.yieldCurveId,

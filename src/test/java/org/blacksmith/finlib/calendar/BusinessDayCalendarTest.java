@@ -27,7 +27,7 @@ public class BusinessDayCalendarTest {
         LocalDate.of(2019,5,16),
         LocalDate.of(2019,6,15));
     DatePartHolidayPolicy<LocalDate> ymdProvider = new DatePartHolidayPolicy<>(DateExtractor.getInstance(), hyc);
-    BusinessDayCalendar cal = new BusinessDayCalendarWithPolicy(HolidayPolicyComposite.ofSingle(ymdProvider));
+    BusinessDayCalendar cal = BusinessDayCalendarWithPolicy.of(HolidayPolicyComposite.ofSingle(ymdProvider));
     assertEquals(LocalDate.of(2019, 5,14),cal.nextOrSame(LocalDate.of(2019,5,14)));
     assertEquals(LocalDate.of(2019, 5,17),cal.nextOrSame(LocalDate.of(2019,5,15)));
     assertEquals(LocalDate.of(2019, 5,17),cal.nextOrSame(LocalDate.of(2019,5,16)));

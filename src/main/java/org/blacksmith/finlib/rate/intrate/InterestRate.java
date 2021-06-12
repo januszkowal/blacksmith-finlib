@@ -11,7 +11,7 @@ public class InterestRate extends BasicMarketData<Rate> {
     super(valueDate, rate);
   }
 
-  public static InterestRate of(LocalDate valueDate, Rate rate) {
+  public static InterestRate ofRate(LocalDate valueDate, Rate rate) {
     return new InterestRate(valueDate, rate);
   }
 }

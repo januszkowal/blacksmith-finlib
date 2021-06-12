@@ -1,35 +1,32 @@
 package org.blacksmith.finlib.rate.marketdata;
 
-import java.time.LocalDate;
+import org.blacksmith.finlib.marketdata.MarketData;
+import org.blacksmith.finlib.marketdata.MarketDataId;
 
 import lombok.ToString;
 
 @ToString
-public class BasicMarketDataWrapper<K, V> implements MarketDataWrapper<K, V> {
+public class BasicMarketDataWrapper<I extends MarketDataId<V>, V extends MarketData> implements MarketDataWrapper<I, V> {
 
-  private final K key;
-  private final MarketData<V> marketData;
+  private final I id;
+  private final V value;
 
-  public BasicMarketDataWrapper(K key, MarketData<V> marketData) {
-    this.key = key;
-    this.marketData = marketData;
+  public BasicMarketDataWrapper(I id, V value) {
+    this.id = id;
+    this.value = value;
   }
 
-  public static <K, V> BasicMarketDataWrapper<K, V> of(K key, MarketData<V> marketData) {
-    return new BasicMarketDataWrapper<>(key, marketData);
-  }
-
-  public static <K, V> BasicMarketDataWrapper<K, V> of(K key, LocalDate date, V value) {
-    return new BasicMarketDataWrapper<>(key, new BasicMarketData<>(date, value));
+  public static <I extends MarketDataId<V>, V extends MarketData> BasicMarketDataWrapper<I, V> of(I id, V value) {
+    return new BasicMarketDataWrapper<>(id, value);
   }
 
   @Override
-  public K getKey() {
-    return this.key;
+  public I getId() {
+    return this.id;
   }
 
   @Override
-  public MarketData<V> getMarketData() {
-    return this.marketData;
+  public V getValue() {
+    return this.value;
   }
 }
