@@ -39,7 +39,6 @@ import lombok.extern.slf4j.Slf4j;
 @Measurement(iterations = 5)
 public class CurveBenchmark {
   private static final LocalDate valuationDate = LocalDate.now();
-  private static final YieldCurveCalculator calculator = new YieldCurveCalculator();
   private static final CurveFactory curveFactory = new CurveFactory();
 
   @State(Scope.Benchmark)
