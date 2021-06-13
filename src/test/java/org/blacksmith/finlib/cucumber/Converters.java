@@ -15,7 +15,7 @@ import io.cucumber.java.ParameterType;
 public class Converters {
   @ParameterType(name = "frequency", value = "(\\d+)(D|W|M|Q|H|Y)")
   public Frequency frequency(String amount, String unit) {
-    return new Frequency(Integer.parseInt(amount), TimeUnit.ofSymbol(unit));
+    return Frequency.of(Integer.parseInt(amount), TimeUnit.ofSymbol(unit));
   }
 
   @ParameterType(name = "date", value = "\\d{4}-\\d{2}-\\d{2}")

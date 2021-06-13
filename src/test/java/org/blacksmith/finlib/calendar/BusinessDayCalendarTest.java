@@ -80,16 +80,4 @@ public class BusinessDayCalendarTest {
     assertEquals(LocalDate.of(2019, 5,14),cal.shift(LocalDate.of(2019,5,18),-2));
     assertEquals(LocalDate.of(2019, 5,13),cal.shift(LocalDate.of(2019,5,18),-3));
   }
-
-  @Test
-  public void dayCountTest1() {
-    BusinessDayCalendar noHolidaysCalendar = BusinessDayCalendarWithPolicy.of((d)->false);
-    BusinessDayCalendar weekendCalendar = BusinessDayCalendarWithPolicy.of(StandardWeekDayPolicy.SAT_SUN);
-    assertEquals(30,noHolidaysCalendar.businessDaysCount(DateRange.closedOpen(LocalDate.of(2019, 1, 1),LocalDate.of(2019,
-        1,31))));
-    assertEquals(31,noHolidaysCalendar.businessDaysCount(DateRange.closed(LocalDate.of(2019, 1, 1),LocalDate.of(2019, 1,31))));
-    assertEquals(22,weekendCalendar.businessDaysCount(DateRange.closedOpen(LocalDate.of(2019, 1, 1),LocalDate.of(2019,
-        1,31))));
-    assertEquals(23,weekendCalendar.businessDaysCount(DateRange.closed(LocalDate.of(2019, 1, 1),LocalDate.of(2019, 1,31))));
-  }
 }
