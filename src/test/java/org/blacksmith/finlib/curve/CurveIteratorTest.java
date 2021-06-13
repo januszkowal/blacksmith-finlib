@@ -3,43 +3,39 @@ package org.blacksmith.finlib.curve;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.blacksmith.finlib.curve.iterator.CurveDateIterator;
+import org.blacksmith.finlib.curve.iterator.CurveIntegerIterator;
+import org.blacksmith.finlib.curve.iterator.CurveIterator;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.InterpolatorFactory;
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.interest.basis.DayCount;
 import org.blacksmith.finlib.interest.basis.StandardDayCounts;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CurveIteratorTest {
-
-  final InterpolatorFactory factory = new InterpolatorFactory();
-
   @Test
-  public void shouldDatesIterate() {
-    LocalDate d1 = LocalDate.of(2021, 7, 20);
-    LocalDate d2 = LocalDate.of(2021, 9, 1);
-    DayCount dayCount = StandardDayCounts.D30_E_360;
-    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
+  public void shouldIntegersIerate() {
+    Curve curve = Mockito.mock(Curve.class);
+    Mockito.when(curve.getDayCount()).thenReturn(StandardDayCounts.ACT_360);
+    LocalDate valuationDate = LocalDate.of(2021, 7, 1);
+    CurveIterator iterator = CurveIntegerIterator.of(valuationDate, 5, 8, curve);
+    var values = iterator.values();
+    assertEquals(4, values.size());
   }
 
   @Test
   public void shouldDatesIterate2() {
+    Curve curve = Mockito.mock(Curve.class);
+    Mockito.when(curve.getDayCount()).thenReturn(StandardDayCounts.ACT_360);
+    LocalDate valuationDate = LocalDate.of(2021, 7, 1);
     LocalDate d1 = LocalDate.of(2021, 7, 20);
-    LocalDate d2 = LocalDate.of(2021, 9, 1);
-    DayCount dayCount = StandardDayCounts.D30_E_360;
-    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, create365DayKnots());
+    LocalDate d2 = LocalDate.of(2021, 7, 25);
+    CurveIterator iterator = CurveDateIterator.of(valuationDate, d1, d2, curve);
+    var values = iterator.values();
+    assertEquals(6, values.size());
   }
-
-  private List<Knot> create365DayKnots() {
-    return List.of(Knot.of(0, 2.43d),
-        Knot.of(1, 2.50d),
-        Knot.of(7, 3.07d),
-        Knot.of(14, 3.36d),
-        Knot.of(30, 3.71d),
-        Knot.of(90, 4.27d),
-        Knot.of(182, 4.38d),
-        Knot.of(273, 4.47d),
-        Knot.of(365, 4.52d));
-  }
-
 }
