@@ -2,6 +2,8 @@
 
 [Source code see here](../src/main/java/org/blacksmith/finlib/curve)
 
+[Tests see here](../src/test/java/org/blacksmith/finlib/curve)
+
 [Benchmarks see here](../src/jmh/java/org/blacksmith/finlib/curve)
 
 [Benchmarks results see here](../src/jmh/resources)
