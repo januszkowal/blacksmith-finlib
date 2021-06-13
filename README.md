@@ -10,9 +10,16 @@ Set of financial libraries
 
 ## 2. Business day conventions
 
-[Calendars](doc/BusinessDayConventions.md)
+[Business day conventions](doc/BusinessDayConventions.md)
 
 ## 3. Curves
+
+A yield curve is a line that plots yields (interest rates) of instruments (e.g. bonds) having equal credit quality but differing maturity dates. The slope of the yield curve gives an idea of future interest rate changes and economic activity.
+
+There are three main shapes of yield curve shapes: 
+- normal (upward sloping curve) 
+- inverted (downward sloping curve)
+- flat.
 
 [Curves](doc/Curves.md)
 
