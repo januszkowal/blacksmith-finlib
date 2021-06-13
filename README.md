@@ -4,9 +4,59 @@ Set of financial libraries
 
 [Cucumber tests see here](src/test/resources/features)
 
-## 1. Market data
+## 1. Calendars
 
-### 1.1. Foreign Exchange Rates
+[Source code see here](src/main/java/org/blacksmith/finlib/calendar)
+
+## 2. Business day conventions
+
+[Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
+
+## 3. Curves
+
+[Source code see here](src/main/java/org/blacksmith/finlib/curve)
+
+[Benchmarks see here](src/jmh/java/org/blacksmith/finlib/curve)
+
+[Benchmarks results see here](src/jmh/resources)
+
+The Akima spline algorithm was published by Hiroshi Akima in 1970. It could be particularly useful for Interpolation and smooth Curve Fitting.
+
+This method avoids overshooting issues common with many other splines (e.g., cubic splines), resulting in a more natural curve.
+Blacksmith implementation of Akima Polynomial algorithm is based on original paper of Hiroshi Akima, and it behaves more predictably than Apache Commons, and the difference is visible around inflection points.
+
+![Akima algorithm - with inflection point](doc/akima_full.png)
+
+Figure 1. Full Chart - 365 days
+
+![Akima algorithm - with inflection point](doc/akima_with_inflection_point.png)
+
+Figure 2. 20 days - case with inflection point
+
+![Akima algorithm - without inflection point](doc/akima_without_inflection_point.png)
+
+Figure 3. 20 days - case without inflection point
+
+## 4. Valuation
+
+### 4.1 Xirr
+
+[Source code see here](src/main/java/org/blacksmith/finlib/valuation/xirr)
+
+Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
+- BiSection method
+- Newton-Raphson method
+
+Newton-Raphson method consumes 2-3x fewer iterations than BiSection
+
+How to use? Look at the tests
+
+- XirrBuilderTest.java - how to use builders
+- XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
+
+## 5. Market data
+
+### 5.1. Foreign Exchange Rates
 
 [Source code see here](src/main/java/org/blacksmith/finlib/rate/fxrate)
 
@@ -149,51 +199,9 @@ Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662
 |2021-05-15|USD|HUF|291.511194|cross|
 |2021-05-15|USD|PLN|3.750000|direct|
 |2021-05-15|USD|JPY|109.489051|cross|
-## 2. Calendars
 
-[Source code see here](src/main/java/org/blacksmith/finlib/calendar)
+## 6. Calculations
 
-## 3. Calculations
-### 3.1 Business day conventions
-[Source code see here](src/main/java/org/blacksmith/finlib/dayconvention)
-### 3.2 Xirr
-[Source code see here](src/main/java/org/blacksmith/finlib/valuation/xirr)
+### 6.1 Interest calculation
 
-Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
-- BiSection method
-- Newton-Raphson method
-
-Newton-Raphson method consumes 2-3x fewer iterations than BiSection
-
-How to use? Look at the tests
-
-- XirrBuilderTest.java - how to use builders
-- XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
-
-### 3.3 Interest calculation
 [Source code see here](src/main/java/org/blacksmith/finlib/interest)
-
-### 3.4 Yield curves
-
-[Source code see here](src/main/java/org/blacksmith/finlib/curve)
-
-[Benchmarks see here](src/jmh/java/org/blacksmith/finlib/curve)
-
-[Benchmarks results see here](src/jmh/resources)
-
-The Akima spline algorithm was published by Hiroshi Akima in 1970. It could be particularly useful for Interpolation and smooth Curve Fitting.
-
-This method avoids overshooting issues common with many other splines (e.g., cubic splines), resulting in a more natural curve.
-Blacksmith implementation of Akima Polynomial algorithm is based on original paper of Hiroshi Akima, and it behaves more predictably than Apache Commons, and the difference is visible around inflection points.
-
-![Akima algorithm - with inflection point](doc/akima_full.png)
-
-Figure 1. Full Chart - 365 days
-
-![Akima algorithm - with inflection point](doc/akima_with_inflection_point.png)
-
-Figure 2. 20 days - case with inflection point
-
-![Akima algorithm - without inflection point](doc/akima_without_inflection_point.png)
-
-Figure 3. 20 days - case without inflection point
