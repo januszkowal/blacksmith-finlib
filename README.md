@@ -21,7 +21,7 @@ There are three main shapes of yield curve shapes:
 - inverted (downward sloping curve)
 - flat.
 
-[Curves](doc/Curves.md)
+[More ...](doc/Curves.md)
 
 ## 4. Valuation
 
