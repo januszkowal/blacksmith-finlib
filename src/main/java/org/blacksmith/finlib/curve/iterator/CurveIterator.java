@@ -30,7 +30,7 @@ public abstract class CurveIterator<T> {
         .collect(Collectors.toList());
   }
 
-  public CurvePoint createCurvePoint(Index index) {
+  protected CurvePoint createCurvePoint(Index index) {
     return CurvePoint.of(index.date, index.x, curve.value(index.x));
   }
 
