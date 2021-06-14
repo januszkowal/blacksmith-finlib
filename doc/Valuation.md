@@ -13,3 +13,5 @@ How to use? Look at the tests
 
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
+
+### Discount factor
