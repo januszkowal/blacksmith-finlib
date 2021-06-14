@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
-import org.blacksmith.finlib.interest.basis.DayCount;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 
 public class CurveDefinitionBuilder {

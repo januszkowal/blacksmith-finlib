@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.curve.types.Knot;
-import org.blacksmith.finlib.interest.basis.DayCount;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 

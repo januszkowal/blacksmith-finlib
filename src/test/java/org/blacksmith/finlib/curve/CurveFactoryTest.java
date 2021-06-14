@@ -1,8 +1,6 @@
 package org.blacksmith.finlib.curve;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
@@ -10,10 +8,8 @@ import org.blacksmith.finlib.curve.definition.CurveDefinition;
 import org.blacksmith.finlib.curve.definition.CurveDefinitionBuilder;
 import org.blacksmith.finlib.curve.discount.CurveDiscountFactor;
 import org.blacksmith.finlib.curve.discount.ZeroRateDiscountFactor;
-import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeDefinition;
-import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
-import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
 import org.blacksmith.finlib.marketdata.QuoteId;
 import org.blacksmith.finlib.marketdata.QuoteProvider;
 import org.blacksmith.finlib.marketdata.StandardId;
@@ -37,7 +33,7 @@ class CurveFactoryTest {
   private static final double QUOTE_3Y_VALUE = 0.036d;
   private static final double QUOTE_5Y_VALUE = 0.038d;
   QuoteProvider quoteProvider = Mockito.mock(QuoteProvider.class);
-  private CurveFactory curveFactory = new CurveFactory(quoteProvider);
+  private CurveFactoryDef curveFactory = new CurveFactoryDef(quoteProvider);
 
   @Test
   public void shouldReturnKnots() {

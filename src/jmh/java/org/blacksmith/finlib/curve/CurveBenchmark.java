@@ -7,12 +7,13 @@ import java.util.concurrent.TimeUnit;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
 import org.blacksmith.finlib.curve.definition.CurveDefinition;
+import org.blacksmith.finlib.curve.definition.CurveDefinitionBuilder;
 import org.blacksmith.finlib.curve.iterator.CurveDateIterator;
 import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
 import org.blacksmith.finlib.curve.types.CurvePoint;
-import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
 import org.blacksmith.finlib.marketdata.QuoteId;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -60,7 +61,7 @@ public class CurveBenchmark {
       else if (years == 10) {
         this.nodes = createNodes10Y();
       }
-      this.curveDefinition = CurveDefinition.builder()
+      this.curveDefinition = CurveDefinitionBuilder.builder()
           .curveName("aaa")
           .currency(Currency.EUR)
           .dayCount(StandardDayCounts.ACT_360)

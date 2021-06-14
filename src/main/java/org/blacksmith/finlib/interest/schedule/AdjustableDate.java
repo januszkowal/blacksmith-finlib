@@ -2,7 +2,7 @@ package org.blacksmith.finlib.interest.schedule;
 
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
+import org.blacksmith.finlib.datetime.dayconvention.BusinessDayConvention;
 
 public class AdjustableDate {
 

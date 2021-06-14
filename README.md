@@ -4,13 +4,19 @@ Set of financial libraries
 
 [Cucumber tests see here](src/test/resources/features)
 
-## 1. Calendars
+## 1. Dates
 
-Calendars help to manage of business days
+What Is a Business Day? A business day is a popular unit of time measure that typically refers to any day in which normal business operations are conducted. In Western countries, this is generally considered to be Monday through Friday from 9 a.m. to 5 p.m. local time and excludes weekends and public holidays. Within the securities industry, any day the financial markets are open for trading is considered to be a business day.
+
+### 1.1 Calendars
+
+Calendar keeps business / non-business days
 
 [More ...](doc/Calendars.md)
 
-## 2. Business day conventions
+## 1.2. Business day conventions
+
+When a contractual day falls on a holiday it's pushed forward or backward to nearest business day according to used Business Day Convention.
 
 [More ...](doc/BusinessDayConventions.md)
 

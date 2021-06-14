@@ -3,7 +3,7 @@ package org.blacksmith.finlib.interest.schedule;
 import java.time.LocalDate;
 
 import org.blacksmith.finlib.basic.datetime.Frequency;
-import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
+import org.blacksmith.finlib.interest.InterestAlgorithm;
 import org.blacksmith.finlib.interest.schedule.timetable.TermTimetableGenerator;
 import org.blacksmith.finlib.interest.schedule.timetable.TimetableGeneratorFactory;
 import org.junit.jupiter.api.Test;
