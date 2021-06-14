@@ -2,9 +2,7 @@
 
 Set of financial libraries
 
-[Cucumber tests see here](src/test/resources/features)
-
-## 1. Dates
+## 1. Date&Time
 
 What Is a Business Day? A business day is a popular unit of time measure that typically refers to any day in which normal business operations are conducted. In Western countries, this is generally considered to be Monday through Friday from 9 a.m. to 5 p.m. local time and excludes weekends and public holidays. Within the securities industry, any day the financial markets are open for trading is considered to be a business day.
 
