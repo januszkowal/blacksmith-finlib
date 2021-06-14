@@ -6,10 +6,10 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Frequency;
 import org.blacksmith.finlib.basic.numbers.Amount;
 import org.blacksmith.finlib.basic.numbers.Rate;
-import org.blacksmith.finlib.calendar.BusinessDayCalendar;
-import org.blacksmith.finlib.dayconvention.BusinessDayConvention;
-import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
-import org.blacksmith.finlib.interest.basis.DayCount;
+import org.blacksmith.finlib.datetime.calendar.BusinessDayCalendar;
+import org.blacksmith.finlib.datetime.dayconvention.BusinessDayConvention;
+import org.blacksmith.finlib.interest.InterestAlgorithm;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
 
 import lombok.Builder;
 import lombok.Data;

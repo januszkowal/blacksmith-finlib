@@ -1,12 +1,9 @@
 package org.blacksmith.finlib.curve.discount;
 
 import java.time.LocalDate;
-import java.time.temporal.IsoFields;
-import java.util.List;
 
-import org.blacksmith.commons.datetime.DateUtils;
-import org.blacksmith.finlib.interest.basis.DayCount;
-import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

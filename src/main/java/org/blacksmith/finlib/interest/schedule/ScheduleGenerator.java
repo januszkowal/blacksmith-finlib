@@ -2,7 +2,7 @@ package org.blacksmith.finlib.interest.schedule;
 
 import java.util.List;
 
-import org.blacksmith.finlib.interest.basis.InterestAlgorithm;
+import org.blacksmith.finlib.interest.InterestAlgorithm;
 import org.blacksmith.finlib.rate.intrate.InterestRateService;
 import org.blacksmith.finlib.interest.schedule.events.InterestEvent;
 import org.blacksmith.finlib.interest.schedule.policy.AnnuityScheduleAlgorithm;

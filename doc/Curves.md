@@ -1,13 +1,5 @@
 ## Curves
 
-[Source code see here](../src/main/java/org/blacksmith/finlib/curve)
-
-[Tests see here](../src/test/java/org/blacksmith/finlib/curve)
-
-[Benchmarks see here](../src/jmh/java/org/blacksmith/finlib/curve)
-
-[Benchmarks results see here](../src/jmh/resources)
-
 ### 1. Interpolation
 #### 1.1. Akima spline algorithm
 
@@ -27,3 +19,11 @@ Figure 2. 20 days - case with inflection point
 ![Akima algorithm - without inflection point](akima_without_inflection_point.png)
 
 Figure 3. 20 days - case without inflection point
+
+[Source ...](../src/main/java/org/blacksmith/finlib/curve)
+
+[Unit tests ...](../src/test/java/org/blacksmith/finlib/curve)
+
+[Benchmarks ...](../src/jmh/java/org/blacksmith/finlib/curve)
+
+[Benchmarks results ...](../src/jmh/resources)

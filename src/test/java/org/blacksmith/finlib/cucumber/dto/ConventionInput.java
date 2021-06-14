@@ -2,7 +2,7 @@ package org.blacksmith.finlib.cucumber.dto;
 
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.interest.basis.ScheduleInfo;
+import org.blacksmith.finlib.datetime.daycount.ScheduleInfo;
 
 import lombok.Builder;
 import lombok.Getter;

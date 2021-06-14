@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.curve.iterator.CurveDateIterator;
 import org.blacksmith.finlib.curve.iterator.CurveIntegerIterator;
 import org.blacksmith.finlib.curve.iterator.CurveIterator;
-import org.blacksmith.finlib.interest.basis.StandardDayCounts;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

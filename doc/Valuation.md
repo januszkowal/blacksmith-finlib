@@ -1,8 +1,6 @@
 ## Valuation
 ### Xirr
 
-[Source code see here](../src/main/java/org/blacksmith/finlib/valuation/xirr)
-
 Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
 - BiSection method
 - Newton-Raphson method
@@ -13,3 +11,9 @@ How to use? Look at the tests
 
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
+
+### Discount factor
+
+[Xirr Source code ...](../src/main/java/org/blacksmith/finlib/valuation/xirr)
+
+[Xirr Cucumber tests ...](../src/test/resources/features/valuation)
