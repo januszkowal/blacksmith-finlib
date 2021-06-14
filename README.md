@@ -29,7 +29,9 @@ There are three main shapes of yield curve shapes:
 
 ## 5. Market data
 
-[Market data](doc/MarketData.md)
+Exchange rates, interest rates and other market data
+
+[More ...](doc/MarketData.md)
 
 ## 6. Calculations
 

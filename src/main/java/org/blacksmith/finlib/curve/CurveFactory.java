@@ -10,13 +10,34 @@ import org.blacksmith.finlib.curve.definition.CurveDefinition;
 import org.blacksmith.finlib.curve.node.CurveNode;
 import org.blacksmith.finlib.curve.node.CurveNodeMetadata;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
+import org.blacksmith.finlib.curve.node.SimpleCurveNodeReferenceData;
 import org.blacksmith.finlib.curve.types.Knot;
+import org.blacksmith.finlib.marketdata.QuoteProvider;
 import org.blacksmith.finlib.math.analysis.InterpolatorFactory;
 
 public class CurveFactory {
+  private final QuoteProvider quoteProvider;
+
+  public CurveFactory(QuoteProvider quoteProvider) {
+    this.quoteProvider = quoteProvider;
+  }
+
+  public Curve createCurve(LocalDate valuationDate, CurveDefinition definition) {
+    ArgChecker.notNull(valuationDate, "Valuation date must be not null");
+    ArgChecker.notNull(definition, "Definition be not null");
+
+    List<CurveNodeReferenceData> referenceNodes = definition.getNodes().stream()
+        .map(node -> SimpleCurveNodeReferenceData
+            .of(node.getLabel(), node.getTenor(), quoteProvider.getQuote(valuationDate, node.getQuoteId()) + node.getSpread()))
+        .collect(Collectors.toList());
+
+    return createCurve(valuationDate, definition, referenceNodes);
+  }
+
   public Curve createCurve(LocalDate valuationDate, CurveDefinition definition, List<CurveNodeReferenceData> referenceNodes) {
-    ArgChecker.notEmpty(referenceNodes, "Reference nodes must be not empty");
-    ArgChecker.isTrue(referenceNodes.size() > 2, "Reference nodes size must be greater than 2");
+    ArgChecker.notNull(valuationDate, "Valuation date must be not null");
+    ArgChecker.notNull(definition, "Definition be not null");
+    ArgChecker.isTrue(referenceNodes.size() >= CurveDefinition.MIN_NODES_SIZE, "Reference nodes size must be greater than " + CurveDefinition.MIN_NODES_SIZE);
     List<CurveNode> nodes = referenceNodes.stream()
         .map(referenceNode -> createCurveNodeValue(valuationDate, definition, referenceNode))
         .sorted(Comparator.comparing(CurveNode::getX))
