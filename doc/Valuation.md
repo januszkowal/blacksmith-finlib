@@ -14,7 +14,6 @@ How to use? Look at the tests
 
 [Source code see here](../src/main/java/org/blacksmith/finlib/valuation/xirr)
 
-
 ### Discount factor
 
-Cucumber tests [Xirr](../src/test/resources/features/xirr.feature)
+Cucumber tests [Xirr](../src/test/resources/features/valuation)
