@@ -6,11 +6,13 @@ Set of financial libraries
 
 ## 1. Calendars
 
-[Calendars](doc/Calendars.md)
+Calendars help to manage of business days
+
+[More ...](doc/Calendars.md)
 
 ## 2. Business day conventions
 
-[Business day conventions](doc/BusinessDayConventions.md)
+[More ...](doc/BusinessDayConventions.md)
 
 ## 3. Curves
 
@@ -25,7 +27,7 @@ There are three main shapes of yield curve shapes:
 
 ## 4. Valuation
 
-[Valuation](doc/Valuation.md)
+[More ...](doc/Valuation.md)
 
 ## 5. Market data
 
@@ -35,4 +37,4 @@ Exchange rates, interest rates and other market data
 
 ## 6. Calculations
 
-[Calculations](doc/Calculations.md)
+[More ...](doc/Calculations.md)
