@@ -13,8 +13,8 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-@Builder
 public class CurveDefinition {
+  public static final int MIN_NODES_SIZE = 3;
   private final String curveName;
   private final Currency currency;
   private final DayCount dayCount;
@@ -27,7 +27,8 @@ public class CurveDefinition {
     ArgChecker.notNull(currency, "Currency must be not null");
     ArgChecker.notNull(dayCount, "Day count must be not null");
     ArgChecker.notNull(interpolator, "Interpolator must be not null");
-    ArgChecker.notEmpty(nodes, "Nodes must be not empty");
+    ArgChecker.notNull(nodes, "Nodes must be not null");
+    ArgChecker.isTrue(nodes.size() >= MIN_NODES_SIZE, "Nodes size must be greater than " + MIN_NODES_SIZE);
     this.curveName = curveName;
     this.dayCount = dayCount;
     this.currency = currency;
