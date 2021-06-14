@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.datetime.dayconvention;
+package org.blacksmith.finlib.datetime.daycount;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class DayCountConventionTest {
+class DayCountTest {
 
   @Test
   public void testDayCountConvention() {
