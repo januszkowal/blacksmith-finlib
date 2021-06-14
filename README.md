@@ -14,11 +14,17 @@ Calendar keeps business / non-business days
 
 [More ...](doc/Calendars.md)
 
-## 1.2. Business day conventions
+### 1.2. Business day conventions
 
 When a contractual day falls on a holiday it's pushed forward or backward to nearest business day according to used Business Day Convention.
 
 [More ...](doc/BusinessDayConventions.md)
+
+### 1.3. Day-Count conventions
+
+A day-count convention is a rule to calculate amount of accrued interest,  coupon or number of days between two dates
+
+[More ...](doc/DayCountConventions.md)
 
 ## 3. Curves
 
