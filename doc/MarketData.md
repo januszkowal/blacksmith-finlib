@@ -1,8 +1,6 @@
 ## Market data
 ### Foreign Exchange Rates
 
-[Source code see here](../src/main/java/org/blacksmith/finlib/rate/fxrate)
-
 FxRateService - service that helps converts between currencies.
 ##### How to Exchange Currency
 Currency can be converted using an online currency exchange, or it can be performed manually.
@@ -142,3 +140,5 @@ Conversion JPY->HUF is made "through" PLN (100 * 3.4250 / (100 * 1.2864) = 2.662
 |2021-05-15|USD|HUF|291.511194|cross|
 |2021-05-15|USD|PLN|3.750000|direct|
 |2021-05-15|USD|JPY|109.489051|cross|
+
+[Fx Exchange Rates source code ...](../src/main/java/org/blacksmith/finlib/rate/fxrate)

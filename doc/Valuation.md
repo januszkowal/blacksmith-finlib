@@ -12,8 +12,8 @@ How to use? Look at the tests
 - XirrBuilderTest.java - how to use builders
 - XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
 
-[Source code see here](../src/main/java/org/blacksmith/finlib/valuation/xirr)
-
 ### Discount factor
 
-Cucumber tests [Xirr](../src/test/resources/features/valuation)
+[Xirr Source code ...](../src/main/java/org/blacksmith/finlib/valuation/xirr)
+
+[Xirr Cucumber tests ...](../src/test/resources/features/valuation)

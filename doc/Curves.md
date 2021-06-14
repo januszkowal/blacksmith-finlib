@@ -20,10 +20,10 @@ Figure 2. 20 days - case with inflection point
 
 Figure 3. 20 days - case without inflection point
 
-[Source code see here](../src/main/java/org/blacksmith/finlib/curve)
+[Source ...](../src/main/java/org/blacksmith/finlib/curve)
 
-[Tests see here](../src/test/java/org/blacksmith/finlib/curve)
+[Unit tests ...](../src/test/java/org/blacksmith/finlib/curve)
 
-[Benchmarks see here](../src/jmh/java/org/blacksmith/finlib/curve)
+[Benchmarks ...](../src/jmh/java/org/blacksmith/finlib/curve)
 
-[Benchmarks results see here](../src/jmh/resources)
+[Benchmarks results ...](../src/jmh/resources)
