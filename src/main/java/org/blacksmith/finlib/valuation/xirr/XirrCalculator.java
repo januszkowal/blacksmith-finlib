@@ -45,7 +45,7 @@ public class XirrCalculator {
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
-  private final DayCount dayCount;
+  private final DayCount dayCount = StandardDayCounts.ACT_365;
   private final Solver<UnivariateFunction> solver;
   private XirrStats stats;
 
@@ -53,11 +53,9 @@ public class XirrCalculator {
   private long allIterations = 0L;
   private long lastIterations = 0L;
 
-  public XirrCalculator(Solver<UnivariateFunction> solver, DayCount dayCount, Double guess) {
+  public XirrCalculator(Solver<UnivariateFunction> solver, Double guess) {
     ArgChecker.notNull(solver, "Solver must be not null");
-    ArgChecker.notNull(dayCount, "DayCount  must be not null");
     this.solver = solver;
-    this.dayCount = dayCount;
     this.guess = guess;
   }
 
@@ -70,7 +68,7 @@ public class XirrCalculator {
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
   public static XirrCalculator of(Solver<UnivariateFunction> solver) {
-    return new XirrCalculator(solver, StandardDayCounts.ACT_365_25, null);
+    return new XirrCalculator(solver, null);
   }
 
   /**

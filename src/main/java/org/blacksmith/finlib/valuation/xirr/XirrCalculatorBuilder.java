@@ -8,7 +8,6 @@ import org.blacksmith.finlib.math.solver.Solver;
 
 public class XirrCalculatorBuilder {
   private Double guess = null;
-  private DayCount dayCount = StandardDayCounts.ACT_365;
   private Solver<UnivariateFunction> solver;
 
   public XirrCalculatorBuilder() {
@@ -33,13 +32,8 @@ public class XirrCalculatorBuilder {
     return this;
   }
 
-  public XirrCalculatorBuilder withDayCount(DayCount dayCount) {
-    this.dayCount = dayCount;
-    return this;
-  }
-
   public XirrCalculator build() {
-    return new XirrCalculator(solver, dayCount, guess);
+    return new XirrCalculator(solver, guess);
   }
 
   public static <T extends UnivariateFunction> Solver<T> castSolver(Solver<?> solver, Class<T> cls) {
