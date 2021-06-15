@@ -36,15 +36,15 @@ public class XirrStats {
     }
     else {
       a.startDate = cs.getDate().isBefore(a.startDate) ? cs.getDate() : a.startDate;
-      a.endDate = cs.getDate().isAfter(a.endDate) ? cs.getDate() : a.startDate;
+      a.endDate = cs.getDate().isAfter(a.endDate) ? cs.getDate() : a.endDate;
     }
-    a.minAmount = Math.min(a.minAmount, cs.getAmount());
-    a.maxAmount = Math.max(a.maxAmount, cs.getAmount());
-    a.total += cs.getAmount();
-    if (cs.getAmount() < 0) {
-      a.outcomes -= cs.getAmount();
+    a.minAmount = Math.min(a.minAmount, cs.getAmount().doubleValue());
+    a.maxAmount = Math.max(a.maxAmount, cs.getAmount().doubleValue());
+    a.total += cs.getAmount().doubleValue();
+    if (cs.getAmount().doubleValue() < 0) {
+      a.outcomes -= cs.getAmount().doubleValue();
     } else {
-      a.incomes += cs.getAmount();
+      a.incomes += cs.getAmount().doubleValue();
     }
   }
 

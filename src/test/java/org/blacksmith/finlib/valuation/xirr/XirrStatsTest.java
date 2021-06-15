@@ -3,6 +3,7 @@ package org.blacksmith.finlib.valuation.xirr;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrStats;
 import org.junit.jupiter.api.Assertions;
@@ -12,10 +13,10 @@ class XirrStatsTest {
   @Test
   public void test() {
     List<Cashflow> cashflows = List.of(
-        Cashflow.of(LocalDate.parse("2010-01-01"), 1000.0d),
-        Cashflow.of(LocalDate.parse("2010-01-02"), 200.0d),
-        Cashflow.of(LocalDate.parse("2010-01-03"), -900.0d),
-        Cashflow.of(LocalDate.parse("2010-01-03"), -50.0d));
+        Cashflow.of(LocalDate.parse("2010-01-01"), 1000.0d, Currency.EUR),
+        Cashflow.of(LocalDate.parse("2010-01-02"), 200.0d, Currency.EUR),
+        Cashflow.of(LocalDate.parse("2010-01-03"), -900.0d, Currency.EUR),
+        Cashflow.of(LocalDate.parse("2010-01-03"), -50.0d, Currency.EUR));
     var stats = XirrStats.fromCashflows(cashflows);
     Assertions.assertEquals(1200d, stats.getIncomes());
     Assertions.assertEquals(950d, stats.getOutcomes());

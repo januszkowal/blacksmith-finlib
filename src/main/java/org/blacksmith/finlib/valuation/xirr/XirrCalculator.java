@@ -12,6 +12,7 @@ import org.blacksmith.finlib.exception.ZeroValuedDerivativeException;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.solver.Solver;
 import org.blacksmith.finlib.valuation.dto.Cashflow;
+import org.blacksmith.finlib.valuation.dto.CashflowAggregator;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrStats;
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class XirrCalculator {
   public double xirr(List<Cashflow> cashflows) {
     ArgChecker.notEmpty(cashflows, "Cashflows must be not empty");
     reset();
-    List<Cashflow> groupedCashflows = Cashflow.groupCashflows(cashflows);
+    List<Cashflow> groupedCashflows = CashflowAggregator.aggregate(cashflows, false);
     List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
     stats = XirrStats.fromCashflows(statsCashflows);
     var xirrCashflows = groupedCashflows.stream()
@@ -144,7 +145,7 @@ public class XirrCalculator {
   }
 
   private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getAmount(), dayCount.yearFraction(cashflow.getDate(), stats.getEndDate()));
+    return new XirrCashflow(cashflow.getAmount().doubleValue(), dayCount.yearFraction(cashflow.getDate(), stats.getEndDate()));
   }
 
   private void reset() {

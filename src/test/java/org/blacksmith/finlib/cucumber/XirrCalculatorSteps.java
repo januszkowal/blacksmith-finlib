@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.valuation.dto.Cashflow;
@@ -29,7 +30,7 @@ public class XirrCalculatorSteps {
   @DataTableType
   public List<Cashflow> createCashflow(DataTable table) {
     return table.asMaps().stream()
-        .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount"))))
+        .map(fields -> Cashflow.of(LocalDate.parse(fields.get("on")), Double.parseDouble(fields.get("amount")), Currency.EUR))
         .collect(Collectors.toList());
   }
 
