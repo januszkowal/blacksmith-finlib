@@ -23,23 +23,7 @@ import org.slf4j.LoggerFactory;
  * rate for which, if the transactions had been applied to an investment with that rate, the same resulting returns
  * would be realized.
  * <p>
- * When creating the list of {@link Cashflow} instances to feed Xirr, be sure to include one cashflow representing the
- * present value of the account now, as if you had cashed out the investment.
- * <p>
- * Example usage:
- * <code>
- * double rate = new Xirr( new Cashflow(-1000, "2016-01-15"), new Cashflow(-2500, "2016-02-08"), new Cashflow(-1000,
- * "2016-04-17"), new Cashflow( 5050, "2016-08-24") ).xirr();
- * </code>
- * <p>
- * Example using the builder to gain more control:
- * <code>
- * double rate = Xirr.builder() .withSolverBuilder( NewtonRaphsonAlgorithm.builder() .withIterations(1000)
- * .withTolerance(0.0001)) .withGuess(.20) .withTransactions( new Cashflow(-1000, "2016-01-15"), new Cashflow(-2500,
- * "2016-02-08"), new Cashflow(-1000, "2016-04-17"), new Cashflow( 5050, "2016-08-24") ).xirr();
- * </code>
- * <p>
- * This class is not thread-safe and is designed for each instance to be used once.
+ * This class is not thread-safe.
  */
 public class XirrCalculator {
 
