@@ -37,6 +37,8 @@ There are three main shapes of yield curve shapes:
 
 ## 4. Valuation
 
+Valuation is the analytical process of determining the current (or projected) worth of an asset or a company. There are many techniques used for doing a valuation. An analyst placing a value on a company looks at the business's management, the composition of its capital structure, the prospect of future earnings, and the market value of its assets, among other metrics.
+
 [More ...](doc/Valuation.md)
 
 ## 5. Market data
