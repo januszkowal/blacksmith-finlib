@@ -1,7 +1,13 @@
 ## Valuation
-### Xirr
+### Irr (Xirr)
 
-Calculates Xirr - the internal rate of return for cash flows. One of two algorithms can be used:
+The internal rate of return (IRR) is a metric used in financial analysis to estimate the profitability of potential investments. IRR is a discount rate that makes the net present value (NPV) of all cash flows equal to zero in a discounted cash flow analysis.
+
+IRR calculations rely on the same formula as NPV does. Keep in mind that IRR is not the actual money value of the project. It is the annual return that makes the NPV equal to zero.
+
+Generally speaking, the higher an internal rate of return, the more desirable an investment is to undertake. IRR is uniform for investments of varying types and, as such, can be used to rank multiple prospective investments or projects on a relatively even basis. In general, when comparing investment options with other similar characteristics, the investment with the highest IRR probably would be considered the best.
+
+Two algorithms are available:
 - BiSection method
 - Newton-Raphson method
 
