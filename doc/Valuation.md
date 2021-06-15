@@ -13,11 +13,6 @@ Two algorithms are available:
 
 Newton-Raphson method consumes 2-3x fewer iterations than BiSection
 
-How to use? Look at the tests
-
-- XirrBuilderTest.java - how to use builders
-- XirrCalculatorTest.java - it uses cucumber tests definition (xirr.feature)
-
 [Xirr valuation Source code ...](../src/main/java/org/blacksmith/finlib/valuation/xirr)
 
 [Xirr valuation Cucumber tests ...](../src/test/resources/features/valuation)
