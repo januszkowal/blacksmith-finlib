@@ -8,7 +8,6 @@ import lombok.Value;
 @Value
 @Builder
 public class CurveNodeMetadata {
-//  LocalDate date;
   String label;
   Tenor tenor;
 }

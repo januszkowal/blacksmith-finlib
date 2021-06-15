@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.stream.Collector;
 
-import org.blacksmith.finlib.valuation.xirr.Cashflow;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.blacksmith.finlib.valuation.xirr.XirrCalculator;
 
 /**
@@ -30,15 +30,21 @@ public class XirrStats {
   }
 
   private static void accumulate(XirrStats a, Cashflow cs) {
-    a.startDate = a.startDate != null && a.startDate.isBefore(cs.getDate()) ? a.startDate : cs.getDate();
-    a.endDate = a.endDate != null && a.endDate.isAfter(cs.getDate()) ? a.endDate : cs.getDate();
-    a.minAmount = Math.min(a.minAmount, cs.getAmount());
-    a.maxAmount = Math.max(a.maxAmount, cs.getAmount());
-    a.total += cs.getAmount();
-    if (cs.getAmount() < 0) {
-      a.outcomes -= cs.getAmount();
+    if (a.startDate == null) {
+      a.startDate = cs.getDate();
+      a.endDate = cs.getDate();
+    }
+    else {
+      a.startDate = cs.getDate().isBefore(a.startDate) ? cs.getDate() : a.startDate;
+      a.endDate = cs.getDate().isAfter(a.endDate) ? cs.getDate() : a.endDate;
+    }
+    a.minAmount = Math.min(a.minAmount, cs.getAmount().doubleValue());
+    a.maxAmount = Math.max(a.maxAmount, cs.getAmount().doubleValue());
+    a.total += cs.getAmount().doubleValue();
+    if (cs.getAmount().doubleValue() < 0) {
+      a.outcomes -= cs.getAmount().doubleValue();
     } else {
-      a.incomes += cs.getAmount();
+      a.incomes += cs.getAmount().doubleValue();
     }
   }
 

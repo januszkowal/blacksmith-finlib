@@ -1,5 +1,7 @@
 package org.blacksmith.finlib.valuation.xirr;
 
+import org.blacksmith.finlib.datetime.daycount.DayCount;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
 import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.solver.Solver;

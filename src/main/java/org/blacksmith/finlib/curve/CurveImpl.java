@@ -11,6 +11,7 @@ import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 
 public class CurveImpl implements Curve {
+  private final String name;
   private final LocalDate valuationDate;
   private final Set<Double> knotSet;
   private final UnivariateFunction function;
@@ -18,7 +19,6 @@ public class CurveImpl implements Curve {
   private final UnivariateFunction rightExtrapolator;
   private final Knot minKnot;
   private final Knot maxKnot;
-  private final String name;
   private final DayCount dayCount;
 
   public CurveImpl(String name, LocalDate valuationDate, DayCount dayCount, InterpolatedFunction function, Knot minKnot, Knot maxKnot) {
@@ -36,10 +36,10 @@ public class CurveImpl implements Curve {
 
   @Override
   public double value(double x) {
-    if (x < this.minKnot.getX()) {
+    if (x <= this.minKnot.getX()) {
       return leftExtrapolator.value(x);
     }
-    else if (x > this.maxKnot.getX()) {
+    else if (x >= this.maxKnot.getX()) {
       return rightExtrapolator.value(x);
     }
     else {
@@ -48,14 +48,14 @@ public class CurveImpl implements Curve {
   }
 
   @Override
-  public String getName() {
-    return this.name;
-  }
-
-  @Override
   public double value(LocalDate date) {
     double x = dayCount.relativeYearFraction(valuationDate, date);
     return value(x);
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
   }
 
   @Override

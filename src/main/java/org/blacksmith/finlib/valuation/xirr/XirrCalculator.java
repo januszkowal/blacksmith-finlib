@@ -1,53 +1,36 @@
 package org.blacksmith.finlib.valuation.xirr;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
+import org.blacksmith.finlib.exception.NonconvergenceException;
 import org.blacksmith.finlib.exception.OverflowException;
-import org.blacksmith.finlib.exception.TooManyEvaluationsException;
+import org.blacksmith.finlib.exception.ZeroValuedDerivativeException;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.exception.NonconvergenceException;
-import org.blacksmith.finlib.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
+import org.blacksmith.finlib.valuation.dto.CashflowAggregator;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 /**
- * Calculates the irregular rate of return on a series of transactions.  The irregular rate of return is the constant
+ * Calculates the irregular rate of return on a series of cashflows. The irregular rate of return is the constant
  * rate for which, if the transactions had been applied to an investment with that rate, the same resulting returns
  * would be realized.
  * <p>
- * When creating the list of {@link Cashflow} instances to feed Xirr, be sure to include one cashflow representing the
- * present value of the account now, as if you had cashed out the investment.
- * <p>
- * Example usage:
- * <code>
- * double rate = new Xirr( new Cashflow(-1000, "2016-01-15"), new Cashflow(-2500, "2016-02-08"), new Cashflow(-1000,
- * "2016-04-17"), new Cashflow( 5050, "2016-08-24") ).xirr();
- * </code>
- * <p>
- * Example using the builder to gain more control:
- * <code>
- * double rate = Xirr.builder() .withSolverBuilder( NewtonRaphsonAlgorithm.builder() .withIterations(1000)
- * .withTolerance(0.0001)) .withGuess(.20) .withTransactions( new Cashflow(-1000, "2016-01-15"), new Cashflow(-2500,
- * "2016-02-08"), new Cashflow(-1000, "2016-04-17"), new Cashflow( 5050, "2016-08-24") ).xirr();
- * </code>
- * <p>
- * This class is not thread-safe and is designed for each instance to be used once.
+ * This class is not thread-safe.
  */
 public class XirrCalculator {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
-  private static final double DAYS_IN_YEAR = 365d;
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
+  private final DayCount dayCount = StandardDayCounts.ACT_365;
   private final Solver<UnivariateFunction> solver;
   private XirrStats stats;
 
@@ -55,44 +38,36 @@ public class XirrCalculator {
   private long allIterations = 0L;
   private long lastIterations = 0L;
 
-  /**
-   * Construct an Xirr instance for the given cashflows.
-   *
-   * @throws IllegalArgumentException if there are fewer than 2 cashflows
-   * @throws IllegalArgumentException if all the cashflows are on the same date
-   * @throws IllegalArgumentException if all the cashflows negative (deposits)
-   * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
-   */
-  public XirrCalculator(Solver<UnivariateFunction> solver) {
-    this(solver, null);
-  }
-
   public XirrCalculator(Solver<UnivariateFunction> solver, Double guess) {
-    ArgChecker.notNull(solver, "Solver builder must be not null");
+    ArgChecker.notNull(solver, "Solver must be not null");
     this.solver = solver;
     this.guess = guess;
   }
 
-  public List<Cashflow> groupCashflows(Collection<Cashflow> cashflows) {
-    return cashflows.stream()
-        .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summingDouble(Cashflow::getAmount)))
-        .entrySet().stream()
-        .map(e -> Cashflow.of(e.getKey(), e.getValue()))
-        .sorted(Comparator.comparing(Cashflow::getDate))
-        .collect(Collectors.toList());
+  /**
+   * Construct an XirrCalculator instance for the given solver.
+   *
+   */
+  public static XirrCalculator of(Solver<UnivariateFunction> solver) {
+    return new XirrCalculator(solver, null);
   }
 
   /**
-   * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
+   * Calculates the irregular rate of return of the cashflows for this instance of XirrCalculator.
    *
    * @param cashflows the cashflows
    * @return the irregular rate of return of the cashflows
    * @throws ZeroValuedDerivativeException if the derivative is 0 while executing the Newton-Raphson method
    * @throws NonconvergenceException       if the Newton-Raphson method fails to converge in the
+   * @throws IllegalArgumentException if there are fewer than 2 cashflows
+   * @throws IllegalArgumentException if all the cashflows are on the same date
+   * @throws IllegalArgumentException if all the cashflows negative (deposits)
+   * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
   public double xirr(List<Cashflow> cashflows) {
     ArgChecker.notEmpty(cashflows, "Cashflows must be not empty");
-    List<Cashflow> groupedCashflows = groupCashflows(cashflows);
+    reset();
+    List<Cashflow> groupedCashflows = CashflowAggregator.aggregate(cashflows, false);
     List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
     stats = XirrStats.fromCashflows(statsCashflows);
     var xirrCashflows = groupedCashflows.stream()
@@ -101,10 +76,10 @@ public class XirrCalculator {
     if (xirrCashflows.size() < 2) {
       throw new IllegalArgumentException("Must have at least two dates");
     }
-    var derivativeFunction = new XirrSolverFunctionDerivative(xirrCashflows);
     stats.validate();
+    var derivativeFunction = new XirrFunctionDerivative(xirrCashflows);
 
-    final double years = DAYS.between(stats.getStartDate(), stats.getEndDate()) / DAYS_IN_YEAR;
+    final double years = dayCount.yearFraction(stats.getStartDate(), stats.getEndDate());
     if (stats.getMaxAmount() == 0) {
       return -1; // Total loss
     }
@@ -144,7 +119,7 @@ public class XirrCalculator {
     return this.allIterations;
   }
 
-  private double calculateInternal(XirrSolverFunctionDerivative derivativeFunction, double guess) {
+  private double calculateInternal(XirrFunctionDerivative derivativeFunction, double guess) {
     try {
       return solver.findRoot(derivativeFunction, guess);
     } finally {
@@ -154,8 +129,11 @@ public class XirrCalculator {
   }
 
   private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getAmount(),
-        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
+    return new XirrCashflow(cashflow.getAmount().doubleValue(), dayCount.yearFraction(cashflow.getDate(), stats.getEndDate()));
   }
 
+  private void reset() {
+    this.allIterations = 0L;
+    this.lastIterations = 0L;
+  }
 }
