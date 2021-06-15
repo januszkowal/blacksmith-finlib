@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Calculates the irregular rate of return on a series of transactions.  The irregular rate of return is the constant
+ * Calculates the irregular rate of return on a series of cashflows. The irregular rate of return is the constant
  * rate for which, if the transactions had been applied to an investment with that rate, the same resulting returns
  * would be realized.
  * <p>
@@ -45,24 +45,24 @@ public class XirrCalculator {
   }
 
   /**
-   * Construct an Xirr instance for the given cashflows.
+   * Construct an XirrCalculator instance for the given solver.
    *
-   * @throws IllegalArgumentException if there are fewer than 2 cashflows
-   * @throws IllegalArgumentException if all the cashflows are on the same date
-   * @throws IllegalArgumentException if all the cashflows negative (deposits)
-   * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
   public static XirrCalculator of(Solver<UnivariateFunction> solver) {
     return new XirrCalculator(solver, null);
   }
 
   /**
-   * Calculates the irregular rate of return of the cashflows for this instance of Xirr.
+   * Calculates the irregular rate of return of the cashflows for this instance of XirrCalculator.
    *
    * @param cashflows the cashflows
    * @return the irregular rate of return of the cashflows
    * @throws ZeroValuedDerivativeException if the derivative is 0 while executing the Newton-Raphson method
    * @throws NonconvergenceException       if the Newton-Raphson method fails to converge in the
+   * @throws IllegalArgumentException if there are fewer than 2 cashflows
+   * @throws IllegalArgumentException if all the cashflows are on the same date
+   * @throws IllegalArgumentException if all the cashflows negative (deposits)
+   * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
   public double xirr(List<Cashflow> cashflows) {
     ArgChecker.notEmpty(cashflows, "Cashflows must be not empty");
