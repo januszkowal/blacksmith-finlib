@@ -36,10 +36,10 @@ public class CurveImpl implements Curve {
 
   @Override
   public double value(double x) {
-    if (x < this.minKnot.getX()) {
+    if (x <= this.minKnot.getX()) {
       return leftExtrapolator.value(x);
     }
-    else if (x > this.maxKnot.getX()) {
+    else if (x >= this.maxKnot.getX()) {
       return rightExtrapolator.value(x);
     }
     else {
@@ -48,14 +48,14 @@ public class CurveImpl implements Curve {
   }
 
   @Override
-  public String getName() {
-    return this.name;
-  }
-
-  @Override
   public double value(LocalDate date) {
     double x = dayCount.relativeYearFraction(valuationDate, date);
     return value(x);
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
   }
 
   @Override
