@@ -1,6 +1,12 @@
-package org.blacksmith.finlib.valuation.xirr;
+package org.blacksmith.finlib.valuation.dto;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.blacksmith.finlib.valuation.xirr.XirrCalculator;
 
 /**
  * Represents a single cashlow for the purposes of computing the irregular rate
@@ -41,5 +47,14 @@ public final class Cashflow {
         "date=" + date +
         ", amount=" + amount +
         '}';
+  }
+
+  public static List<Cashflow> groupCashflows(Collection<Cashflow> cashflows) {
+    return cashflows.stream()
+        .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summingDouble(Cashflow::getAmount)))
+        .entrySet().stream()
+        .map(e -> Cashflow.of(e.getKey(), e.getValue()))
+        .sorted(Comparator.comparing(Cashflow::getDate))
+        .collect(Collectors.toList());
   }
 }

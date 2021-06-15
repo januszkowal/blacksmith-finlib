@@ -1,23 +1,21 @@
 package org.blacksmith.finlib.valuation.xirr;
 
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.blacksmith.commons.arg.ArgChecker;
+import org.blacksmith.finlib.datetime.daycount.DayCount;
+import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
+import org.blacksmith.finlib.exception.NonconvergenceException;
 import org.blacksmith.finlib.exception.OverflowException;
-import org.blacksmith.finlib.exception.TooManyEvaluationsException;
+import org.blacksmith.finlib.exception.ZeroValuedDerivativeException;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.solver.Solver;
-import org.blacksmith.finlib.exception.NonconvergenceException;
-import org.blacksmith.finlib.exception.ZeroValuedDerivativeException;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrCashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Calculates the irregular rate of return on a series of transactions.  The irregular rate of return is the constant
@@ -46,14 +44,22 @@ public class XirrCalculator {
 
   private static final Logger log = LoggerFactory.getLogger(XirrCalculator.class);
 
-  private static final double DAYS_IN_YEAR = 365d;
   private static final boolean STATS_FROM_GROUPED_CASHFLOWS = true;
+  private final DayCount dayCount;
   private final Solver<UnivariateFunction> solver;
   private XirrStats stats;
 
   private Double guess;
   private long allIterations = 0L;
   private long lastIterations = 0L;
+
+  public XirrCalculator(Solver<UnivariateFunction> solver, DayCount dayCount, Double guess) {
+    ArgChecker.notNull(solver, "Solver must be not null");
+    ArgChecker.notNull(dayCount, "DayCount  must be not null");
+    this.solver = solver;
+    this.dayCount = dayCount;
+    this.guess = guess;
+  }
 
   /**
    * Construct an Xirr instance for the given cashflows.
@@ -63,23 +69,8 @@ public class XirrCalculator {
    * @throws IllegalArgumentException if all the cashflows negative (deposits)
    * @throws IllegalArgumentException if all the cashflows non-negative (withdrawals)
    */
-  public XirrCalculator(Solver<UnivariateFunction> solver) {
-    this(solver, null);
-  }
-
-  public XirrCalculator(Solver<UnivariateFunction> solver, Double guess) {
-    ArgChecker.notNull(solver, "Solver builder must be not null");
-    this.solver = solver;
-    this.guess = guess;
-  }
-
-  public List<Cashflow> groupCashflows(Collection<Cashflow> cashflows) {
-    return cashflows.stream()
-        .collect(Collectors.groupingBy(Cashflow::getDate, Collectors.summingDouble(Cashflow::getAmount)))
-        .entrySet().stream()
-        .map(e -> Cashflow.of(e.getKey(), e.getValue()))
-        .sorted(Comparator.comparing(Cashflow::getDate))
-        .collect(Collectors.toList());
+  public static XirrCalculator of(Solver<UnivariateFunction> solver) {
+    return new XirrCalculator(solver, StandardDayCounts.ACT_365_25, null);
   }
 
   /**
@@ -92,7 +83,8 @@ public class XirrCalculator {
    */
   public double xirr(List<Cashflow> cashflows) {
     ArgChecker.notEmpty(cashflows, "Cashflows must be not empty");
-    List<Cashflow> groupedCashflows = groupCashflows(cashflows);
+    reset();
+    List<Cashflow> groupedCashflows = Cashflow.groupCashflows(cashflows);
     List<Cashflow> statsCashflows = STATS_FROM_GROUPED_CASHFLOWS ? groupedCashflows : cashflows;
     stats = XirrStats.fromCashflows(statsCashflows);
     var xirrCashflows = groupedCashflows.stream()
@@ -101,10 +93,10 @@ public class XirrCalculator {
     if (xirrCashflows.size() < 2) {
       throw new IllegalArgumentException("Must have at least two dates");
     }
-    var derivativeFunction = new XirrSolverFunctionDerivative(xirrCashflows);
     stats.validate();
+    var derivativeFunction = new XirrFunctionDerivative(xirrCashflows);
 
-    final double years = DAYS.between(stats.getStartDate(), stats.getEndDate()) / DAYS_IN_YEAR;
+    final double years = dayCount.yearFraction(stats.getStartDate(), stats.getEndDate());
     if (stats.getMaxAmount() == 0) {
       return -1; // Total loss
     }
@@ -144,7 +136,7 @@ public class XirrCalculator {
     return this.allIterations;
   }
 
-  private double calculateInternal(XirrSolverFunctionDerivative derivativeFunction, double guess) {
+  private double calculateInternal(XirrFunctionDerivative derivativeFunction, double guess) {
     try {
       return solver.findRoot(derivativeFunction, guess);
     } finally {
@@ -154,8 +146,11 @@ public class XirrCalculator {
   }
 
   private XirrCashflow createXirrCashflow(Cashflow cashflow) {
-    return new XirrCashflow(cashflow.getAmount(),
-        DAYS.between(cashflow.getDate(), stats.getEndDate()) / DAYS_IN_YEAR);
+    return new XirrCashflow(cashflow.getAmount(), dayCount.yearFraction(cashflow.getDate(), stats.getEndDate()));
   }
 
+  private void reset() {
+    this.allIterations = 0L;
+    this.lastIterations = 0L;
+  }
 }

@@ -5,11 +5,11 @@ import java.util.List;
 import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrCashflow;
 
-class XirrSolverFunctionDerivative implements UnivariateDifferentiableFunction {
+class XirrFunctionDerivative implements UnivariateDifferentiableFunction {
 
   private final List<XirrCashflow> xirrCashflows;
 
-  public XirrSolverFunctionDerivative(List<XirrCashflow> xirrCashflows) {
+  public XirrFunctionDerivative(List<XirrCashflow> xirrCashflows) {
     this.xirrCashflows = xirrCashflows;
   }
 

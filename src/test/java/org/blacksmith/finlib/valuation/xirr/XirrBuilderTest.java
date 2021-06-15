@@ -6,6 +6,7 @@ import java.util.List;
 import org.blacksmith.finlib.math.analysis.UnivariateDifferentiableFunction;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
 import org.blacksmith.finlib.math.solver.Solver;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 

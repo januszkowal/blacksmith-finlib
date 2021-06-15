@@ -3,6 +3,7 @@ package org.blacksmith.finlib.valuation.xirr;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.blacksmith.finlib.valuation.xirr.dto.XirrStats;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

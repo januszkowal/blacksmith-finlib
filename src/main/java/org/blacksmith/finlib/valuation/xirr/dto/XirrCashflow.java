@@ -3,7 +3,7 @@ package org.blacksmith.finlib.valuation.xirr.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.blacksmith.finlib.valuation.xirr.Cashflow;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 
 /**
  * Convenient class which represents {@link Cashflow} instances more

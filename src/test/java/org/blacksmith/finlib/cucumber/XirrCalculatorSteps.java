@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.math.solver.BiSectionSolverBuilder;
 import org.blacksmith.finlib.math.solver.NewtonRaphsonSolverBuilder;
-import org.blacksmith.finlib.valuation.xirr.Cashflow;
+import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.blacksmith.finlib.valuation.xirr.XirrCalculatorBuilder;
 
 import io.cucumber.datatable.DataTable;
