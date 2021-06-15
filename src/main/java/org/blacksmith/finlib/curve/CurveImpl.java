@@ -11,6 +11,7 @@ import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 
 public class CurveImpl implements Curve {
+  private final String name;
   private final LocalDate valuationDate;
   private final Set<Double> knotSet;
   private final UnivariateFunction function;
@@ -18,7 +19,6 @@ public class CurveImpl implements Curve {
   private final UnivariateFunction rightExtrapolator;
   private final Knot minKnot;
   private final Knot maxKnot;
-  private final String name;
   private final DayCount dayCount;
 
   public CurveImpl(String name, LocalDate valuationDate, DayCount dayCount, InterpolatedFunction function, Knot minKnot, Knot maxKnot) {
