@@ -45,8 +45,8 @@ public class CurveDefinitionBuilder {
     return this;
   }
 
-  public CurveDefinitionBuilder node(CurveNodeDefinition node) {
-    this.nodes.add(node);
+  public CurveDefinitionBuilder nodes(CurveNodeDefinition... nodes) {
+    this.nodes.addAll(List.of(nodes));
     return this;
   }
 

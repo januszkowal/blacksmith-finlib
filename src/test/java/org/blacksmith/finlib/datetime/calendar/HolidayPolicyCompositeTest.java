@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(org.blacksmith.test.TimingExtension.class)
-public class HolidayPolicyTest {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyTest.class);
+public class HolidayPolicyCompositeTest {
+  private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyCompositeTest.class);
 
   private static Set<MonthDay> monthDays = Set.of(
       MonthDay.of(5, 15),
