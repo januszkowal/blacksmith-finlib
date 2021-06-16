@@ -2,18 +2,16 @@ package org.blacksmith.finlib.datetime.calendar;
 
 import java.time.LocalDate;
 
-import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
-import org.blacksmith.finlib.datetime.calendar.policy.DatePartHolidayPolicy;
 import org.blacksmith.finlib.datetime.calendar.extractor.DateExtractor;
+import org.blacksmith.finlib.datetime.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.datetime.calendar.provider.DatePartInMemoryProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("BusinessDayCalendarTest")
-@ExtendWith(org.blacksmith.test.TimingExtension.class)
 public class BusinessDayCalendarTest {
   @Test
   public void holidayByWeekDay1() {
