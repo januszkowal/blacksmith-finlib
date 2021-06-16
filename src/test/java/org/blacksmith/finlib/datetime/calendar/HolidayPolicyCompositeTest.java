@@ -6,19 +6,17 @@ import java.util.Set;
 
 import org.blacksmith.finlib.datetime.calendar.extractor.DateExtractor;
 import org.blacksmith.finlib.datetime.calendar.extractor.MonthDayExtractor;
-import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.datetime.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.datetime.calendar.provider.DatePartInMemoryProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(org.blacksmith.test.TimingExtension.class)
 public class HolidayPolicyCompositeTest {
   private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyCompositeTest.class);
 
