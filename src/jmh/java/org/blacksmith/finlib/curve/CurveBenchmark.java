@@ -62,7 +62,7 @@ public class CurveBenchmark {
         this.nodes = createNodes10Y();
       }
       this.curveDefinition = CurveDefinitionBuilder.builder()
-          .curveName("aaa")
+          .name("aaa")
           .currency(Currency.EUR)
           .dayCount(StandardDayCounts.ACT_360)
           .interpolator(interpolator)
