@@ -10,7 +10,7 @@ import org.blacksmith.finlib.datetime.daycount.DayCount;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 
 public class CurveDefinitionBuilder {
-  private String curveName;
+  private String name;
   private Currency currency;
   private DayCount dayCount;
   private InterpolationAlgorithm interpolator;
@@ -20,8 +20,8 @@ public class CurveDefinitionBuilder {
     return new CurveDefinitionBuilder();
   }
 
-  public CurveDefinitionBuilder curveName(String curveName) {
-    this.curveName = curveName;
+  public CurveDefinitionBuilder name(String name) {
+    this.name = name;
     return this;
   }
 
@@ -51,6 +51,6 @@ public class CurveDefinitionBuilder {
   }
 
   public CurveDefinition build() {
-    return new CurveDefinition(curveName, currency, dayCount, interpolator, nodes);
+    return new CurveDefinition(name, currency, dayCount, interpolator, nodes);
   }
 }
