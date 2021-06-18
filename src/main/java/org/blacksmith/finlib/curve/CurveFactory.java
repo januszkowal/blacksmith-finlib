@@ -29,7 +29,7 @@ public class CurveFactory {
     var xValues = nodes.stream().mapToDouble(CurveNode::getX).toArray();
     var yValues = nodes.stream().mapToDouble(CurveNode::getY).toArray();
     var function = (new InterpolatorFactory()).createFunction(definition.getInterpolator(), xValues, yValues);
-    return new CurveImpl(definition.getCurveName(), valuationDate, definition.getDayCount(), function, minKnot, maxKnot);
+    return new CurveImpl(definition.getName(), valuationDate, definition.getDayCount(), function, minKnot, maxKnot);
   }
 
   private CurveNode createCurveNodeValue(LocalDate valuationDate, CurveDefinition definition, CurveNodeReferenceData referenceNode) {

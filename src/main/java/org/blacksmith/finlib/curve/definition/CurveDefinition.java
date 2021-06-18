@@ -9,15 +9,19 @@ import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.datetime.daycount.DayCount;
 
+import lombok.Builder;
+import lombok.Singular;
 import lombok.Value;
 
-@Value(staticConstructor = "of")
+@Builder
+@Value
 public class CurveDefinition implements NamedItem {
   public static final int MIN_NODES_SIZE = 3;
   private final String name;
   private final Currency currency;
   private final DayCount dayCount;
   private final InterpolationAlgorithm interpolator;
+  @Singular
   private final List<CurveNodeDefinition> nodes;
 
   public CurveDefinition(String name, Currency currency, DayCount dayCount, InterpolationAlgorithm interpolator,

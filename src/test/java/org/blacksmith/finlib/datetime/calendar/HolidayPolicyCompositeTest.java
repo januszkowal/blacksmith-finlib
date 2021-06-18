@@ -40,14 +40,16 @@ public class HolidayPolicyCompositeTest {
   @Test
   public void holidayPolicyCompositeBuilderTest() {
     HolidayPolicy singlePolicyComposite = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy)
+        .policy(monthDayPolicy)
         .build();
     HolidayPolicy twoPoliciesComposite = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy, yearMonthDayPolicy)
+        .policy(monthDayPolicy)
+        .policy(yearMonthDayPolicy)
         .build();
     HolidayPolicy twoPoliciesComposite2 = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy)
-        .policies(HolidayPolicyComposite.builder().policies(yearMonthDayPolicy)
+        .policy(monthDayPolicy)
+        .policy(HolidayPolicyComposite.builder()
+            .policy(yearMonthDayPolicy)
             .build())
         .build();
     checkPolicyGroup1("singlePolicyComposite", singlePolicyComposite);

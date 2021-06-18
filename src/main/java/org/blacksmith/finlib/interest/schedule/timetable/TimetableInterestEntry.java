@@ -8,6 +8,7 @@ import org.blacksmith.finlib.interest.schedule.events.Event;
 
 import lombok.Builder;
 import lombok.NonNull;
+import lombok.Singular;
 import lombok.Value;
 
 @Value
@@ -21,8 +22,8 @@ public class TimetableInterestEntry implements Event {
   LocalDate paymentDate;
   @NonNull
   LocalDate paymentDateUnadjusted;
-  @Builder.Default
-  List<TimetableRateResetEntry> subEvents = new ArrayList<>();
+  @Singular
+  List<TimetableRateResetEntry> subEvents;
 
   @Override
   public LocalDate getEventDate() {
