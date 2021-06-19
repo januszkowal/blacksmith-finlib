@@ -1,50 +1,55 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-public class PolynomialSplineFunction implements InterpolatedFunction {
-  private final double[] knots;
-  private final PolynomialFunction[] polynomials;
-  private final int lastKPIndex;
+import lombok.Value;
 
-  public PolynomialSplineFunction(double[] knots, PolynomialFunction[] polynomials) {
-    this.knots = new double[knots.length];
+public class PolynomialSplineFunction implements InterpolatedFunction {
+  protected final double[] xValues;
+  protected final PolynomialFunction[] polynomials;
+  protected final int lastInterval;
+
+  public PolynomialSplineFunction(double[] xValues, PolynomialFunction[] polynomials) {
+    this.xValues = new double[xValues.length];
     this.polynomials = new PolynomialFunction[polynomials.length];
-    System.arraycopy(knots, 0, this.knots, 0, knots.length);
+    System.arraycopy(xValues, 0, this.xValues, 0, xValues.length);
     System.arraycopy(polynomials, 0, this.polynomials, 0, polynomials.length);
-    this.lastKPIndex = Math.min(polynomials.length - 1, knots.length - 1);
+    this.lastInterval = polynomials.length - 1;
   }
 
   @Override
   public double value(double x) {
     int index = getKnotIndex0(x);
-    return polynomialValue(index, x);
+    return polynomials[index].value(x - xValues[index]);
   }
 
   @Override
-  public double[] getKnots() {
-    double[] out = new double[knots.length];
-    System.arraycopy(knots, 0, out, 0, knots.length);
+  public double[] getXValues() {
+    double[] out = new double[xValues.length];
+    System.arraycopy(xValues, 0, out, 0, xValues.length);
     return out;
   }
 
   public int getKnotIndex1(double key) {
-    int index = Arrays.binarySearch(this.knots, key);
+    int index = Arrays.binarySearch(this.xValues, key);
     if (index < 0) {
       index = -index - 2;
     }
-    if (index > lastKPIndex) {
-      index = lastKPIndex;
+    if (index > lastInterval) {
+      index = lastInterval;
     }
     return index;
   }
 
   public int getKnotIndex0(double key) {
-    int index = InterpolationUtils.getKnotIndex0(this.knots, key);
-    if (index > lastKPIndex) {
-      index = lastKPIndex;
+    int index = InterpolationUtils.getKnotIndex0(this.xValues, key);
+    if (index > lastInterval) {
+      index = lastInterval;
     }
     return index;
   }
@@ -58,10 +63,19 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
     for (int i = 0; i < polynomials.length; i++) {
       derivativePolynomials[i] = polynomials[i].polynomialDerivative();
     }
-    return new PolynomialSplineFunction(knots, derivativePolynomials);
+    return new PolynomialSplineFunction(xValues, derivativePolynomials);
   }
 
-  protected double polynomialValue(int index, double x) {
-    return polynomials[index].evaluate(x - knots[index]);
+  public List<Metadata> metadata() {
+    return IntStream.range(0, polynomials.length)
+        .mapToObj(i -> Metadata.of(xValues[i], IntStream.range(0, polynomials[i].coefficients.length)
+            .mapToObj(coeff -> polynomials[i].coefficients[coeff]).collect(Collectors.toList())))
+        .collect(Collectors.toList());
+  }
+
+  @Value(staticConstructor = "of")
+  public static final class Metadata {
+    double x;
+    List<Double> coefficients;
   }
 }
