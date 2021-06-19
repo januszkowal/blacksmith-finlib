@@ -11,21 +11,7 @@ public class Matrix {
   int numRows;
   int numCols;
 
-  static class Coordinate {
-    int row;
-    int col;
-
-    Coordinate(int r, int c) {
-      row = r;
-      col = c;
-    }
-
-    public String toString() {
-      return "(" + row + ", " + col + ")";
-    }
-  }
-
-  public Matrix(double [][] m) {
+  public Matrix(double[][] m) {
     numRows = m.length;
     numCols = m[0].length;
 
@@ -72,7 +58,7 @@ public class Matrix {
   }
 
   public void RREF() {
-    Coordinate pivot = new Coordinate(0,0);
+    Coordinate pivot = new Coordinate(0, 0);
 
     int submatrix = 0;
     for (int x = 0; x < numCols; x++) {
@@ -144,7 +130,7 @@ public class Matrix {
       //Step 4
       //Ignore the row containing the pivot position and cover all rows, if any, above it.
       //Apply steps 1-3 to the remaining submatrix. Repeat until there are no more nonzero entries.
-      if ((pivot.row + 1) >= numRows || isRowZeroes(new Coordinate(pivot.row+1, pivot.col))) {
+      if ((pivot.row + 1) >= numRows || isRowZeroes(new Coordinate(pivot.row + 1, pivot.col))) {
         break;
       }
 
@@ -194,7 +180,6 @@ public class Matrix {
       }
     }
 
-
     return pivot;
   }
 
@@ -204,5 +189,19 @@ public class Matrix {
 
   public String toString() {
     return matrix.toString().replace("], ", "]\n");
+  }
+
+  static class Coordinate {
+    int row;
+    int col;
+
+    Coordinate(int r, int c) {
+      row = r;
+      col = c;
+    }
+
+    public String toString() {
+      return "(" + row + ", " + col + ")";
+    }
   }
 }
