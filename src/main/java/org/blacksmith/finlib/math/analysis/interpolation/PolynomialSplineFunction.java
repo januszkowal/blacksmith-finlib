@@ -66,16 +66,10 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
     return new PolynomialSplineFunction(xValues, derivativePolynomials);
   }
 
-  public List<Metadata> metadata() {
+  public List<PolynomialFunctionMetadata> metadata() {
     return IntStream.range(0, polynomials.length)
-        .mapToObj(i -> Metadata.of(xValues[i], IntStream.range(0, polynomials[i].coefficients.length)
+        .mapToObj(i -> PolynomialFunctionMetadata.of(xValues[i], IntStream.range(0, polynomials[i].coefficients.length)
             .mapToObj(coeff -> polynomials[i].coefficients[coeff]).collect(Collectors.toList())))
         .collect(Collectors.toList());
-  }
-
-  @Value(staticConstructor = "of")
-  public static final class Metadata {
-    double x;
-    List<Double> coefficients;
   }
 }
