@@ -12,6 +12,7 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
     InterpolationUtils.checkArraysSize(yValues, xValues.length,
         String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length, yValues.length));
     InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
+
     double[] secants = calculateSecants(xValues, yValues);
     double[] firstDerivatives = calculateFirstDerivatives(secants, xValues.length);
 
@@ -24,11 +25,11 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
   }
 
   private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] firstDerivatives, double[] secants, int index) {
-    double xDelta = xValues[index + 1] - xValues[index];
+    double xDiff = xValues[index + 1] - xValues[index];
     double a = yValues[index];
     double b = firstDerivatives[index];
-    double c = (3.0d * secants[index + 2] - 2.0d * firstDerivatives[index] - firstDerivatives[index + 1]) / xDelta;
-    double d = (-2.0d * secants[index + 2] + firstDerivatives[index] + firstDerivatives[index + 1]) / (xDelta * xDelta);
+    double c = (3.0d * secants[index + 2] - 2.0d * firstDerivatives[index] - firstDerivatives[index + 1]) / xDiff;
+    double d = (-2.0d * secants[index + 2] + firstDerivatives[index] + firstDerivatives[index + 1]) / (xDiff * xDiff);
     return new PolynomialFunction(a, b, c, d);
   }
 

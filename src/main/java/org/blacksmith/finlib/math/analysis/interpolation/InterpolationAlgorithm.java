@@ -4,6 +4,7 @@ public enum InterpolationAlgorithm {
   AKIMA_SPLINE("Akima Spline"),
   DOUBLE_QUADRATIC("Double Quadratic"),
   QUADRATIC("Quadratic"),
+  NATURAL_SPLINE("Natural Spline"),
   LINEAR("Linear"),
   AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons"),
   LINEAR_APACHE_COMMONS("Linear - Apache Commons");

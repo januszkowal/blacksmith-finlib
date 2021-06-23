@@ -1,6 +1,9 @@
-package org.blacksmith.finlib.math.analysis.interpolation;
+package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
-public class PolynomialSplineFunction2 extends PolynomialSplineFunction1 {
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
+
+public class PolynomialSplineFunction2 extends PolynomialSplineFunction {
   public PolynomialSplineFunction2(double[] knots, PolynomialFunction[] polynomials) {
     super(knots, polynomials);
   }

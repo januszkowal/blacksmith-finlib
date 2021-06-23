@@ -1,15 +1,17 @@
-package org.blacksmith.finlib.math.analysis.interpolation;
+package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
 import org.blacksmith.finlib.math.struct.DoubleOperations;
-import org.blacksmith.finlib.math.struct.Matrix;
+import org.blacksmith.finlib.math.struct.Matrix2D;
 import org.blacksmith.finlib.math.struct.MatrixRref;
-import org.blacksmith.finlib.math.struct.Rref;
 
 public class QuadraticInterpolator implements PolynomialInterpolator {
   @Override
-  public PolynomialSplineFunction1 interpolate(double[] xValues, double[] yValues) {
+  public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
     int numberOfUnknowns = 3 * (xValues.length - 1);
-    var matrix = new Matrix<>(numberOfUnknowns, numberOfUnknowns + 1, Double.class, new DoubleOperations());
+    var matrix = new Matrix2D<>(numberOfUnknowns, numberOfUnknowns + 1, Double.class, new DoubleOperations());
     // through points equations
     for (int i = 0, j = 0; j < xValues.length - 1; i += 2, j++) {
       double x0 = xValues[j];
@@ -43,10 +45,10 @@ public class QuadraticInterpolator implements PolynomialInterpolator {
     for (int i = 0; i < matrix.getRowCount(); i += 3) {
       polynomials[i / 3] = polynomial(matrix, i);
     }
-    return new PolynomialSplineFunction1(xValues, polynomials);
+    return new PolynomialSplineFunction(xValues, polynomials);
   }
 
-  private PolynomialFunction polynomial(Matrix<Double> matrix, int index) {
+  private PolynomialFunction polynomial(Matrix2D<Double> matrix, int index) {
     double c = matrix.getCell(index, matrix.getColCount() - 1).doubleValue();
     double b = matrix.getCell(index + 1, matrix.getColCount() - 1).doubleValue();
     double a = matrix.getCell(index + 2, matrix.getColCount() - 1).doubleValue();

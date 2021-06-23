@@ -6,7 +6,7 @@ import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
 public class PolynomialFunction implements UnivariateFunction {
-  double[] coefficients;
+  protected final double [] coefficients;
   int n;
 
   public PolynomialFunction(double... coefficients) {
@@ -17,7 +17,6 @@ public class PolynomialFunction implements UnivariateFunction {
     while ((n > 1) && (coefficients[n - 1] == 0)) {
       --n;
     }
-//    this.coefficients = coefficients;
     this.coefficients = new double[n];
     System.arraycopy(coefficients, 0, this.coefficients, 0, n);
   }

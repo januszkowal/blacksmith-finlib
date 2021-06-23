@@ -85,6 +85,17 @@ public class InterpolationUtils {
     return ranges;
   }
 
+  public static double[] getDiffs(double[] xValues) {
+    int points = xValues.length;
+    double[] res = new double[points - 1];
+
+    for (int i = 0; i < points - 1; ++i) {
+      res[i] = xValues[i + 1] - xValues[i];
+    }
+
+    return res;
+  }
+
   public static class CalcRange {
     final int start;
     final int end;

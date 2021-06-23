@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.math.analysis.interpolation;
+package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
 import java.util.List;
 

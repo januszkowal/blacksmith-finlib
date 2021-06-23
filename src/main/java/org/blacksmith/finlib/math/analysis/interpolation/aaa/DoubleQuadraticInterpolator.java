@@ -1,10 +1,15 @@
-package org.blacksmith.finlib.math.analysis.interpolation;
+package org.blacksmith.finlib.math.analysis.interpolation.aaa;
+
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationUtils;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
+import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
 
 public class DoubleQuadraticInterpolator implements PolynomialInterpolator {
 
   private static final int MIN_SIZE = 2;
 
-  public PolynomialSplineFunction1 interpolate(double[] xValues, double[] yValues) {
+  public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
     InterpolationUtils.checkMinSize(xValues, MIN_SIZE);
     InterpolationUtils.checkArraysSize(yValues, xValues.length,
         String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length,
@@ -13,7 +18,7 @@ public class DoubleQuadraticInterpolator implements PolynomialInterpolator {
     return polynomials(xValues, yValues);
   }
 
-  private PolynomialSplineFunction1 polynomials(double[] xValues, double[] yValues) {
+  private PolynomialSplineFunction polynomials(double[] xValues, double[] yValues) {
     if (xValues.length == 1) {
       double a = yValues[1];
       double b = (yValues[1] - yValues[0]) / (xValues[1] - xValues[0]);

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.blacksmith.finlib.math.struct.DoubleOperations;
-import org.blacksmith.finlib.math.struct.Matrix;
+import org.blacksmith.finlib.math.struct.Matrix2D;
 import org.blacksmith.finlib.math.struct.VArray;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ class VArrayTest {
   @Test
   public void multiply1() {
     double[][] array = new double[][]{{1d, 2d, 3d},{3d, 5d, 7d}};
-    Matrix<Double> matrix = new Matrix<Double>(array, Double.class, new DoubleOperations());
+    Matrix2D<Double> matrix = new Matrix2D<Double>(array, Double.class, new DoubleOperations());
     System.out.println("m0:" + matrix.toString());
     VArray<Double> varray = matrix.getRow(1).multiply(2d);
     System.out.println("a1:"+varray);
@@ -39,7 +39,7 @@ class VArrayTest {
     return Stream.of(array).map(d -> d.toString()).collect(Collectors.joining(","));
   }
 
-  private String matrixToString(Matrix matrix) {
+  private String matrixToString(Matrix2D matrix) {
     return matrix.toString();
     //return Stream.of(array).map(d -> d.toString()).collect(Collectors.joining(","));
   }

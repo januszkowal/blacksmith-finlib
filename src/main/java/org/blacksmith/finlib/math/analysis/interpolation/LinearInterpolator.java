@@ -19,12 +19,12 @@ public class LinearInterpolator implements PolynomialInterpolator {
     af[intervals - 1] = af[intervals - 2];
     PolynomialFunction[] polynomials = new PolynomialFunction[intervals];
     for (int i = 0; i < intervals; i++) {
-      polynomials[i] = polynomial(yValues, af, i);
+      polynomials[i] = polynomial(xValues, yValues, af, i);
     }
     return new PolynomialSplineFunction(xValues, polynomials);
   }
 
-  private PolynomialFunction polynomial(double[] yValues, double[] af, int index) {
+  private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] af, int index) {
     double a = yValues[index];
     double b = af[index];
     return new PolynomialFunction(a, b);

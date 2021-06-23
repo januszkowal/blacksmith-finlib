@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-public class NaturalSpline implements PolynomialInterpolator {
+public class NaturalSplineInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 2;
 
   @Override
@@ -20,11 +20,11 @@ public class NaturalSpline implements PolynomialInterpolator {
   }
 
   private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] z, int index) {
-    double xDelta = xValues[index + 1] - xValues[index];
+    double xStep = xValues[index + 1] - xValues[index];
     double a = yValues[index];
-    double b = -(xDelta / 6.0d) * (z[index + 1] + 2.0d * z[index]) + (yValues[index + 1] - yValues[index]) / xDelta;
+    double b = -(xStep / 6.0d) * (z[index + 1] + 2.0d * z[index]) + (yValues[index + 1] - yValues[index]) / xStep;
     double c = 0.5d * z[index];
-    double d = (z[index + 1] - z[index]) / (6.0d * xDelta);
+    double d = (z[index + 1] - z[index]) / (6.0d * xStep);
     return new PolynomialFunction(a, b, c, d);
   }
 

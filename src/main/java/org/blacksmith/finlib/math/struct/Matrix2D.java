@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import org.blacksmith.commons.arg.ArgChecker;
 
-public class Matrix<T extends Number> {
+public class Matrix2D<T extends Number> {
   private final Class<T> clazz;
   private T[][] array;
   private int rowCount;
@@ -15,7 +15,7 @@ public class Matrix<T extends Number> {
 
   private FieldOperations<T> operator;
 
-  public Matrix(int rowCount, int colCount, Class<T> clazz, FieldOperations<T> operator) {
+  public Matrix2D(int rowCount, int colCount, Class<T> clazz, FieldOperations<T> operator) {
     this.clazz = clazz;
     this.operator = operator;
     this.rowCount = rowCount;
@@ -28,7 +28,7 @@ public class Matrix<T extends Number> {
     }
   }
 
-  public Matrix(double[][] m, Class<T> clazz, FieldOperations<T> operator) {
+  public Matrix2D(double[][] m, Class<T> clazz, FieldOperations<T> operator) {
     ArgChecker.notNull(m);
     ArgChecker.isTrue(m.length > 0);
     ArgChecker.isTrue(m[0].length > 0);

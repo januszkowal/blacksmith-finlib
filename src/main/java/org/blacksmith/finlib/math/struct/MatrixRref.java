@@ -1,12 +1,10 @@
 package org.blacksmith.finlib.math.struct;
 
-import org.blacksmith.finlib.math.struct.Matrix;
-
 // Reduced row echelon form
 public class MatrixRref<T extends Number> {
-  private final Matrix<T> matrix;
+  private final Matrix2D<T> matrix;
 
-  public MatrixRref(Matrix<T> matrix) {
+  public MatrixRref(Matrix2D<T> matrix) {
     this.matrix = matrix;
   }
 
