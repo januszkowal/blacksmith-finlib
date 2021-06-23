@@ -7,7 +7,7 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
   }
 
   @Override
-  public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
+  public InterpolatedFunction interpolate(double[] xValues, double[] yValues) {
     InterpolationUtils.checkMinSize(xValues, MIN_SIZE);
     InterpolationUtils.checkArraysSize(yValues, xValues.length,
         String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length, yValues.length));

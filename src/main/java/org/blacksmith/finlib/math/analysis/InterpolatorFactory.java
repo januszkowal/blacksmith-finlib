@@ -5,17 +5,21 @@ import java.util.stream.Stream;
 
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.math.analysis.interpolation.AkimaSplineInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.DoubleQuadraticInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.LinearInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.QuadraticInterpolator;
 
 public class InterpolatorFactory {
   public InterpolatedFunction createFunction(InterpolationAlgorithm interpolator, double[] xValues, double[] yValues) {
     InterpolatedFunction curveFunction = null;
-    if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH) {
+    if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE) {
       curveFunction = new AkimaSplineInterpolator().interpolate(xValues, yValues);
-    } else if (interpolator == InterpolationAlgorithm.LINEAR_BLACKSMITH) {
+    } else if (interpolator == InterpolationAlgorithm.LINEAR) {
       curveFunction = new LinearInterpolator().interpolate(xValues, yValues);
+    } else if (interpolator == InterpolationAlgorithm.QUADRATIC) {
+      curveFunction = new DoubleQuadraticInterpolator().interpolate(xValues, yValues);
     } else if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
           new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xValues, yValues);
@@ -26,7 +30,7 @@ public class InterpolatorFactory {
         }
 
         @Override
-        public double[] getKnots() {
+        public double[] getXValues() {
           return akimaSplineApacheCommonsFunction.getKnots();
         }
       };
@@ -40,7 +44,7 @@ public class InterpolatorFactory {
         }
 
         @Override
-        public double[] getKnots() {
+        public double[] getXValues() {
           return linearApacheCommonsInterpolatorFunction.getKnots();
         }
       };

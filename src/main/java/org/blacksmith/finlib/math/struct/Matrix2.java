@@ -1,4 +1,4 @@
-package org.blacksmith.finlib.math.analysis;
+package org.blacksmith.finlib.math.struct;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.commons.math3.fraction.Fraction;
 import org.apache.commons.math3.fraction.FractionConversionException;
 
-public class Matrix {
-  List<List<Fraction>> matrix;
+public class Matrix2 {
+  public List<List<Fraction>> matrix;
   int numRows;
   int numCols;
 
-  public Matrix(double[][] m) {
+  public Matrix2(double[][] m) {
     numRows = m.length;
     numCols = m[0].length;
 
@@ -25,6 +25,7 @@ public class Matrix {
           cols.add(new Fraction(m[i][j]));
         } catch (FractionConversionException e) {
           System.err.println("Fraction could not be converted from double by apache commons . . .");
+          throw e;
         }
       }
       matrix.add(cols);

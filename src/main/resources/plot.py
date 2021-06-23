@@ -36,6 +36,7 @@ yAkimaBlacksmith = []
 yAkimaApacheCommons = []
 yLinearBlacksmith = []
 yLinearApacheCommons = []
+yDoubleQuadraticBlacksmith = []
 knotsx = []
 knotsy = []
 
@@ -49,6 +50,7 @@ def readFile(filePath):
             yAkimaApacheCommons.append(float(row['funAkimaApacheCommons']))
             yLinearBlacksmith.append(float(row['funLinearBlacksmith']))
             yLinearApacheCommons.append(float(row['funLinearApacheCommons']))
+            yDoubleQuadraticBlacksmith.append(float(row['funDoubleQuadraticBlacksmith']))
             #print(row)
             knot = row['knot']
             if (knot):
@@ -79,7 +81,9 @@ if 'AkimaApacheCommons' in displayCurves:
 if 'LinearBlacksmith' in displayCurves:
     plt.plot(x, yLinearBlacksmith, color='violet', label='Linear - Blacksmith')
 if 'LinearApacheCommons' in displayCurves:
-    plt.plot(x, yLinearApacheCommons, color='orange', label='Linear - Apache Commons')  
+    plt.plot(x, yLinearApacheCommons, color='orange', label='Linear - Apache Commons')
+if 'DoubleQuadraticBlacksmith' in displayCurves:
+    plt.plot(x, yDoubleQuadraticBlacksmith, color='olive', label='Double Quadratic - Blacksmith')
     
 # naming the x axis
 plt.xlabel('x')

@@ -77,8 +77,8 @@ public class InterpolatorValidateTest {
         Knot.of(5, 2.3),
         Knot.of(10, 2.5),
         Knot.of(15, 2.8));
-    assertThrows(IllegalArgumentException.class, () -> factory.createFunction(InterpolationAlgorithm.LINEAR_BLACKSMITH, knots));
-    assertThrows(IllegalArgumentException.class, () -> factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, knots));
+    assertThrows(IllegalArgumentException.class, () -> factory.createFunction(InterpolationAlgorithm.LINEAR, knots));
+    assertThrows(IllegalArgumentException.class, () -> factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE, knots));
   }
 
   private List<Knot> create365DayKnots() {

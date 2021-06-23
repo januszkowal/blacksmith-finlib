@@ -40,7 +40,8 @@ public class InterpolatorGenerateTest {
   private List<Knot> create365DayKnots() {
     return List.of(Knot.of(0, 2.43d),
         Knot.of(1, 2.50d),
-        Knot.of(7, 3.07d),
+        Knot.of(7, 2.9d),
+//        Knot.of(7, 3.07d),
         Knot.of(14, 3.36d),
         Knot.of(30, 3.71d),
         Knot.of(90, 4.27d),
@@ -72,19 +73,22 @@ public class InterpolatorGenerateTest {
     double[] yValues = knots.stream().mapToDouble(Knot::getY).toArray();
     Set<Double> knotsX = DoubleStream.of(xValues).boxed().collect(Collectors.toSet());
     int maxValue = knots.stream().mapToInt(x -> (int)x.getX()).max().getAsInt();
-    var akimaInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH, xValues, yValues);
+    var akimaInterpolatorBlacksmith = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE, xValues, yValues);
     var akimaInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS, xValues, yValues);
-    var linearInterpolatorBlackSmith = factory.createFunction(InterpolationAlgorithm.LINEAR_BLACKSMITH, xValues, yValues);
+    var linearInterpolatorBlacksmith = factory.createFunction(InterpolationAlgorithm.LINEAR, xValues, yValues);
     var linearInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.LINEAR_APACHE_COMMONS, xValues, yValues);
-    var valuesAkimaBlackSmith = getValues(akimaInterpolatorBlackSmith, valuationDate, 0, 365);
+    var quadraticInterpolator = factory.createFunction(InterpolationAlgorithm.QUADRATIC, xValues, yValues);
+    var valuesAkimaBlackSmith = getValues(akimaInterpolatorBlacksmith, valuationDate, 0, 365);
     var valuesAkimaApacheCommons = getValues(akimaInterpolatorApacheCommons, valuationDate, 0, 365);
-    var valuesLinearBlackSmith = getValues(linearInterpolatorBlackSmith, valuationDate, 0, 365);
+    var valuesLinearBlackSmith = getValues(linearInterpolatorBlacksmith, valuationDate, 0, 365);
     var valuesLinearApacheCommons = getValues(linearInterpolatorApacheCommons, valuationDate, 0, 365);
+    var valuesDoubleQuadraticBlacksmith = getValues(quadraticInterpolator, valuationDate, 0, 365);
     try (PrintWriter pw = new PrintWriter(path.toFile())) {
-      pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funLinearBlacksmith,funLinearApacheCommons,knot");
+      pw.println("x,funAkimaBlacksmith,funAkimaApacheCommons,funDoubleQuadraticBlacksmith,funLinearBlacksmith,funLinearApacheCommons,knot");
       IntStream.rangeClosed(0, maxValue).mapToObj(i -> convertToCSV(String.valueOf(i),
           String.valueOf(valuesAkimaBlackSmith.get(i).getY()),
           String.valueOf(valuesAkimaApacheCommons.get(i).getY()),
+          String.valueOf(valuesDoubleQuadraticBlacksmith.get(i).getY()),
           String.valueOf(valuesLinearBlackSmith.get(i).getY()),
           String.valueOf(valuesLinearApacheCommons.get(i).getY()),
           knotsX.contains(valuesAkimaBlackSmith.get(i).getX()) ? String.valueOf(valuesAkimaBlackSmith.get(i).getY()) : ""))

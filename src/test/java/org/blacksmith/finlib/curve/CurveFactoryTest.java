@@ -48,7 +48,7 @@ class CurveFactoryTest {
 
     CurveDefinition definition = CurveDefinition.builder()
         .name("EUR-ZERO")
-        .interpolator(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH)
+        .interpolator(InterpolationAlgorithm.AKIMA_SPLINE)
         .dayCount(StandardDayCounts.ACT_360)
         .currency(Currency.EUR)
         .node(SimpleCurveNodeDefinition.of("WIBOR-1D", Tenor.TENOR_1D, quote("WIBOR-EUR-1D"), 0))

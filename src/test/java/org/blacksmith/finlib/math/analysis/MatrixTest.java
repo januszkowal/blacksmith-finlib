@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.analysis;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.blacksmith.finlib.math.struct.Matrix2;
 
 class MatrixTest {
   public static void main (String[] args) {
@@ -10,7 +10,7 @@ class MatrixTest {
         {-2, 0, -3, 22}
     };
 
-    Matrix x = new Matrix(matrix_1);
+    Matrix2 x = new Matrix2(matrix_1);
     System.out.println("before\n" + x.toString() + "\n");
     x.RREF();
     System.out.println("after\n" + x.toString() + "\n");
@@ -23,7 +23,7 @@ class MatrixTest {
         {0, 1, -1, 0, 0}
     };
 
-    Matrix y = new Matrix(matrix_2);
+    Matrix2 y = new Matrix2(matrix_2);
     System.out.println("before\n" + y.toString() + "\n");
     y.RREF();
     System.out.println("after\n" + y.toString() + "\n");
@@ -36,7 +36,7 @@ class MatrixTest {
         {5, 10, 24, 11, 15, -4}
     };
 
-    Matrix z = new Matrix(matrix_3);
+    Matrix2 z = new Matrix2(matrix_3);
     System.out.println("before\n" + z.toString() + "\n");
     z.RREF();
     System.out.println("after\n" + z.toString() + "\n");
@@ -47,7 +47,7 @@ class MatrixTest {
         {0,5}
     };
 
-    Matrix a = new Matrix(matrix_4);
+    Matrix2 a = new Matrix2(matrix_4);
     System.out.println("before\n" + a.toString() + "\n");
     a.RREF();
     System.out.println("after\n" + a.toString() + "\n");
