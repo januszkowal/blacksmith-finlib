@@ -5,10 +5,12 @@ import java.util.stream.Stream;
 
 import org.blacksmith.finlib.curve.types.Knot;
 import org.blacksmith.finlib.math.analysis.interpolation.AkimaSplineInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.BSpline;
 import org.blacksmith.finlib.math.analysis.interpolation.DoubleQuadraticInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolatedFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationAlgorithm;
 import org.blacksmith.finlib.math.analysis.interpolation.LinearInterpolator;
+import org.blacksmith.finlib.math.analysis.interpolation.NaturalSpline;
 import org.blacksmith.finlib.math.analysis.interpolation.QuadraticInterpolator;
 
 public class InterpolatorFactory {
@@ -19,7 +21,7 @@ public class InterpolatorFactory {
     } else if (interpolator == InterpolationAlgorithm.LINEAR) {
       curveFunction = new LinearInterpolator().interpolate(xValues, yValues);
     } else if (interpolator == InterpolationAlgorithm.QUADRATIC) {
-      curveFunction = new DoubleQuadraticInterpolator().interpolate(xValues, yValues);
+      curveFunction = new BSpline().interpolate(xValues, yValues);
     } else if (interpolator == InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS) {
       var akimaSplineApacheCommonsFunction =
           new org.apache.commons.math3.analysis.interpolation.AkimaSplineInterpolator().interpolate(xValues, yValues);
