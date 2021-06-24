@@ -28,10 +28,6 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
     return out;
   }
 
-  public int getIntervals() {
-    return polynomials.length;
-  }
-
   public int getKnotIndex1(double key) {
     int index = Arrays.binarySearch(this.xValues, key);
     if (index < 0) {
@@ -74,6 +70,10 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
   public double value(double x) {
     int index = getKnotIndex0(x);
     return polynomials[index].value(x - xValues[index]);
+  }
+
+  public int getIntervals() {
+    return polynomials.length;
   }
 
   public double[] getPolynomialCoefficients(int polynomial) {

@@ -110,14 +110,21 @@ public class InterpolationUtils {
     return res;
   }
 
-  public static double[] arrayPadLeft(double[] arr, int size) {
-    double[] res = new double[size];
-    int cp = Math.min(size, arr.length);
-    for (int i = size -1, j = arr.length - 1, c = cp; c > 0 ; --i, --j, --c) {
-      res[i] = arr[j];
-    }
+  public static double[] leftPad(double[] src, int size) {
+    double[] dst = new double[size];
+    int copyLength = Math.min(size, src.length);
+    System.arraycopy(src, src.length - copyLength, dst, dst.length - copyLength, copyLength);
+    return dst;
+  }
 
-    return res;
+  public static double[] leftPad(double[] src, int size, double fill) {
+    double[] dst = new double[size];
+    int copyLength = Math.min(size, src.length);
+    for (int i = 0; i < copyLength; i++) {
+      dst[i] = fill;
+    }
+    System.arraycopy(src, src.length - copyLength, dst, dst.length - copyLength, copyLength);
+    return dst;
   }
 
   public static class CalcRange {

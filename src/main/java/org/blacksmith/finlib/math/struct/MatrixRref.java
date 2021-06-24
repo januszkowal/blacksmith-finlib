@@ -2,13 +2,7 @@ package org.blacksmith.finlib.math.struct;
 
 // Reduced row echelon form
 public class MatrixRref<T extends Number> {
-  private final Matrix2D<T> matrix;
-
-  public MatrixRref(Matrix2D<T> matrix) {
-    this.matrix = matrix;
-  }
-
-  public void reduce() {
+  public <T extends Number> void reduce(Matrix2D<T> matrix) {
     var lead = 0;
     for (int r = 0; r < matrix.getRowCount(); r++) {
       if (lead >= matrix.getColCount()) {

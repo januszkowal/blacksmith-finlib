@@ -43,8 +43,8 @@ public class QuadraticInterpolator extends AbstractPolynomialInterpolator implem
     // additional information / boundary condition (required)
     matrix.setCell(numberOfUnknowns - 1, 0, 1d);
     double[][] aaa = matrix.toDoubleArray();
-    var matrixOper = new MatrixRref<>(matrix);
-    matrixOper.reduce();
+    var matrixOper = new MatrixRref<>();
+    matrixOper.reduce(matrix);
     PolynomialFunction[] polynomials = new PolynomialFunction[matrix.getRowCount() / 3];
     for (int i = 0; i < matrix.getRowCount(); i += 3) {
       polynomials[i / 3] = polynomial(matrix, i);

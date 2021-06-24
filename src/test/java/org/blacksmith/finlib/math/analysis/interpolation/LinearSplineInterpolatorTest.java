@@ -11,26 +11,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 @Slf4j
-public class NaturalSplineInterpolatorTest {
+public class LinearSplineInterpolatorTest {
 
   private static final double EPS_KNOT = 1e-14;
   private static final double EPS = 1e-6;
   private static final double INF = 1. / 0.;
-  final NaturalSplineInterpolator interpolator = new NaturalSplineInterpolator();
+  final LinearInterpolator interpolator = new LinearInterpolator();
 
   @Test
   public void recov2ptsTest() {
     final double[] xValues = new double[]{ 1., 2. };
     final double[] yValues = new double[]{ 6., 1. };
 
-    final int nIntervals = 1;
-    final double[][] coeffsMatrix = new double[][]{ { 0., 0., 6.0, -5.0 } };
+    final int nIntervals = 2;
+    final double[][] coeffsMatrix = new double[][]{ { 6.0, -5.0 },{ 1., -5.} };
+
 
     var spline = interpolator.interpolate(xValues, yValues);
 
     assertThat(spline.getIntervals()).isEqualTo(nIntervals);
     assertThat(spline.getXValues()).containsExactly(xValues);
-    ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 4), coeffsMatrix, EPS_KNOT);
+    ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 2), coeffsMatrix, EPS_KNOT);
   }
 
   @Test
@@ -38,29 +39,30 @@ public class NaturalSplineInterpolatorTest {
     final double[] xValues = new double[]{ 1., 2., 3., 4 };
     final double[] yValues = new double[]{ 6., 25. / 6., 10. / 3., 4. };
     //
-    final int nIntervals = 3;
+    final int nIntervals = 4;
     final double[][] coeffsMatrix =
-        new double[][]{ { 6., -2., 0., 1. / 6. },
-            { 25. / 6., -3. / 2., 1. / 2., 1. / 6. },
-            { 10. / 3., 0., 1., -1. / 3. } };
+        new double[][]{ { 6., -11. / 6. },
+            { 25. / 6., -5. / 6. },
+            { 10. / 3., 2. / 3. },
+            { 4., 2. / 3. }};
 
     var spline = interpolator.interpolate(xValues, yValues);
 
     assertThat(spline.getIntervals()).isEqualTo(nIntervals);
     assertThat(spline.getXValues()).containsExactly(xValues);
-    ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 4), coeffsMatrix, EPS_KNOT);
-    assertThat(spline.values(xValues)).containsExactly(yValues, Offset.offset(EPS_KNOT));
+    ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 2), coeffsMatrix, EPS_KNOT);
+    assertThat(spline.values(xValues)).containsExactly(yValues, Offset.offset(EPS));
 
     double[][] vvv = new double[][]{
         { 1., 6. },
-        { 1.2, 4201. / 750 },
-        { 1.5, 241. / 48 },
-        { 1.7, 5556. / 1193. },
+        { 1.2, 169. / 30 },
+        { 1.5, 61. / 12 },
+        { 1.7, 283. / 60 },
         { 2.0, 25. / 6 },
-        { 2.3, 22597. / 6000 },
-        { 2.5, 57. / 16 },
-        { 2.7, 20513. / 6000 },
-        { 2.9, 20059. / 6000 },
+        { 2.3, 47. / 12 },
+        { 2.5, 15. / 4 },
+        { 2.9, 41. / 12 },
+        { 2.7, 43. / 12 },
         { 3.0, 10. / 3 }
     };
 
