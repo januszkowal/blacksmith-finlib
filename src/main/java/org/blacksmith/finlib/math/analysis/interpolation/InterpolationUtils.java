@@ -37,6 +37,7 @@ public class InterpolationUtils {
   }
 
   public static void checkOrder(double[] val, String message) {
+    if (val.length < 2) return;
     for (int i = 1; i < val.length; i++) {
       if (val[i] < val[i - 1]) {
         throw new IllegalArgumentException(message);
@@ -45,6 +46,7 @@ public class InterpolationUtils {
   }
 
   public static void checkIncreasing(double[] val, String message) {
+    if (val.length < 2) return;
     for (int i = 1; i < val.length; i++) {
       if (val[i] <= val[i - 1]) {
         throw new IllegalArgumentException(message);

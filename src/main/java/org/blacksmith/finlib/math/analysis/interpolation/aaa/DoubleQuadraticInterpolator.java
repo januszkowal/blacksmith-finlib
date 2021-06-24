@@ -1,20 +1,17 @@
 package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
+import org.blacksmith.finlib.math.analysis.interpolation.AbstractPolynomialInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.InterpolationUtils;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
 
-public class DoubleQuadraticInterpolator implements PolynomialInterpolator {
+public class DoubleQuadraticInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
 
-  private static final int MIN_SIZE = 2;
+  private static final int MIN_SIZE = 1;
 
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.checkMinSize(xValues, MIN_SIZE);
-    InterpolationUtils.checkArraysSize(yValues, xValues.length,
-        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length,
-            yValues.length));
-    InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
+    validateKnots(xValues, yValues, MIN_SIZE);
     return polynomials(xValues, yValues);
   }
 
