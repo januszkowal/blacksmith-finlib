@@ -1,8 +1,6 @@
 package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
-import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.math.analysis.interpolation.AbstractPolynomialInterpolator;
-import org.blacksmith.finlib.math.analysis.interpolation.InterpolationUtils;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
