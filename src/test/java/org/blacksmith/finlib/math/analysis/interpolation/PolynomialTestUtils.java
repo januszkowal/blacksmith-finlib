@@ -24,7 +24,7 @@ public class PolynomialTestUtils {
     }
   }
 
-  public static void assertArray(double[] expected, double[] actual) {
+  public static void assertArrayClose(double[] expected, double[] actual) {
     for (int i = 0; i < actual.length; i++) {
       double ref;
       if (Double.isNaN(expected[i])) {
@@ -34,6 +34,13 @@ public class PolynomialTestUtils {
         ref = expected[i] == 0. ? 1. : Math.abs(expected[i]);
       }
       assertThat(actual[i]).isCloseTo(expected[i], offset(ref * EPS))
+          .describedAs("Cell: " + i);
+    }
+  }
+
+  public static void assertArray(double[] expected, double[] actual) {
+    for (int i = 0; i < actual.length; i++) {
+      assertThat(actual[i]).isEqualTo(expected[i])
           .describedAs("Cell: " + i);
     }
   }

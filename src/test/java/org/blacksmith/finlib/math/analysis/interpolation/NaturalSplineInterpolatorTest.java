@@ -1,5 +1,6 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
+import org.assertj.core.data.Offset;
 import org.blacksmith.finlib.math.analysis.InterpolatorFactory;
 import org.junit.jupiter.api.Test;
 
@@ -48,9 +49,7 @@ public class NaturalSplineInterpolatorTest {
     assertThat(interpolator.getIntervals()).isEqualTo(nIntervals);
     assertThat(interpolator.getXValues()).containsExactly(xValues);
     PolynomialTestUtils.assertCoeffArray(coeffsMatrix, interpolator);
-    for (int i = 0; i < xValues.length; i++) {
-      assertThat(interpolator.value(xValues[i])).isEqualTo(yValues[i]);
-    }
+    assertThat(interpolator.values(xValues)).containsExactly(yValues, Offset.offset(EPS));
 
     double[][] vvv = new double[][]{
         { 1., 6. },
@@ -62,14 +61,12 @@ public class NaturalSplineInterpolatorTest {
         { 2.5, 3.5625 },
         { 2.7, 3.4188333333333336 },
         { 2.9, 3.343166666666667 },
-        { 3.0, 3.3333333333333335 },
-        { Double.NaN, Double.NaN }
+        { 3.0, 3.3333333333333335 }
     };
 
     double[] xValues1 = PolynomialTestUtils.getCol(vvv, 0);
     double[] yValues1 = PolynomialTestUtils.getCol(vvv, 1);
-    double[] yValues1Actual = interpolator.values(xValues1);
-    PolynomialTestUtils.assertArray(yValues1, yValues1Actual);
+    assertThat(interpolator.values(xValues1)).containsExactly(yValues1, Offset.offset(EPS));
   }
 
 
