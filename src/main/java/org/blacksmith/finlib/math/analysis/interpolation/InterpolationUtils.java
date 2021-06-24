@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.blacksmith.commons.arg.ArgChecker;
+
 public class InterpolationUtils {
   public static int getKnotIndex0(double[] a, double key) {
     int low = 0;
@@ -51,13 +53,23 @@ public class InterpolationUtils {
   }
 
   public static void checkArraysSize(double[] a, int size, String message) {
+    ArgChecker.notNull(a, "Array can't be null");
     if (a.length != size)
       throw new IllegalArgumentException(message);
   }
 
-  public static void checkMinSize(double[] xValues, int min) {
-    if (xValues.length < min)
-      throw new IllegalArgumentException("Minimum arrays size is: " + min);
+  public static void checkMinSize(double[] a, int min) {
+    ArgChecker.notNull(a, "Array can't be null");
+    if (a.length < min)
+      throw new IllegalArgumentException("Minimum array size is: " + min);
+  }
+
+  public static void checkValidNumbers(double[] val, String message) {
+    for (int i = 0; i < val.length; i++) {
+      if (Double.isNaN(val[i]) || Double.isInfinite(val[i])) {
+        throw new IllegalArgumentException(message);
+      }
+    }
   }
 
   public static List<CalcRange> getCalculationRanges(int min, int max, double[] knots, int polynomialLength) {
@@ -94,6 +106,28 @@ public class InterpolationUtils {
     }
 
     return res;
+  }
+
+  public static double[] arrayPadLeft(double[] arr, int size) {
+    double[] res = new double[size];
+    int cp = Math.min(size, arr.length);
+    for (int i = size -1, j = arr.length - 1, c = cp; c > 0 ; --i, --j, --c) {
+      res[i] = arr[j];
+    }
+
+    return res;
+  }
+
+  public static void validateInterpolatorKnots(double[] xValues, double[] yValues, int minSize) {
+    ArgChecker.notNull(xValues, "X-values array can't be null");
+    ArgChecker.notNull(yValues, "Y-values array can't be null");
+    InterpolationUtils.checkMinSize(xValues, minSize);
+    InterpolationUtils.checkArraysSize(yValues, xValues.length,
+        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length,
+            yValues.length));
+    InterpolationUtils.checkValidNumbers(xValues, "X-values must be valid numbers");
+    InterpolationUtils.checkValidNumbers(yValues, "Y-values must be valid numbers");
+    InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
   }
 
   public static class CalcRange {

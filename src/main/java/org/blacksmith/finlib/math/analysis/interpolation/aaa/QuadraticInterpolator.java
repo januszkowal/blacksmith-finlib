@@ -1,5 +1,7 @@
 package org.blacksmith.finlib.math.analysis.interpolation.aaa;
 
+import org.blacksmith.commons.arg.ArgChecker;
+import org.blacksmith.finlib.math.analysis.interpolation.InterpolationUtils;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialFunction;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialInterpolator;
 import org.blacksmith.finlib.math.analysis.interpolation.PolynomialSplineFunction;
@@ -8,8 +10,11 @@ import org.blacksmith.finlib.math.struct.Matrix2D;
 import org.blacksmith.finlib.math.struct.MatrixRref;
 
 public class QuadraticInterpolator implements PolynomialInterpolator {
+  private static final int MIN_SIZE = 3;
+
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
+    InterpolationUtils.validateInterpolatorKnots(xValues, yValues, MIN_SIZE);
     int numberOfUnknowns = 3 * (xValues.length - 1);
     var matrix = new Matrix2D<>(numberOfUnknowns, numberOfUnknowns + 1, Double.class, new DoubleOperations());
     // through points equations

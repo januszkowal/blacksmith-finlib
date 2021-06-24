@@ -58,4 +58,10 @@ public class PolynomialFunction implements UnivariateFunction {
   public UnivariateFunction derivative() {
     return polynomialDerivative();
   }
+
+  public double[] getCoefficients() {
+    double[] out = new double[coefficients.length];
+    System.arraycopy(coefficients, 0, out, 0, coefficients.length);
+    return out;
+  }
 }

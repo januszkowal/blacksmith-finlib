@@ -4,12 +4,8 @@ public class NaturalSplineInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 2;
 
   @Override
-  public InterpolatedFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.checkMinSize(xValues, MIN_SIZE);
-    InterpolationUtils.checkArraysSize(yValues, xValues.length,
-        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length,
-            yValues.length));
-    InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
+  public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
+    InterpolationUtils.validateInterpolatorKnots(xValues, yValues, MIN_SIZE);
     int intervals = xValues.length - 1;
     double[] z = solve(xValues, yValues);
     PolynomialFunction[] polynomials = new PolynomialFunction[intervals];

@@ -36,6 +36,7 @@ dependencies {
     api libs.slf4jApi
     api libs.jackson
     api libs.apacheCommonsCollections
+    api libs.blacksmithTest
     api group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     api libs.validation
     //jmh
