@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
-import org.blacksmith.finlib.math.analysis.interpolation.aaa.PolynomialFunctionMetadata;
 
 public class PolynomialSplineFunction implements InterpolatedFunction {
 

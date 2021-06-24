@@ -77,7 +77,7 @@ public class InterpolatorGenerateTest {
     var akimaInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.AKIMA_SPLINE_APACHE_COMMONS, xValues, yValues);
     var linearInterpolatorBlacksmith = factory.createFunction(InterpolationAlgorithm.LINEAR, xValues, yValues);
     var linearInterpolatorApacheCommons = factory.createFunction(InterpolationAlgorithm.LINEAR_APACHE_COMMONS, xValues, yValues);
-    var quadraticInterpolator = factory.createFunction(InterpolationAlgorithm.NATURAL_SPLINE, xValues, yValues);
+    var quadraticInterpolator = factory.createFunction(InterpolationAlgorithm.DOUBLE_QUADRATIC, xValues, yValues);
     var valuesAkimaBlackSmith = getValues(akimaInterpolatorBlacksmith, valuationDate, 0, 365);
     var valuesAkimaApacheCommons = getValues(akimaInterpolatorApacheCommons, valuationDate, 0, 365);
     var valuesLinearBlackSmith = getValues(linearInterpolatorBlacksmith, valuationDate, 0, 365);
