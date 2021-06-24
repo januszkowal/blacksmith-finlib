@@ -1,11 +1,11 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-public class NaturalSplineInterpolator implements PolynomialInterpolator {
+public class NaturalSplineInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 2;
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.validateInterpolatorKnots(xValues, yValues, MIN_SIZE);
+    validateKnots(xValues, yValues, MIN_SIZE);
     int intervals = xValues.length - 1;
     double[] z = solve(xValues, yValues);
     PolynomialFunction[] polynomials = new PolynomialFunction[intervals];

@@ -1,13 +1,13 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-public class LinearInterpolator implements PolynomialInterpolator {
+public class LinearInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 2;
   public LinearInterpolator() {
   }
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.validateInterpolatorKnots(xValues, yValues, MIN_SIZE);
+    validateKnots(xValues, yValues, MIN_SIZE);
     int intervals = xValues.length;
     final double[] af = new double[intervals];
     for (int i = 0; i < intervals - 1; i++) {

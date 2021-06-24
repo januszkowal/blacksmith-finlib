@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-public class AkimaSplineInterpolator implements PolynomialInterpolator {
+public class AkimaSplineInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 3;
 
   public AkimaSplineInterpolator() {
@@ -8,7 +8,7 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.validateInterpolatorKnots(xValues, yValues, MIN_SIZE);
+    validateKnots(xValues, yValues, MIN_SIZE);
     double[] secants = calculateSecants(xValues, yValues);
     double[] firstDerivatives = calculateFirstDerivatives(secants, xValues.length);
 

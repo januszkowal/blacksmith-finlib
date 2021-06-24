@@ -118,18 +118,6 @@ public class InterpolationUtils {
     return res;
   }
 
-  public static void validateInterpolatorKnots(double[] xValues, double[] yValues, int minSize) {
-    ArgChecker.notNull(xValues, "X-values array can't be null");
-    ArgChecker.notNull(yValues, "Y-values array can't be null");
-    checkMinSize(xValues, minSize);
-    checkArraysSize(yValues, xValues.length,
-        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length,
-            yValues.length));
-    checkValidNumbers(xValues, "X-values must be valid numbers");
-    checkValidNumbers(yValues, "Y-values must be valid numbers");
-    checkIncreasing(xValues, "X-values must increase");
-  }
-
   public static class CalcRange {
     final int start;
     final int end;
