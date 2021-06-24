@@ -18,16 +18,10 @@ public class GenericInterpolatorTest {
 
   private static final double INF = 1. / 0.;
 
+  /* Used instead of @MethodSource*/
   public static List<Arguments> interpolators = List.of(Arguments.of(new LinearInterpolator()),
       Arguments.of(new NaturalSplineInterpolator()),
       Arguments.of(new AkimaSplineInterpolator()));
-
-  public static Stream<Arguments> interpolators2() {
-    return Stream.of(
-        Arguments.of(new LinearInterpolator()),
-        Arguments.of(new NaturalSplineInterpolator()),
-        Arguments.of(new AkimaSplineInterpolator()));
-  }
 
   @ParameterizedTest
   @VariableSource("interpolators")
