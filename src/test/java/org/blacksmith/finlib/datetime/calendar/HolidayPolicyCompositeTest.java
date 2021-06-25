@@ -6,21 +6,19 @@ import java.util.Set;
 
 import org.blacksmith.finlib.datetime.calendar.extractor.DateExtractor;
 import org.blacksmith.finlib.datetime.calendar.extractor.MonthDayExtractor;
-import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.datetime.calendar.policy.DatePartHolidayPolicy;
+import org.blacksmith.finlib.datetime.calendar.policy.HolidayPolicyComposite;
 import org.blacksmith.finlib.datetime.calendar.provider.DatePartInMemoryProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@ExtendWith(org.blacksmith.test.TimingExtension.class)
-public class HolidayPolicyTest {
-  private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyTest.class);
+public class HolidayPolicyCompositeTest {
+  private static final Logger LOGGER = LoggerFactory.getLogger(HolidayPolicyCompositeTest.class);
 
   private static Set<MonthDay> monthDays = Set.of(
       MonthDay.of(5, 15),
@@ -42,14 +40,16 @@ public class HolidayPolicyTest {
   @Test
   public void holidayPolicyCompositeBuilderTest() {
     HolidayPolicy singlePolicyComposite = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy)
+        .policy(monthDayPolicy)
         .build();
     HolidayPolicy twoPoliciesComposite = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy, yearMonthDayPolicy)
+        .policy(monthDayPolicy)
+        .policy(yearMonthDayPolicy)
         .build();
     HolidayPolicy twoPoliciesComposite2 = HolidayPolicyComposite.builder()
-        .policies(monthDayPolicy)
-        .policies(HolidayPolicyComposite.builder().policies(yearMonthDayPolicy)
+        .policy(monthDayPolicy)
+        .policy(HolidayPolicyComposite.builder()
+            .policy(yearMonthDayPolicy)
             .build())
         .build();
     checkPolicyGroup1("singlePolicyComposite", singlePolicyComposite);

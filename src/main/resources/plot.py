@@ -32,23 +32,26 @@ for (opt, value) in opts:
 
 #rowIndex = -1
 x = []
-yAkimaBlacksmith = []
+yAkima = []
 yAkimaApacheCommons = []
-yLinearBlacksmith = []
-yLinearApacheCommons = []
+yLinear = []
+yQuadratic = []
+yDoubleQuadratic = []
+yNatural = []
 knotsx = []
 knotsy = []
-
 def readFile(filePath):
     with open(filePath, 'r') as file : 
         reader = csv.DictReader(file)
         for row in reader:
             xval = int(row['x'])
             x.append(xval)
-            yAkimaBlacksmith.append(float(row['funAkimaBlacksmith']))
-            yAkimaApacheCommons.append(float(row['funAkimaApacheCommons']))
-            yLinearBlacksmith.append(float(row['funLinearBlacksmith']))
-            yLinearApacheCommons.append(float(row['funLinearApacheCommons']))
+            yAkima.append(float(row['yAkima']))
+            yAkimaApacheCommons.append(float(row['yAkimaApacheCommons']))
+            yLinear.append(float(row['yLinear']))
+            yQuadratic.append(float(row['yQuadratic']))
+            yDoubleQuadratic.append(float(row['yDoubleQuadratic']))
+            yNatural.append(float(row['yNatural']))
             #print(row)
             knot = row['knot']
             if (knot):
@@ -72,15 +75,19 @@ plt.xlim([rangeLow, rangeHigh])
 # plotting the functions
 if displayKnots:
     plt.plot(knotsx, knotsy, 'ro', label='Knots') 
-if 'AkimaBlacksmith' in displayCurves:
-    plt.plot(x, yAkimaBlacksmith, color='green', label='Akima - Blacksmith')
+if 'Akima' in displayCurves:
+    plt.plot(x, yAkima, color='green', label='Akima')
 if 'AkimaApacheCommons' in displayCurves:
     plt.plot(x, yAkimaApacheCommons, color='blue', label='Akima - Apache Commons')
-if 'LinearBlacksmith' in displayCurves:
-    plt.plot(x, yLinearBlacksmith, color='violet', label='Linear - Blacksmith')
-if 'LinearApacheCommons' in displayCurves:
-    plt.plot(x, yLinearApacheCommons, color='orange', label='Linear - Apache Commons')  
-    
+if 'Linear' in displayCurves:
+    plt.plot(x, yLinear, color='violet', label='Linear')
+if 'Quadratic' in displayCurves:
+    plt.plot(x, yQuadratic, color='olive', label='Quadratic')
+if 'DoubleQuadratic' in displayCurves:
+    plt.plot(x, yDoubleQuadratic, color='magenta', label='Double Quadratic')
+if 'Natural' in displayCurves:
+    plt.plot(x, yNatural, color='orange', label='Natural')
+
 # naming the x axis
 plt.xlabel('x')
 # naming the y axis

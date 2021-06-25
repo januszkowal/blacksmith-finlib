@@ -1,10 +1,12 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
 public enum InterpolationAlgorithm {
-  AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons"),
-  AKIMA_SPLINE_BLACKSMITH("Akima Spline - Blacksmith"),
-  LINEAR_APACHE_COMMONS("Linear - Apache Commons"),
-  LINEAR_BLACKSMITH("Linear - Blacksmith");
+  AKIMA_SPLINE("Akima Spline"),
+  DOUBLE_QUADRATIC("Double Quadratic"),
+  QUADRATIC_SPLINE("Quadratic Spline"),
+  NATURAL_SPLINE("Natural Spline"),
+  LINEAR("Linear"),
+  AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons");
 
   private final String description;
 

@@ -1,6 +1,6 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-public class AkimaSplineInterpolator implements PolynomialInterpolator {
+public class AkimaSplineInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 3;
 
   public AkimaSplineInterpolator() {
@@ -8,26 +8,25 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
 
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
-    InterpolationUtils.checkMinSize(xValues, MIN_SIZE);
-    InterpolationUtils.checkArraysSize(yValues, xValues.length,
-        String.format("Y-values array should have the same size as X-values array. Expected: %d, actual: %d", xValues.length, yValues.length));
-    InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
-    int n = xValues.length;
+    validateKnots(xValues, yValues, MIN_SIZE);
     double[] secants = calculateSecants(xValues, yValues);
-    double[] firstDerivatives = calculateFirstDerivatives(xValues, yValues, secants);
+    double[] firstDerivatives = calculateFirstDerivatives(secants, xValues.length);
 
-    PolynomialFunction[] polynomials = new PolynomialFunction[n - 1];
-    double[] coefficients = new double[4];
-    double xDelta;
-    for (int i = 0; i < n - 1; i++) {
-      xDelta = xValues[i + 1] - xValues[i];
-      coefficients[0] = yValues[i];
-      coefficients[1] = firstDerivatives[i];
-      coefficients[2] = (3.0d * secants[i + 2] - 2.0d * firstDerivatives[i] - firstDerivatives[i + 1]) / xDelta;
-      coefficients[3] = (-2.0d * secants[i + 2] + firstDerivatives[i] + firstDerivatives[i + 1]) / (xDelta * xDelta);
-      polynomials[i] = new PolynomialFunction(coefficients);
+    int n = xValues.length - 1;
+    PolynomialFunction[] polynomials = new PolynomialFunction[n];
+    for (int i = 0; i < n; i++) {
+      polynomials[i] = polynomial(xValues, yValues, firstDerivatives, secants, i);
     }
     return new PolynomialSplineFunction(xValues, polynomials);
+  }
+
+  private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] firstDerivatives, double[] secants, int index) {
+    double xDiff = xValues[index + 1] - xValues[index];
+    double a = yValues[index];
+    double b = firstDerivatives[index];
+    double c = (3.0d * secants[index + 2] - 2.0d * firstDerivatives[index] - firstDerivatives[index + 1]) / xDiff;
+    double d = (-2.0d * secants[index + 2] + firstDerivatives[index] + firstDerivatives[index + 1]) / (xDiff * xDiff);
+    return new PolynomialFunction(a, b, c, d);
   }
 
   private double[] calculateSecants(double[] xValues, double[] yValues) {
@@ -47,13 +46,10 @@ public class AkimaSplineInterpolator implements PolynomialInterpolator {
     return secants;
   }
 
-  private double[] calculateFirstDerivatives(double[] xValues, double[] yValues, double[] secants) {
-    /*
-     * Compute slopes
-     * */
+  private double[] calculateFirstDerivatives(double[] secants, int count) {
     double a, b;
-    double[] firstDerivatives = new double[xValues.length];
-    for (int i = 0; i < xValues.length; i++) {
+    double[] firstDerivatives = new double[count];
+    for (int i = 0; i < count; i++) {
       a = Math.abs(secants[i + 3] - secants[i + 2]);
       b = Math.abs(secants[i + 1] - secants[i]);
       if ((a + b) != 0) {

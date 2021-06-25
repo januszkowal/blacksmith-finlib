@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.blacksmith.commons.arg.ArgChecker;
+
 public class InterpolationUtils {
+  protected static long NEGATIVE_ZERO_BITS = Double.doubleToRawLongBits(-0d);
+  
   public static int getKnotIndex0(double[] a, double key) {
     int low = 0;
     int high = a.length - 1;
@@ -35,6 +39,7 @@ public class InterpolationUtils {
   }
 
   public static void checkOrder(double[] val, String message) {
+    if (val.length < 2) return;
     for (int i = 1; i < val.length; i++) {
       if (val[i] < val[i - 1]) {
         throw new IllegalArgumentException(message);
@@ -43,6 +48,7 @@ public class InterpolationUtils {
   }
 
   public static void checkIncreasing(double[] val, String message) {
+    if (val.length < 2) return;
     for (int i = 1; i < val.length; i++) {
       if (val[i] <= val[i - 1]) {
         throw new IllegalArgumentException(message);
@@ -51,13 +57,23 @@ public class InterpolationUtils {
   }
 
   public static void checkArraysSize(double[] a, int size, String message) {
+    ArgChecker.notNull(a, "Array can't be null");
     if (a.length != size)
       throw new IllegalArgumentException(message);
   }
 
-  public static void checkMinSize(double[] xValues, int min) {
-    if (xValues.length < min)
-      throw new IllegalArgumentException("Minimum arrays size is: " + min);
+  public static void checkMinSize(double[] a, int min) {
+    ArgChecker.notNull(a, "Array can't be null");
+    if (a.length < min)
+      throw new IllegalArgumentException("Minimum array size is: " + min);
+  }
+
+  public static void checkValidNumbers(double[] val, String message) {
+    for (int i = 0; i < val.length; i++) {
+      if (Double.isNaN(val[i]) || Double.isInfinite(val[i])) {
+        throw new IllegalArgumentException(message);
+      }
+    }
   }
 
   public static List<CalcRange> getCalculationRanges(int min, int max, double[] knots, int polynomialLength) {
@@ -83,6 +99,34 @@ public class InterpolationUtils {
       knotIndex++;
     }
     return ranges;
+  }
+
+  public static double[] getDiffs(double[] xValues) {
+    int points = xValues.length;
+    double[] res = new double[points - 1];
+
+    for (int i = 0; i < points - 1; ++i) {
+      res[i] = xValues[i + 1] - xValues[i];
+    }
+
+    return res;
+  }
+
+  public static double[] leftPad(double[] src, int size) {
+    double[] dst = new double[size];
+    int copyLength = Math.min(size, src.length);
+    System.arraycopy(src, src.length - copyLength, dst, dst.length - copyLength, copyLength);
+    return dst;
+  }
+
+  public static double[] leftPad(double[] src, int size, double fill) {
+    double[] dst = new double[size];
+    int copyLength = Math.min(size, src.length);
+    for (int i = 0; i < copyLength; i++) {
+      dst[i] = fill;
+    }
+    System.arraycopy(src, src.length - copyLength, dst, dst.length - copyLength, copyLength);
+    return dst;
   }
 
   public static class CalcRange {

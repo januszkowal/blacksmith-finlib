@@ -6,10 +6,11 @@ import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
 public class PolynomialFunction implements UnivariateFunction {
-  double[] coefficients;
+  protected final double [] coefficients;
+  int n;
 
-  public PolynomialFunction(double[] coefficients) {
-    int n = coefficients.length;
+  public PolynomialFunction(double... coefficients) {
+    n = coefficients.length;
     if (n == 0) {
       throw new IllegalArgumentException("Empty coefficients array");
     }
@@ -20,13 +21,29 @@ public class PolynomialFunction implements UnivariateFunction {
     System.arraycopy(coefficients, 0, this.coefficients, 0, n);
   }
 
-  public double evaluate(double x) {
+  protected static double[] differentiate(double[] coefficients)
+      throws NullArgumentException, NoDataException {
+    ArgChecker.notNull(coefficients);
     int n = coefficients.length;
-    double result = coefficients[n - 1];
-    for (int i = n - 2; i >= 0; i--) {
-      result = x * result + coefficients[i];
+    if (n == 0) {
+      throw new IllegalArgumentException("Empty polynomials coefficients array");
+    }
+    if (n == 1) {
+      return new double[]{ 0 };
+    }
+    double[] result = new double[n - 1];
+    for (int i = n - 1; i > 0; i--) {
+      result[i - 1] = i * coefficients[i];
     }
     return result;
+  }
+
+  private double evaluate(double x) {
+    double y = coefficients[n - 1];
+    for (int i = n - 2; i >= 0; i--) {
+      y = x * y + coefficients[i];
+    }
+    return y;
   }
 
   @Override
@@ -42,20 +59,9 @@ public class PolynomialFunction implements UnivariateFunction {
     return polynomialDerivative();
   }
 
-  protected static double[] differentiate(double[] coefficients)
-      throws NullArgumentException, NoDataException {
-    ArgChecker.notNull(coefficients);
-    int n = coefficients.length;
-    if (n == 0) {
-      throw new IllegalArgumentException("Empty polynomials coefficients array");
-    }
-    if (n == 1) {
-      return new double[]{0};
-    }
-    double[] result = new double[n - 1];
-    for (int i = n - 1; i > 0; i--) {
-      result[i - 1] = i * coefficients[i];
-    }
-    return result;
+  public double[] getCoefficients() {
+    double[] out = new double[coefficients.length];
+    System.arraycopy(coefficients, 0, out, 0, coefficients.length);
+    return out;
   }
 }

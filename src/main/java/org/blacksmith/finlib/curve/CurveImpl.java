@@ -28,7 +28,7 @@ public class CurveImpl implements Curve {
     this.function = function;
     this.minKnot = minKnot;
     this.maxKnot = maxKnot;
-    this.knotSet = Arrays.stream(function.getKnots()).boxed()
+    this.knotSet = Arrays.stream(function.getXValues()).boxed()
         .collect(Collectors.toSet());
     this.leftExtrapolator = flatExtrapolator(minKnot.getY());
     this.rightExtrapolator = flatExtrapolator(maxKnot.getY());

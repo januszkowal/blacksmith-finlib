@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
 import org.blacksmith.finlib.curve.definition.CurveDefinition;
-import org.blacksmith.finlib.curve.definition.CurveDefinitionBuilder;
 import org.blacksmith.finlib.curve.iterator.CurveDateIterator;
 import org.blacksmith.finlib.curve.node.CurveNodeDefinition;
 import org.blacksmith.finlib.curve.node.CurveNodeReferenceData;
@@ -47,7 +46,7 @@ public class CurveBenchmark {
     @Param({ "1", "10" })
     int years;
 
-    @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE_BLACKSMITH", "LINEAR_APACHE_COMMONS", "LINEAR_BLACKSMITH" })
+    @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE", "LINEAR_APACHE_COMMONS", "LINEAR", "DOUBLE_QUADRATIC" })
     InterpolationAlgorithm interpolator;
     public List<CurveNodeReferenceData> nodes;
     private CurveDefinition curveDefinition;
@@ -61,8 +60,8 @@ public class CurveBenchmark {
       else if (years == 10) {
         this.nodes = createNodes10Y();
       }
-      this.curveDefinition = CurveDefinitionBuilder.builder()
-          .curveName("aaa")
+      this.curveDefinition = CurveDefinition.builder()
+          .name("aaa")
           .currency(Currency.EUR)
           .dayCount(StandardDayCounts.ACT_360)
           .interpolator(interpolator)

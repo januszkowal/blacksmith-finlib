@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
 import org.blacksmith.finlib.curve.definition.CurveDefinition;
-import org.blacksmith.finlib.curve.definition.CurveDefinitionBuilder;
 import org.blacksmith.finlib.curve.discount.CurveDiscountFactorImpl;
 import org.blacksmith.finlib.curve.discount.ZeroRateDiscountFactor;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeDefinition;
@@ -47,9 +46,9 @@ class CurveFactoryTest {
     Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-3Y")))).thenReturn(QUOTE_3Y_VALUE);
     Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-5Y")))).thenReturn(QUOTE_5Y_VALUE);
 
-    CurveDefinition definition = CurveDefinitionBuilder.builder()
-        .curveName("EUR-ZERO")
-        .interpolator(InterpolationAlgorithm.AKIMA_SPLINE_BLACKSMITH)
+    CurveDefinition definition = CurveDefinition.builder()
+        .name("EUR-ZERO")
+        .interpolator(InterpolationAlgorithm.AKIMA_SPLINE)
         .dayCount(StandardDayCounts.ACT_360)
         .currency(Currency.EUR)
         .node(SimpleCurveNodeDefinition.of("WIBOR-1D", Tenor.TENOR_1D, quote("WIBOR-EUR-1D"), 0))

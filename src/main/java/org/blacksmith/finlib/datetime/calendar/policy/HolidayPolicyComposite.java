@@ -8,11 +8,16 @@ import java.util.List;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.datetime.calendar.HolidayPolicy;
 
+import lombok.Builder;
+import lombok.Singular;
+
+@Builder
 public class HolidayPolicyComposite implements HolidayPolicy {
 
   private static final String EMPTY_POLICIES_MESSAGE = "Empty policies list not allowed";
   private static final String NULL_POLICY_MESSAGE = "Null policy is not allowed";
 
+  @Singular(value = "policy")
   private final List<HolidayPolicy> policies;
 
   public HolidayPolicyComposite(Collection<HolidayPolicy> policies) {
@@ -34,7 +39,6 @@ public class HolidayPolicyComposite implements HolidayPolicy {
   }
 
   public static HolidayPolicyComposite ofSingle(HolidayPolicy policy) {
-    ArgChecker.notNull(policy, NULL_POLICY_MESSAGE);
     return new HolidayPolicyComposite(policy);
   }
 
@@ -45,24 +49,5 @@ public class HolidayPolicyComposite implements HolidayPolicy {
   @Override
   public boolean isHoliday(LocalDate date) {
     return policies.stream().anyMatch(hp -> hp.isHoliday(date));
-  }
-
-  public static class HolidayPolicyCompositeBuilder {
-
-    private List<HolidayPolicy> policies = new ArrayList<>();
-
-    public HolidayPolicyCompositeBuilder policies(HolidayPolicy... policies) {
-      this.policies.addAll(List.of(policies));
-      return this;
-    }
-
-    public HolidayPolicyCompositeBuilder policies(Collection<HolidayPolicy> policies) {
-      this.policies.addAll(policies);
-      return this;
-    }
-
-    public HolidayPolicyComposite build() {
-      return new HolidayPolicyComposite(policies);
-    }
   }
 }
