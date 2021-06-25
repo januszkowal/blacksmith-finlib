@@ -12,9 +12,9 @@ public class AkimaSplineInterpolator extends AbstractPolynomialInterpolator impl
     double[] secants = calculateSecants(xValues, yValues);
     double[] firstDerivatives = calculateFirstDerivatives(secants, xValues.length);
 
-    int intervals = xValues.length - 1;
-    PolynomialFunction[] polynomials = new PolynomialFunction[intervals];
-    for (int i = 0; i < intervals; i++) {
+    int n = xValues.length - 1;
+    PolynomialFunction[] polynomials = new PolynomialFunction[n];
+    for (int i = 0; i < n; i++) {
       polynomials[i] = polynomial(xValues, yValues, firstDerivatives, secants, i);
     }
     return new PolynomialSplineFunction(xValues, polynomials);

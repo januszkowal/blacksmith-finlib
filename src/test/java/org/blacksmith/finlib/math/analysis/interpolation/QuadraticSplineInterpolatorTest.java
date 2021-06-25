@@ -11,12 +11,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 
 @Slf4j
-public class NaturalSplineInterpolatorTest {
+public class QuadraticSplineInterpolatorTest {
 
   private static final double EPS_KNOT = 1e-14;
   private static final double EPS = 1e-6;
   private static final double INF = 1. / 0.;
-  final NaturalSplineInterpolator interpolator = new NaturalSplineInterpolator();
+  final QuadraticSplineInterpolator interpolator = new QuadraticSplineInterpolator();
 
   @Test
   public void recov2ptsTest() {

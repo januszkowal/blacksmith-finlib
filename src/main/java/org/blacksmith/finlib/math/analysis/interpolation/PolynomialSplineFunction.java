@@ -7,24 +7,15 @@ import java.util.stream.IntStream;
 
 import org.blacksmith.finlib.math.analysis.UnivariateFunction;
 
-public class PolynomialSplineFunction implements InterpolatedFunction {
+public class PolynomialSplineFunction extends AbstractSplineFunction implements InterpolatedFunction {
 
-  protected final double[] xValues;
-  protected final PolynomialFunction[] polynomials;
+  private static long NEGATIVE_ZERO_BITS = Double.doubleToRawLongBits(-0d);
+
   protected final int lastInterval;
 
   public PolynomialSplineFunction(double[] xValues, PolynomialFunction[] polynomials) {
-    this.xValues = new double[xValues.length];
-    this.polynomials = new PolynomialFunction[polynomials.length];
-    System.arraycopy(xValues, 0, this.xValues, 0, xValues.length);
-    System.arraycopy(polynomials, 0, this.polynomials, 0, polynomials.length);
+    super(xValues, polynomials);
     this.lastInterval = polynomials.length - 1;
-  }
-
-  public double[] getXValues() {
-    double[] out = new double[xValues.length];
-    System.arraycopy(xValues, 0, out, 0, xValues.length);
-    return out;
   }
 
   public int getKnotIndex1(double key) {
@@ -40,7 +31,9 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
 
   public int getKnotIndex0(double key) {
     int index = InterpolationUtils.getKnotIndex0(this.xValues, key);
-    if (index > lastInterval) {
+    if (index < 0) {
+      index = 0;
+    } else if (index > lastInterval) {
       index = lastInterval;
     }
     return index;
@@ -69,13 +62,5 @@ public class PolynomialSplineFunction implements InterpolatedFunction {
   public double value(double x) {
     int index = getKnotIndex0(x);
     return polynomials[index].value(x - xValues[index]);
-  }
-
-  public int getIntervals() {
-    return polynomials.length;
-  }
-
-  public double[] getPolynomialCoefficients(int polynomial) {
-    return polynomials[polynomial].getCoefficients();
   }
 }

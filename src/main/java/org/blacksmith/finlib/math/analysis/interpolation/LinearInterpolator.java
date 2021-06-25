@@ -8,14 +8,14 @@ public class LinearInterpolator extends AbstractPolynomialInterpolator implement
   @Override
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
     validateKnots(xValues, yValues, MIN_SIZE);
-    int intervals = xValues.length;
-    final double[] af = new double[intervals];
-    for (int i = 0; i < intervals - 1; i++) {
+    int n = xValues.length;
+    final double[] af = new double[n];
+    for (int i = 0; i < n - 1; i++) {
       af[i] = (yValues[i + 1] - yValues[i]) / (xValues[i + 1] - xValues[i]);
     }
-    af[intervals - 1] = af[intervals - 2];
-    PolynomialFunction[] polynomials = new PolynomialFunction[intervals];
-    for (int i = 0; i < intervals; i++) {
+    af[n - 1] = af[n - 2];
+    PolynomialFunction[] polynomials = new PolynomialFunction[n];
+    for (int i = 0; i < n; i++) {
       polynomials[i] = polynomial(xValues, yValues, af, i);
     }
     return new PolynomialSplineFunction(xValues, polynomials);

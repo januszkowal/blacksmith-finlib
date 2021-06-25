@@ -20,24 +20,24 @@ public class LinearSplineInterpolatorTest {
 
   @Test
   public void recov2ptsTest() {
-    final double[] xValues = new double[]{ 1., 2. };
-    final double[] yValues = new double[]{ 6., 1. };
+    final double[] X_KNOTS = new double[]{ 1., 2. };
+    final double[] Y_KNOTS = new double[]{ 6., 1. };
 
     final int nIntervals = 2;
     final double[][] coeffsMatrix = new double[][]{ { 6.0, -5.0 },{ 1., -5.} };
 
 
-    var spline = interpolator.interpolate(xValues, yValues);
+    var spline = interpolator.interpolate(X_KNOTS, Y_KNOTS);
 
-    assertThat(spline.getIntervals()).isEqualTo(nIntervals);
-    assertThat(spline.getXValues()).containsExactly(xValues);
+    assertThat(spline.getPolynomialCount()).isEqualTo(nIntervals);
+    assertThat(spline.getXValues()).containsExactly(X_KNOTS);
     ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 2), coeffsMatrix, EPS_KNOT);
   }
 
   @Test
   public void recov4ptsTest() {
-    final double[] xValues = new double[]{ 1., 2., 3., 4 };
-    final double[] yValues = new double[]{ 6., 25. / 6., 10. / 3., 4. };
+    final double[] X_KNOTS = new double[]{ 1., 2., 3., 4 };
+    final double[] Y_KNOTS = new double[]{ 6., 25. / 6., 10. / 3., 4. };
     //
     final int nIntervals = 4;
     final double[][] coeffsMatrix =
@@ -46,12 +46,12 @@ public class LinearSplineInterpolatorTest {
             { 10. / 3., 2. / 3. },
             { 4., 2. / 3. }};
 
-    var spline = interpolator.interpolate(xValues, yValues);
+    var spline = interpolator.interpolate(X_KNOTS, Y_KNOTS);
 
-    assertThat(spline.getIntervals()).isEqualTo(nIntervals);
-    assertThat(spline.getXValues()).containsExactly(xValues);
+    assertThat(spline.getPolynomialCount()).isEqualTo(nIntervals);
+    assertThat(spline.getXValues()).containsExactly(X_KNOTS);
     ArrayTestUtils.assertArray(PolynomialTestUtils.getCoeffMatrix(spline, 2), coeffsMatrix, EPS_KNOT);
-    assertThat(spline.values(xValues)).containsExactly(yValues, Offset.offset(EPS));
+    assertThat(spline.values(X_KNOTS)).containsExactly(Y_KNOTS, Offset.offset(EPS));
 
     double[][] vvv = new double[][]{
         { 1., 6. },
@@ -73,14 +73,14 @@ public class LinearSplineInterpolatorTest {
 
   @Test
   public void shortDataLengthTest() {
-    double[] xValues1 = new double[]{ 1. };
-    double[] yValues1 = new double[]{ 4. };
-    double[] xValues2 = new double[]{ 1., 2. };
-    double[] yValues2 = new double[]{ 4., 4. };
+    double[] X_KNOTS1 = new double[]{ 1. };
+    double[] Y_KNOTS1 = new double[]{ 4. };
+    double[] X_KNOTS2 = new double[]{ 1., 2. };
+    double[] Y_KNOTS2 = new double[]{ 4., 4. };
 
     assertThatIllegalArgumentException()
-        .isThrownBy(() -> interpolator.interpolate(xValues1, yValues1));
+        .isThrownBy(() -> interpolator.interpolate(X_KNOTS1, Y_KNOTS1));
 
-    interpolator.interpolate(xValues2, yValues2);
+    interpolator.interpolate(X_KNOTS2, Y_KNOTS2);
   }
 }

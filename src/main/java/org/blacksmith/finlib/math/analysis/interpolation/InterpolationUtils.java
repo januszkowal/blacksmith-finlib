@@ -7,6 +7,8 @@ import java.util.List;
 import org.blacksmith.commons.arg.ArgChecker;
 
 public class InterpolationUtils {
+  protected static long NEGATIVE_ZERO_BITS = Double.doubleToRawLongBits(-0d);
+  
   public static int getKnotIndex0(double[] a, double key) {
     int low = 0;
     int high = a.length - 1;

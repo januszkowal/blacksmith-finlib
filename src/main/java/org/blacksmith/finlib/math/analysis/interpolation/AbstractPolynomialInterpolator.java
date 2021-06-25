@@ -14,4 +14,13 @@ public abstract class AbstractPolynomialInterpolator {
     InterpolationUtils.checkValidNumbers(yValues, "Y-values must be valid numbers");
     InterpolationUtils.checkIncreasing(xValues, "X-values must increase");
   }
+
+  public double[] hcoeffs(double[] xValues) {
+    int n = xValues.length - 1;
+    final double h[] = new double[n];
+    for (int i = 0; i < n; i++) {
+      h[i] = xValues[i + 1] - xValues[i];
+    }
+    return h;
+  }
 }

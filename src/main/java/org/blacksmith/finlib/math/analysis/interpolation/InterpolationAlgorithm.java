@@ -3,12 +3,10 @@ package org.blacksmith.finlib.math.analysis.interpolation;
 public enum InterpolationAlgorithm {
   AKIMA_SPLINE("Akima Spline"),
   DOUBLE_QUADRATIC("Double Quadratic"),
-  QUADRATIC("Quadratic"),
-  BSPLINE("B-Spline"),
+  QUADRATIC_SPLINE("Quadratic Spline"),
   NATURAL_SPLINE("Natural Spline"),
   LINEAR("Linear"),
-  AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons"),
-  LINEAR_APACHE_COMMONS("Linear - Apache Commons");
+  AKIMA_SPLINE_APACHE_COMMONS("Akima Spline - Apache Commons");
 
   private final String description;
 
