@@ -8,12 +8,12 @@ import java.util.function.Function;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
+import org.blacksmith.finlib.marketdata.MarketDataProvider;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPairProvider;
 import org.blacksmith.finlib.rate.fxrate.FxRate;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
-import org.blacksmith.finlib.rate.fxrate.FxRateProvider;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
 import org.blacksmith.finlib.rate.fxrate.FxRateType;
 import org.blacksmith.finlib.marketdata.MarketDataExtractor;
@@ -25,10 +25,10 @@ public class FxRateServiceImpl implements FxRateService {
 
   private final Currency localCurrency;
   private final FxCurrencyPairProvider ccyPairProvider;
-  private final FxRateProvider fxRateProvider;
+  private final MarketDataProvider<FxRateId, FxRate3> fxRateProvider;
   private final int decimalPlaces;
 
-  public FxRateServiceImpl(Currency localCurrency, FxCurrencyPairProvider ccyPairProvider, FxRateProvider fxRateProvider,
+  public FxRateServiceImpl(Currency localCurrency, FxCurrencyPairProvider ccyPairProvider, MarketDataProvider<FxRateId, FxRate3> fxRateProvider,
       int decimalPlaces) {
     ArgChecker.notNull(localCurrency, "Local currency must be not null");
     ArgChecker.notNull(ccyPairProvider, "Currency Pair Provider must be not null");
@@ -44,8 +44,8 @@ public class FxRateServiceImpl implements FxRateService {
     ArgChecker.notNull(key, "Key must be not null");
     ArgChecker.notNull(date, "Date must be not null");
     ArgChecker.notNull(fxRateType, "Type must be not null");
-    if (key.getFromCcy().equals(key.getToCcy())) {
-      return FxRate.of(date, Rate.ONE);
+    if (key.getBaseCcy().equals(key.getCounterCcy())) {
+      return FxRate.of(Rate.ONE, date);
     }
     return getRateInternal(key, date, fx3toFx1b(fxRateType)).toFxRate(decimalPlaces);
   }
@@ -60,7 +60,7 @@ public class FxRateServiceImpl implements FxRateService {
   public FxRate3 getRate(FxRateId key, LocalDate date) {
     ArgChecker.notNull(key, "Key must be not null");
     ArgChecker.notNull(date, "Date must be not null");
-    if (key.getFromCcy().equals(key.getToCcy())) {
+    if (key.getBaseCcy().equals(key.getCounterCcy())) {
       return FxRate3.of(date, Rate.ONE, Rate.ONE, Rate.ONE);
     }
     return getRateInternal(key, date, md -> FxRate3Internal.of(md.getDate(), md.getValue())).toFxRate3(decimalPlaces);
@@ -81,7 +81,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private FxCurrencyPair getPair(FxRateId key) {
-    return this.ccyPairProvider.getPair(key.getFromCcy(), key.getToCcy());
+    return this.ccyPairProvider.getPair(key.getBaseCcy(), key.getCounterCcy());
   }
 
   private <R extends FxRateOperations<R>> Optional<R> getSourceFxRate(FxRateId key, LocalDate date,
@@ -120,8 +120,8 @@ public class FxRateServiceImpl implements FxRateService {
 
   private <R extends FxRateOperations<R>> R getCrossRate(FxRateId key, LocalDate date,
       Function<FxRate3, R> extractor) {
-    FxRateId key1 = FxRateId.of(key.getFromCcy(), localCurrency);
-    FxRateId key2 = FxRateId.of(key.getToCcy(), localCurrency);
+    FxRateId key1 = FxRateId.of(key.getBaseCcy(), localCurrency);
+    FxRateId key2 = FxRateId.of(key.getCounterCcy(), localCurrency);
     FxCurrencyPairInternal pair1 = getPairInternal(key1);
     FxCurrencyPairInternal pair2 = getPairInternal(key2);
     Optional<R> r1 = getSourceFxRate(pair1.getFxRateId(), date, extractor);
@@ -161,14 +161,6 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   private Function<FxRate3, FxRate1Internal> fx3toFx1b(FxRateType fxRateType) {
-    switch (fxRateType) {
-      case BUY:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getBuy().doubleValue());
-      case SELL:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getSell().doubleValue());
-      case AVG:
-        return r3 -> FxRate1Internal.of(r3.getDate(), r3.getValue().getAvg().doubleValue());
-    }
-    return null;
+    return fxRate3 -> FxRate1Internal.of(fxRateType.getRateExtractor().apply(fxRate3).doubleValue(), fxRate3.getDate());
   }
 }

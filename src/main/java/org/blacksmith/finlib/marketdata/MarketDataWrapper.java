@@ -1,10 +1,7 @@
-package org.blacksmith.finlib.rate.marketdata;
+package org.blacksmith.finlib.marketdata;
 
 import java.time.LocalDate;
 import java.util.Comparator;
-
-import org.blacksmith.finlib.marketdata.MarketData;
-import org.blacksmith.finlib.marketdata.MarketDataId;
 
 public interface MarketDataWrapper<I extends MarketDataId<M>, M extends MarketData> {
   Comparator<MarketDataWrapper<?, ?>> marketDataDateComparator =

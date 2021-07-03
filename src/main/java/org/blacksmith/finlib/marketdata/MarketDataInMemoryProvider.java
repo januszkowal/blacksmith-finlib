@@ -1,21 +1,15 @@
 package org.blacksmith.finlib.marketdata;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import org.blacksmith.finlib.marketdata.MarketData;
-import org.blacksmith.finlib.marketdata.MarketDataId;
-import org.blacksmith.finlib.marketdata.MarketDataProvider;
-import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
 
 public class MarketDataInMemoryProvider<I extends MarketDataId<V>, V extends MarketData> implements MarketDataProvider<I, V> {
 
-  private final Map<I, List<MarketDataWrapper<I, V>>> marketData = new HashMap<>();
+  private final Map<I, List<MarketDataWrapper<I, V>>> marketData = new ConcurrentHashMap<>();
 
   public MarketDataInMemoryProvider() {
   }

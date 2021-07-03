@@ -10,25 +10,25 @@ import lombok.ToString;
 public class BasicMarketData<V> implements MarketData {
 
   @ToString.Include
-  protected final LocalDate date;
-  @ToString.Include
   protected final V value;
+  @ToString.Include
+  protected final LocalDate date;
 
-  public BasicMarketData(LocalDate date, V value) {
-    this.date = date;
+  public BasicMarketData(V value, LocalDate date) {
     this.value = value;
+    this.date = date;
   }
 
   public static <V> BasicMarketData<V> of(LocalDate date, V value) {
-    return new BasicMarketData<>(date, value);
+    return new BasicMarketData<>(value, date);
+  }
+
+  public V getValue() {
+    return this.value;
   }
 
   @Override
   public LocalDate getDate() {
     return this.date;
-  }
-  
-  public V getValue() {
-    return this.value;
   }
 }

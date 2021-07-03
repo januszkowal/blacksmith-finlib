@@ -7,11 +7,11 @@ import org.blacksmith.finlib.rate.marketdata.BasicMarketData;
 
 public class FxRate extends BasicMarketData<Rate> {
 
-  public FxRate(LocalDate date, Rate rate) {
-    super(date, rate);
+  public FxRate(Rate rate, LocalDate date) {
+    super(rate, date);
   }
 
-  public static FxRate of(LocalDate date, Rate rate) {
-    return new FxRate(date, rate);
+  public static FxRate of(Rate rate, LocalDate date) {
+    return new FxRate(rate, date);
   }
 }

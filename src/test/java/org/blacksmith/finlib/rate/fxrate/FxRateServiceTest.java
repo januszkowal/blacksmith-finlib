@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
+import org.blacksmith.finlib.marketdata.MarketDataInMemoryProvider;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
@@ -36,18 +37,18 @@ class FxRateServiceTest {
 
   @BeforeAll
   public static void setUp() {
-    FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
+    MarketDataInMemoryProvider<FxRateId, FxRate3> fxRateProvider = new MarketDataInMemoryProvider();
     fxRateProvider.setMarketData(List.of(
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3.of(date1, 4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES)),
+            FxRate3.of(4.4439d, 4.5337d, 4.4888d, DECIMAL_PLACES, date1)),
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3.of(date2, 4.45d, 4.54d, 4.495d, DECIMAL_PLACES)),
+            FxRate3.of(4.45d, 4.54d, 4.495d, DECIMAL_PLACES, date2)),
         BasicMarketDataWrapper.of(FxRateId.of("EUR", "PLN"),
-            FxRate3.of(date3, 4.44d, 4.53d, 4.485d, DECIMAL_PLACES)),
+            FxRate3.of(4.44d, 4.53d, 4.485d, DECIMAL_PLACES, date3)),
         BasicMarketDataWrapper.of(FxRateId.of("USD", "PLN"),
-            FxRate3.of(date1, 3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES)),
+            FxRate3.of(3.6471d, 3.7207d, 3.6839d, DECIMAL_PLACES, date1)),
         BasicMarketDataWrapper.of(FxRateId.of("HUF", "PLN"),
-            FxRate3.of(date1, 1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES))
+            FxRate3.of(1.2653d, 1.2909d, 1.2781d, DECIMAL_PLACES, date1))
     ));
     rateService = new FxRateServiceImpl(Currency.PLN, (ccy1, ccy2) -> pairs.get(ccy1 + "/" + ccy2), fxRateProvider, OUTPUT_DECIMAL_PLACES);
   }

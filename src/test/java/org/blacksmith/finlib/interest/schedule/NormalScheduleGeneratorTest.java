@@ -95,7 +95,7 @@ public class NormalScheduleGeneratorTest {
   }
 
   public InterestRate irate(double rate) {
-    return InterestRate.ofRate(LocalDate.now(), Rate.of(rate));
+    return InterestRate.ofRate(Rate.of(rate), LocalDate.now());
   }
 
 }

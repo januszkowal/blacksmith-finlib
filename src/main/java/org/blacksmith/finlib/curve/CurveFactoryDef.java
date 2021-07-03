@@ -25,7 +25,7 @@ public class CurveFactoryDef {
 
     List<CurveNodeReferenceData> referenceNodes = definition.getNodes().stream()
         .map(node -> SimpleCurveNodeReferenceData
-            .of(node.getLabel(), node.getTenor(), quoteProvider.getQuote(valuationDate, node.getQuoteId()) + node.getSpread()))
+            .of(node.getLabel(), node.getTenor(), quoteProvider.getQuote(node.getQuoteId(), valuationDate) + node.getSpread()))
         .collect(Collectors.toList());
 
     return curveFactory.createCurve(valuationDate, definition, referenceNodes);

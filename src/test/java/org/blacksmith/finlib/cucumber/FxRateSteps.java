@@ -10,15 +10,15 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.cucumber.dto.FxRate1Input;
 import org.blacksmith.finlib.cucumber.dto.FxRate3Input;
+import org.blacksmith.finlib.marketdata.MarketDataInMemoryProvider;
+import org.blacksmith.finlib.marketdata.MarketDataWrapper;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
-import org.blacksmith.finlib.rate.fxrate.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
 import org.blacksmith.finlib.rate.fxrate.FxRateType;
 import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FxRateSteps {
 
   final GroovyShell shell = new GroovyShell();
-  final FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
+  final MarketDataInMemoryProvider<FxRateId, FxRate3> fxRateProvider = new MarketDataInMemoryProvider<>();
   Map<String, FxCurrencyPair> pairs;
   private FxRateService fxRateService;
   private int precision;
@@ -115,8 +115,8 @@ public class FxRateSteps {
   public List<MarketDataWrapper<FxRateId, FxRate3>> createRates(DataTable table, int precision) {
     return table.asMaps().stream()
         .map(row -> BasicMarketDataWrapper.of(FxRateId.of(row.get("from"), row.get("to")),
-            FxRate3.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
-                evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
+            FxRate3.of(evaluate(row.get("buy")),
+                evaluate(row.get("sell")), evaluate(row.get("avg")), precision, LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE))))
         .collect(Collectors.toList());
   }
 

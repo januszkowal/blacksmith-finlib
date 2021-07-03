@@ -36,15 +36,15 @@ class CurveFactoryTest {
 
   @Test
   public void shouldReturnKnots() {
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-1D")))).thenReturn(QUOTE_1D_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-1W")))).thenReturn(QUOTE_1W_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-2W")))).thenReturn(QUOTE_2W_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-1M")))).thenReturn(QUOTE_1M_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-3M")))).thenReturn(QUOTE_3M_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-6M")))).thenReturn(QUOTE_6M_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-1Y")))).thenReturn(QUOTE_1Y_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-3Y")))).thenReturn(QUOTE_3Y_VALUE);
-    Mockito.when(quoteProvider.getQuote(any(LocalDate.class), eq(quote("WIBOR-EUR-5Y")))).thenReturn(QUOTE_5Y_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-1D")), any(LocalDate.class))).thenReturn(QUOTE_1D_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-1W")), any(LocalDate.class))).thenReturn(QUOTE_1W_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-2W")), any(LocalDate.class))).thenReturn(QUOTE_2W_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-1M")), any(LocalDate.class))).thenReturn(QUOTE_1M_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-3M")), any(LocalDate.class))).thenReturn(QUOTE_3M_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-6M")), any(LocalDate.class))).thenReturn(QUOTE_6M_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-1Y")), any(LocalDate.class))).thenReturn(QUOTE_1Y_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-3Y")), any(LocalDate.class))).thenReturn(QUOTE_3Y_VALUE);
+    Mockito.when(quoteProvider.getQuote(eq(quote("WIBOR-EUR-5Y")), any(LocalDate.class))).thenReturn(QUOTE_5Y_VALUE);
 
     CurveDefinition definition = CurveDefinition.builder()
         .name("EUR-ZERO")

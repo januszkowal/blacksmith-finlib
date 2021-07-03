@@ -24,13 +24,13 @@ class MarketDataMemoryServiceTest {
     interestRateService.setMarketData(List.of(
         BasicMarketDataWrapper
             .of(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
-                InterestRate.ofRate(LocalDate.parse("2019-12-01"), Rate.of(3.0d))),
+                InterestRate.ofRate(Rate.of(3.0d), LocalDate.parse("2019-12-01"))),
         BasicMarketDataWrapper
             .of(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
-                InterestRate.ofRate(LocalDate.parse("2020-01-01"), Rate.of(3.1d))),
+                InterestRate.ofRate(Rate.of(3.1d), LocalDate.parse("2020-01-01"))),
         BasicMarketDataWrapper
             .of(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")),
-                InterestRate.ofRate(LocalDate.parse("2020-01-02"), Rate.of(3.4d)))
+                InterestRate.ofRate(Rate.of(3.4d), LocalDate.parse("2020-01-02")))
     ));
   }
 

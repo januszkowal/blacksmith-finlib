@@ -9,16 +9,16 @@ import lombok.Value;
 
 public class FxRate3 extends BasicMarketData<FxRate3.Data> {
 
-  public FxRate3(LocalDate date, FxRate3.Data rate3Values) {
-    super(date, rate3Values);
+  public FxRate3(FxRate3.Data rate3Values, LocalDate date) {
+    super(rate3Values, date);
   }
 
   public static FxRate3 of(LocalDate date, Rate buy, Rate sell, Rate avg) {
-    return new FxRate3(date, FxRate3.Data.of(buy, sell, avg));
+    return new FxRate3(FxRate3.Data.of(buy, sell, avg), date);
   }
 
-  public static FxRate3 of(LocalDate date, double buyRate, double sellRate, double avgRate, int decimalPlaces) {
-    return new FxRate3(date, FxRate3.Data.of(Rate.of(buyRate, decimalPlaces), Rate.of(sellRate, decimalPlaces), Rate.of(avgRate, decimalPlaces)));
+  public static FxRate3 of(double buyRate, double sellRate, double avgRate, int decimalPlaces, LocalDate date) {
+    return new FxRate3(FxRate3.Data.of(Rate.of(buyRate, decimalPlaces), Rate.of(sellRate, decimalPlaces), Rate.of(avgRate, decimalPlaces)), date);
   }
 
   @Value(staticConstructor = "of")
