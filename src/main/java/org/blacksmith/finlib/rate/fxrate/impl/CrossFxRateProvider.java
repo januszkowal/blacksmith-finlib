@@ -29,9 +29,13 @@ public class CrossFxRateProvider implements FxRateProvider {
     FxRateId key2 = FxRateId.of(pair.isDirect() ? pair.getCounter() : pair.getBase(), localCurrency);
     CurrencyPairExt2 pair1 = ccyPairProvider.getPairExt(key1);
     CurrencyPairExt2 pair2 = ccyPairProvider.getPairExt(key2);
+    log.debug("Cross rate pair={} pair2={} pair2={}", pair, pair1, pair2);
+    return calcRate(pair1, pair2, date, extractor);
+  }
+
+  private <R extends FxRateOperations<R>> R calcRate(CurrencyPairExt2 pair1, CurrencyPairExt2 pair2, LocalDate date, Function<FxRate3, R> extractor) {
     FxRate3 r1 = sourceRateProvider.get(pair1.getFxRateId(), date);
     FxRate3 r2 = sourceRateProvider.get(pair2.getFxRateId(), date);
-    log.debug("Cross rate pair={} pair2={} pair2={}", pair, pair1, pair2);
     if (r1 != null && r2 != null) {
       R result;
       R r1v = extractor.apply(r1);
@@ -51,16 +55,16 @@ public class CrossFxRateProvider implements FxRateProvider {
         result = r2v.multiplyAndDivide(factor, r1v);
       }
       return result;
-    } else {
+    }
+    else {
       if (r1 == null) {
         throw new IllegalArgumentException(String.format("No available rate %s on %s", pair1.getFxRateId().getPairName(),
             date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
       }
-      if (r2 == null) {
+      else  {
         throw new IllegalArgumentException(String.format("No available rate %s on %s", pair2.getFxRateId().getPairName(),
             date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
       }
     }
-    return null;
   }
 }
