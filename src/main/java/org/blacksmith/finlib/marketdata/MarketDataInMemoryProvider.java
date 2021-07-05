@@ -24,7 +24,7 @@ public class MarketDataInMemoryProvider<I extends MarketDataId<V>, V extends Mar
   }
 
   @Override
-  public V getValue(I id, LocalDate date) {
+  public V get(I id, LocalDate date) {
     return marketData.getOrDefault(id, Collections.emptyList()).stream()
         .filter(m -> m.getValue().getDate().compareTo(date) <= 0)
         .max(MarketDataWrapper.marketDataDateComparator)

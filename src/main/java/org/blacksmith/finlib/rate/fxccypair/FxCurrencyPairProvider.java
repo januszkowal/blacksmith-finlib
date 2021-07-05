@@ -1,10 +1,11 @@
 package org.blacksmith.finlib.rate.fxccypair;
 
-import org.blacksmith.finlib.basic.currency.Currency;
+import org.blacksmith.finlib.rate.fxrate.FxRateId;
 
 public interface FxCurrencyPairProvider {
-  FxCurrencyPair getPair(String ccy1, String ccy2);
-  default FxCurrencyPair getPair(Currency ccy1, Currency ccy2) {
-    return getPair(ccy1.getCurrencyCode(), ccy2.getCurrencyCode());
+  CurrencyPairExt getPair(String base, String counter);
+
+  default CurrencyPairExt getPair(FxRateId pair) {
+    return getPair(pair.getBase().getCurrencyCode(), pair.getCounter().getCurrencyCode());
   }
 }

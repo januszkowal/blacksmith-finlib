@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 public class NormalScheduleGeneratorTest {
   public InterestRateService createInterestRateService1() {
     var interestRateService = Mockito.mock(InterestRateService.class);
-    Mockito.when(interestRateService.getValue(any(InterestRateId.class), any(LocalDate.class)))
+    Mockito.when(interestRateService.get(any(InterestRateId.class), any(LocalDate.class)))
         .thenReturn(irate(3d));
 //        .thenReturn(Rate.of(3d));
     return interestRateService;
@@ -58,7 +58,7 @@ public class NormalScheduleGeneratorTest {
     assertEquals(8, schedule.size());
     //    assertEquals(3,schedule.get(0).getInterestRate());
     log.info("schedule1: {}", schedule);
-    Mockito.when(interestRateService.getValue(any(), any()))
+    Mockito.when(interestRateService.get(any(), any()))
         .thenReturn(irate(2d));
     var schedule2 = scheduleGenerator.update(schedule);
     log.info("schedule2: {}", schedule);

@@ -12,7 +12,7 @@ import org.blacksmith.finlib.cucumber.dto.FxRate1Input;
 import org.blacksmith.finlib.cucumber.dto.FxRate3Input;
 import org.blacksmith.finlib.marketdata.MarketDataInMemoryProvider;
 import org.blacksmith.finlib.marketdata.MarketDataWrapper;
-import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
+import org.blacksmith.finlib.rate.fxccypair.CurrencyPairExt;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
@@ -36,12 +36,12 @@ public class FxRateSteps {
 
   final GroovyShell shell = new GroovyShell();
   final MarketDataInMemoryProvider<FxRateId, FxRate3> fxRateProvider = new MarketDataInMemoryProvider<>();
-  Map<String, FxCurrencyPair> pairs;
+  Map<String, CurrencyPairExt> pairs;
   private FxRateService fxRateService;
   private int precision;
 
   @Given("Define currency pairs")
-  public void definePairs(List<FxCurrencyPair> inputPairs) {
+  public void definePairs(List<CurrencyPairExt> inputPairs) {
     log.info("Currency pairs");
     inputPairs.forEach(pair -> log.info(pair.toString()));
     this.pairs = inputPairs.stream()
@@ -88,8 +88,8 @@ public class FxRateSteps {
   }
 
   @DataTableType
-  public FxCurrencyPair createFxCurrencyPair(Map<String, String> row) {
-    return FxCurrencyPair.of(Currency.of(row.get("base")),
+  public CurrencyPairExt createFxCurrencyPair(Map<String, String> row) {
+    return CurrencyPairExt.of(Currency.of(row.get("base")),
         Currency.of(row.get("counter")),
         Boolean.parseBoolean(row.get("cross")),
         Double.parseDouble(row.get("factor")));

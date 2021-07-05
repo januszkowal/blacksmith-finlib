@@ -36,9 +36,9 @@ class MarketDataMemoryServiceTest {
 
   @Test
   public void test1() {
-    InterestRate val1 = interestRateService.getValue(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
+    InterestRate val1 = interestRateService.get(InterestRateId.of("WIBOR", "6M", Currency.of("EUR")),
         LocalDate.parse("2020-01-15"));
-    InterestRate val2 = interestRateService.getValue(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")),
+    InterestRate val2 = interestRateService.get(InterestRateId.of("EURIBOR", "3M", Currency.of("EUR")),
         LocalDate.parse("2020-01-15"));
     assertThat(val1.getValue().doubleValue()).isEqualTo(3.1d);
     assertThat(val2.getValue().doubleValue()).isEqualTo(3.4d);

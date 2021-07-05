@@ -8,21 +8,22 @@ import lombok.Value;
 
 @Value
 public final class FxRateId implements MarketDataId<FxRate3> {
-  String table;
-  Currency baseCcy;
-  Currency counterCcy;
+  private static final String DEFAULT = "DEFAULT";
+  Currency base;
+  Currency counter;
+  String source;
 
-  public FxRateId(String table, Currency baseCcy, Currency counterCcy) {
-    ArgChecker.notEmpty(table);
-    ArgChecker.notNull(baseCcy);
-    ArgChecker.notNull(counterCcy);
-    this.table = table;
-    this.baseCcy = baseCcy;
-    this.counterCcy = counterCcy;
+  public FxRateId(Currency base, Currency counter, String source) {
+    ArgChecker.notNull(base);
+    ArgChecker.notNull(counter);
+    ArgChecker.notEmpty(source);
+    this.base = base;
+    this.counter = counter;
+    this.source = source;
   }
 
-  public static FxRateId of(String baseCcy, String counterCcy) {
-    return new FxRateId("DEFAULT", Currency.of(baseCcy), Currency.of(counterCcy));
+  public static FxRateId of(String base, String counter) {
+    return new FxRateId(Currency.of(base), Currency.of(counter), DEFAULT);
   }
 
   public static FxRateId of(String name) {
@@ -30,27 +31,27 @@ public final class FxRateId implements MarketDataId<FxRate3> {
     ArgChecker.isTrue(name.length()==7,"Name should have size of 7 characters");
     String baseCcy = name.substring(0,3);
     String counterCcy = name.substring(4, 7);
-    return new FxRateId("DEFAULT", Currency.of(baseCcy), Currency.of(counterCcy));
+    return new FxRateId(Currency.of(baseCcy), Currency.of(counterCcy), DEFAULT);
   }
 
-  public static FxRateId of(String table, String baseCcy, String toCcy) {
-    return new FxRateId(table, Currency.of(baseCcy), Currency.of(toCcy));
+  public static FxRateId of(String base, String counterCcy, String table) {
+    return new FxRateId(Currency.of(base), Currency.of(counterCcy), DEFAULT);
   }
 
-  public static FxRateId of(Currency baseCcy, Currency counterCcy) {
-    return new FxRateId("DEFAULT", baseCcy, counterCcy);
+  public static FxRateId of(Currency base, Currency counter) {
+    return new FxRateId(base, counter, DEFAULT);
   }
 
-  public static FxRateId of(String table, Currency baseCcy, Currency counterCcy) {
-    return new FxRateId(table, baseCcy, counterCcy);
+  public static FxRateId of(Currency base, Currency counter, String source) {
+    return new FxRateId(base, counter, DEFAULT);
   }
 
   public String getPairName() {
-    return baseCcy.getCurrencyCode() + "/" + counterCcy.getCurrencyCode();
+    return base.getCurrencyCode() + "/" + counter.getCurrencyCode();
   }
 
   public FxRateId inverse() {
-    return new FxRateId(this.table, this.counterCcy, this.baseCcy);
+    return new FxRateId(this.counter, this.base, this.source);
   }
 
   @Override
