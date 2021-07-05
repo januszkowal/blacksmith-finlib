@@ -87,15 +87,15 @@ class FxRateServiceTest {
 
   @Test
   public void shouldFail() {
-    assertThrows(IllegalArgumentException.class, () -> rateService.getRateDouble(FxRateId.of("EUR", "USD"), dateFail, FxRateType.AVG),
+    assertThrows(IllegalArgumentException.class, () -> rateService.fxRateDouble(FxRateId.of("EUR", "USD"), dateFail, FxRateType.AVG),
         "No available rate EUR/PLN on 2019-12-31");
-    assertThrows(IllegalArgumentException.class, () -> rateService.getRateDouble(FxRateId.of("EUR", "PLN"), dateFail, FxRateType.AVG),
+    assertThrows(IllegalArgumentException.class, () -> rateService.fxRateDouble(FxRateId.of("EUR", "PLN"), dateFail, FxRateType.AVG),
         "No available rate EUR/PLN on 2019-12-31");
   }
 
   private void assertRate3(double buyRate, double sellRate, double avgRate, String pair, LocalDate date, String description) {
     var fxRateId = FxRateId.of(pair);
-    var rate3 = rateService.getRate(fxRateId, date);
+    var rate3 = rateService.fxRate3(fxRateId, date);
     assertNotNull(rate3, description);
     assertThat(rate3.getValue()).describedAs(description)
         .extracting(FxRate3.Data::getBuy, FxRate3.Data::getSell, FxRate3.Data::getAvg)
@@ -107,7 +107,7 @@ class FxRateServiceTest {
   }
 
   private void assertRate1(double rate, FxRateId fxRateId, LocalDate date, FxRateType type, String description) {
-    var rate1 = rateService.getRate(fxRateId, date, type);
+    var rate1 = rateService.fxRate(fxRateId, date, type);
     assertNotNull(rate1, description);
     assertThat(rate1.getValue()).describedAs(description)
         .isEqualTo(Rate.of(rate, OUTPUT_DECIMAL_PLACES));
@@ -115,7 +115,7 @@ class FxRateServiceTest {
 
   private void assertRate3WithDate(LocalDate date, LocalDate expectedDate, double buyRate, double sellRate, double avgRate, String pair,
       String description) {
-    var rate3 = rateService.getRate(FxRateId.of(pair), date);
+    var rate3 = rateService.fxRate3(FxRateId.of(pair), date);
     assertNotNull(rate3, description);
     assertThat(rate3).describedAs(description)
         .extracting(FxRate3::getDate, r3 -> r3.getValue().getBuy(), r3 -> r3.getValue().getSell(), r3 -> r3.getValue().getAvg())

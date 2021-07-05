@@ -66,7 +66,7 @@ public class FxRateSteps {
   @Then("Verify output triple rates")
   public void verifyOutputTripleRates(List<FxRate3Input> inputRates) {
     for (FxRate3Input input : inputRates) {
-      var rate3 = fxRateService.getRate(input.getKey(), input.getDate());
+      var rate3 = fxRateService.fxRate3(input.getKey(), input.getDate());
       log.info("Rate {} value {}", input.getKey(), rate3);
       assertNotNull(rate3, input.toString());
       assertThat(rate3.getValue()).describedAs(input.toString())
@@ -81,9 +81,9 @@ public class FxRateSteps {
   @Then("Verify output single rates")
   public void verifyOutputSingleRates(List<FxRate1Input> inputRates) {
     for (FxRate1Input input : inputRates) {
-      var rate3 = fxRateService.getRate(input.getKey(), input.getDate(), input.getType());
-      assertNotNull(rate3, input.toString());
-      assertThat(rate3.getValue()).describedAs(input.toString()).isEqualTo(input.getRate());
+      var rate = fxRateService.fxRate(input.getKey(), input.getDate(), input.getType());
+      assertNotNull(rate, input.toString());
+      assertThat(rate.getValue()).describedAs(input.toString()).isEqualTo(input.getRate());
     }
   }
 
@@ -121,7 +121,7 @@ public class FxRateSteps {
   }
 
   private void assertRate1(double rate, FxRateId key, LocalDate date, FxRateType type, String description) {
-    var rate1 = fxRateService.getRate(key, date, type);
+    var rate1 = fxRateService.fxRate(key, date, type);
     assertNotNull(rate1, description);
     assertThat(rate1.getValue()).describedAs(description)
         .isEqualTo(Rate.of(rate, precision));

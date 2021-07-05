@@ -40,7 +40,7 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   @Override
-  public FxRate getRate(FxRateId key, LocalDate date, FxRateType fxRateType) {
+  public FxRate fxRate(FxRateId key, LocalDate date, FxRateType fxRateType) {
     ArgChecker.notNull(key, "Key must be not null");
     ArgChecker.notNull(date, "Date must be not null");
     ArgChecker.notNull(fxRateType, "Type must be not null");
@@ -51,13 +51,13 @@ public class FxRateServiceImpl implements FxRateService {
   }
 
   @Override
-  public <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3, R> extractor) {
+  public <V, R> R fxRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3, R> extractor) {
     ArgChecker.notNull(extractor, "Extractor must be not null");
-    return extractor.extract(getRate(key, date));
+    return extractor.extract(fxRate3(key, date));
   }
 
   @Override
-  public FxRate3 getRate(FxRateId key, LocalDate date) {
+  public FxRate3 fxRate3(FxRateId key, LocalDate date) {
     ArgChecker.notNull(key, "Key must be not null");
     ArgChecker.notNull(date, "Date must be not null");
     if (key.getBaseCcy().equals(key.getCounterCcy())) {
