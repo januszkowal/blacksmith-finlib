@@ -45,7 +45,7 @@ public class CrossFxRateProvider implements FxRateProvider {
         result = r1v.multiplyAndDivide(r2v, factor);
       } else if (!pair1.isDirect() && pair2.isDirect()) {
         double factor = pair1.getFactor() * pair2.getFactor();
-        result = r1v.inverse2(factor, r2v);
+        result = r1v.multiplyAndInverse(r2v, factor);
       } else {
         double factor = pair1.getFactor() / pair2.getFactor();
         result = r2v.multiplyAndDivide(factor, r1v);

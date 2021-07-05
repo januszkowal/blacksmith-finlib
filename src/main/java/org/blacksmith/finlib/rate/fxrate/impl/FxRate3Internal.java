@@ -70,19 +70,11 @@ class FxRate3Internal implements FxRateOperations<FxRate3Internal> {
   }
 
   @Override
-  public FxRate3Internal inverse2(double divisor) {
+  public FxRate3Internal inverse2(double numerator) {
     return new FxRate3Internal(this.date,
-        divisor / this.buy,
-        divisor / this.sell,
-        divisor / this.avg);
-  }
-
-  @Override
-  public FxRate3Internal inverse2(double numerator, FxRate3Internal multiplicand) {
-    return new FxRate3Internal(DateUtils.max(this.date, multiplicand.date),
-        numerator / (this.buy * multiplicand.buy),
-        numerator / (this.sell * multiplicand.sell),
-        numerator / (this.avg * multiplicand.avg));
+        numerator / this.buy,
+        numerator / this.sell,
+        numerator / this.avg);
   }
 
   @Override
@@ -99,5 +91,13 @@ class FxRate3Internal implements FxRateOperations<FxRate3Internal> {
         this.buy * multiplicand / divisor.buy,
         this.sell * multiplicand / divisor.sell,
         this.avg * multiplicand / divisor.avg);
+  }
+
+  @Override
+  public FxRate3Internal multiplyAndInverse(FxRate3Internal multiplicand, double numerator) {
+    return new FxRate3Internal(DateUtils.max(this.date, multiplicand.date),
+        numerator / (this.buy * multiplicand.buy),
+        numerator / (this.sell * multiplicand.sell),
+        numerator / (this.avg * multiplicand.avg));
   }
 }

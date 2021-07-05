@@ -7,7 +7,7 @@ interface FxRateOperations<R> {
   R divide(double divisor);
   R inverse();
   R inverse2(double numerator);
-  R inverse2(double numerator, R multiplicand);
   R multiplyAndDivide(R multiplicand, double divisor);
   R multiplyAndDivide(double multiplicand, R divisor);
+  R multiplyAndInverse(R multiplicand, double numerator);
 }

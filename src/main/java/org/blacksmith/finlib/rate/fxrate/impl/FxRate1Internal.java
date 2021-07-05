@@ -49,13 +49,8 @@ class FxRate1Internal implements FxRateOperations<FxRate1Internal> {
   }
 
   @Override
-  public FxRate1Internal inverse2(double divisor) {
-    return new FxRate1Internal(divisor / this.value, this.date);
-  }
-
-  @Override
-  public FxRate1Internal inverse2(double numerator, FxRate1Internal multiplicand) {
-    return new FxRate1Internal(numerator / (this.value * multiplicand.value), DateUtils.max(this.date, multiplicand.date));
+  public FxRate1Internal inverse2(double numerator) {
+    return new FxRate1Internal(numerator / this.value, this.date);
   }
 
   @Override
@@ -66,5 +61,10 @@ class FxRate1Internal implements FxRateOperations<FxRate1Internal> {
   @Override
   public FxRate1Internal multiplyAndDivide(double multiplicand, FxRate1Internal divisor) {
     return new FxRate1Internal(this.value * multiplicand / divisor.value, DateUtils.max(this.date, divisor.date));
+  }
+
+  @Override
+  public FxRate1Internal multiplyAndInverse(FxRate1Internal multiplicand, double numerator) {
+    return new FxRate1Internal(numerator / (this.value * multiplicand.value), DateUtils.max(this.date, multiplicand.date));
   }
 }
