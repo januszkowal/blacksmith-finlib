@@ -7,7 +7,7 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.rounding.HalfUpRounding;
-import org.blacksmith.finlib.curve.discount.CurveDiscountFactor;
+import org.blacksmith.finlib.curve.discount.CurveFactors;
 import org.blacksmith.finlib.valuation.dto.Cashflow;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ public class DcfValuatorTest {
 
   @BeforeAll
   public static void setUp() {
-    CurveDiscountFactor curveDiscountFactor = Mockito.mock(CurveDiscountFactor.class);
+    CurveFactors curveDiscountFactor = Mockito.mock(CurveFactors.class);
     Mockito.when(curveDiscountFactor.discountFactor(eq(valuationDate))).thenReturn(1d);
     Mockito.when(curveDiscountFactor.discountFactor(eq(dt1))).thenReturn(0.95d);
     Mockito.when(curveDiscountFactor.discountFactor(eq(dt2))).thenReturn(0.9d);

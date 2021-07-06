@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Tenor;
 import org.blacksmith.finlib.curve.definition.CurveDefinition;
-import org.blacksmith.finlib.curve.discount.CurveDiscountFactorImpl;
+import org.blacksmith.finlib.curve.discount.CurveFactorsImpl;
 import org.blacksmith.finlib.curve.discount.ZeroRateDiscountFactor;
 import org.blacksmith.finlib.curve.node.SimpleCurveNodeDefinition;
 import org.blacksmith.finlib.datetime.daycount.StandardDayCounts;
@@ -63,7 +63,7 @@ class CurveFactoryTest {
         .build();
 
     var curve = curveFactory.createCurve(valuationDate, definition);
-    CurveDiscountFactorImpl df = CurveDiscountFactorImpl.of(curve, ZeroRateDiscountFactor.of());
+    CurveFactorsImpl df = CurveFactorsImpl.of(curve, ZeroRateDiscountFactor.of());
 
     assertThat(curve.value(valuationDate.minusDays(10))).isEqualTo(QUOTE_1D_VALUE);
     assertThat(curve.value(valuationDate)).isEqualTo(QUOTE_1D_VALUE);

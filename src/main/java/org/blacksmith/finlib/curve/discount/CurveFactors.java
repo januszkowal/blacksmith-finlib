@@ -2,8 +2,10 @@ package org.blacksmith.finlib.curve.discount;
 
 import java.time.LocalDate;
 
-public interface CurveDiscountFactor {
+public interface CurveFactors {
   double interestRate(LocalDate date);
+
+  double interestRate(double yearFraction);
 
   double yearFraction(LocalDate date);
 
