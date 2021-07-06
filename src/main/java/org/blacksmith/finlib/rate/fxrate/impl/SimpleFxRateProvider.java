@@ -2,9 +2,11 @@ package org.blacksmith.finlib.rate.fxrate.impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.blacksmith.finlib.marketdata.MarketDataProvider;
+import org.blacksmith.finlib.rate.fxccypair.CurrencyPairExt;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
 
@@ -20,17 +22,17 @@ public class SimpleFxRateProvider implements FxRateProvider {
   }
 
   @Override
-  public <R extends FxRateOperations<R>> R rate(CurrencyPairExt2 pair, LocalDate date, Function<FxRate3, R> extractor) {
-    FxRate3 rate = sourceRateProvider.get(pair.getFxRateId(), date);
-    if (rate == null) {
+  public <R extends FxRateOperations<R>> R rate(CurrencyPairExt pair, LocalDate date, Function<FxRate3, R> extractor) {
+    Optional<FxRate3> rate = sourceRateProvider.value(pair.getFxRateId(), date);
+    if (rate.isEmpty()) {
       throw new IllegalArgumentException(String.format("No available rate %s on %s", pair.getFxRateId().getPairName(),
           date.format(DateTimeFormatter.ISO_LOCAL_DATE)));
     }
     log.debug("Simple rate pair={}", pair);
     if (pair.isDirect()) {
-      return extractor.apply(rate).divide(pair.getFactor());
+      return rate.map(extractor::apply).get().divide(pair.getFactor());
     } else {
-      return extractor.apply(rate).inverse2(pair.getFactor());
+      return rate.map(extractor::apply).get().inverse2(pair.getFactor());
     }
   }
 }

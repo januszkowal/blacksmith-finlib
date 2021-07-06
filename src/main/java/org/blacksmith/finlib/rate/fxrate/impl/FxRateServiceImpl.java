@@ -8,6 +8,7 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.marketdata.MarketDataExtractor;
 import org.blacksmith.finlib.marketdata.MarketDataProvider;
+import org.blacksmith.finlib.rate.fxccypair.CurrencyPairExt;
 import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPairProvider;
 import org.blacksmith.finlib.rate.fxrate.FxRate;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FxRateServiceImpl implements FxRateService {
 
   private final Currency localCurrency;
-  private final FxCurrencyPairProviderImpl ccyPairProvider;
+  private final FxCurrencyPairProvider ccyPairProvider;
   private final int decimalPlaces;
   private final SimpleFxRateProvider simpleRateProvider;
   private final CrossFxRateProvider crossRateProvider;
@@ -33,9 +34,9 @@ public class FxRateServiceImpl implements FxRateService {
     ArgChecker.notNull(fxRateProvider, "Fx Rate Provider must be not null");
     this.localCurrency = localCurrency;
     this.decimalPlaces = decimalPlaces;
-    this.ccyPairProvider = new FxCurrencyPairProviderImpl(ccyPairProvider);
+    this.ccyPairProvider = ccyPairProvider;
     this.simpleRateProvider = new SimpleFxRateProvider(fxRateProvider);
-    this.crossRateProvider = new CrossFxRateProvider(localCurrency, this.ccyPairProvider, fxRateProvider);
+    this.crossRateProvider = new CrossFxRateProvider(localCurrency, ccyPairProvider, fxRateProvider);
   }
 
   @Override
@@ -68,7 +69,7 @@ public class FxRateServiceImpl implements FxRateService {
   private <R extends FxRateOperations<R>> R getRateInternal(FxRateId pair, LocalDate date,
       Function<FxRate3, R> extractor) {
     R result;
-    CurrencyPairExt2 pairExt = ccyPairProvider.getPairExt(pair);
+    CurrencyPairExt pairExt = ccyPairProvider.getPair2Dir(pair);
     if (pairExt.isCross()) {
       result = crossRateProvider.rate(pairExt, date, extractor);
     } else {

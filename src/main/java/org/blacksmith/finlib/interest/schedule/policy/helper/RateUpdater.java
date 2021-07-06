@@ -63,7 +63,7 @@ public class RateUpdater implements ScheduleUpdater {
           scheduleParameters.getCouponFrequency().toString(),
           scheduleParameters.getCurrency());
       //fixingDate
-      return Optional.ofNullable(interestRateService.get(rateKey, startDate))
+      return interestRateService.value(rateKey, startDate)
           .map(r -> r.getValue().multiply(scheduleParameters.getInterestRateMulMargin()))
           .orElse(Rate.ZERO)
           .add(scheduleParameters.getInterestRateAddMargin());

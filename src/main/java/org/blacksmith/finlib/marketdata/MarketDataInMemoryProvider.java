@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -24,11 +25,10 @@ public class MarketDataInMemoryProvider<I extends MarketDataId<V>, V extends Mar
   }
 
   @Override
-  public V get(I id, LocalDate date) {
+  public Optional<V> value(I id, LocalDate date) {
     return marketData.getOrDefault(id, Collections.emptyList()).stream()
         .filter(m -> m.getValue().getDate().compareTo(date) <= 0)
         .max(MarketDataWrapper.marketDataDateComparator)
-        .map(MarketDataWrapper::getValue)
-        .orElse(null);
+        .map(MarketDataWrapper::getValue);
   }
 }

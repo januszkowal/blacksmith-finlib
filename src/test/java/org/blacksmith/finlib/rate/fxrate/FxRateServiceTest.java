@@ -22,11 +22,11 @@ class FxRateServiceTest {
   static final int DECIMAL_PLACES = 4;
   static final int OUTPUT_DECIMAL_PLACES = 6;
   private static final Map<String, CurrencyPairExt> pairs = List.of(
-      CurrencyPairExt.of(Currency.EUR, Currency.PLN, false, 1.0d),
-      CurrencyPairExt.of(Currency.USD, Currency.PLN, false, 1.0d),
-      CurrencyPairExt.of(Currency.EUR, Currency.USD, true, 1.0d),
-      CurrencyPairExt.of(Currency.of("HUF"), Currency.PLN, false, 100d),
-      CurrencyPairExt.of(Currency.EUR, Currency.of("HUF"), true, 1.0d))
+      CurrencyPairExt.ofDirect(Currency.EUR, Currency.PLN, false, 1.0d),
+      CurrencyPairExt.ofDirect(Currency.USD, Currency.PLN, false, 1.0d),
+      CurrencyPairExt.ofDirect(Currency.EUR, Currency.USD, true, 1.0d),
+      CurrencyPairExt.ofDirect(Currency.of("HUF"), Currency.PLN, false, 100d),
+      CurrencyPairExt.ofDirect(Currency.EUR, Currency.of("HUF"), true, 1.0d))
       .stream()
       .collect(Collectors.toMap(pair -> pair.getBase().getCurrencyCode() + "/" + pair.getCounter().getCurrencyCode(), pair -> pair));
   static final LocalDate dateFail = LocalDate.parse("2019-12-31");

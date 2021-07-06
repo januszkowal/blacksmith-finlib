@@ -89,7 +89,7 @@ public class FxRateSteps {
 
   @DataTableType
   public CurrencyPairExt createFxCurrencyPair(Map<String, String> row) {
-    return CurrencyPairExt.of(Currency.of(row.get("base")),
+    return CurrencyPairExt.ofDirect(Currency.of(row.get("base")),
         Currency.of(row.get("counter")),
         Boolean.parseBoolean(row.get("cross")),
         Double.parseDouble(row.get("factor")));
