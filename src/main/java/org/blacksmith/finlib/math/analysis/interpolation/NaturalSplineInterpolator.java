@@ -10,6 +10,7 @@ public class NaturalSplineInterpolator extends AbstractPolynomialInterpolator im
   public PolynomialSplineFunction interpolate(double[] xValues, double[] yValues) {
     validateKnots(xValues, yValues, MIN_SIZE);
     int n = xValues.length - 1;
+    // xIncrease
     double[] h = new double[xValues.length];
     double[] b = new double[xValues.length];
     double[] u = new double[xValues.length];
@@ -33,16 +34,17 @@ public class NaturalSplineInterpolator extends AbstractPolynomialInterpolator im
 
     PolynomialFunction[] polynomials = new PolynomialFunction[n];
     for (int i = 0; i < n; i++) {
-      polynomials[i] = polynomial(xValues, yValues, h, z, i);
+      polynomials[i] = polynomial(yValues, b, h, z, i);
     }
     return new PolynomialSplineFunction(xValues, polynomials);
   }
 
-  private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] h, double[] z, int index) {
-    double a = yValues[index];
-    double b = -(h[index] / 6.0d) * (z[index + 1] + 2.0d * z[index]) + (yValues[index + 1] - yValues[index]) / h[index];
-    double c = 0.5d * z[index];
-    double d = (z[index + 1] - z[index]) / (6.0d * h[index]);
-    return new PolynomialFunction(a, b, c, d);
+  private PolynomialFunction polynomial(double[] yValues, double[] b, double[] h, double[] z, int index) {
+    double hi = h[index];
+    double coeffa = yValues[index];
+    double coeffb = -(hi / 6.0) * (z[index + 1] + 2.0 * z[index]) + b[index];
+    double coeffc = 0.5 * z[index];
+    double coeffd = (z[index + 1] - z[index]) / (6.0 * hi);
+    return new PolynomialFunction(coeffa, coeffb, coeffc, coeffd);
   }
 }

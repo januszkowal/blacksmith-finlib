@@ -1,10 +1,5 @@
 package org.blacksmith.finlib.math.analysis.interpolation;
 
-import org.apache.commons.math3.exception.DimensionMismatchException;
-import org.apache.commons.math3.exception.NumberIsTooSmallException;
-import org.apache.commons.math3.exception.util.LocalizedFormats;
-import org.apache.commons.math3.util.MathArrays;
-
 public class QuadraticSplineInterpolator extends AbstractPolynomialInterpolator implements PolynomialInterpolator {
   private static final int MIN_SIZE = 2;
 
@@ -16,39 +11,43 @@ public class QuadraticSplineInterpolator extends AbstractPolynomialInterpolator 
     validateKnots(xValues, yValues, MIN_SIZE);
     final int n = xValues.length - 1;
     // Differences between knot points
-    final double h[] = new double[n];
+    final double[] h = new double[n];
+    final double[] b = new double[n];
     for (int i = 0; i < n; i++) {
       h[i] = xValues[i + 1] - xValues[i];
+      b[i] = (yValues[i + 1] - yValues[i]) / h[i];
     }
 
-    final double mu[] = new double[n];
-    final double z[] = new double[n + 1];
-    mu[0] = 0d;
-    z[0] = 0d;
-    z[n] = 0d;
+    final double u[] = new double[n];
+    final double v[] = new double[n + 1];
+    u[0] = 0.0;
+    v[0] = 0.0;
+    v[n] = 0.0;
 
     double g = 0;
     for (int i = 1; i < n; i++) {
-      g = 2d * (xValues[i+1]  - xValues[i - 1]) - h[i - 1] * mu[i -1];
-      mu[i] = h[i] / g;
-      z[i] = (3d * (yValues[i + 1] * h[i - 1] - yValues[i] * (xValues[i + 1] - xValues[i - 1])+ yValues[i - 1] * h[i]) /
-          (h[i - 1] * h[i]) - h[i - 1] * z[i - 1]) / g;
+      g = 2.0 * (h[i] + h[i - 1]) - h[i - 1] * u[i - 1];
+      u[i] = h[i] / g;
+      v[i] = (3.0 * (yValues[i + 1] * h[i - 1] - yValues[i] * (xValues[i + 1] - xValues[i - 1]) + yValues[i - 1] * h[i]) /
+          (h[i - 1] * h[i]) - h[i - 1] * v[i - 1]) / g;
     }
 
-    final double b[] = new double[n];
-    final double c[] = new double[n + 1];
-    final double d[] = new double[n];
-    c[n] = 0d;
+    final double z[] = new double[n + 1];
+    z[n] = 0d;
 
-    for (int j = n -1; j >=0; j--) {
-      c[j] = z[j] - mu[j] * c[j + 1];
-      b[j] = (yValues[j + 1] - yValues[j]) / h[j] - h[j] * (c[j + 1] + 2d * c[j]) / 3d;
-      d[j] = (c[j + 1] - c[j]) / (3d * h[j]);
+    for (int i = n - 1; i >= 0; i--) {
+      z[i] = v[i] - u[i] * z[i + 1];
     }
 
     final PolynomialFunction polynomials[] = new PolynomialFunction[n];
+    double coeffa, coeffb, coeffc, coeffd, hi;
     for (int i = 0; i < n; i++) {
-      polynomials[i] = new PolynomialFunction(yValues[i], b[i], c[i], d[i]);
+      hi = h[i];
+      coeffa = yValues[i];
+      coeffb = -hi * (z[i + 1] + 2d * z[i]) / 3d + b[i];
+      coeffc = z[i];
+      coeffd = (z[i + 1] - z[i]) / (3.0d * hi);
+      polynomials[i] = new PolynomialFunction(coeffa, coeffb, coeffc, coeffd);
     }
 
     return new PolynomialSplineFunction(xValues, polynomials);
