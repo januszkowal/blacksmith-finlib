@@ -4,20 +4,20 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.blacksmith.finlib.basic.rounding.Rounding;
-import org.blacksmith.finlib.curve.discount.CurveDiscountFactor;
+import org.blacksmith.finlib.curve.discount.CurveFactors;
 import org.blacksmith.finlib.valuation.CashflowValuator;
 import org.blacksmith.finlib.valuation.dto.Cashflow;
 
 public class DcfValuator implements CashflowValuator {
-  private final CurveDiscountFactor discountFactor;
+  private final CurveFactors discountFactor;
   private final Rounding rounding;
 
-  public DcfValuator(CurveDiscountFactor discountFactor, Rounding rounding) {
+  public DcfValuator(CurveFactors discountFactor, Rounding rounding) {
     this.discountFactor = discountFactor;
     this.rounding = rounding;
   }
 
-  public static DcfValuator of (CurveDiscountFactor discountFactor, Rounding rounding) {
+  public static DcfValuator of (CurveFactors discountFactor, Rounding rounding) {
     return new DcfValuator(discountFactor, rounding);
   }
 

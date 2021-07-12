@@ -2,6 +2,7 @@ package org.blacksmith.finlib.interest.schedule;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
+import java.util.Optional;
 
 import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.datetime.Frequency;
@@ -36,8 +37,8 @@ import static org.mockito.ArgumentMatchers.any;
 public class NormalScheduleGeneratorTest {
   public InterestRateService createInterestRateService1() {
     var interestRateService = Mockito.mock(InterestRateService.class);
-    Mockito.when(interestRateService.getValue(any(InterestRateId.class), any(LocalDate.class)))
-        .thenReturn(irate(3d));
+    Mockito.when(interestRateService.value(any(InterestRateId.class), any(LocalDate.class)))
+        .thenReturn(Optional.of(irate(3d)));
 //        .thenReturn(Rate.of(3d));
     return interestRateService;
   }
@@ -58,8 +59,8 @@ public class NormalScheduleGeneratorTest {
     assertEquals(8, schedule.size());
     //    assertEquals(3,schedule.get(0).getInterestRate());
     log.info("schedule1: {}", schedule);
-    Mockito.when(interestRateService.getValue(any(), any()))
-        .thenReturn(irate(2d));
+    Mockito.when(interestRateService.value(any(), any()))
+        .thenReturn(Optional.of(irate(2d)));
     var schedule2 = scheduleGenerator.update(schedule);
     log.info("schedule2: {}", schedule);
   }
@@ -95,7 +96,7 @@ public class NormalScheduleGeneratorTest {
   }
 
   public InterestRate irate(double rate) {
-    return InterestRate.ofRate(LocalDate.now(), Rate.of(rate));
+    return InterestRate.ofRate(Rate.of(rate), LocalDate.now());
   }
 
 }

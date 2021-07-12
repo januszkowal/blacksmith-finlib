@@ -10,61 +10,61 @@ class FxRate1Internal implements FxRateOperations<FxRate1Internal> {
   private final LocalDate date;
   private final double value;
 
-  public FxRate1Internal(LocalDate date, double value) {
-    this.date = date;
+  public FxRate1Internal(double value, LocalDate date) {
     this.value = value;
+    this.date = date;
   }
 
-  public static FxRate1Internal of(LocalDate date, double value) {
-    return new FxRate1Internal(date, value);
+  public static FxRate1Internal of(double value, LocalDate date) {
+    return new FxRate1Internal(value, date);
   }
 
   public FxRate toFxRate(int decimalPlaces) {
-    return FxRate.of(date, Rate.of(value, decimalPlaces));
+    return FxRate.of(Rate.of(value, decimalPlaces), date);
   }
 
   @Override
   public FxRate1Internal multiply(double multiplicand) {
-    return new FxRate1Internal(this.date, this.value * multiplicand);
+    return new FxRate1Internal(this.value * multiplicand, this.date);
   }
 
   @Override
   public FxRate1Internal multiply(FxRate1Internal multiplicand) {
-    return new FxRate1Internal(DateUtils.max(this.date, multiplicand.date), this.value * multiplicand.value);
+    return new FxRate1Internal(this.value * multiplicand.value, DateUtils.max(this.date, multiplicand.date));
   }
 
   @Override
   public FxRate1Internal divide(FxRate1Internal divisor) {
-    return new FxRate1Internal(DateUtils.max(this.date, divisor.date), this.value / divisor.value);
+    return new FxRate1Internal(this.value / divisor.value, DateUtils.max(this.date, divisor.date));
   }
 
   @Override
   public FxRate1Internal divide(double divisor) {
-    return new FxRate1Internal(this.date, this.value / divisor);
+    return new FxRate1Internal(this.value / divisor, this.date);
   }
 
   @Override
   public FxRate1Internal inverse() {
-    return new FxRate1Internal(this.date, 1 / this.value);
+    return new FxRate1Internal(1 / this.value, this.date);
   }
 
   @Override
-  public FxRate1Internal inverse2(double divisor) {
-    return new FxRate1Internal(this.date, divisor / this.value);
-  }
-
-  @Override
-  public FxRate1Internal inverse2(double numerator, FxRate1Internal multiplicand) {
-    return new FxRate1Internal(DateUtils.max(this.date, multiplicand.date), numerator / (this.value * multiplicand.value));
+  public FxRate1Internal inverse2(double numerator) {
+    return new FxRate1Internal(numerator / this.value, this.date);
   }
 
   @Override
   public FxRate1Internal multiplyAndDivide(FxRate1Internal multiplicand, double divisor) {
-    return new FxRate1Internal(DateUtils.max(this.date, multiplicand.date), this.value * multiplicand.value / divisor);
+    return new FxRate1Internal(this.value * multiplicand.value / divisor, DateUtils.max(this.date, multiplicand.date));
   }
 
   @Override
   public FxRate1Internal multiplyAndDivide(double multiplicand, FxRate1Internal divisor) {
-    return new FxRate1Internal(DateUtils.max(this.date, divisor.date), this.value * multiplicand / divisor.value);
+    return new FxRate1Internal(this.value * multiplicand / divisor.value, DateUtils.max(this.date, divisor.date));
+  }
+
+  @Override
+  public FxRate1Internal multiplyAndInverse(FxRate1Internal multiplicand, double numerator) {
+    return new FxRate1Internal(numerator / (this.value * multiplicand.value), DateUtils.max(this.date, multiplicand.date));
   }
 }

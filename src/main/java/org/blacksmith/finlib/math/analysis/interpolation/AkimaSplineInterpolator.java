@@ -21,11 +21,11 @@ public class AkimaSplineInterpolator extends AbstractPolynomialInterpolator impl
   }
 
   private PolynomialFunction polynomial(double[] xValues, double[] yValues, double[] firstDerivatives, double[] secants, int index) {
-    double xDiff = xValues[index + 1] - xValues[index];
+    double h = xValues[index + 1] - xValues[index];
     double a = yValues[index];
     double b = firstDerivatives[index];
-    double c = (3.0d * secants[index + 2] - 2.0d * firstDerivatives[index] - firstDerivatives[index + 1]) / xDiff;
-    double d = (-2.0d * secants[index + 2] + firstDerivatives[index] + firstDerivatives[index + 1]) / (xDiff * xDiff);
+    double c = (3.0d * secants[index + 2] - 2.0d * firstDerivatives[index] - firstDerivatives[index + 1]) / h;
+    double d = (-2.0d * secants[index + 2] + firstDerivatives[index] + firstDerivatives[index + 1]) / (h * h);
     return new PolynomialFunction(a, b, c, d);
   }
 

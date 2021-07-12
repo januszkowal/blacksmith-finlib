@@ -2,6 +2,7 @@ package org.blacksmith.finlib.rate.marketdata;
 
 import org.blacksmith.finlib.marketdata.MarketData;
 import org.blacksmith.finlib.marketdata.MarketDataId;
+import org.blacksmith.finlib.marketdata.MarketDataWrapper;
 
 import lombok.ToString;
 

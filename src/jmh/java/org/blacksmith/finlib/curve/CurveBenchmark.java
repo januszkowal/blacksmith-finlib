@@ -46,7 +46,7 @@ public class CurveBenchmark {
     @Param({ "1", "10" })
     int years;
 
-    @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE", "LINEAR_APACHE_COMMONS", "LINEAR", "DOUBLE_QUADRATIC" })
+    @Param({ "AKIMA_SPLINE_APACHE_COMMONS", "AKIMA_SPLINE", "LINEAR", "DOUBLE_QUADRATIC" })
     InterpolationAlgorithm interpolator;
     public List<CurveNodeReferenceData> nodes;
     private CurveDefinition curveDefinition;

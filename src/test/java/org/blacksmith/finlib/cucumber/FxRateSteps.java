@@ -10,15 +10,15 @@ import org.blacksmith.finlib.basic.currency.Currency;
 import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.cucumber.dto.FxRate1Input;
 import org.blacksmith.finlib.cucumber.dto.FxRate3Input;
-import org.blacksmith.finlib.rate.fxccypair.FxCurrencyPair;
+import org.blacksmith.finlib.marketdata.MarketDataInMemoryProvider;
+import org.blacksmith.finlib.marketdata.MarketDataWrapper;
+import org.blacksmith.finlib.rate.fxccypair.CurrencyPairExt;
 import org.blacksmith.finlib.rate.fxrate.FxRate3;
 import org.blacksmith.finlib.rate.fxrate.FxRateId;
-import org.blacksmith.finlib.rate.fxrate.FxRateMarketDataInMemoryProviderImpl;
 import org.blacksmith.finlib.rate.fxrate.FxRateService;
 import org.blacksmith.finlib.rate.fxrate.FxRateType;
 import org.blacksmith.finlib.rate.fxrate.impl.FxRateServiceImpl;
 import org.blacksmith.finlib.rate.marketdata.BasicMarketDataWrapper;
-import org.blacksmith.finlib.rate.marketdata.MarketDataWrapper;
 
 import groovy.lang.GroovyShell;
 import io.cucumber.datatable.DataTable;
@@ -35,13 +35,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class FxRateSteps {
 
   final GroovyShell shell = new GroovyShell();
-  final FxRateMarketDataInMemoryProviderImpl fxRateProvider = new FxRateMarketDataInMemoryProviderImpl();
-  Map<String, FxCurrencyPair> pairs;
+  final MarketDataInMemoryProvider<FxRateId, FxRate3> fxRateProvider = new MarketDataInMemoryProvider<>();
+  Map<String, CurrencyPairExt> pairs;
   private FxRateService fxRateService;
   private int precision;
 
   @Given("Define currency pairs")
-  public void definePairs(List<FxCurrencyPair> inputPairs) {
+  public void definePairs(List<CurrencyPairExt> inputPairs) {
     log.info("Currency pairs");
     inputPairs.forEach(pair -> log.info(pair.toString()));
     this.pairs = inputPairs.stream()
@@ -66,7 +66,7 @@ public class FxRateSteps {
   @Then("Verify output triple rates")
   public void verifyOutputTripleRates(List<FxRate3Input> inputRates) {
     for (FxRate3Input input : inputRates) {
-      var rate3 = fxRateService.getRate(input.getKey(), input.getDate());
+      var rate3 = fxRateService.fxRate3(input.getKey(), input.getDate());
       log.info("Rate {} value {}", input.getKey(), rate3);
       assertNotNull(rate3, input.toString());
       assertThat(rate3.getValue()).describedAs(input.toString())
@@ -81,15 +81,15 @@ public class FxRateSteps {
   @Then("Verify output single rates")
   public void verifyOutputSingleRates(List<FxRate1Input> inputRates) {
     for (FxRate1Input input : inputRates) {
-      var rate3 = fxRateService.getRate(input.getKey(), input.getDate(), input.getType());
-      assertNotNull(rate3, input.toString());
-      assertThat(rate3.getValue()).describedAs(input.toString()).isEqualTo(input.getRate());
+      var rate = fxRateService.fxRate(input.getKey(), input.getDate(), input.getType());
+      assertNotNull(rate, input.toString());
+      assertThat(rate.getValue()).describedAs(input.toString()).isEqualTo(input.getRate());
     }
   }
 
   @DataTableType
-  public FxCurrencyPair createFxCurrencyPair(Map<String, String> row) {
-    return FxCurrencyPair.of(Currency.of(row.get("base")),
+  public CurrencyPairExt createFxCurrencyPair(Map<String, String> row) {
+    return CurrencyPairExt.ofDirect(Currency.of(row.get("base")),
         Currency.of(row.get("counter")),
         Boolean.parseBoolean(row.get("cross")),
         Double.parseDouble(row.get("factor")));
@@ -115,13 +115,13 @@ public class FxRateSteps {
   public List<MarketDataWrapper<FxRateId, FxRate3>> createRates(DataTable table, int precision) {
     return table.asMaps().stream()
         .map(row -> BasicMarketDataWrapper.of(FxRateId.of(row.get("from"), row.get("to")),
-            FxRate3.of(LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE),
-                evaluate(row.get("buy")), evaluate(row.get("sell")), evaluate(row.get("avg")), precision)))
+            FxRate3.of(evaluate(row.get("buy")),
+                evaluate(row.get("sell")), evaluate(row.get("avg")), precision, LocalDate.parse(row.get("date"), DateTimeFormatter.ISO_LOCAL_DATE))))
         .collect(Collectors.toList());
   }
 
   private void assertRate1(double rate, FxRateId key, LocalDate date, FxRateType type, String description) {
-    var rate1 = fxRateService.getRate(key, date, type);
+    var rate1 = fxRateService.fxRate(key, date, type);
     assertNotNull(rate1, description);
     assertThat(rate1.getValue()).describedAs(description)
         .isEqualTo(Rate.of(rate, precision));

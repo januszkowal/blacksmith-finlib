@@ -8,28 +8,26 @@ import org.blacksmith.finlib.basic.numbers.Rate;
 import org.blacksmith.finlib.marketdata.MarketDataExtractor;
 
 public interface FxRateService {
-  FxRate getRate(FxRateId key, LocalDate date, FxRateType fxRateType);
+  FxRate fxRate(FxRateId pair, LocalDate date, FxRateType fxRateType);
 
-  <V, R> R getRate(FxRateId key, LocalDate date, MarketDataExtractor<FxRate3, R> extractor);
+  <V, R> R fxRate(FxRateId pair, LocalDate date, MarketDataExtractor<FxRate3, R> extractor);
 
-  FxRate3 getRate(FxRateId key, LocalDate date);
+  FxRate3 fxRate3(FxRateId pair, LocalDate date);
 
-
-  default Rate getRateValue(FxRateId key, LocalDate date, FxRateType fxRateType) {
-    return Optional.ofNullable(getRate(key, date, fxRateType))
-        .map(FxRate::getValue)
-        .orElse(null);
+  default double convert(double amount, FxRateId pair, LocalDate date, FxRateType fxRateType) {
+    double rate = fxRate(pair, date, fxRateType).getValue().doubleValue();
+    return amount * rate;
   }
 
-  default double getRateDouble(FxRateId key, LocalDate date, FxRateType fxRateType) {
-    return Optional.ofNullable(getRate(key, date, fxRateType))
+  default double fxRateDouble(FxRateId pair, LocalDate date, FxRateType fxRateType) {
+    return Optional.ofNullable(fxRate(pair, date, fxRateType))
         .map(FxRate::getValue)
         .map(Rate::doubleValue)
         .orElse(0d);
   }
 
-  default BigDecimal getRateDecimal(FxRateId key, LocalDate date, FxRateType fxRateType) {
-    return Optional.ofNullable(getRate(key, date, fxRateType))
+  default BigDecimal fxRateBigDecimal(FxRateId pair, LocalDate date, FxRateType fxRateType) {
+    return Optional.ofNullable(fxRate(pair, date, fxRateType))
         .map(FxRate::getValue)
         .map(Rate::getValue)
         .orElse(BigDecimal.ZERO);

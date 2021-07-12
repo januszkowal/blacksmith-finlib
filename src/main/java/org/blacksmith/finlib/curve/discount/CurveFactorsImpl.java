@@ -5,24 +5,28 @@ import java.time.LocalDate;
 import org.blacksmith.commons.arg.ArgChecker;
 import org.blacksmith.finlib.curve.Curve;
 
-public class CurveDiscountFactorImpl implements CurveDiscountFactor {
+public class CurveFactorsImpl implements CurveFactors {
   private final Curve curve;
   private final DiscountFactor discountFactor;
 
-  public CurveDiscountFactorImpl(Curve curve, DiscountFactor discountFactor) {
+  public CurveFactorsImpl(Curve curve, DiscountFactor discountFactor) {
     ArgChecker.notNull(curve, "Curve must be not null");
     ArgChecker.notNull(discountFactor, "Discount factor must be not null");
     this.curve = curve;
     this.discountFactor = discountFactor;
   }
 
-  public static CurveDiscountFactorImpl of(Curve curve, DiscountFactor discountFactor) {
-    return new CurveDiscountFactorImpl(curve, discountFactor);
+  public static CurveFactorsImpl of(Curve curve, DiscountFactor discountFactor) {
+    return new CurveFactorsImpl(curve, discountFactor);
   }
 
   @Override
   public double interestRate(LocalDate date) {
-    double yearFraction = curve.getDayCount().relativeYearFraction(curve.getValuationDate(), date);
+    return curve.value(yearFraction(date));
+  }
+
+  @Override
+  public double interestRate(double yearFraction) {
     return curve.value(yearFraction);
   }
 
@@ -33,9 +37,9 @@ public class CurveDiscountFactorImpl implements CurveDiscountFactor {
 
   @Override
   public double discountFactor(LocalDate date) {
-    double yearFraction = curve.getDayCount().relativeYearFraction(curve.getValuationDate(), date);
-    double curveValue = curve.value(yearFraction);
-    return discountFactor.discountFactor(yearFraction, curveValue);
+    double yearFraction = yearFraction(date);
+    double interestRate = curve.value(yearFraction);
+    return discountFactor.discountFactor(yearFraction, interestRate);
   }
 
   @Override

@@ -113,32 +113,6 @@ public class GenericInterpolatorTest {
   }
 
   @ParameterizedTest
-  @EnumSource(InterpolationAlgorithm.class)
-  public void shouldIncreaseFail(InterpolationAlgorithm algorithm) {
-    List<Knot> knots = List.of(Knot.of(0, 0),
-        Knot.of(1, 2),
-        Knot.of(5, 2.2),
-        Knot.of(5, 2.3),
-        Knot.of(10, 2.5),
-        Knot.of(15, 2.8));
-    var factory = new InterpolatorFactory();
-    assertThrows(IllegalArgumentException.class, () -> factory.createFunction(algorithm, knots));
-  }
-
-  @ParameterizedTest
-  @EnumSource(InterpolationAlgorithm.class)
-  public void shouldSuccess(InterpolationAlgorithm algorithm) {
-    List<Knot> knots = List.of(Knot.of(0, 0),
-        Knot.of(1, 2),
-        Knot.of(5, 2.2),
-        Knot.of(6, 2.3),
-        Knot.of(10, 2.5),
-        Knot.of(15, 2.8));
-    var factory = new InterpolatorFactory();
-    Assertions.assertThat(factory.createFunction(algorithm, knots)).isNotNull();
-  }
-
-  @ParameterizedTest
   @VariableSource("interpolators")
   public void nodesValueTest(PolynomialInterpolator interpolator) {
     final double[] X_KNOTS = {0.0, 0.4, 1.0, 1.8, 2.8, 5.0};
@@ -154,7 +128,6 @@ public class GenericInterpolatorTest {
   public void outOfRangeArgument(PolynomialInterpolator interpolator) {
     final double[] X_KNOTS = {0.0, 0.4, 1.0, 1.8};
     final double[] Y_KNOTS = {3.0, 4.0, 3.1, 2.0};
-    final double illegalXValue = -0.1d;
     var spline = interpolator.interpolate(X_KNOTS, Y_KNOTS);
     spline.value(-1);
     spline.value(2);
