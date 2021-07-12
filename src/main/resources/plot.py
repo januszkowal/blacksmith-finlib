@@ -74,11 +74,11 @@ print('TITLE      :', displayTitle)
 plt.xlim([rangeLow, rangeHigh])
 # plotting the functions
 if displayKnots:
-    plt.plot(knotsx, knotsy, 'ro', label='Knots') 
+    plt.plot(knotsx, knotsy, 'ro', label='Knots')
 if 'Akima' in displayCurves:
-    plt.plot(x, yAkima, color='green', label='Akima')
+    plt.plot(x, yAkima, color='blue', label='Akima')
 if 'AkimaApacheCommons' in displayCurves:
-    plt.plot(x, yAkimaApacheCommons, color='blue', label='Akima - Apache Commons')
+    plt.plot(x, yAkimaApacheCommons, color='green', label='Akima - Apache Commons')
 if 'Linear' in displayCurves:
     plt.plot(x, yLinear, color='violet', label='Linear')
 if 'Quadratic' in displayCurves:
